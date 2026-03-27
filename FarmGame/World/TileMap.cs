@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using FarmGame.Camera;
@@ -8,36 +9,59 @@ namespace FarmGame.World;
 
 public class TileMap
 {
-    private readonly TileType[,] _tiles;
+    private readonly TerrainType[,] _terrain;
+    private readonly ObjectType?[,] _objects;
+    private readonly Dictionary<TerrainType, Color> _terrainColors;
+    private readonly Dictionary<ObjectType, Color> _objectColors;
 
     public int Width { get; }
     public int Height { get; }
 
-    public TileMap(int width, int height)
+    public TileMap(
+        int width,
+        int height,
+        Dictionary<TerrainType, Color> terrainColors,
+        Dictionary<ObjectType, Color> objectColors)
     {
         Width = width;
         Height = height;
-        _tiles = new TileType[width, height];
+        _terrain = new TerrainType[width, height];
+        _objects = new ObjectType?[width, height];
+        _terrainColors = terrainColors;
+        _objectColors = objectColors;
     }
 
-    public TileType GetTile(int x, int y)
-    {
-        if (x < 0 || x >= Width || y < 0 || y >= Height)
-            return TileType.Water;
-        return _tiles[x, y];
-    }
-
-    public void SetTile(int x, int y, TileType type)
+    public void SetTerrain(int x, int y, TerrainType type)
     {
         if (x >= 0 && x < Width && y >= 0 && y < Height)
-            _tiles[x, y] = type;
+            _terrain[x, y] = type;
+    }
+
+    public void SetObject(int x, int y, ObjectType type)
+    {
+        if (x >= 0 && x < Width && y >= 0 && y < Height)
+            _objects[x, y] = type;
+    }
+
+    public TerrainType GetTerrain(int x, int y)
+    {
+        if (x < 0 || x >= Width || y < 0 || y >= Height)
+            return TerrainType.Grass;
+        return _terrain[x, y];
+    }
+
+    public ObjectType? GetObject(int x, int y)
+    {
+        if (x < 0 || x >= Width || y < 0 || y >= Height)
+            return null;
+        return _objects[x, y];
     }
 
     public bool IsPassable(int x, int y)
     {
         if (x < 0 || x >= Width || y < 0 || y >= Height)
             return false;
-        return _tiles[x, y] != TileType.Water;
+        return _objects[x, y] == null;
     }
 
     public void Draw(SpriteBatch spriteBatch, Texture2D pixel, Camera2D camera)
@@ -57,17 +81,15 @@ public class TileMap
                     y * GameConstants.TileSize,
                     GameConstants.TileSize,
                     GameConstants.TileSize);
-                spriteBatch.Draw(pixel, rect, GetTileColor(_tiles[x, y]));
+
+                // Draw terrain layer
+                if (_terrainColors.TryGetValue(_terrain[x, y], out var terrainColor))
+                    spriteBatch.Draw(pixel, rect, terrainColor);
+
+                // Draw object layer on top
+                if (_objects[x, y] is ObjectType obj && _objectColors.TryGetValue(obj, out var objColor))
+                    spriteBatch.Draw(pixel, rect, objColor);
             }
         }
     }
-
-    private static Color GetTileColor(TileType type) => type switch
-    {
-        TileType.Grass => new Color(34, 139, 34),
-        TileType.Dirt => new Color(139, 119, 101),
-        TileType.Water => new Color(30, 144, 255),
-        TileType.Path => new Color(210, 180, 140),
-        _ => Color.Magenta,
-    };
 }

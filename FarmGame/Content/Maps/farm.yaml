@@ -1,0 +1,32 @@
+name: Farm
+width: 40
+height: 30
+player_start: [10, 10]
+
+terrain_colors:
+  grass: [34, 139, 34]
+  dirt: [139, 119, 101]
+  path: [210, 180, 140]
+  sand: [238, 214, 175]
+
+object_colors:
+  water: [30, 144, 255]
+  rock: [128, 128, 128]
+  fence: [139, 90, 43]
+
+default_terrain: grass
+
+terrain:
+  - type: path
+    regions:
+      - { x: 0, y: 14, w: 40, h: 2 }
+      - { x: 20, y: 0, w: 2, h: 30 }
+  - type: dirt
+    regions:
+      - { x: 8, y: 8, w: 6, h: 4 }
+
+objects:
+  - type: water
+    regions:
+      - { x: 30, y: 5, w: 5, h: 4 }
+      - { x: 2, y: 22, w: 4, h: 4 }

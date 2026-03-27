@@ -1,9 +1,9 @@
 namespace FarmGame.World;
 
-public enum TileType
+public enum TerrainType
 {
     Grass,
     Dirt,
-    Water,
-    Path
+    Path,
+    Sand
 }

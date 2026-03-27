@@ -1,3 +1,4 @@
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -60,8 +61,10 @@ public class Game1 : Game
 
     private void StartGame()
     {
-        _tileMap = MapGenerator.GenerateDefault();
-        _player = new Player(new Point(10, 10), _tileMap);
+        var (map, playerStart) = MapLoader.Load(
+            Path.Combine(Content.RootDirectory, "Maps", "farm.yaml"));
+        _tileMap = map;
+        _player = new Player(playerStart, _tileMap);
         _camera = new Camera2D(GraphicsDevice.Viewport);
         _gameState = GameState.Playing;
     }
