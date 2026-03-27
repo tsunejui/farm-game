@@ -50,7 +50,11 @@ just clean    # Clean build artifacts
 
 ## Tech Stack
 
-- **Framework**: MonoGame 3.8 (DesktopGL)
-- **Runtime**: .NET 9
-- **Language**: C#
-- **Tools**: mise, just
+| Category | Technology |
+|----------|------------|
+| **Language** | C# |
+| **Runtime** | .NET 9 |
+| **Game Framework** | MonoGame 3.8 (DesktopGL) |
+| **Build Tool** | [just](https://github.com/casey/just) — command runner |
+| **Version Manager** | [mise](https://mise.jdx.dev/) — manages dotnet, just, etc. |
+| **Platforms** | macOS (ARM64 / x64), Windows (x64), Linux (x64) |
