@@ -45,8 +45,10 @@ just clean    # Clean build artifacts
 
 ## Documentation
 
-- [Setup Guide](SETUP.md) — Step-by-step project setup process
+- [Developer Guide](docs/developer-guide.md) — For programmers: environment setup, architecture, and extending the game
+- [Designer Guide](docs/designer-guide.md) — For game designers: YAML map config format and content editing
 - [Project Structure](docs/project-structure.md) — Codebase architecture and module descriptions
+- [Setup Guide](SETUP.md) — Step-by-step project setup process
 
 ## Tech Stack
 
