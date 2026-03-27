@@ -1,0 +1,27 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userprefs
+*.sln.docstates
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# MonoGame content build cache
+FarmGame/Content/bin/
+FarmGame/Content/obj/
+
+# mise local config
+.mise.local.toml

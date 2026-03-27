@@ -1,0 +1,3 @@
+[tools]
+dotnet = "9"
+just = "latest"
