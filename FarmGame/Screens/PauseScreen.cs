@@ -24,6 +24,7 @@ public class PauseScreen
     {
         _selectedIndex = 0;
         SelectedAction = null;
+        _previousKeyboard = Keyboard.GetState();
     }
 
     public void Update(GameTime gameTime)
