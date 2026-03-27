@@ -23,5 +23,8 @@ Thumbs.db
 FarmGame/Content/bin/
 FarmGame/Content/obj/
 
+# Release output
+dist/
+
 # mise local config
 .mise.local.toml
