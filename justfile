@@ -1,8 +1,8 @@
 set shell := ['/bin/sh', '-cu']
 
-import 'env.just'
-import 'map.just'
-import 'release.just'
+import 'justfiles/env.just'
+import 'justfiles/map.just'
+import 'justfiles/release.just'
 
 # Default invocation prints the command list
 default:
