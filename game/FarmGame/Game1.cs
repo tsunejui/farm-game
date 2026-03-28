@@ -1,3 +1,23 @@
+// =============================================================================
+// Game1.cs — Main game entry class
+//
+// Inherits from MonoGame's Game class and manages the entire game lifecycle,
+// including initialization, content loading, the game state machine
+// (TitleScreen → Playing → Paused), and per-frame update and render logic.
+//
+// Functions:
+//   - Game1()        : Constructor. Initializes GraphicsDeviceManager and sets Content root directory.
+//   - Initialize()   : Loads game config from YAML, sets window size and initial state.
+//                       see: https://docs.monogame.net/api/Microsoft.Xna.Framework.Game.html#Microsoft_Xna_Framework_Game_Initialize
+//   - LoadContent()  : Creates SpriteBatch, 1x1 white pixel texture, font, and loads all data via DataRegistry.
+//                       see: https://docs.monogame.net/api/Microsoft.Xna.Framework.Game.html#Microsoft_Xna_Framework_Game_LoadContent
+//   - StartGame()    : Builds the map, player, and camera from DataRegistry, then transitions to Playing state.
+//   - Update()       : Per-frame update. Handles menu actions, player movement, and pause toggle based on game state.
+//                       see: https://docs.monogame.net/api/Microsoft.Xna.Framework.Game.html#Microsoft_Xna_Framework_Game_Update_Microsoft_Xna_Framework_GameTime_
+//   - Draw()         : Per-frame render. Draws title screen, game scene, or pause overlay based on game state.
+//                       see: https://docs.monogame.net/api/Microsoft.Xna.Framework.Game.html#Microsoft_Xna_Framework_Game_Draw_Microsoft_Xna_Framework_GameTime_
+// =============================================================================
+
 using System;
 using System.IO;
 using Microsoft.Xna.Framework;
