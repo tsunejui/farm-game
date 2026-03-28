@@ -33,6 +33,7 @@ Below is a complete example (`farm.yaml`):
 
 ```yaml
 name: Farm
+description: A peaceful farmland with cross-shaped paths, a small dirt plot for crops, and two water ponds.
 width: 40
 height: 30
 player_start: [10, 10]
@@ -71,6 +72,7 @@ objects:
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
 | `name` | string | yes | Display name of the map |
+| `description` | string | yes | Brief description of the map's theme and layout |
 | `width` | int | yes | Map width in tiles |
 | `height` | int | yes | Map height in tiles |
 | `player_start` | [x, y] | yes | Tile coordinates where the player spawns |
@@ -172,6 +174,7 @@ Create a small 20x15 village map:
 
 ```yaml
 name: Village
+description: A small village with a main road, a fenced garden, a pond, and scattered rocks.
 width: 20
 height: 15
 player_start: [10, 7]

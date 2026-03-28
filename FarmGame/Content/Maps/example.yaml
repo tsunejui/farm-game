@@ -1,0 +1,113 @@
+# =============================================================================
+# Map Configuration File — Automated Map Pipeline Format
+#
+# This YAML file is the source of truth for a game map. The automated pipeline
+# converts it through: YAML → TMX (Python) → JSON (Tiled CLI) → C# Runtime.
+#
+# All spatial values use tile units. Each tile is tile_size x tile_size pixels.
+# Coordinate system: (0,0) = top-left, x → right, y → down.
+# =============================================================================
+
+# --- Map Metadata -----------------------------------------------------------
+
+# Display name of the map
+name: Example
+
+# Brief description of the map's theme and layout
+description: A small example map demonstrating all available terrain and object types.
+
+# Map dimensions in tiles
+width: 20
+height: 15
+
+# Tile size in pixels (must match tileset)
+tile_size: 32
+
+# Player spawn position in tile coordinates [x, y]
+player_start: [10, 7]
+
+# --- Tileset Reference ------------------------------------------------------
+# Defines the tileset used by this map. The Python script generates a .tsx file
+# from this section combined with the legend below.
+
+tileset:
+  name: example_tiles       # Tileset identifier
+  tile_width: 32             # Width of each tile in pixels
+  tile_height: 32            # Height of each tile in pixels
+
+# --- Symbol Legend -----------------------------------------------------------
+# Maps single characters to tile definitions. Each entry specifies:
+#   layer      — which layer this tile belongs to: "terrain" or "object"
+#   type       — the tile type name (must match TerrainType or ObjectType enum)
+#   properties — (optional) custom key-value pairs attached to the tile
+#                e.g., is_plantable, is_water — used for game logic at runtime
+
+legend:
+  ".": { layer: terrain, type: grass }
+  "#": { layer: terrain, type: dirt, properties: { is_plantable: true } }
+  "=": { layer: terrain, type: path }
+  ",": { layer: terrain, type: sand }
+  "~": { layer: object, type: water, properties: { is_water: true } }
+  "O": { layer: object, type: rock }
+  "|": { layer: object, type: fence }
+  "T": { layer: object, type: tree }
+
+# --- Colors ------------------------------------------------------------------
+# RGB colors [R, G, B] for rendering. Only types used in this map need entries.
+
+terrain_colors:
+  grass: [34, 139, 34]       # forest green
+  dirt: [139, 119, 101]      # brown
+  path: [210, 180, 140]      # light tan
+  sand: [238, 214, 175]      # pale yellow
+
+object_colors:
+  water: [30, 144, 255]      # dodger blue
+  rock: [128, 128, 128]      # gray
+  fence: [139, 90, 43]       # dark brown
+  tree: [20, 100, 20]        # dark green
+
+# --- Layer Matrices ----------------------------------------------------------
+# Each layer is a block of text where every character maps to the legend above.
+# Rules:
+#   - Each row must have exactly `width` characters
+#   - There must be exactly `height` rows
+#   - "." in the object layer means "no object" (empty)
+#   - Terrain layer must have no empty tiles (every cell needs a terrain type)
+#
+# The terrain layer is drawn first, then objects are drawn on top.
+# Objects block player movement; terrain is always walkable.
+
+layers:
+  terrain: |
+    ....................
+    .............####...
+    .............####...
+    .............####...
+    .............####...
+    ....................
+    ....................
+    ====================
+    ....................
+    ,,,,,...............
+    ....................
+    ....................
+    ....................
+    ....................
+    ....................
+  objects: |
+    ....................
+    ............||||||..
+    ............|....|..
+    ............|....|..
+    ............|....|..
+    ............||||||..
+    ....................
+    ....................
+    ....................
+    ....................
+    ..~~~...............
+    ..~~~...............
+    ..~~~...............
+    ....................
+    ....................

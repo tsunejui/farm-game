@@ -10,6 +10,7 @@ namespace FarmGame.World;
 public class MapData
 {
     public string Name { get; set; } = "";
+    public string Description { get; set; } = "";
     public int Width { get; set; }
     public int Height { get; set; }
 
