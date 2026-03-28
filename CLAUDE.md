@@ -36,6 +36,12 @@ just release          # Build for all platforms
 - Object types: Water, Rock, Fence, Tree (always impassable)
 - Adding new types: add to enum in `World/TerrainType.cs` or `World/ObjectType.cs`, then use in YAML
 
+## Skills
+
+- `.claude/skills/create-map.md` — Create a new map YAML config
+- `.claude/skills/create-item.md` — Create a new item/object YAML definition
+- `.claude/skills/create-terrain.md` — Create a new terrain YAML definition
+
 ## Documentation
 
 - [Developer Guide](docs/developer-guide.md) — For programmers
