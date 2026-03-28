@@ -28,6 +28,8 @@ using FarmGame.Core;
 using FarmGame.Data;
 using FarmGame.Entities;
 using FarmGame.Persistence;
+using FarmGame.Persistence.Models;
+using FarmGame.Persistence.Repositories;
 using FarmGame.Screens;
 using FarmGame.World;
 
@@ -50,6 +52,9 @@ public class Game1 : Game
     private DataRegistry _registry;
     private DatabaseBootstrapper _database;
     private string _databaseError;
+    private string _playerUuid;
+    private SettingRepository _settings;
+    private PlayerStateRepository _playerStateRepo;
 
     // Gameplay
     private GameMap _currentMap;
@@ -105,6 +110,18 @@ public class Game1 : Game
         if (!initResult.Success)
         {
             _databaseError = initResult.ErrorMessage;
+            return;
+        }
+
+        _settings = new SettingRepository(_database);
+        _playerStateRepo = new PlayerStateRepository(_database);
+
+        // Create or load player UUID
+        _playerUuid = _settings.Get("player_uuid");
+        if (string.IsNullOrEmpty(_playerUuid))
+        {
+            _playerUuid = Guid.NewGuid().ToString();
+            _settings.Set("player_uuid", _playerUuid);
         }
     }
 
@@ -136,6 +153,29 @@ public class Game1 : Game
         _player = new Player(playerStart, _currentMap);
         _camera = new Camera2D(GraphicsDevice.Viewport);
         _gameState = GameState.Playing;
+    }
+
+    protected override void OnExiting(object sender, ExitingEventArgs args)
+    {
+        SavePlayerState();
+        base.OnExiting(sender, args);
+    }
+
+    private void SavePlayerState()
+    {
+        if (_database == null || _playerStateRepo == null || _player == null)
+            return;
+
+        var state = new PlayerState
+        {
+            Uuid = _playerUuid,
+            PositionX = _player.GridPosition.X,
+            PositionY = _player.GridPosition.Y,
+            FacingDirection = _player.FacingDirection.ToString(),
+            CurrentMap = GameConstants.StartMap,
+        };
+
+        _playerStateRepo.Save(_playerUuid, state, GameConstants.GameTitle);
     }
 
     protected override void Update(GameTime gameTime)

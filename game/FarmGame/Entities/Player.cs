@@ -30,6 +30,8 @@ public class Player
     private readonly IPlayerAction[] _actions;
 
     public Vector2 PixelPosition => _movement.PixelPosition;
+    public Point GridPosition => _movement.GridPosition;
+    public Direction FacingDirection => _movement.FacingDirection;
 
     public Player(Point startPosition, GameMap tileMap)
     {

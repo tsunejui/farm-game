@@ -15,6 +15,7 @@ public class MovementAction : IPlayerAction
     public bool IsActive { get; private set; }
     public Direction FacingDirection { get; private set; }
     public Vector2 PixelPosition { get; private set; }
+    public Point GridPosition => _gridPosition;
 
     public MovementAction(Point startPosition, GameMap tileMap)
     {
