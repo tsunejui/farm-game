@@ -1,0 +1,20 @@
+metadata:
+  item_id: "water_body"
+  display_name: "Water"
+  category: "terrain_feature"
+
+visuals:
+  color: "#1E90FF"
+  origin_point: "top_left"
+  background:
+    enabled: false
+
+physics:
+  occupy_width: 1
+  occupy_height: 1
+  is_collidable: true
+
+logic:
+  action_handler: "none"
+  properties:
+    is_water: true

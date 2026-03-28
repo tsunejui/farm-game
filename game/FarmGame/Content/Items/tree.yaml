@@ -1,0 +1,29 @@
+metadata:
+  item_id: "tree"
+  display_name: "Oak Tree"
+  category: "natural_resource"
+
+visuals:
+  color: "#146414"
+  origin_point: "bottom_center"
+  # Example: enable background image for this item
+  # background:
+  #   enabled: true
+  #   image_path: "textures/entities/trees/oak_bg"
+  #   display_mode: "stretch"      # stretch | tile | center
+  #   offset_x: 0
+  #   offset_y: 0
+  background:
+    enabled: false
+
+physics:
+  occupy_width: 2
+  occupy_height: 2
+  is_collidable: true
+
+logic:
+  action_handler: "tree_logic"
+  max_health: 12
+  drops:
+    - item: "wood"
+      amount: 4

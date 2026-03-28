@@ -1,0 +1,10 @@
+metadata:
+  terrain_id: "dirt"
+  display_name: "Dirt"
+  category: "farmable"
+
+visuals:
+  color: "#8B7765"
+
+properties:
+  is_plantable: true

@@ -1,0 +1,7 @@
+metadata:
+  terrain_id: "path"
+  display_name: "Path"
+  category: "constructed"
+
+visuals:
+  color: "#D2B48C"

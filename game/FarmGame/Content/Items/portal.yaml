@@ -1,0 +1,18 @@
+metadata:
+  item_id: "portal"
+  display_name: "Portal"
+  category: "transport"
+
+visuals:
+  color: "#B464FF"
+  origin_point: "top_left"
+  background:
+    enabled: false
+
+physics:
+  occupy_width: 1
+  occupy_height: 1
+  is_collidable: false
+
+logic:
+  action_handler: "portal_logic"

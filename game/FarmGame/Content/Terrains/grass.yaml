@@ -1,0 +1,7 @@
+metadata:
+  terrain_id: "grass"
+  display_name: "Grass"
+  category: "natural"
+
+visuals:
+  color: "#228B22"

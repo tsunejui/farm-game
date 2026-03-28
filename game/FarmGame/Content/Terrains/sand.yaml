@@ -1,0 +1,7 @@
+metadata:
+  terrain_id: "sand"
+  display_name: "Sand"
+  category: "natural"
+
+visuals:
+  color: "#EED6AF"

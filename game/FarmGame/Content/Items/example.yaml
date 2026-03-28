@@ -1,0 +1,72 @@
+# =============================================================================
+# Item Example — Reference for all available fields
+#
+# Each item YAML defines a reusable prototype. Maps place instances of items
+# by referencing the item_id. Data defines "what", code defines "behavior".
+# =============================================================================
+
+# --- Metadata ----------------------------------------------------------------
+# Required. item_id must be unique and match the filename (without .yaml).
+metadata:
+  item_id: "example_item"          # unique ID referenced by maps
+  display_name: "Example Item"     # display name shown in-game
+  category: "natural_resource"     # category for grouping
+                                   # common: natural_resource, structure,
+                                   #         terrain_feature, transport
+
+# --- Visuals -----------------------------------------------------------------
+# How the item appears on screen.
+visuals:
+  # Foreground color [R, G, B] (0-255) — used as placeholder before sprites
+  color: "#64C864"
+
+  # Texture path for MonoGame Content.Load<Texture2D>()
+  # Leave empty to use color only
+  texture_path: ""
+
+  # Anchor point for positioning: top_left | bottom_center
+  origin_point: "top_left"
+
+  # Background image settings
+  background:
+    enabled: false                 # set to true to load a background image
+
+    # MonoGame content path (no file extension)
+    # The image is loaded via Content.Load<Texture2D>(image_path)
+    image_path: "textures/backgrounds/example"
+
+    # How the background image is rendered:
+    #   "stretch" — scale image to fill the entire occupy area
+    #   "tile"    — repeat the image as a pattern across the area
+    #   "center"  — draw once at center without scaling
+    display_mode: "stretch"
+
+    # Pixel offset from top-left corner of the entity area
+    offset_x: 0
+    offset_y: 0
+
+# --- Physics -----------------------------------------------------------------
+# Size and collision behavior.
+physics:
+  occupy_width: 1                  # width in tiles
+  occupy_height: 1                 # height in tiles
+  is_collidable: true              # true = blocks player movement
+
+# --- Logic -------------------------------------------------------------------
+# Game behavior. Code reads action_handler to decide what happens on interact.
+logic:
+  # Handler ID that maps to C# logic (e.g., "tree_logic", "rock_logic",
+  # "portal_logic", or "none" for no interaction)
+  action_handler: "none"
+
+  # Health for destructible items (0 = indestructible)
+  max_health: 0
+
+  # Items dropped when destroyed
+  drops:
+    - item: "wood"                 # item_id of the drop
+      amount: 2                    # quantity per drop
+
+  # Additional custom properties accessible at runtime
+  properties:
+    is_water: false

@@ -1,113 +1,92 @@
 # =============================================================================
-# Map Configuration File — Automated Map Pipeline Format
+# Map Example — Reference for all available fields
 #
-# This YAML file is the source of truth for a game map. The automated pipeline
-# converts it through: YAML → TMX (Python) → JSON (Tiled CLI) → C# Runtime.
-#
-# All spatial values use tile units. Each tile is tile_size x tile_size pixels.
-# Coordinate system: (0,0) = top-left, x → right, y → down.
+# Coordinate system: (0,0) = top-left, x → right, y → down
+# All x, y, w, h values are in tile units
 # =============================================================================
 
-# --- Map Metadata -----------------------------------------------------------
+# --- Metadata ----------------------------------------------------------------
+metadata:
+  map_id: "example_map"
+  display_name: "Example Map"
 
-# Display name of the map
-name: Example
+# --- Config ------------------------------------------------------------------
+config:
+  width: 20
+  height: 15
+  tile_size: 32
+  default_terrain: grass           # terrain_id used to fill entire map first
+  player_start: [5, 7]
 
-# Brief description of the map's theme and layout
-description: A small example map demonstrating all available terrain and object types.
-
-# Map dimensions in tiles (actual pixels = tiles * tile_size)
-# This map is 20x15 tiles = 640x480 pixels
-width: 20
-height: 15
-
-# Tile size in pixels (must match tileset)
-tile_size: 32
-
-# Player spawn position in tile coordinates [x, y]
-player_start: [10, 7]
-
-# --- Tileset Reference ------------------------------------------------------
-
-tileset:
-  name: example_tiles
-  tile_width: 32
-  tile_height: 32
-
-# --- Colors ------------------------------------------------------------------
-# RGB colors [R, G, B] for rendering (0-255).
-# Only types used in this map need entries.
-
-terrain_colors:
-  grass: [34, 139, 34]       # forest green
-  dirt: [139, 119, 101]      # brown
-  path: [210, 180, 140]      # light tan
-  sand: [238, 214, 175]      # pale yellow
-
-object_colors:
-  water: [30, 144, 255]      # dodger blue
-  rock: [128, 128, 128]      # gray
-  fence: [139, 90, 43]       # dark brown
-  tree: [20, 100, 20]        # dark green
-
-# --- Default Terrain ---------------------------------------------------------
-# The entire map is filled with this terrain type first,
-# before any terrain regions are applied on top.
-
-default_terrain: grass
-
-# --- Terrain Regions ---------------------------------------------------------
-# Walkable ground tiles. Each entry defines:
-#   type       — terrain type name (must match a key in terrain_colors)
-#   properties — (optional) custom key-value pairs for game logic
-#   regions    — list of rectangles: { x, y, w, h }
-#     x: left edge (tile column)
-#     y: top edge (tile row)
-#     w: width in tiles
-#     h: height in tiles
+# --- Terrains ----------------------------------------------------------------
+# Ground tiles painted over the default terrain.
+# Each entry references a terrain_id defined in Content/Terrains/<id>.yaml.
+# Properties from the terrain definition are applied automatically.
+# Instance-specific property overrides can be added here.
 #
-# Regions are applied top to bottom; later entries overwrite earlier ones.
-
-terrain:
-  - type: path
+# Fields:
+#   terrain    — terrain_id (must match a Terrains/*.yaml file)
+#   properties — (optional) instance-specific overrides
+#   regions    — list of rectangles { x, y, w, h }
+terrains:
+  - terrain: "path"
     regions:
       - { x: 0, y: 7, w: 20, h: 1 }
 
-  - type: sand
+  - terrain: "dirt"
     regions:
-      - { x: 1, y: 9, w: 5, h: 1 }
+      - { x: 12, y: 2, w: 4, h: 3 }
 
-  - type: dirt
-    properties: { is_plantable: true }
+  - terrain: "sand"
     regions:
-      - { x: 14, y: 2, w: 4, h: 3 }
+      - { x: 1, y: 11, w: 4, h: 1 }
 
-# --- Object Regions ---------------------------------------------------------
-# Impassable items placed on top of terrain. Same format as terrain regions.
-# Objects block player movement.
-# Use w: 1, h: 1 for single-tile objects (e.g., one rock or tree).
-# Combine multiple regions to build composite shapes (e.g., a fence border).
+# --- Entities ----------------------------------------------------------------
+# Items placed on the map. Each entry references an item_id defined in
+# Content/Items/<item_id>.yaml.
+#
+# Fields:
+#   item       — item_id (must match an Items/*.yaml file)
+#   tile_x     — x position in tile coordinates
+#   tile_y     — y position in tile coordinates
+#   properties — (optional) instance-specific overrides
+entities:
+  - item: "water_body"
+    tile_x: 1
+    tile_y: 12
+    properties:
+      fill_width: 3
+      fill_height: 2
 
-objects:
-  - type: water
-    properties: { is_water: true }
-    regions:
-      - { x: 1, y: 10, w: 4, h: 3 }
+  - item: "tree"
+    tile_x: 8
+    tile_y: 1
 
-  - type: fence
-    regions:
-      - { x: 13, y: 1, w: 6, h: 1 }
-      - { x: 13, y: 5, w: 6, h: 1 }
-      - { x: 13, y: 1, w: 1, h: 5 }
-      - { x: 18, y: 1, w: 1, h: 5 }
+  - item: "tree"
+    tile_x: 16
+    tile_y: 10
 
-  - type: tree
-    regions:
-      - { x: 7, y: 2, w: 1, h: 1 }
-      - { x: 9, y: 3, w: 1, h: 1 }
-      - { x: 8, y: 1, w: 1, h: 1 }
+  - item: "rock"
+    tile_x: 10
+    tile_y: 5
 
-  - type: rock
-    regions:
-      - { x: 3, y: 5, w: 1, h: 1 }
-      - { x: 16, y: 12, w: 1, h: 1 }
+  - item: "fence"
+    tile_x: 11
+    tile_y: 1
+  - item: "fence"
+    tile_x: 16
+    tile_y: 1
+  - item: "fence"
+    tile_x: 11
+    tile_y: 5
+  - item: "fence"
+    tile_x: 16
+    tile_y: 5
+
+  - item: "portal"
+    tile_x: 19
+    tile_y: 7
+    properties:
+      target_map: "farm_home"
+      spawn_tile_x: 1
+      spawn_tile_y: 14

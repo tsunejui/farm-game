@@ -1,0 +1,20 @@
+# =============================================================================
+# Terrain Definition Example — Reference for all available fields
+#
+# Each terrain YAML defines a ground tile type. Maps place terrains by
+# referencing the terrain_id. Terrain is always walkable by the player.
+# =============================================================================
+
+metadata:
+  terrain_id: "example_terrain"    # unique ID referenced by maps
+  display_name: "Example Terrain"  # display name shown in-game
+  category: "natural"              # grouping: natural, farmable, constructed
+
+# How the terrain appears on screen
+visuals:
+  color: "#228B22"                 # hex color code (#RRGGBB or #RRGGBBAA)
+
+# Default properties applied to every tile of this terrain type
+# These can be queried at runtime via GameMap.HasProperty(x, y, name)
+properties:
+  is_plantable: false

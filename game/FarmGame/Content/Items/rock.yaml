@@ -1,0 +1,22 @@
+metadata:
+  item_id: "rock"
+  display_name: "Rock"
+  category: "natural_resource"
+
+visuals:
+  color: "#808080"
+  origin_point: "top_left"
+  background:
+    enabled: false
+
+physics:
+  occupy_width: 1
+  occupy_height: 1
+  is_collidable: true
+
+logic:
+  action_handler: "rock_logic"
+  max_health: 8
+  drops:
+    - item: "stone"
+      amount: 2

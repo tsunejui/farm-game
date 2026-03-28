@@ -1,0 +1,50 @@
+metadata:
+  map_id: "farm_home"
+  display_name: "Starter Farm"
+
+config:
+  width: 40
+  height: 30
+  tile_size: 32
+  default_terrain: grass
+  player_start: [10, 10]
+
+terrains:
+  - terrain: "path"
+    regions:
+      - { x: 0, y: 14, w: 40, h: 2 }
+      - { x: 20, y: 0, w: 2, h: 30 }
+  - terrain: "dirt"
+    regions:
+      - { x: 8, y: 8, w: 6, h: 4 }
+
+entities:
+  - item: "water_body"
+    tile_x: 30
+    tile_y: 5
+    properties:
+      fill_width: 5
+      fill_height: 4
+
+  - item: "water_body"
+    tile_x: 2
+    tile_y: 22
+    properties:
+      fill_width: 4
+      fill_height: 4
+
+  - item: "tree"
+    tile_x: 5
+    tile_y: 3
+
+  - item: "tree"
+    tile_x: 35
+    tile_y: 20
+
+  - item: "rock"
+    tile_x: 15
+    tile_y: 5
+
+  - item: "rock"
+    tile_x: 28
+    tile_y: 25
