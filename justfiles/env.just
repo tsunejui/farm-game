@@ -12,5 +12,6 @@ env:
 		"# Generated at: $(date -u '+%Y-%m-%dT%H:%M:%SZ')" \
 		"GAME_TITLE=\"Farm Game\"" \
 		"DB_PATH=\"$db_dir/game.db\"" \
+		"LOG_DIR=\"$db_dir/logs\"" \
 		> .env.local
 	echo "Generated .env.local"
