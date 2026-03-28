@@ -1,9 +1,9 @@
 [tools]
 dotnet = "9"
-just = "latest"
+just = "1.46.0"
 python = "3.12"
-gum = "latest"
-"pipx:litecli" = "latest"
+gum = "0.17.0"
+"pipx:litecli" = "1.17.1"
 
 # GUI tools (install manually):
 #   brew install --cask tiled   # Tiled map editor (https://github.com/mapeditor/tiled)
