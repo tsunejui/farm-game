@@ -7,7 +7,7 @@ namespace FarmGame.Persistence;
 
 public static class DatabasePathResolver
 {
-    private const string DatabaseFileName = "save.db";
+    private const string DatabaseFileName = "game.db";
 
     public static string GetDatabaseDirectory(string gameName)
     {
