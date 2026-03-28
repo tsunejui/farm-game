@@ -23,6 +23,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Serilog;
 using FarmGame.Camera;
 using FarmGame.Core;
 using FarmGame.Data;
@@ -74,6 +75,8 @@ public class Game1 : Game
         var contentDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
         var config = GameConfig.Load(Path.Combine(contentDir, "config.yaml"));
         GameConstants.LoadFrom(config);
+        Log.Information("Config loaded: {Width}x{Height}, tile size {TileSize}",
+            config.Screen.Width, config.Screen.Height, config.Tile.Size);
 
         _graphics.PreferredBackBufferWidth = GameConstants.ScreenWidth;
         _graphics.PreferredBackBufferHeight = GameConstants.ScreenHeight;
@@ -105,13 +108,16 @@ public class Game1 : Game
         }
 
         var dbPath = DatabasePathResolver.GetDatabasePath(GameConstants.GameTitle);
+        Log.Information("Database path: {DbPath}", dbPath);
         _database = new DatabaseBootstrapper(dbPath);
         var initResult = _database.Initialize();
         if (!initResult.Success)
         {
             _databaseError = initResult.ErrorMessage;
+            Log.Error("Database initialization failed: {Error}", _databaseError);
             return;
         }
+        Log.Information("Database initialized");
 
         _settings = new SettingRepository(_database);
         _playerStateRepo = new PlayerStateRepository(_database);
@@ -122,6 +128,11 @@ public class Game1 : Game
         {
             _playerUuid = Guid.NewGuid().ToString();
             _settings.Set("player_uuid", _playerUuid);
+            Log.Information("Created new player UUID: {Uuid}", _playerUuid);
+        }
+        else
+        {
+            Log.Information("Loaded player UUID: {Uuid}", _playerUuid);
         }
     }
 
@@ -172,11 +183,14 @@ public class Game1 : Game
         {
             playerStart = new Point(savedState.PositionX, savedState.PositionY);
             Enum.TryParse(savedState.FacingDirection, out facingDirection);
+            Log.Information("Loaded save: map={Map}, pos=({X},{Y}), dir={Dir}",
+                mapId, savedState.PositionX, savedState.PositionY, facingDirection);
         }
         else
         {
             playerStart = new Point(config.PlayerStart[0], config.PlayerStart[1]);
             facingDirection = Direction.Down;
+            Log.Information("No save found, starting new game on map {Map}", mapId);
         }
 
         _player = new Player(playerStart, _currentMap, facingDirection);
@@ -204,7 +218,12 @@ public class Game1 : Game
             CurrentMap = GameConstants.StartMap,
         };
 
-        _playerStateRepo.Save(_playerUuid, state, GameConstants.GameTitle);
+        var result = _playerStateRepo.Save(_playerUuid, state, GameConstants.GameTitle);
+        if (result.Success)
+            Log.Information("Player state saved: pos=({X},{Y}), dir={Dir}",
+                state.PositionX, state.PositionY, state.FacingDirection);
+        else
+            Log.Error("Failed to save player state: {Error}", result.ErrorMessage);
     }
 
     protected override void Update(GameTime gameTime)
