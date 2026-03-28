@@ -1,19 +1,21 @@
 using System;
-using Microsoft.Data.Sqlite;
+using System.Linq;
+using SQLite;
+using FarmGame.Persistence.Models;
 
 namespace FarmGame.Persistence;
 
 public static class MigrationManager
 {
-    public const int CurrentSchemaVersion = 2;
+    public const int CurrentSchemaVersion = 1;
 
-    public static DatabaseResult Migrate(SqliteConnection connection)
+    public static DatabaseResult Migrate(SQLiteConnection db)
     {
-        int dbVersion = GetCurrentDbVersion(connection);
+        int dbVersion = GetCurrentDbVersion(db);
 
         for (int version = dbVersion + 1; version <= CurrentSchemaVersion; version++)
         {
-            var result = ApplyMigration(connection, version);
+            var result = ApplyMigration(db, version);
             if (!result.Success)
                 return result;
         }
@@ -21,82 +23,45 @@ public static class MigrationManager
         return DatabaseResult.Ok();
     }
 
-    private static int GetCurrentDbVersion(SqliteConnection connection)
+    private static int GetCurrentDbVersion(SQLiteConnection db)
     {
-        using var cmd = connection.CreateCommand();
-        cmd.CommandText = "SELECT MAX(version) FROM schema_version;";
         try
         {
-            var result = cmd.ExecuteScalar();
-            return result is DBNull or null ? 0 : Convert.ToInt32(result);
+            var versions = db.Table<SchemaVersion>().ToList();
+            return versions.Count == 0 ? 0 : versions.Max(v => v.Version);
         }
-        catch (SqliteException)
+        catch
         {
-            // Table doesn't exist yet
             return 0;
         }
     }
 
-    private static DatabaseResult ApplyMigration(SqliteConnection connection, int version)
+    private static DatabaseResult ApplyMigration(SQLiteConnection db, int version)
     {
-        using var transaction = connection.BeginTransaction();
         try
         {
-            using var cmd = connection.CreateCommand();
-            cmd.Transaction = transaction;
-
-            switch (version)
+            db.RunInTransaction(() =>
             {
-                case 1:
-                    cmd.CommandText = @"
-                        CREATE TABLE IF NOT EXISTS schema_version (
-                            version INTEGER NOT NULL,
-                            applied_at TEXT NOT NULL DEFAULT (datetime('now')),
-                            description TEXT
-                        );
+                switch (version)
+                {
+                    case 1:
+                        db.Insert(new SchemaVersion
+                        {
+                            Version = 1,
+                            AppliedAt = DateTime.UtcNow.ToString("o"),
+                            Description = "Initial schema"
+                        });
+                        break;
 
-                        CREATE TABLE IF NOT EXISTS save_metadata (
-                            id INTEGER PRIMARY KEY,
-                            slot_name TEXT NOT NULL,
-                            created_at TEXT NOT NULL DEFAULT (datetime('now')),
-                            updated_at TEXT NOT NULL DEFAULT (datetime('now')),
-                            play_time_seconds INTEGER NOT NULL DEFAULT 0,
-                            game_version TEXT NOT NULL
-                        );
+                    default:
+                        throw new InvalidOperationException($"Unknown migration version: {version}");
+                }
+            });
 
-                        INSERT INTO schema_version (version, description)
-                        VALUES (1, 'Initial schema');
-                    ";
-                    break;
-
-                case 2:
-                    cmd.CommandText = @"
-                        CREATE TABLE IF NOT EXISTS player_state (
-                            id INTEGER PRIMARY KEY,
-                            slot_name TEXT NOT NULL UNIQUE,
-                            state_json TEXT NOT NULL,
-                            game_version TEXT NOT NULL,
-                            created_at TEXT NOT NULL DEFAULT (datetime('now')),
-                            updated_at TEXT NOT NULL DEFAULT (datetime('now'))
-                        );
-
-                        INSERT INTO schema_version (version, description)
-                        VALUES (2, 'Add player_state table');
-                    ";
-                    break;
-
-                default:
-                    return DatabaseResult.Fail(DatabaseErrorKind.MigrationFailed,
-                        $"Unknown migration version: {version}");
-            }
-
-            cmd.ExecuteNonQuery();
-            transaction.Commit();
             return DatabaseResult.Ok();
         }
         catch (Exception ex)
         {
-            transaction.Rollback();
             return DatabaseResult.Fail(DatabaseErrorKind.MigrationFailed,
                 $"Migration to version {version} failed: {ex.Message}");
         }

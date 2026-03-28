@@ -28,6 +28,9 @@ public class PlayerState
     [JsonPropertyName("version")]
     public int Version { get; set; } = CurrentVersion;
 
+    [JsonPropertyName("uuid")]
+    public string Uuid { get; set; } = "";
+
     [JsonPropertyName("position_x")]
     public int PositionX { get; set; }
 

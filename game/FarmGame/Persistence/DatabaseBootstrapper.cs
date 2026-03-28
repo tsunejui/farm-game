@@ -1,6 +1,7 @@
 using System;
 using System.IO;
-using Microsoft.Data.Sqlite;
+using SQLite;
+using FarmGame.Persistence.Models;
 
 namespace FarmGame.Persistence;
 
@@ -21,20 +22,22 @@ public class DatabaseBootstrapper
 
         try
         {
-            using var connection = CreateConnection();
-            connection.Open();
-            return MigrationManager.Migrate(connection);
+            using var db = CreateConnection();
+            db.CreateTable<SchemaVersion>();
+            db.CreateTable<Setting>();
+            db.CreateTable<PlayerStateRecord>();
+            return DatabaseResult.Ok();
         }
-        catch (SqliteException ex)
+        catch (Exception ex)
         {
             return DatabaseResult.Fail(DatabaseErrorKind.ConnectionFailed,
                 $"Failed to initialize database: {ex.Message}");
         }
     }
 
-    public SqliteConnection CreateConnection()
+    public SQLiteConnection CreateConnection()
     {
-        return new SqliteConnection($"Data Source={_databasePath}");
+        return new SQLiteConnection(_databasePath);
     }
 
     private static DatabaseResult CheckDiskSpace(string directory)
