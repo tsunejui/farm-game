@@ -144,13 +144,42 @@ public class Game1 : Game
 
     private void StartGame()
     {
-        var mapDef = _registry.Maps[GameConstants.StartMap];
+        // Backup database before starting gameplay
+        if (_database != null)
+        {
+            var dbPath = DatabasePathResolver.GetDatabasePath(GameConstants.GameTitle);
+            DatabaseBackup.Backup(dbPath);
+        }
+
+        // Load saved state if exists
+        PlayerState savedState = null;
+        if (_playerStateRepo != null && _playerUuid != null)
+        {
+            var loadResult = _playerStateRepo.Load(_playerUuid);
+            if (loadResult.Success)
+                savedState = loadResult.Value;
+        }
+
+        var mapId = savedState?.CurrentMap ?? GameConstants.StartMap;
+        var mapDef = _registry.Maps[mapId];
         _currentMap = MapBuilder.Build(mapDef, _registry, Content.Load<Texture2D>);
 
         var config = mapDef.Config;
-        var playerStart = new Point(config.PlayerStart[0], config.PlayerStart[1]);
+        Point playerStart;
+        Direction facingDirection;
 
-        _player = new Player(playerStart, _currentMap);
+        if (savedState != null)
+        {
+            playerStart = new Point(savedState.PositionX, savedState.PositionY);
+            Enum.TryParse(savedState.FacingDirection, out facingDirection);
+        }
+        else
+        {
+            playerStart = new Point(config.PlayerStart[0], config.PlayerStart[1]);
+            facingDirection = Direction.Down;
+        }
+
+        _player = new Player(playerStart, _currentMap, facingDirection);
         _camera = new Camera2D(GraphicsDevice.Viewport);
         _gameState = GameState.Playing;
     }
