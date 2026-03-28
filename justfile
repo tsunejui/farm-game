@@ -8,7 +8,7 @@ default:
 
 # Start the game
 start:
-	dotnet run --project FarmGame/FarmGame.csproj
+	dotnet run --project game/FarmGame/FarmGame.csproj
 
 # Build the project
 build:
@@ -35,7 +35,7 @@ map-build: map-generate map-export
 map-generate:
 	pip3 install -q -r tools/requirements.txt
 	mkdir -p build/maps
-	for f in FarmGame/Content/Maps/*.yaml; do \
+	for f in game/FarmGame/Content/Maps/*.yaml; do \
 		python3 tools/yaml_to_tmx.py "$f" --output build/maps/; \
 	done
 
@@ -44,14 +44,14 @@ map-export:
 	for f in build/maps/*.tmx; do \
 		name=$(basename "$f" .tmx); \
 		{{tiled}} --export-map --embed-tilesets --resolve-types-and-properties \
-			"$f" "FarmGame/Content/Maps/$name.json"; \
-		echo "Exported: FarmGame/Content/Maps/$name.json"; \
+			"$f" "game/FarmGame/Content/Maps/$name.json"; \
+		echo "Exported: game/FarmGame/Content/Maps/$name.json"; \
 	done
 
 # Clean intermediate map build files
 map-clean:
 	rm -rf build/maps
-	rm -f FarmGame/Content/Maps/*.json
+	rm -f game/FarmGame/Content/Maps/*.json
 	echo "Cleaned map build cache"
 
 # Build and run with map pipeline
@@ -64,16 +64,16 @@ release: release-osx-arm64 release-osx-x64 release-win-x64 release-linux-x64
 
 # Publish for macOS (Apple Silicon)
 release-osx-arm64:
-	dotnet publish FarmGame/FarmGame.csproj {{publish_flags}} -r osx-arm64 -o dist/osx-arm64/
+	dotnet publish game/FarmGame/FarmGame.csproj {{publish_flags}} -r osx-arm64 -o dist/osx-arm64/
 
 # Publish for macOS (Intel)
 release-osx-x64:
-	dotnet publish FarmGame/FarmGame.csproj {{publish_flags}} -r osx-x64 -o dist/osx-x64/
+	dotnet publish game/FarmGame/FarmGame.csproj {{publish_flags}} -r osx-x64 -o dist/osx-x64/
 
 # Publish for Windows (x64)
 release-win-x64:
-	dotnet publish FarmGame/FarmGame.csproj {{publish_flags}} -r win-x64 -o dist/win-x64/
+	dotnet publish game/FarmGame/FarmGame.csproj {{publish_flags}} -r win-x64 -o dist/win-x64/
 
 # Publish for Linux (x64)
 release-linux-x64:
-	dotnet publish FarmGame/FarmGame.csproj {{publish_flags}} -r linux-x64 -o dist/linux-x64/
+	dotnet publish game/FarmGame/FarmGame.csproj {{publish_flags}} -r linux-x64 -o dist/linux-x64/

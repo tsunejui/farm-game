@@ -20,8 +20,8 @@ obj/
 Thumbs.db
 
 # MonoGame content build cache
-FarmGame/Content/bin/
-FarmGame/Content/obj/
+game/FarmGame/Content/bin/
+game/FarmGame/Content/obj/
 
 # Release output
 dist/
@@ -30,7 +30,7 @@ dist/
 build/
 
 # Generated map JSON (output of Tiled CLI)
-FarmGame/Content/Maps/*.json
+game/FarmGame/Content/Maps/*.json
 
 # mise local config
 .mise.local.toml

@@ -42,14 +42,15 @@ Created a cross-platform desktop application using the `mgdesktopgl` template:
 dotnet new mgdesktopgl -n FarmGame
 ```
 
-This generated the project under the `FarmGame/` directory with the following structure:
+This generated the project under the `game/FarmGame/` directory with the following structure:
 
 ```
 farm-game/
 ├── .mise.toml
 ├── FarmGame.sln
-└── FarmGame/
-    ├── .config/
+└── game/
+    └── FarmGame/
+        ├── .config/
     │   └── dotnet-tools.json
     ├── .vscode/
     │   └── launch.json
@@ -69,7 +70,7 @@ Created a solution file and added the project to it:
 
 ```bash
 dotnet new sln -n FarmGame
-dotnet sln FarmGame.sln add FarmGame/FarmGame.csproj
+dotnet sln FarmGame.sln add game/FarmGame/FarmGame.csproj
 ```
 
 ## Step 5: Build and Verify
@@ -85,5 +86,5 @@ Build succeeded with 0 warnings and 0 errors.
 ## Running the Game
 
 ```bash
-dotnet run --project FarmGame/FarmGame.csproj
+dotnet run --project game/FarmGame/FarmGame.csproj
 ```

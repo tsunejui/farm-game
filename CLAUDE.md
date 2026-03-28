@@ -15,18 +15,18 @@ just release          # Build for all platforms
 ## Architecture
 
 - **Two-layer tile map**: Terrain (always walkable) + Objects (impassable), both defined in YAML configs
-- **Map configs**: `FarmGame/Content/Maps/*.yaml` — loaded at runtime by `MapLoader`
+- **Map configs**: `game/FarmGame/Content/Maps/*.yaml` — loaded at runtime by `MapLoader`
 - **Game loop**: MonoGame standard `Initialize → LoadContent → [Update → Draw]`
 - **State machine**: TitleScreen → Playing → Paused
 
 ## Key Directories
 
-- `FarmGame/Core/` — Constants, game state enum
-- `FarmGame/World/` — TerrainType, ObjectType, TileMap, MapLoader
-- `FarmGame/Entities/` — Player movement and rendering
-- `FarmGame/Camera/` — 2D camera with boundary clamping
-- `FarmGame/Screens/` — Title and pause screen UI
-- `FarmGame/Content/Maps/` — YAML map config files
+- `game/FarmGame/Core/` — Constants, game state enum
+- `game/FarmGame/World/` — TerrainType, ObjectType, TileMap, MapLoader
+- `game/FarmGame/Entities/` — Player movement and rendering
+- `game/FarmGame/Camera/` — 2D camera with boundary clamping
+- `game/FarmGame/Screens/` — Title and pause screen UI
+- `game/FarmGame/Content/Maps/` — YAML map config files
 
 ## Conventions
 

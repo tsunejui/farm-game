@@ -18,7 +18,7 @@ The player can walk freely on terrain tiles but cannot pass through object tiles
 Map definitions are YAML files located in:
 
 ```
-FarmGame/Content/Maps/
+game/FarmGame/Content/Maps/
 ```
 
 Each `.yaml` file represents one complete map. After editing a YAML file, rebuild and run the game to see changes:
@@ -173,7 +173,7 @@ Regions are applied in order from top to bottom. Later entries overwrite earlier
 
 ## Creating a New Map
 
-1. Copy an existing map file (e.g., `farm.yaml`) in `FarmGame/Content/Maps/`.
+1. Copy an existing map file (e.g., `farm.yaml`) in `game/FarmGame/Content/Maps/`.
 2. Rename it (e.g., `village.yaml`).
 3. Edit the YAML fields to define your new map.
 4. Ask a developer to point `Game1.cs` to your new map file.

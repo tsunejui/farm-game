@@ -4,40 +4,50 @@
 
 ```
 farm-game/
-├── .mise.toml                  # Tool version management (dotnet, just)
+├── .mise.toml                  # Tool version management (dotnet, just, python, gum)
 ├── justfile                    # Task runner commands
 ├── FarmGame.sln                # .NET solution file
 ├── SETUP.md                    # Project setup guide
 ├── README.md                   # Project overview
+├── CLAUDE.md                   # Project context for Claude Code
+├── scripts/
+│   └── interactive.sh          # Interactive menu selector (gum)
+├── tools/
+│   ├── yaml_to_tmx.py         # YAML → TMX conversion script
+│   └── requirements.txt        # Python dependencies
 ├── docs/
 │   ├── project-structure.md    # This file
 │   ├── developer-guide.md     # Developer guide (for programmers)
 │   └── designer-guide.md      # Designer guide (for game designers)
-└── FarmGame/                   # Main game project
-    ├── FarmGame.csproj         # Project file (MonoGame 3.8, YamlDotNet, .NET 9)
-    ├── Program.cs              # Entry point
-    ├── Game1.cs                # Main game loop (orchestrator)
-    ├── Core/
-    │   ├── GameConstants.cs    # Shared constants (tile size, speed, screen size)
-    │   └── GameState.cs        # Game state enum
-    ├── World/
-    │   ├── TerrainType.cs      # Terrain type enum (Grass, Dirt, Path, Sand)
-    │   ├── ObjectType.cs       # Object type enum (Water, Rock, Fence, Tree)
-    │   ├── TileMap.cs          # Two-layer tile map (terrain + objects)
-    │   └── MapLoader.cs        # Loads map from YAML config
-    ├── Entities/
-    │   ├── Direction.cs        # Facing direction enum
-    │   └── Player.cs           # Player state, movement, and rendering
-    ├── Camera/
-    │   └── Camera2D.cs         # Viewport camera that follows the player
-    ├── Screens/
-    │   ├── TitleScreen.cs      # Title menu screen
-    │   └── PauseScreen.cs      # Pause overlay screen
-    └── Content/
-        ├── Content.mgcb        # MonoGame content pipeline config
-        ├── DefaultFont.spritefont  # Default font asset
-        └── Maps/               # YAML map config directory
-            └── farm.yaml       # Default farm map definition
+└── game/
+    └── FarmGame/               # Main game project
+        ├── FarmGame.csproj     # Project file (MonoGame 3.8, YamlDotNet, .NET 9)
+        ├── Program.cs          # Entry point
+        ├── Game1.cs            # Main game loop (orchestrator)
+        ├── Core/
+        │   ├── GameConstants.cs    # Shared constants (tile size, speed, screen size)
+        │   └── GameState.cs        # Game state enum
+        ├── World/
+        │   ├── TerrainType.cs      # Terrain type enum (Grass, Dirt, Path, Sand)
+        │   ├── ObjectType.cs       # Object type enum (Water, Rock, Fence, Tree)
+        │   ├── TileMap.cs          # Two-layer tile map (terrain + objects)
+        │   ├── TiledMap.cs         # Tiled JSON data classes
+        │   ├── TiledMapLoader.cs   # Loads map from Tiled JSON
+        │   └── MapLoader.cs        # Legacy YAML map loader
+        ├── Entities/
+        │   ├── Direction.cs        # Facing direction enum
+        │   └── Player.cs           # Player state, movement, and rendering
+        ├── Camera/
+        │   └── Camera2D.cs         # Viewport camera that follows the player
+        ├── Screens/
+        │   ├── TitleScreen.cs      # Title menu screen
+        │   └── PauseScreen.cs      # Pause overlay screen
+        └── Content/
+            ├── Content.mgcb        # MonoGame content pipeline config
+            ├── DefaultFont.spritefont  # Default font asset
+            └── Maps/               # YAML map sources + generated JSON
+                ├── farm.yaml       # Default farm map definition
+                └── example.yaml    # Documented example map
 ```
 
 ## Module Descriptions

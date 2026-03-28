@@ -147,7 +147,7 @@ The game uses a two-layer tile map system:
 - **Terrain layer** — Ground tiles that are always walkable (Grass, Dirt, Path, Sand).
 - **Object layer** — Tiles placed on top of terrain that block player movement (Water, Rock, Fence, Tree).
 
-Map definitions are stored as YAML files in `FarmGame/Content/Maps/`. The `MapLoader` reads these files at runtime to construct the `TileMap`. See the [Designer Guide](designer-guide.md) for the YAML format reference.
+Map definitions are stored as YAML files in `game/FarmGame/Content/Maps/`. The `MapLoader` reads these files at runtime to construct the `TileMap`. See the [Designer Guide](designer-guide.md) for the YAML format reference.
 
 ### Rendering
 
@@ -192,8 +192,8 @@ var (map, playerStart) = MapLoader.Load(
 
 ### Adding Content Assets
 
-1. Place the asset file (sprite, font, sound) in `FarmGame/Content/`.
-2. Register it in `FarmGame/Content/Content.mgcb` with the appropriate importer/processor.
+1. Place the asset file (sprite, font, sound) in `game/FarmGame/Content/`.
+2. Register it in `game/FarmGame/Content/Content.mgcb` with the appropriate importer/processor.
 3. Load it in `Game1.LoadContent` using `Content.Load<T>("AssetName")`.
 
 ## Controls
