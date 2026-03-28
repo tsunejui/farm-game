@@ -34,3 +34,6 @@ game/FarmGame/Content/Maps/*.json
 
 # mise local config
 .mise.local.toml
+
+# Local environment config (auto-generated)
+.env.local
