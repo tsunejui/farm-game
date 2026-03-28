@@ -26,5 +26,11 @@ FarmGame/Content/obj/
 # Release output
 dist/
 
+# Map pipeline intermediate files
+build/
+
+# Generated map JSON (output of Tiled CLI)
+FarmGame/Content/Maps/*.json
+
 # mise local config
 .mise.local.toml
