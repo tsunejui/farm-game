@@ -33,9 +33,9 @@ public class Player
     public Point GridPosition => _movement.GridPosition;
     public Direction FacingDirection => _movement.FacingDirection;
 
-    public Player(Point startPosition, GameMap tileMap)
+    public Player(Point startPosition, GameMap tileMap, Direction facingDirection = Direction.Down)
     {
-        _movement = new MovementAction(startPosition, tileMap);
+        _movement = new MovementAction(startPosition, tileMap, facingDirection);
         _jump = new JumpAction();
         _attack = new AttackAction();
         _actions = new IPlayerAction[] { _movement, _jump, _attack };

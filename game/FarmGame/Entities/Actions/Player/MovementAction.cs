@@ -17,12 +17,12 @@ public class MovementAction : IPlayerAction
     public Vector2 PixelPosition { get; private set; }
     public Point GridPosition => _gridPosition;
 
-    public MovementAction(Point startPosition, GameMap tileMap)
+    public MovementAction(Point startPosition, GameMap tileMap, Direction facingDirection = Direction.Down)
     {
         _tileMap = tileMap;
         _gridPosition = startPosition;
         _targetGridPosition = startPosition;
-        FacingDirection = Direction.Down;
+        FacingDirection = facingDirection;
         IsActive = false;
         _moveProgress = 0f;
         PixelPosition = new Vector2(
