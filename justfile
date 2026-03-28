@@ -1,6 +1,7 @@
 set shell := ['/bin/sh', '-cu']
 
 import 'justfiles/env.just'
+import 'justfiles/db.just'
 import 'justfiles/map.just'
 import 'justfiles/release.just'
 
