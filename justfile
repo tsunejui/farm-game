@@ -1,5 +1,7 @@
 set shell := ['/bin/sh', '-cu']
 
+tiled := "/Applications/Tiled.app/Contents/MacOS/tiled"
+
 # Default invocation prints the command list
 default:
 	@just --list
@@ -15,6 +17,45 @@ build:
 # Clean build artifacts
 clean:
 	dotnet clean FarmGame.sln
+	rm -rf build/
+
+# Interactive map pipeline menu
+map:
+	@INTERACTIVE_HEADER="Map Pipeline" ./scripts/interactive.sh \
+		"Build All (YAML → TMX → JSON)::just map-build" \
+		"Generate TMX (YAML → TMX)::just map-generate" \
+		"Export JSON (TMX → JSON via Tiled)::just map-export" \
+		"Clean map build cache::just map-clean" \
+		"Build + Run Game::just start-full"
+
+# Full map pipeline: YAML → TMX → JSON
+map-build: map-generate map-export
+
+# Generate TMX from all YAML map sources
+map-generate:
+	pip3 install -q -r tools/requirements.txt
+	mkdir -p build/maps
+	for f in FarmGame/Content/Maps/*.yaml; do \
+		python3 tools/yaml_to_tmx.py "$f" --output build/maps/; \
+	done
+
+# Validate and export all TMX maps to JSON via Tiled CLI
+map-export:
+	for f in build/maps/*.tmx; do \
+		name=$(basename "$f" .tmx); \
+		{{tiled}} --export-map --embed-tilesets --resolve-types-and-properties \
+			"$f" "FarmGame/Content/Maps/$name.json"; \
+		echo "Exported: FarmGame/Content/Maps/$name.json"; \
+	done
+
+# Clean intermediate map build files
+map-clean:
+	rm -rf build/maps
+	rm -f FarmGame/Content/Maps/*.json
+	echo "Cleaned map build cache"
+
+# Build and run with map pipeline
+start-full: map-build build start
 
 publish_flags := "-c Release --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true"
 
