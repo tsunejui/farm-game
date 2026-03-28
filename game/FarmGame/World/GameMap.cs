@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using FarmGame.Camera;
 using FarmGame.Core;
 
@@ -92,7 +93,7 @@ public class GameMap
         });
     }
 
-    public void Draw(SpriteBatch spriteBatch, Texture2D pixel, Camera2D camera)
+    public void Draw(SpriteBatch spriteBatch, Camera2D camera)
     {
         var visible = camera.VisibleArea;
         int startX = Math.Max(0, visible.Left / GameConstants.TileSize);
@@ -113,7 +114,7 @@ public class GameMap
 
                 var tid = _terrain[x, y];
                 if (tid != null && _terrainColors.TryGetValue(tid, out var color))
-                    spriteBatch.Draw(pixel, rect, color);
+                    spriteBatch.FillRectangle(rect, color);
             }
         }
 
@@ -180,8 +181,8 @@ public class GameMap
             // Draw foreground color on top
             if (!string.IsNullOrEmpty(def.Visuals.Color))
             {
-                var entityColor = ColorHelper.FromHex(def.Visuals.Color);
-                spriteBatch.Draw(pixel, entityArea, entityColor);
+                var entityColor = Core.ColorHelper.FromHex(def.Visuals.Color);
+                spriteBatch.FillRectangle(entityArea, entityColor);
             }
         }
     }

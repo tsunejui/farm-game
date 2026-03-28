@@ -24,6 +24,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Serilog;
+using MonoGame.Extended.Input;
 using FarmGame.Camera;
 using FarmGame.Core;
 using FarmGame.Data;
@@ -40,14 +41,12 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Texture2D _pixel;
     private SpriteFont _font;
     private GameState _gameState;
 
     // Screens
     private TitleScreen _titleScreen;
     private PauseScreen _pauseScreen;
-    private KeyboardState _previousKeyboard;
 
     // Data
     private DataRegistry _registry;
@@ -140,9 +139,6 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        _pixel = new Texture2D(GraphicsDevice, 1, 1);
-        _pixel.SetData(new[] { Color.White });
-
         _font = Content.Load<SpriteFont>("DefaultFont");
 
         _titleScreen = new TitleScreen();
@@ -194,7 +190,7 @@ public class Game1 : Game
         }
 
         _player = new Player(playerStart, _currentMap, facingDirection);
-        _camera = new Camera2D(GraphicsDevice.Viewport);
+        _camera = new Camera2D(GraphicsDevice);
         _gameState = GameState.Playing;
     }
 
@@ -228,6 +224,8 @@ public class Game1 : Game
 
     protected override void Update(GameTime gameTime)
     {
+        KeyboardExtended.Update();
+
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
             Exit();
 
@@ -242,8 +240,8 @@ public class Game1 : Game
                 break;
 
             case GameState.Playing:
-                var keyboard = Keyboard.GetState();
-                if (keyboard.IsKeyDown(Keys.Escape) && _previousKeyboard.IsKeyUp(Keys.Escape))
+                var keyboard = KeyboardExtended.GetState();
+                if (keyboard.WasKeyPressed(Keys.Escape))
                 {
                     _pauseScreen.Reset();
                     _gameState = GameState.Paused;
@@ -253,7 +251,6 @@ public class Game1 : Game
                     _player.Update(gameTime);
                     _camera.Update(_player, _currentMap);
                 }
-                _previousKeyboard = keyboard;
                 break;
 
             case GameState.Paused:
@@ -276,7 +273,7 @@ public class Game1 : Game
         {
             case GameState.TitleScreen:
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-                _titleScreen.Draw(_spriteBatch, _pixel, _font, _databaseError);
+                _titleScreen.Draw(_spriteBatch, _font, _databaseError);
                 _spriteBatch.End();
                 break;
 
@@ -284,8 +281,8 @@ public class Game1 : Game
                 _spriteBatch.Begin(
                     transformMatrix: _camera.TransformMatrix,
                     samplerState: SamplerState.PointClamp);
-                _currentMap.Draw(_spriteBatch, _pixel, _camera);
-                _player.Draw(_spriteBatch, _pixel);
+                _currentMap.Draw(_spriteBatch, _camera);
+                _player.Draw(_spriteBatch);
                 _spriteBatch.End();
                 break;
 
@@ -293,11 +290,11 @@ public class Game1 : Game
                 _spriteBatch.Begin(
                     transformMatrix: _camera.TransformMatrix,
                     samplerState: SamplerState.PointClamp);
-                _currentMap.Draw(_spriteBatch, _pixel, _camera);
-                _player.Draw(_spriteBatch, _pixel);
+                _currentMap.Draw(_spriteBatch, _camera);
+                _player.Draw(_spriteBatch);
                 _spriteBatch.End();
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-                _pauseScreen.Draw(_spriteBatch, _pixel, _font);
+                _pauseScreen.Draw(_spriteBatch, _font);
                 _spriteBatch.End();
                 break;
         }

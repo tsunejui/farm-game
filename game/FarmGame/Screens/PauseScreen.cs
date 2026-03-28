@@ -1,6 +1,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
+using MonoGame.Extended.Input;
 using FarmGame.Core;
 
 namespace FarmGame.Screens;
@@ -15,7 +17,6 @@ public class PauseScreen
 {
     private readonly string[] _menuLabels = { "Resume", "Exit Game" };
     private int _selectedIndex;
-    private KeyboardState _previousKeyboard;
     private float _animTimer;
 
     public PauseMenuOption? SelectedAction { get; private set; }
@@ -24,7 +25,6 @@ public class PauseScreen
     {
         _selectedIndex = 0;
         SelectedAction = null;
-        _previousKeyboard = Keyboard.GetState();
     }
 
     public void Update(GameTime gameTime)
@@ -32,30 +32,28 @@ public class PauseScreen
         _animTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
         SelectedAction = null;
 
-        var keyboard = Keyboard.GetState();
+        var keyboard = KeyboardExtended.GetState();
 
-        if (IsKeyPressed(keyboard, Keys.Up) || IsKeyPressed(keyboard, Keys.W))
+        if (keyboard.WasKeyPressed(Keys.Up) || keyboard.WasKeyPressed(Keys.W))
             _selectedIndex = (_selectedIndex - 1 + _menuLabels.Length) % _menuLabels.Length;
 
-        if (IsKeyPressed(keyboard, Keys.Down) || IsKeyPressed(keyboard, Keys.S))
+        if (keyboard.WasKeyPressed(Keys.Down) || keyboard.WasKeyPressed(Keys.S))
             _selectedIndex = (_selectedIndex + 1) % _menuLabels.Length;
 
-        if (IsKeyPressed(keyboard, Keys.Enter) || IsKeyPressed(keyboard, Keys.Space))
+        if (keyboard.WasKeyPressed(Keys.Enter) || keyboard.WasKeyPressed(Keys.Space))
             SelectedAction = (PauseMenuOption)_selectedIndex;
 
-        if (IsKeyPressed(keyboard, Keys.Escape))
+        if (keyboard.WasKeyPressed(Keys.Escape))
             SelectedAction = PauseMenuOption.Resume;
-
-        _previousKeyboard = keyboard;
     }
 
-    public void Draw(SpriteBatch spriteBatch, Texture2D pixel, SpriteFont font)
+    public void Draw(SpriteBatch spriteBatch, SpriteFont font)
     {
         int screenW = GameConstants.ScreenWidth;
         int screenH = GameConstants.ScreenHeight;
 
         // Semi-transparent dark overlay
-        spriteBatch.Draw(pixel,
+        spriteBatch.FillRectangle(
             new Rectangle(0, 0, screenW, screenH),
             new Color(0, 0, 0, 180));
 
@@ -64,11 +62,13 @@ public class PauseScreen
         int panelH = 200;
         int panelX = (screenW - panelW) / 2;
         int panelY = (screenH - panelH) / 2;
-        spriteBatch.Draw(pixel,
+        spriteBatch.FillRectangle(
             new Rectangle(panelX, panelY, panelW, panelH),
             new Color(30, 40, 30));
         // Panel border
-        DrawBorder(spriteBatch, pixel, panelX, panelY, panelW, panelH, 2, new Color(80, 120, 80));
+        spriteBatch.DrawRectangle(
+            new Rectangle(panelX, panelY, panelW, panelH),
+            new Color(80, 120, 80), 2);
 
         // Title
         string title = "Paused";
@@ -98,7 +98,7 @@ public class PauseScreen
             {
                 int barWidth = (int)(labelSize.X * scale) + 30;
                 int barHeight = (int)(labelSize.Y * scale) + 8;
-                spriteBatch.Draw(pixel,
+                spriteBatch.FillRectangle(
                     new Rectangle((screenW - barWidth) / 2, (int)y - 4, barWidth, barHeight),
                     new Color(34, 139, 34, 80));
 
@@ -119,17 +119,4 @@ public class PauseScreen
         }
     }
 
-    private static void DrawBorder(SpriteBatch spriteBatch, Texture2D pixel,
-        int x, int y, int w, int h, int thickness, Color color)
-    {
-        spriteBatch.Draw(pixel, new Rectangle(x, y, w, thickness), color);
-        spriteBatch.Draw(pixel, new Rectangle(x, y + h - thickness, w, thickness), color);
-        spriteBatch.Draw(pixel, new Rectangle(x, y, thickness, h), color);
-        spriteBatch.Draw(pixel, new Rectangle(x + w - thickness, y, thickness, h), color);
-    }
-
-    private bool IsKeyPressed(KeyboardState current, Keys key)
-    {
-        return current.IsKeyDown(key) && _previousKeyboard.IsKeyUp(key);
-    }
 }

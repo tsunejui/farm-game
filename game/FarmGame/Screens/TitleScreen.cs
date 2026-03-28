@@ -1,6 +1,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
+using MonoGame.Extended.Input;
 using FarmGame.Core;
 
 namespace FarmGame.Screens;
@@ -15,7 +17,6 @@ public class TitleScreen
 {
     private readonly string[] _menuLabels = { "Start Game", "Exit Game" };
     private int _selectedIndex;
-    private KeyboardState _previousKeyboard;
     private float _animTimer;
 
     public TitleMenuOption? SelectedAction { get; private set; }
@@ -25,27 +26,25 @@ public class TitleScreen
         _animTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
         SelectedAction = null;
 
-        var keyboard = Keyboard.GetState();
+        var keyboard = KeyboardExtended.GetState();
 
-        if (IsKeyPressed(keyboard, Keys.Up) || IsKeyPressed(keyboard, Keys.W))
+        if (keyboard.WasKeyPressed(Keys.Up) || keyboard.WasKeyPressed(Keys.W))
             _selectedIndex = (_selectedIndex - 1 + _menuLabels.Length) % _menuLabels.Length;
 
-        if (IsKeyPressed(keyboard, Keys.Down) || IsKeyPressed(keyboard, Keys.S))
+        if (keyboard.WasKeyPressed(Keys.Down) || keyboard.WasKeyPressed(Keys.S))
             _selectedIndex = (_selectedIndex + 1) % _menuLabels.Length;
 
-        if (IsKeyPressed(keyboard, Keys.Enter) || IsKeyPressed(keyboard, Keys.Space))
+        if (keyboard.WasKeyPressed(Keys.Enter) || keyboard.WasKeyPressed(Keys.Space))
             SelectedAction = (TitleMenuOption)_selectedIndex;
-
-        _previousKeyboard = keyboard;
     }
 
-    public void Draw(SpriteBatch spriteBatch, Texture2D pixel, SpriteFont font, string errorMessage = null)
+    public void Draw(SpriteBatch spriteBatch, SpriteFont font, string errorMessage = null)
     {
         int screenW = GameConstants.ScreenWidth;
         int screenH = GameConstants.ScreenHeight;
 
         // Dark background
-        spriteBatch.Draw(pixel,
+        spriteBatch.FillRectangle(
             new Rectangle(0, 0, screenW, screenH),
             new Color(20, 30, 20));
 
@@ -79,7 +78,7 @@ public class TitleScreen
             {
                 int barWidth = (int)(labelSize.X * scale) + 40;
                 int barHeight = (int)(labelSize.Y * scale) + 10;
-                spriteBatch.Draw(pixel,
+                spriteBatch.FillRectangle(
                     new Rectangle((screenW - barWidth) / 2, (int)y - 5, barWidth, barHeight),
                     new Color(34, 139, 34, 80));
 
@@ -120,8 +119,4 @@ public class TitleScreen
             new Color(80, 80, 80));
     }
 
-    private bool IsKeyPressed(KeyboardState current, Keys key)
-    {
-        return current.IsKeyDown(key) && _previousKeyboard.IsKeyUp(key);
-    }
 }

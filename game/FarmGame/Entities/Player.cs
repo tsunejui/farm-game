@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
+using MonoGame.Extended.Input;
 using FarmGame.Core;
 using FarmGame.Entities.Actions;
 using FarmGame.Entities.Actions.Player;
@@ -44,18 +45,17 @@ public class Player
     public void Update(GameTime gameTime)
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        var keyboard = Keyboard.GetState();
+        var keyboard = KeyboardExtended.GetState();
 
         foreach (var action in _actions)
             action.Update(deltaTime, keyboard);
     }
 
-    public void Draw(SpriteBatch spriteBatch, Texture2D pixel)
+    public void Draw(SpriteBatch spriteBatch)
     {
         var context = new ActionDrawContext
         {
             SpriteBatch = spriteBatch,
-            Pixel = pixel,
             PixelPosition = _movement.PixelPosition,
             FacingDirection = _movement.FacingDirection,
             YOffset = _jump.Offset,
@@ -66,11 +66,11 @@ public class Player
             action.Draw(context);
 
         // Body and direction indicator on top
-        DrawBody(spriteBatch, pixel);
-        DrawDirectionIndicator(spriteBatch, pixel);
+        DrawBody(spriteBatch);
+        DrawDirectionIndicator(spriteBatch);
     }
 
-    private void DrawBody(SpriteBatch spriteBatch, Texture2D pixel)
+    private void DrawBody(SpriteBatch spriteBatch)
     {
         int pad = GameConstants.PlayerBodyPadding;
         int bodyW = GameConstants.TileSize - pad * 2;
@@ -79,10 +79,10 @@ public class Player
         int baseY = (int)_movement.PixelPosition.Y + pad;
 
         var bodyRect = new Rectangle(baseX, baseY + (int)_jump.Offset, bodyW, bodyH);
-        spriteBatch.Draw(pixel, bodyRect, GameConstants.PlayerColor);
+        spriteBatch.FillRectangle(bodyRect, GameConstants.PlayerColor);
     }
 
-    private void DrawDirectionIndicator(SpriteBatch spriteBatch, Texture2D pixel)
+    private void DrawDirectionIndicator(SpriteBatch spriteBatch)
     {
         int sz = GameConstants.PlayerIndicatorSize;
         int pad = GameConstants.PlayerBodyPadding;
@@ -100,6 +100,6 @@ public class Player
             _ => new Rectangle(cx, cy, sz, sz),
         };
 
-        spriteBatch.Draw(pixel, rect, Color.White);
+        spriteBatch.FillRectangle(rect, Color.White);
     }
 }
