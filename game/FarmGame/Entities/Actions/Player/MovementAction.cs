@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Input;
 using FarmGame.Core;
 using FarmGame.World;
 
@@ -30,7 +31,7 @@ public class MovementAction : IPlayerAction
             _gridPosition.Y * GameConstants.TileSize);
     }
 
-    public void Update(float deltaTime, KeyboardState keyboard)
+    public void Update(float deltaTime, KeyboardStateExtended keyboard)
     {
         if (IsActive)
         {
@@ -77,7 +78,7 @@ public class MovementAction : IPlayerAction
         // Movement has no visual effect of its own
     }
 
-    private void TryMove(KeyboardState keyboard)
+    private void TryMove(KeyboardStateExtended keyboard)
     {
         Point direction = Point.Zero;
 

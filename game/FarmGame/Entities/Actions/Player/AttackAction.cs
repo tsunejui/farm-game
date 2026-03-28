@@ -1,5 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
+using MonoGame.Extended.Input;
 using FarmGame.Core;
 
 namespace FarmGame.Entities.Actions.Player;
@@ -7,14 +9,13 @@ namespace FarmGame.Entities.Actions.Player;
 public class AttackAction : IPlayerAction
 {
     private float _attackProgress;
-    private KeyboardState _previousKeyboard;
 
     public bool IsActive { get; private set; }
     public float Progress => _attackProgress;
 
-    public void Update(float deltaTime, KeyboardState keyboard)
+    public void Update(float deltaTime, KeyboardStateExtended keyboard)
     {
-        if (!IsActive && keyboard.IsKeyDown(Keys.Z) && _previousKeyboard.IsKeyUp(Keys.Z))
+        if (!IsActive && keyboard.WasKeyPressed(Keys.Z))
         {
             IsActive = true;
             _attackProgress = 0f;
@@ -28,8 +29,6 @@ public class AttackAction : IPlayerAction
                 Reset();
             }
         }
-
-        _previousKeyboard = keyboard;
     }
 
     public void Reset()
@@ -60,6 +59,6 @@ public class AttackAction : IPlayerAction
             _ => Rectangle.Empty,
         };
 
-        context.SpriteBatch.Draw(context.Pixel, effectRect, GameConstants.PlayerAttackColor * alpha);
+        context.SpriteBatch.FillRectangle(effectRect, GameConstants.PlayerAttackColor * alpha);
     }
 }

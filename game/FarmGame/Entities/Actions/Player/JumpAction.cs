@@ -1,5 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
+using MonoGame.Extended.Input;
 using FarmGame.Core;
 
 namespace FarmGame.Entities.Actions.Player;
@@ -7,14 +9,13 @@ namespace FarmGame.Entities.Actions.Player;
 public class JumpAction : IPlayerAction
 {
     private float _jumpProgress;
-    private KeyboardState _previousKeyboard;
 
     public bool IsActive { get; private set; }
     public float Offset { get; private set; }
 
-    public void Update(float deltaTime, KeyboardState keyboard)
+    public void Update(float deltaTime, KeyboardStateExtended keyboard)
     {
-        if (!IsActive && keyboard.IsKeyDown(Keys.Space) && _previousKeyboard.IsKeyUp(Keys.Space))
+        if (!IsActive && keyboard.WasKeyPressed(Keys.Space))
         {
             IsActive = true;
             _jumpProgress = 0f;
@@ -33,8 +34,6 @@ public class JumpAction : IPlayerAction
                 Offset = -GameConstants.PlayerJumpHeight * 4f * p * (1f - p);
             }
         }
-
-        _previousKeyboard = keyboard;
     }
 
     public void Reset()
@@ -59,6 +58,6 @@ public class JumpAction : IPlayerAction
         int shadowH = (int)(bodyH * 0.3f * shadowScale);
         int shadowX = baseX + (bodyW - shadowW) / 2;
         int shadowY = baseY + bodyH - shadowH;
-        context.SpriteBatch.Draw(context.Pixel, new Rectangle(shadowX, shadowY, shadowW, shadowH), Color.Black * 0.3f);
+        context.SpriteBatch.FillRectangle(new Rectangle(shadowX, shadowY, shadowW, shadowH), Color.Black * 0.3f);
     }
 }
