@@ -36,7 +36,13 @@ name: Farm
 description: A peaceful farmland with cross-shaped paths, a small dirt plot for crops, and two water ponds.
 width: 40
 height: 30
+tile_size: 32
 player_start: [10, 10]
+
+tileset:
+  name: farm_tiles
+  tile_width: 32
+  tile_height: 32
 
 terrain_colors:
   grass: [34, 139, 34]
@@ -57,11 +63,13 @@ terrain:
       - { x: 0, y: 14, w: 40, h: 2 }
       - { x: 20, y: 0, w: 2, h: 30 }
   - type: dirt
+    properties: { is_plantable: true }
     regions:
       - { x: 8, y: 8, w: 6, h: 4 }
 
 objects:
   - type: water
+    properties: { is_water: true }
     regions:
       - { x: 30, y: 5, w: 5, h: 4 }
       - { x: 2, y: 22, w: 4, h: 4 }
@@ -75,7 +83,9 @@ objects:
 | `description` | string | yes | Brief description of the map's theme and layout |
 | `width` | int | yes | Map width in tiles |
 | `height` | int | yes | Map height in tiles |
+| `tile_size` | int | yes | Tile size in pixels (e.g., 32) |
 | `player_start` | [x, y] | yes | Tile coordinates where the player spawns |
+| `tileset` | map | no | Tileset reference (name, tile_width, tile_height) |
 | `default_terrain` | string | yes | Terrain type used to fill the entire map before regions are applied |
 | `terrain_colors` | map | yes | RGB color definitions for terrain types |
 | `object_colors` | map | yes | RGB color definitions for object types |
@@ -116,6 +126,7 @@ Terrain and object regions are rectangular areas defined by position and size:
 
 ```yaml
 - type: <type name>
+  properties: { is_plantable: true }   # optional custom properties
   regions:
     - { x: <left>, y: <top>, w: <width>, h: <height> }
 ```

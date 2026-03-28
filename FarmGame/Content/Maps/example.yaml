@@ -16,7 +16,8 @@ name: Example
 # Brief description of the map's theme and layout
 description: A small example map demonstrating all available terrain and object types.
 
-# Map dimensions in tiles
+# Map dimensions in tiles (actual pixels = tiles * tile_size)
+# This map is 20x15 tiles = 640x480 pixels
 width: 20
 height: 15
 
@@ -27,33 +28,15 @@ tile_size: 32
 player_start: [10, 7]
 
 # --- Tileset Reference ------------------------------------------------------
-# Defines the tileset used by this map. The Python script generates a .tsx file
-# from this section combined with the legend below.
 
 tileset:
-  name: example_tiles       # Tileset identifier
-  tile_width: 32             # Width of each tile in pixels
-  tile_height: 32            # Height of each tile in pixels
-
-# --- Symbol Legend -----------------------------------------------------------
-# Maps single characters to tile definitions. Each entry specifies:
-#   layer      — which layer this tile belongs to: "terrain" or "object"
-#   type       — the tile type name (must match TerrainType or ObjectType enum)
-#   properties — (optional) custom key-value pairs attached to the tile
-#                e.g., is_plantable, is_water — used for game logic at runtime
-
-legend:
-  ".": { layer: terrain, type: grass }
-  "#": { layer: terrain, type: dirt, properties: { is_plantable: true } }
-  "=": { layer: terrain, type: path }
-  ",": { layer: terrain, type: sand }
-  "~": { layer: object, type: water, properties: { is_water: true } }
-  "O": { layer: object, type: rock }
-  "|": { layer: object, type: fence }
-  "T": { layer: object, type: tree }
+  name: example_tiles
+  tile_width: 32
+  tile_height: 32
 
 # --- Colors ------------------------------------------------------------------
-# RGB colors [R, G, B] for rendering. Only types used in this map need entries.
+# RGB colors [R, G, B] for rendering (0-255).
+# Only types used in this map need entries.
 
 terrain_colors:
   grass: [34, 139, 34]       # forest green
@@ -67,47 +50,64 @@ object_colors:
   fence: [139, 90, 43]       # dark brown
   tree: [20, 100, 20]        # dark green
 
-# --- Layer Matrices ----------------------------------------------------------
-# Each layer is a block of text where every character maps to the legend above.
-# Rules:
-#   - Each row must have exactly `width` characters
-#   - There must be exactly `height` rows
-#   - "." in the object layer means "no object" (empty)
-#   - Terrain layer must have no empty tiles (every cell needs a terrain type)
-#
-# The terrain layer is drawn first, then objects are drawn on top.
-# Objects block player movement; terrain is always walkable.
+# --- Default Terrain ---------------------------------------------------------
+# The entire map is filled with this terrain type first,
+# before any terrain regions are applied on top.
 
-layers:
-  terrain: |
-    ....................
-    .............####...
-    .............####...
-    .............####...
-    .............####...
-    ....................
-    ....................
-    ====================
-    ....................
-    ,,,,,...............
-    ....................
-    ....................
-    ....................
-    ....................
-    ....................
-  objects: |
-    ....................
-    ............||||||..
-    ............|....|..
-    ............|....|..
-    ............|....|..
-    ............||||||..
-    ....................
-    ....................
-    ....................
-    ....................
-    ..~~~...............
-    ..~~~...............
-    ..~~~...............
-    ....................
-    ....................
+default_terrain: grass
+
+# --- Terrain Regions ---------------------------------------------------------
+# Walkable ground tiles. Each entry defines:
+#   type       — terrain type name (must match a key in terrain_colors)
+#   properties — (optional) custom key-value pairs for game logic
+#   regions    — list of rectangles: { x, y, w, h }
+#     x: left edge (tile column)
+#     y: top edge (tile row)
+#     w: width in tiles
+#     h: height in tiles
+#
+# Regions are applied top to bottom; later entries overwrite earlier ones.
+
+terrain:
+  - type: path
+    regions:
+      - { x: 0, y: 7, w: 20, h: 1 }
+
+  - type: sand
+    regions:
+      - { x: 1, y: 9, w: 5, h: 1 }
+
+  - type: dirt
+    properties: { is_plantable: true }
+    regions:
+      - { x: 14, y: 2, w: 4, h: 3 }
+
+# --- Object Regions ---------------------------------------------------------
+# Impassable items placed on top of terrain. Same format as terrain regions.
+# Objects block player movement.
+# Use w: 1, h: 1 for single-tile objects (e.g., one rock or tree).
+# Combine multiple regions to build composite shapes (e.g., a fence border).
+
+objects:
+  - type: water
+    properties: { is_water: true }
+    regions:
+      - { x: 1, y: 10, w: 4, h: 3 }
+
+  - type: fence
+    regions:
+      - { x: 13, y: 1, w: 6, h: 1 }
+      - { x: 13, y: 5, w: 6, h: 1 }
+      - { x: 13, y: 1, w: 1, h: 5 }
+      - { x: 18, y: 1, w: 1, h: 5 }
+
+  - type: tree
+    regions:
+      - { x: 7, y: 2, w: 1, h: 1 }
+      - { x: 9, y: 3, w: 1, h: 1 }
+      - { x: 8, y: 1, w: 1, h: 1 }
+
+  - type: rock
+    regions:
+      - { x: 3, y: 5, w: 1, h: 1 }
+      - { x: 16, y: 12, w: 1, h: 1 }
