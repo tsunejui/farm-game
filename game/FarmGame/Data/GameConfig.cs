@@ -44,6 +44,24 @@ public class PlayerConfig
 
     [YamlMember(Alias = "indicator_size")]
     public int IndicatorSize { get; set; } = 8;
+
+    [YamlMember(Alias = "jump_height")]
+    public int JumpHeight { get; set; } = 12;
+
+    [YamlMember(Alias = "jump_duration")]
+    public float JumpDuration { get; set; } = 0.4f;
+
+    [YamlMember(Alias = "attack_duration")]
+    public float AttackDuration { get; set; } = 0.3f;
+
+    [YamlMember(Alias = "attack_range")]
+    public int AttackRange { get; set; } = 16;
+
+    [YamlMember(Alias = "attack_width")]
+    public int AttackWidth { get; set; } = 20;
+
+    [YamlMember(Alias = "attack_color")]
+    public string AttackColor { get; set; } = "#FFD700";
 }
 
 public class GameStartConfig

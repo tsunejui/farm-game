@@ -14,6 +14,12 @@ public static class GameConstants
     public static Color PlayerColor { get; private set; } = Color.OrangeRed;
     public static int PlayerBodyPadding { get; private set; } = 2;
     public static int PlayerIndicatorSize { get; private set; } = 8;
+    public static int PlayerJumpHeight { get; private set; } = 12;
+    public static float PlayerJumpDuration { get; private set; } = 0.4f;
+    public static float PlayerAttackDuration { get; private set; } = 0.3f;
+    public static int PlayerAttackRange { get; private set; } = 16;
+    public static int PlayerAttackWidth { get; private set; } = 20;
+    public static Color PlayerAttackColor { get; private set; } = Color.Gold;
 
     public static void LoadFrom(GameConfig config)
     {
@@ -26,5 +32,11 @@ public static class GameConstants
         PlayerBodyPadding = config.Player.BodyPadding;
         PlayerIndicatorSize = config.Player.IndicatorSize;
         PlayerColor = ColorHelper.FromHex(config.Player.Color);
+        PlayerJumpHeight = config.Player.JumpHeight;
+        PlayerJumpDuration = config.Player.JumpDuration;
+        PlayerAttackDuration = config.Player.AttackDuration;
+        PlayerAttackRange = config.Player.AttackRange;
+        PlayerAttackWidth = config.Player.AttackWidth;
+        PlayerAttackColor = ColorHelper.FromHex(config.Player.AttackColor);
     }
 }
