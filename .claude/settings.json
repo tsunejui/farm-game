@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Check if the changes made in this conversation turn require updating CLAUDE.md. CLAUDE.md documents: project structure (key directories), conventions (terrain types, object types, rendering approach), architecture overview, build commands, skills, and documentation links.\n\nSpecifically check if any of these happened:\n1. New directories or key files were added/removed/renamed\n2. New terrain types, object types, or other game concepts were added\n3. Build commands or workflow changed\n4. New skills were added to .claude/skills/\n5. Architecture or conventions changed\n6. New documentation files were added\n\nIf CLAUDE.md needs updating, respond with {\"decision\": \"block\", \"reason\": \"CLAUDE.md needs updating: <specific changes needed>\"}\nIf no update is needed, respond with {\"decision\": \"allow\"}"
+          }
+        ]
+      }
+    ]
+  }
+}
