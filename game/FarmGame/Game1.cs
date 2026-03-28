@@ -27,6 +27,7 @@ using FarmGame.Camera;
 using FarmGame.Core;
 using FarmGame.Data;
 using FarmGame.Entities;
+using FarmGame.Persistence;
 using FarmGame.Screens;
 using FarmGame.World;
 
@@ -47,6 +48,8 @@ public class Game1 : Game
 
     // Data
     private DataRegistry _registry;
+    private DatabaseBootstrapper _database;
+    private string _databaseError;
 
     // Gameplay
     private GameMap _currentMap;
@@ -71,9 +74,38 @@ public class Game1 : Game
         _graphics.PreferredBackBufferHeight = GameConstants.ScreenHeight;
         _graphics.ApplyChanges();
 
+        // Initialize database
+        InitializeDatabase();
+
         _gameState = GameState.TitleScreen;
 
         base.Initialize();
+    }
+
+    private void InitializeDatabase()
+    {
+        var dbDir = DatabasePathResolver.GetDatabaseDirectory(GameConstants.GameTitle);
+        var dirResult = DatabasePathResolver.EnsureDirectoryExists(dbDir);
+        if (!dirResult.Success)
+        {
+            _databaseError = dirResult.ErrorMessage;
+            return;
+        }
+
+        var permResult = DatabasePathResolver.CheckWritePermission(dbDir);
+        if (!permResult.Success)
+        {
+            _databaseError = permResult.ErrorMessage;
+            return;
+        }
+
+        var dbPath = DatabasePathResolver.GetDatabasePath(GameConstants.GameTitle);
+        _database = new DatabaseBootstrapper(dbPath);
+        var initResult = _database.Initialize();
+        if (!initResult.Success)
+        {
+            _databaseError = initResult.ErrorMessage;
+        }
     }
 
     protected override void LoadContent()
@@ -156,7 +188,7 @@ public class Game1 : Game
         {
             case GameState.TitleScreen:
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-                _titleScreen.Draw(_spriteBatch, _pixel, _font);
+                _titleScreen.Draw(_spriteBatch, _pixel, _font, _databaseError);
                 _spriteBatch.End();
                 break;
 

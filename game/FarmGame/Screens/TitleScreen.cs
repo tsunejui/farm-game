@@ -39,7 +39,7 @@ public class TitleScreen
         _previousKeyboard = keyboard;
     }
 
-    public void Draw(SpriteBatch spriteBatch, Texture2D pixel, SpriteFont font)
+    public void Draw(SpriteBatch spriteBatch, Texture2D pixel, SpriteFont font, string errorMessage = null)
     {
         int screenW = GameConstants.ScreenWidth;
         int screenH = GameConstants.ScreenHeight;
@@ -101,6 +101,15 @@ public class TitleScreen
             spriteBatch.DrawString(font, label,
                 new Vector2(x, y), color,
                 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+        }
+
+        // Error message above hint
+        if (!string.IsNullOrEmpty(errorMessage))
+        {
+            var errorSize = font.MeasureString(errorMessage);
+            spriteBatch.DrawString(font, errorMessage,
+                new Vector2((screenW - errorSize.X) / 2f, screenH - 70f),
+                Color.Red);
         }
 
         // Hint at bottom
