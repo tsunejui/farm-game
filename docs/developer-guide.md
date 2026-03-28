@@ -16,7 +16,7 @@ git clone git@github.com:tsunejui/farm-game.git
 cd farm-game
 ```
 
-2. Install tools via mise (installs .NET SDK 9 and just):
+2. Install tools via mise (installs .NET SDK 9, just, litecli, etc.):
 
 ```bash
 mise trust
@@ -36,9 +36,10 @@ Run `just` to see all available commands:
 
 | Command | Description |
 |---------|-------------|
-| `just start` | Run the game in development mode |
+| `just start` | Run the game (generates `.env.local` with DB path) |
 | `just build` | Compile the project |
 | `just clean` | Remove build artifacts |
+| `just env` | Generate `.env.local` without starting the game |
 | `just release` | Build self-contained executables for all platforms |
 | `just release-osx-arm64` | Build for macOS Apple Silicon |
 | `just release-osx-x64` | Build for macOS Intel |
@@ -53,7 +54,7 @@ Run `just` to see all available commands:
 just start
 ```
 
-This compiles and launches the game window. Changes to code require restarting the game.
+This generates `.env.local` (with database path info), then compiles and launches the game window. Changes to code require restarting the game.
 
 ### Building
 
@@ -63,13 +64,13 @@ just build
 
 Runs `dotnet build` against the solution file. Use this to check for compilation errors without launching the game.
 
-### Cleaning
+### Inspecting the Database
 
 ```bash
-just clean
+mise exec -- litecli ~/Library/Application\ Support/Farm_Game/game.db
 ```
 
-Removes `bin/` and `obj/` build artifacts.
+Uses [litecli](https://github.com/dbcli/litecli) (installed via mise) to interactively query the SQLite database. The DB path is also recorded in `.env.local` after running `just start`.
 
 ## Release Build
 
@@ -90,13 +91,6 @@ dist/
 ```
 
 Each executable is fully self-contained — no .NET runtime installation is needed on the target machine.
-
-### Build a Single Platform
-
-```bash
-just release-osx-arm64    # macOS Apple Silicon only
-just release-win-x64      # Windows only
-```
 
 ## Game Architecture
 
@@ -121,33 +115,70 @@ TitleScreen ──(Start Game)──→ Playing ──(ESC)──→ Paused
                               (Exit Game)         (Exit Game)
                                   ↓                   ↓
                                 Quit                Quit
+                           (saves player state to DB)
 ```
 
-- **TitleScreen**: Main menu with "Start Game" and "Exit Game" options.
-- **Playing**: Active gameplay with player movement, map rendering, and camera tracking.
+- **TitleScreen**: Main menu with "Start Game" and "Exit Game" options. Shows DB errors if initialization failed.
+- **Playing**: Active gameplay with player movement, jump, attack, map rendering, and camera tracking.
 - **Paused**: Overlay menu with "Resume" and "Exit Game" options. Game world is still rendered underneath.
 
 ### Key Classes
 
 | Class | File | Responsibility |
 |-------|------|----------------|
-| `Game1` | `Game1.cs` | Orchestrates the game loop, manages state transitions |
-| `TitleScreen` | `Screens/TitleScreen.cs` | Title menu UI and input |
-| `PauseScreen` | `Screens/PauseScreen.cs` | Pause overlay UI and input |
-| `Player` | `Entities/Player.cs` | Movement, collision, rendering |
-| `TileMap` | `World/TileMap.cs` | Two-layer map (terrain + objects), tile queries, rendering |
-| `MapLoader` | `World/MapLoader.cs` | Loads map data from YAML config files |
+| `Game1` | `Game1.cs` | Orchestrates game loop, state transitions, DB init, save on exit |
+| `DataRegistry` | `Data/DataRegistry.cs` | Loads all terrain, item, and map definitions from YAML |
+| `GameMap` | `World/GameMap.cs` | Runtime map with terrain grid, collision grid, entities |
+| `MapBuilder` | `World/MapBuilder.cs` | Builds GameMap from MapDefinition + DataRegistry |
+| `Player` | `Entities/Player.cs` | Coordinates actions (movement, jump, attack), renders body |
+| `IPlayerAction` | `Entities/Actions/IPlayerAction.cs` | Interface for player actions |
+| `DatabaseBootstrapper` | `Persistence/DatabaseBootstrapper.cs` | DB creation and table initialization |
+| `PlayerStateRepository` | `Persistence/Repositories/PlayerStateRepository.cs` | Save/load player state |
 | `Camera2D` | `Camera/Camera2D.cs` | Viewport transform, map boundary clamping |
-| `GameConstants` | `Core/GameConstants.cs` | Shared configuration values |
+| `GameConstants` | `Core/GameConstants.cs` | Shared config values (loaded from config.yaml) |
 
-### Map System
+### Data System
 
-The game uses a two-layer tile map system:
+The game uses a data-driven architecture. All content is defined in YAML files:
 
-- **Terrain layer** — Ground tiles that are always walkable (Grass, Dirt, Path, Sand).
-- **Object layer** — Tiles placed on top of terrain that block player movement (Water, Rock, Fence, Tree).
+- **Terrain definitions** (`Content/Terrains/*.yaml`) — Ground tile types with color
+- **Item definitions** (`Content/Items/*.yaml`) — Objects with visuals, physics, and logic
+- **Map definitions** (`Content/Maps/*.yaml`) — Map layout, terrain placements, entity placements
+- **Game config** (`Content/config.yaml`) — Screen size, tile size, player parameters
 
-Map definitions are stored as YAML files in `game/FarmGame/Content/Maps/`. The `MapLoader` reads these files at runtime to construct the `TileMap`. See the [Designer Guide](designer-guide.md) for the YAML format reference.
+`DataRegistry.LoadAll()` scans these directories at startup and builds typed dictionaries keyed by ID.
+
+### Action System
+
+Player behaviors are implemented as separate `IPlayerAction` classes in `Entities/Actions/Player/`:
+
+| Action | Key | Description |
+|--------|-----|-------------|
+| `MovementAction` | WASD / Arrows | Grid movement with smooth Lerp interpolation |
+| `JumpAction` | Space | Parabolic vertical offset with ground shadow |
+| `AttackAction` | Z | Directional slash effect with fade-out |
+
+Each action implements `Update(deltaTime, keyboard)` and `Draw(context)`. The `Player` class iterates all actions in a loop — no switch/case needed.
+
+### Persistence
+
+SQLite database via sqlite-net-pcl ORM. Tables are defined as C# classes with attributes in `Persistence/Models/`:
+
+| Table | Model | Purpose |
+|-------|-------|---------|
+| `schema_version` | `SchemaVersion` | Tracks DB schema version |
+| `setting` | `Setting` | Key-value store (player UUID) |
+| `player_state` | `PlayerStateRecord` | Player save data (JSON blob) |
+
+Database path is platform-specific (see `DatabasePathResolver`):
+
+| Platform | Path |
+|----------|------|
+| macOS | `~/Library/Application Support/Farm_Game/game.db` |
+| Windows | `%LOCALAPPDATA%\Farm_Game\game.db` |
+| Linux | `~/.local/share/Farm_Game/game.db` |
+
+Player state is saved as a versioned JSON blob (`PlayerState`) with its own migration logic, independent from the DB schema version.
 
 ### Rendering
 
@@ -157,32 +188,29 @@ The rendering pipeline per frame:
 
 1. `GraphicsDevice.Clear(Color.Black)`
 2. `SpriteBatch.Begin` with camera transform matrix and `SamplerState.PointClamp`
-3. `TileMap.Draw` — renders terrain layer first, then object layer on top (only visible tiles)
-4. `Player.Draw` — renders player rectangle with direction indicator
-5. `SpriteBatch.End`
-
-For the pause screen, a second `SpriteBatch.Begin/End` pass is used without the camera transform (screen-space) to draw the overlay.
+3. Action effects (jump shadow, attack slash) via `IPlayerAction.Draw()`
+4. `Player.DrawBody` — renders player rectangle
+5. `Player.DrawDirectionIndicator` — renders facing indicator
+6. `GameMap.Draw` — renders visible terrain and entity tiles
+7. `SpriteBatch.End`
 
 ## Extending the Game
 
+### Adding a New Player Action
+
+1. Create a new class in `Entities/Actions/Player/` implementing `IPlayerAction`.
+2. Add the action instance to the `_actions` array in `Player.cs`.
+3. Add config parameters to `config.yaml`, `GameConfig.cs`, and `GameConstants.cs` if needed.
+
 ### Adding a New Terrain Type
 
-1. Add the value to the `TerrainType` enum in `World/TerrainType.cs`.
-2. The designer can then use it in YAML map configs (color and placement are defined there).
+1. Create a YAML file in `Content/Terrains/` (see existing files as templates).
+2. Use the terrain ID in map YAML configs.
 
-### Adding a New Object Type
+### Adding a New Item Type
 
-1. Add the value to the `ObjectType` enum in `World/ObjectType.cs`.
-2. The designer can then use it in YAML map configs (color and placement are defined there).
-
-### Switching the Active Map
-
-In `Game1.cs`, change the map path in `StartGame()`:
-
-```csharp
-var (map, playerStart) = MapLoader.Load(
-    Path.Combine(Content.RootDirectory, "Maps", "village.yaml"));
-```
+1. Create a YAML file in `Content/Items/` (see existing files as templates).
+2. Use the item ID in map YAML entity placements.
 
 ### Adding a New Screen
 
@@ -190,11 +218,11 @@ var (map, playerStart) = MapLoader.Load(
 2. Add a new value to the `GameState` enum in `Core/GameState.cs`.
 3. Add `Update` and `Draw` cases for the new state in `Game1.cs`.
 
-### Adding Content Assets
+### Adding a DB Migration
 
-1. Place the asset file (sprite, font, sound) in `game/FarmGame/Content/`.
-2. Register it in `game/FarmGame/Content/Content.mgcb` with the appropriate importer/processor.
-3. Load it in `Game1.LoadContent` using `Content.Load<T>("AssetName")`.
+1. Increment `MigrationManager.CurrentSchemaVersion`.
+2. Add a new `case` in `ApplyMigration()` with the schema change.
+3. If modifying `PlayerState` JSON fields, also update `PlayerState.CurrentVersion` and `PlayerState.Migrate()`.
 
 ## Controls
 
@@ -203,6 +231,8 @@ var (map, playerStart) = MapLoader.Load(
 | WASD / Arrow Keys | Title Screen | Navigate menu |
 | WASD / Arrow Keys | Playing | Move player |
 | WASD / Arrow Keys | Paused | Navigate menu |
+| Space | Playing | Jump |
+| Z | Playing | Attack |
 | Enter / Space | Title Screen | Confirm selection |
 | Enter / Space | Paused | Confirm selection |
 | ESC | Playing | Open pause menu |

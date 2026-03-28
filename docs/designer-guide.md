@@ -1,96 +1,123 @@
 # Designer Guide
 
-This guide is for **game designers** who create and edit maps and game content. No programming knowledge is required — all map configuration is done through YAML files.
+This guide is for **game designers** who create and edit maps and game content. No programming knowledge is required — all content configuration is done through YAML files.
 
 ## Overview
 
-The game world is built from a grid of colored tiles, organized into two layers:
+The game world is built from a grid of colored tiles. Content is defined in three types of YAML files:
 
-| Layer | Role | Passable |
-|-------|------|----------|
-| **Terrain** | Ground surface (grass, dirt, paths, sand) | Always |
-| **Object** | Items placed on top of terrain (water, rocks, fences, trees) | Never |
+| Definition | Directory | Purpose |
+|------------|-----------|---------|
+| **Terrain** | `Content/Terrains/*.yaml` | Ground surface types (grass, dirt, paths, sand) — always walkable |
+| **Item** | `Content/Items/*.yaml` | Objects placed on the map (water, rocks, fences, trees) — can block movement |
+| **Map** | `Content/Maps/*.yaml` | Map layouts that reference terrain and item definitions |
 
-The player can walk freely on terrain tiles but cannot pass through object tiles.
+## Terrain Definitions
 
-## Map Config Files
-
-Map definitions are YAML files located in:
-
-```
-game/FarmGame/Content/Maps/
-```
-
-Each `.yaml` file represents one complete map. After editing a YAML file, rebuild and run the game to see changes:
-
-```bash
-just start
-```
-
-## YAML Format Reference
-
-Below is a complete example (`farm.yaml`):
+Located in `game/FarmGame/Content/Terrains/`. Each file defines one terrain type:
 
 ```yaml
-name: Farm
-description: A peaceful farmland with cross-shaped paths, a small dirt plot for crops, and two water ponds.
-width: 40
-height: 30
-tile_size: 32
-player_start: [10, 10]
+metadata:
+  terrain_id: grass
+  display_name: Grass
+  category: natural
 
-tileset:
-  name: farm_tiles
-  tile_width: 32
-  tile_height: 32
+visuals:
+  color: "#228B22"
+```
 
-terrain_colors:
-  grass: [34, 139, 34]
-  dirt: [139, 119, 101]
-  path: [210, 180, 140]
-  sand: [238, 214, 175]
+### Available Terrain Types
 
-object_colors:
-  water: [30, 144, 255]
-  rock: [128, 128, 128]
-  fence: [139, 90, 43]
+| File | ID | Description | Color |
+|------|----|-------------|-------|
+| `grass.yaml` | grass | Default walkable ground | Green |
+| `dirt.yaml` | dirt | Farmable soil | Brown |
+| `path.yaml` | path | Roads and walkways | Tan |
+| `sand.yaml` | sand | Sandy ground | Pale yellow |
 
-default_terrain: grass
+To add a new terrain type, create a new YAML file in `Content/Terrains/` following the same format.
 
-terrain:
-  - type: path
+## Item Definitions
+
+Located in `game/FarmGame/Content/Items/`. Each file defines one item type:
+
+```yaml
+metadata:
+  item_id: rock
+  display_name: Rock
+  category: natural
+
+visuals:
+  color: "#808080"
+
+physics:
+  occupy_width: 1
+  occupy_height: 1
+  is_collidable: true
+```
+
+### Available Item Types
+
+| File | ID | Collidable | Description |
+|------|----|------------|-------------|
+| `rock.yaml` | rock | Yes | Boulders and stones |
+| `tree.yaml` | tree | Yes | Trees |
+| `fence.yaml` | fence | Yes | Fences and barriers |
+| `water_body.yaml` | water_body | Yes | Lakes and ponds |
+| `portal.yaml` | portal | No | Map transition point |
+
+To add a new item type, create a new YAML file in `Content/Items/` following the same format.
+
+## Map Definitions
+
+Located in `game/FarmGame/Content/Maps/`. Each file defines one complete map:
+
+```yaml
+metadata:
+  map_id: farm_home
+  display_name: Home Farm
+
+config:
+  width: 40
+  height: 30
+  tile_size: 32
+  default_terrain: grass
+  player_start: [10, 10]
+
+terrains:
+  - terrain_id: path
     regions:
       - { x: 0, y: 14, w: 40, h: 2 }
       - { x: 20, y: 0, w: 2, h: 30 }
-  - type: dirt
-    properties: { is_plantable: true }
+  - terrain_id: dirt
     regions:
       - { x: 8, y: 8, w: 6, h: 4 }
 
-objects:
-  - type: water
-    properties: { is_water: true }
-    regions:
-      - { x: 30, y: 5, w: 5, h: 4 }
-      - { x: 2, y: 22, w: 4, h: 4 }
+entities:
+  - item: water_body
+    tile_x: 30
+    tile_y: 5
+    properties:
+      fill_width: 5
+      fill_height: 4
+  - item: rock
+    tile_x: 8
+    tile_y: 3
 ```
 
-### Fields
+### Map Fields
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `name` | string | yes | Display name of the map |
-| `description` | string | yes | Brief description of the map's theme and layout |
-| `width` | int | yes | Map width in tiles |
-| `height` | int | yes | Map height in tiles |
-| `tile_size` | int | yes | Tile size in pixels (e.g., 32) |
-| `player_start` | [x, y] | yes | Tile coordinates where the player spawns |
-| `tileset` | map | no | Tileset reference (name, tile_width, tile_height) |
-| `default_terrain` | string | yes | Terrain type used to fill the entire map before regions are applied |
-| `terrain_colors` | map | yes | RGB color definitions for terrain types |
-| `object_colors` | map | yes | RGB color definitions for object types |
-| `terrain` | list | no | Terrain region placements (overrides the default terrain) |
-| `objects` | list | no | Object region placements |
+| `metadata.map_id` | string | yes | Unique map identifier |
+| `metadata.display_name` | string | yes | Display name of the map |
+| `config.width` | int | yes | Map width in tiles |
+| `config.height` | int | yes | Map height in tiles |
+| `config.tile_size` | int | yes | Tile size in pixels (e.g., 32) |
+| `config.default_terrain` | string | yes | Terrain ID used to fill the entire map |
+| `config.player_start` | [x, y] | yes | Tile coordinates where the player spawns |
+| `terrains` | list | no | Terrain region placements |
+| `entities` | list | no | Item placements at specific positions |
 
 ### Coordinate System
 
@@ -106,77 +133,56 @@ objects:
 - `x: 0, y: 0` is the **top-left** corner of the map.
 - `x` increases to the right, `y` increases downward.
 
-### Defining Colors
+### Placing Terrain Regions
 
-Colors are defined as RGB arrays `[R, G, B]`, where each value ranges from 0 to 255.
-
-```yaml
-terrain_colors:
-  grass: [34, 139, 34]       # forest green
-  dirt: [139, 119, 101]      # brown
-  path: [210, 180, 140]      # light tan
-  sand: [238, 214, 175]      # pale sand
-```
-
-Only terrain/object types that appear in the map need a color definition. You can customize colors freely per map.
-
-### Placing Regions
-
-Terrain and object regions are rectangular areas defined by position and size:
+Terrain regions are rectangular areas that override the default terrain:
 
 ```yaml
-- type: <type name>
-  properties: { is_plantable: true }   # optional custom properties
-  regions:
-    - { x: <left>, y: <top>, w: <width>, h: <height> }
+terrains:
+  - terrain_id: path
+    regions:
+      - { x: 0, y: 14, w: 40, h: 2 }   # horizontal road
+      - { x: 20, y: 0, w: 2, h: 30 }   # vertical road
 ```
 
 | Parameter | Description |
 |-----------|-------------|
+| `terrain_id` | References a terrain definition file |
 | `x` | Left edge (tile column) |
 | `y` | Top edge (tile row) |
 | `w` | Width in tiles |
 | `h` | Height in tiles |
 
-A single type can have multiple regions:
+### Placing Entities
+
+Entities are individual items placed at specific tile positions:
 
 ```yaml
-- type: water
-  regions:
-    - { x: 30, y: 5, w: 5, h: 4 }     # pond
-    - { x: 2, y: 22, w: 4, h: 4 }     # small lake
+entities:
+  - item: rock
+    tile_x: 8
+    tile_y: 3
+  - item: water_body
+    tile_x: 30
+    tile_y: 5
+    properties:
+      fill_width: 5
+      fill_height: 4
 ```
 
-Regions are applied in order from top to bottom. Later entries overwrite earlier ones when they overlap.
-
-## Available Types
-
-### Terrain Types
-
-| Type | Description | Typical Color |
-|------|-------------|---------------|
-| `grass` | Default walkable ground | Green |
-| `dirt` | Farmable soil | Brown |
-| `path` | Roads and walkways | Tan |
-| `sand` | Sandy ground | Pale yellow |
-
-### Object Types
-
-| Type | Description | Typical Color |
-|------|-------------|---------------|
-| `water` | Lakes and ponds | Blue |
-| `rock` | Boulders and stones | Gray |
-| `fence` | Fences and barriers | Dark brown |
-| `tree` | Trees | Dark green |
-
-> Need a new type? Ask a developer to add it to the enum — then you can use it immediately in YAML.
+| Parameter | Description |
+|-----------|-------------|
+| `item` | References an item definition file |
+| `tile_x` | X position (tile column) |
+| `tile_y` | Y position (tile row) |
+| `properties` | Optional per-instance overrides |
 
 ## Creating a New Map
 
-1. Copy an existing map file (e.g., `farm.yaml`) in `game/FarmGame/Content/Maps/`.
+1. Copy an existing map file (e.g., `farm_home.yaml`) in `game/FarmGame/Content/Maps/`.
 2. Rename it (e.g., `village.yaml`).
 3. Edit the YAML fields to define your new map.
-4. Ask a developer to point `Game1.cs` to your new map file.
+4. Set `start_map` in `Content/config.yaml` to your map's `map_id` to make it the default.
 5. Run `just start` to preview.
 
 ### Step-by-Step Example
@@ -184,60 +190,47 @@ Regions are applied in order from top to bottom. Later entries overwrite earlier
 Create a small 20x15 village map:
 
 ```yaml
-name: Village
-description: A small village with a main road, a fenced garden, a pond, and scattered rocks.
-width: 20
-height: 15
-player_start: [10, 7]
+metadata:
+  map_id: village
+  display_name: Village
 
-terrain_colors:
-  grass: [34, 139, 34]
-  path: [210, 180, 140]
-  dirt: [139, 119, 101]
+config:
+  width: 20
+  height: 15
+  tile_size: 32
+  default_terrain: grass
+  player_start: [10, 7]
 
-object_colors:
-  rock: [128, 128, 128]
-  fence: [139, 90, 43]
-  water: [30, 144, 255]
-
-default_terrain: grass
-
-terrain:
-  # Main road running horizontally
-  - type: path
+terrains:
+  - terrain_id: path
     regions:
       - { x: 0, y: 7, w: 20, h: 1 }
-
-  # Small garden
-  - type: dirt
+  - terrain_id: dirt
     regions:
       - { x: 14, y: 2, w: 4, h: 3 }
 
-objects:
-  # Fence around the garden
-  - type: fence
-    regions:
-      - { x: 13, y: 1, w: 6, h: 1 }    # top
-      - { x: 13, y: 5, w: 6, h: 1 }    # bottom
-      - { x: 13, y: 1, w: 1, h: 5 }    # left
-      - { x: 18, y: 1, w: 1, h: 5 }    # right
-
-  # Small pond
-  - type: water
-    regions:
-      - { x: 2, y: 10, w: 3, h: 3 }
-
-  # Scattered rocks
-  - type: rock
-    regions:
-      - { x: 8, y: 3, w: 1, h: 1 }
-      - { x: 5, y: 12, w: 1, h: 1 }
+entities:
+  - item: fence
+    tile_x: 13
+    tile_y: 1
+  - item: fence
+    tile_x: 18
+    tile_y: 1
+  - item: water_body
+    tile_x: 2
+    tile_y: 10
+    properties:
+      fill_width: 3
+      fill_height: 3
+  - item: rock
+    tile_x: 8
+    tile_y: 3
 ```
 
 ## Tips
 
 - **Start small**: Use a small map (e.g., 20x15) to quickly iterate on layout ideas.
-- **Layer order matters**: The entire map is filled with `default_terrain` first, then terrain regions are painted on top, then objects are placed last.
-- **Objects block movement**: Make sure the player spawn (`player_start`) is not inside an object region.
-- **Colors are per-map**: Each map can define its own color palette, allowing different visual themes.
-- **Single-tile objects**: Use `w: 1, h: 1` to place individual tiles (e.g., a single rock or tree).
+- **Layer order matters**: The entire map is filled with `default_terrain` first, then terrain regions are applied, then entities are placed.
+- **Check collision**: Items with `is_collidable: true` block player movement. Make sure `player_start` is not inside a collidable entity.
+- **Colors are per-definition**: Each terrain and item has its own color defined in its YAML file, ensuring visual consistency across all maps.
+- **Custom properties**: Use `properties` on entity placements for per-instance configuration (e.g., `fill_width` for water bodies).

@@ -4,11 +4,9 @@
 
 ```
 farm-game/
-├── .mise.toml                  # Tool version management (dotnet, just, python, gum)
+├── .mise.toml                  # Tool version management (dotnet, just, python, gum, litecli)
 ├── justfile                    # Task runner commands
 ├── FarmGame.sln                # .NET solution file
-├── SETUP.md                    # Project setup guide
-├── README.md                   # Project overview
 ├── CLAUDE.md                   # Project context for Claude Code
 ├── scripts/
 │   └── interactive.sh          # Interactive menu selector (gum)
@@ -21,33 +19,58 @@ farm-game/
 │   └── designer-guide.md      # Designer guide (for game designers)
 └── game/
     └── FarmGame/               # Main game project
-        ├── FarmGame.csproj     # Project file (MonoGame 3.8, YamlDotNet, .NET 9)
+        ├── FarmGame.csproj     # Project file (MonoGame 3.8, YamlDotNet, sqlite-net-pcl, .NET 9)
         ├── Program.cs          # Entry point
         ├── Game1.cs            # Main game loop (orchestrator)
         ├── Core/
-        │   ├── GameConstants.cs    # Shared constants (tile size, speed, screen size)
-        │   └── GameState.cs        # Game state enum
+        │   ├── GameConstants.cs    # Shared constants (loaded from config.yaml)
+        │   ├── GameState.cs        # Game state enum
+        │   └── ColorHelper.cs      # Hex color code parser
+        ├── Data/
+        │   ├── DataRegistry.cs     # Loads all terrain, item, and map definitions
+        │   ├── GameConfig.cs       # YAML config deserialization (screen, tile, player, game)
+        │   ├── TerrainDefinition.cs # Terrain type definition (id, name, color)
+        │   ├── ItemDefinition.cs    # Item definition (visuals, physics, logic)
+        │   └── MapDefinition.cs     # Map definition (terrain placements, entity placements)
         ├── World/
-        │   ├── TerrainType.cs      # Terrain type enum (Grass, Dirt, Path, Sand)
-        │   ├── ObjectType.cs       # Object type enum (Water, Rock, Fence, Tree)
-        │   ├── TileMap.cs          # Two-layer tile map (terrain + objects)
-        │   ├── TiledMap.cs         # Tiled JSON data classes
-        │   ├── TiledMapLoader.cs   # Loads map from Tiled JSON
-        │   └── MapLoader.cs        # Legacy YAML map loader
+        │   ├── GameMap.cs          # Runtime map (terrain grid, collision grid, entities)
+        │   ├── MapBuilder.cs       # Builds GameMap from MapDefinition + DataRegistry
+        │   └── EntityInstance.cs    # Runtime entity with position and properties
         ├── Entities/
         │   ├── Direction.cs        # Facing direction enum
-        │   └── Player.cs           # Player state, movement, and rendering
+        │   ├── Player.cs           # Player coordinator (actions + body rendering)
+        │   └── Actions/
+        │       ├── IPlayerAction.cs      # Common interface (IsActive, Update, Draw, Reset)
+        │       ├── ActionDrawContext.cs   # Shared draw context (position, direction, offset)
+        │       └── Player/
+        │           ├── MovementAction.cs  # Grid movement with Lerp interpolation
+        │           ├── JumpAction.cs      # Parabolic jump with ground shadow
+        │           └── AttackAction.cs    # Directional slash effect
+        ├── Persistence/
+        │   ├── DatabaseBootstrapper.cs   # DB creation, table init, disk space check
+        │   ├── DatabasePathResolver.cs   # Cross-platform path resolution (Win/macOS/Linux)
+        │   ├── DatabaseResult.cs         # Result pattern for error handling
+        │   ├── MigrationManager.cs       # Schema versioning and upgrades
+        │   ├── Models/
+        │   │   ├── PlayerState.cs        # Player state (JSON serialized, versioned)
+        │   │   ├── PlayerStateRecord.cs  # ORM model for player_state table
+        │   │   ├── Setting.cs            # ORM model for setting table (key-value)
+        │   │   └── SchemaVersion.cs      # ORM model for schema_version table
+        │   └── Repositories/
+        │       ├── PlayerStateRepository.cs  # CRUD for player state
+        │       └── SettingRepository.cs      # Get/Set for settings
         ├── Camera/
         │   └── Camera2D.cs         # Viewport camera that follows the player
         ├── Screens/
-        │   ├── TitleScreen.cs      # Title menu screen
+        │   ├── TitleScreen.cs      # Title menu screen (with DB error display)
         │   └── PauseScreen.cs      # Pause overlay screen
         └── Content/
+            ├── config.yaml         # Game-wide configuration
             ├── Content.mgcb        # MonoGame content pipeline config
             ├── DefaultFont.spritefont  # Default font asset
-            └── Maps/               # YAML map sources + generated JSON
-                ├── farm.yaml       # Default farm map definition
-                └── example.yaml    # Documented example map
+            ├── Terrains/           # Terrain type definitions (*.yaml)
+            ├── Items/              # Item type definitions (*.yaml)
+            └── Maps/               # Map definitions (*.yaml)
 ```
 
 ## Module Descriptions
@@ -56,60 +79,94 @@ farm-game/
 
 Contains shared constants and state definitions.
 
-- **GameConstants**: Defines tile size (32px), player movement speed, and screen resolution (800x600).
+- **GameConstants**: Static properties loaded from `config.yaml` at startup — tile size, screen resolution, player speed, jump/attack parameters, colors.
 - **GameState**: Enum controlling game flow — `TitleScreen`, `Playing`, `Paused`.
+- **ColorHelper**: Parses hex color codes (e.g., `#FF4500`) to MonoGame `Color`.
+
+### Data
+
+Data-driven content loading system using YAML definitions.
+
+- **DataRegistry**: Scans `Content/Terrains/`, `Content/Items/`, and `Content/Maps/` directories, deserializes all YAML files into typed definitions, keyed by ID.
+- **GameConfig**: Deserializes `Content/config.yaml` into strongly-typed config classes (ScreenConfig, TileConfig, PlayerConfig, GameStartConfig).
+- **TerrainDefinition**: Terrain type with metadata (id, name, category) and visuals (hex color).
+- **ItemDefinition**: Item with metadata, visuals (color, background), physics (size, collidable), and logic (action handler, drops).
+- **MapDefinition**: Map with metadata, config (dimensions, player start), terrain placements (regions), and entity placements.
 
 ### World
 
-Handles the game world representation using a two-layer system.
+Runtime game world representation.
 
-- **TerrainType**: Enum for walkable ground tiles — Grass, Dirt, Path, Sand. Terrain is always passable.
-- **ObjectType**: Enum for impassable objects placed on top of terrain — Water, Rock, Fence, Tree.
-- **TileMap**: Stores the map as two 2D arrays: `TerrainType[,]` for the ground layer and `ObjectType?[,]` for the object layer. Provides tile queries (`GetTerrain`, `GetObject`, `IsPassable`) and renders both layers with viewport culling. Colors are defined per-map in YAML configs.
-- **MapLoader**: Reads YAML map config files and constructs a `TileMap` instance. Returns the map and player start position.
+- **GameMap**: Stores terrain as a string ID grid, collision as a boolean grid, and entities as a list of `EntityInstance`. Provides `IsPassable()` queries and renders visible tiles with viewport culling.
+- **MapBuilder**: Constructs a `GameMap` from a `MapDefinition` and `DataRegistry`. Fills default terrain, applies region placements, places entities, and sets up the collision grid.
+- **EntityInstance**: Runtime reference to an `ItemDefinition` with tile position and per-instance property overrides.
 
 ### Entities
 
-Contains game entities.
+Game entities and the action system.
 
-- **Direction**: Four-directional facing enum.
-- **Player**: Manages grid-based position with smooth pixel interpolation (Lerp). Handles keyboard input (WASD / arrow keys), collision detection against the tile map, and renders as a colored rectangle with a directional indicator.
+- **Direction**: Four-directional facing enum (Up, Down, Left, Right).
+- **Player**: Coordinator that owns all `IPlayerAction` instances and renders the player body (colored rectangle with directional indicator). Exposes `GridPosition`, `FacingDirection`, and `PixelPosition`.
+
+#### Actions
+
+- **IPlayerAction**: Interface that all player actions implement — `IsActive`, `Update(deltaTime, keyboard)`, `Draw(context)`, `Reset()`.
+- **ActionDrawContext**: Readonly struct passed to each action's Draw, providing SpriteBatch, pixel texture, position, facing direction, and Y offset.
+- **MovementAction**: Grid-based movement with smooth Lerp interpolation. Reads WASD/Arrow keys, checks `GameMap.IsPassable()` for collision.
+- **JumpAction**: Spacebar-triggered parabolic vertical offset. Draws a ground shadow that scales with jump height.
+- **AttackAction**: Z key-triggered directional slash effect. Renders a rectangle in the facing direction with scale-up and fade-out animation.
+
+### Persistence
+
+SQLite database layer using sqlite-net-pcl ORM.
+
+- **DatabasePathResolver**: Determines the writable database path per platform — `%LOCALAPPDATA%` (Windows), `~/Library/Application Support/` (macOS), `$XDG_DATA_HOME` (Linux). Sanitizes game name for directory safety.
+- **DatabaseBootstrapper**: Creates the database file, initializes tables via `CreateTable<T>()`, and checks disk space. Provides `CreateConnection()` for repositories.
+- **DatabaseResult**: Result pattern (Success/Fail with ErrorKind and message) to avoid exceptions in the game loop.
+- **MigrationManager**: Tracks schema version in `schema_version` table. Runs incremental migrations in transactions.
+
+#### Models
+
+- **PlayerState**: JSON-serializable player state with its own `version` field for forward migration. Contains position, facing direction, current map, play time, and UUID.
+- **PlayerStateRecord**: SQLite-net ORM model for the `player_state` table.
+- **Setting**: ORM model for the `setting` key-value table (stores player UUID, etc.).
+- **SchemaVersion**: ORM model for the `schema_version` table.
+
+#### Repositories
+
+- **PlayerStateRepository**: Save/Load/Delete/Exists operations for player state, keyed by player UUID.
+- **SettingRepository**: Get/Set operations for the setting key-value store.
 
 ### Camera
 
-- **Camera2D**: Computes a transformation matrix for `SpriteBatch` to scroll the world relative to the player. Clamps to map boundaries to prevent showing empty space beyond edges. Exposes a `VisibleArea` rectangle for tile rendering optimization.
+- **Camera2D**: Computes a transformation matrix for `SpriteBatch` to scroll the world relative to the player. Clamps to map boundaries to prevent showing empty space. Exposes `VisibleArea` for rendering optimization.
 
 ### Screens
 
-- **TitleScreen**: Main menu with "Start Game" and "Exit Game" options. Supports keyboard navigation.
+- **TitleScreen**: Main menu with "Start Game" and "Exit Game" options. Displays database error messages in red when initialization fails.
 - **PauseScreen**: Semi-transparent overlay with "Resume" and "Exit Game" options. Game world renders underneath.
-
-### Content/Maps
-
-YAML config files that define map parameters. Each file specifies:
-- Map dimensions and player spawn position
-- Terrain and object color palettes
-- Terrain region placements (walkable ground)
-- Object region placements (impassable blocks)
-
-See the [Developer Guide](developer-guide.md#working-with-map-files) for the full YAML format reference.
 
 ### Game1 (Orchestrator)
 
 The main game class wires all systems together:
 
-1. **Initialize** — Sets screen resolution (800x600).
-2. **LoadContent** — Creates a 1x1 white pixel texture (used for all colored rectangle rendering), initializes screen UIs.
-3. **StartGame** — Loads map from YAML via `MapLoader`, spawns the player, and initializes the camera.
+1. **Initialize** — Loads `config.yaml`, sets screen resolution, initializes SQLite database, creates/loads player UUID.
+2. **LoadContent** — Creates a 1x1 white pixel texture, loads font, initializes screen UIs, loads all data via `DataRegistry`.
+3. **StartGame** — Builds map via `MapBuilder`, spawns player, initializes camera.
 4. **Update** — Routes input and updates based on current `GameState`.
-5. **Draw** — Clears to black, draws the tile map (terrain then objects), then the player, using the camera transform.
+5. **Draw** — Renders map, player, and action effects using the camera transform.
+6. **OnExiting** — Saves player state to database on game exit.
 
 ## Rendering Approach
 
-All graphics currently use a single 1x1 white pixel `Texture2D`, tinted with different colors via `SpriteBatch.Draw`. Colors are defined in each map's YAML config. This placeholder approach allows focusing on game logic before introducing sprite assets.
+All graphics use a single 1x1 white pixel `Texture2D`, tinted with different colors via `SpriteBatch.Draw`. Colors are defined in YAML definition files (terrains, items) and `config.yaml` (player). This placeholder approach allows focusing on game logic before introducing sprite assets.
 
-| Layer | Examples | Passable |
-|-------|----------|----------|
-| Terrain | Grass, Dirt, Path, Sand | Always |
-| Object | Water, Rock, Fence, Tree | Never |
-| Player | Orange Red (28x28) | — |
+## Database
+
+SQLite database stored at platform-specific path (e.g., `~/Library/Application Support/Farm_Game/game.db` on macOS). Tables managed by sqlite-net-pcl ORM:
+
+| Table | Purpose |
+|-------|---------|
+| `schema_version` | Tracks database schema version for migrations |
+| `setting` | Key-value store (player UUID, etc.) |
+| `player_state` | Player save data as JSON blob with UUID |

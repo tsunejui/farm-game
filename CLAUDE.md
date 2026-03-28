@@ -5,36 +5,56 @@ A Stardew Valley-inspired 2D farming game built with MonoGame and .NET 9.
 ## Build & Run
 
 ```bash
-mise install          # Install dotnet, just
+mise install          # Install dotnet, just, litecli
 just build            # Compile
-just start            # Run the game
+just start            # Run the game (also generates .env.local)
 just clean            # Clean build artifacts
 just release          # Build for all platforms
 ```
 
 ## Architecture
 
-- **Two-layer tile map**: Terrain (always walkable) + Objects (impassable), both defined in YAML configs
-- **Map configs**: `game/FarmGame/Content/Maps/*.yaml` — loaded at runtime by `MapLoader`
+- **Data-driven design**: Terrain, items, and maps defined in YAML configs, loaded by `DataRegistry`
+- **Map system**: `GameMap` built from `MapDefinition` via `MapBuilder`, using string-based terrain/item IDs
+- **Action system**: Player behaviors (movement, jump, attack) are separate `IPlayerAction` implementations
+- **Persistence**: SQLite database via sqlite-net-pcl ORM for player state and settings
 - **Game loop**: MonoGame standard `Initialize → LoadContent → [Update → Draw]`
 - **State machine**: TitleScreen → Playing → Paused
 
 ## Key Directories
 
-- `game/FarmGame/Core/` — Constants, game state enum
-- `game/FarmGame/World/` — TerrainType, ObjectType, TileMap, MapLoader
-- `game/FarmGame/Entities/` — Player movement and rendering
+- `game/FarmGame/Core/` — GameConstants (loaded from config.yaml), GameState enum, ColorHelper
+- `game/FarmGame/Data/` — DataRegistry, GameConfig, terrain/item/map definitions
+- `game/FarmGame/World/` — GameMap, MapBuilder, EntityInstance
+- `game/FarmGame/Entities/` — Player coordinator, Direction enum
+- `game/FarmGame/Entities/Actions/` — IPlayerAction interface, ActionDrawContext
+- `game/FarmGame/Entities/Actions/Player/` — MovementAction, JumpAction, AttackAction
+- `game/FarmGame/Persistence/` — DatabaseBootstrapper, DatabasePathResolver, MigrationManager
+- `game/FarmGame/Persistence/Models/` — PlayerState, PlayerStateRecord, Setting, SchemaVersion
+- `game/FarmGame/Persistence/Repositories/` — PlayerStateRepository, SettingRepository
 - `game/FarmGame/Camera/` — 2D camera with boundary clamping
 - `game/FarmGame/Screens/` — Title and pause screen UI
-- `game/FarmGame/Content/Maps/` — YAML map config files
+- `game/FarmGame/Content/` — config.yaml, Maps/, Terrains/, Items/
 
 ## Conventions
 
 - All rendering uses a 1x1 white pixel texture tinted with colors (no sprite assets yet)
-- Map dimensions and colors are per-map in YAML, not in code constants
-- Terrain types: Grass, Dirt, Path, Sand (always passable)
-- Object types: Water, Rock, Fence, Tree (always impassable)
-- Adding new types: add to enum in `World/TerrainType.cs` or `World/ObjectType.cs`, then use in YAML
+- Game configuration loaded from `Content/config.yaml` at startup
+- Terrain types defined in `Content/Terrains/*.yaml` (always passable)
+- Item types defined in `Content/Items/*.yaml` (collidable flag per item)
+- Adding new types: create a YAML definition file, then use in map configs
+- Database stored at platform-specific path (see DatabasePathResolver)
+- Player UUID generated on first launch, stored in `setting` table
+
+## Controls
+
+| Key | Action |
+|-----|--------|
+| WASD / Arrow Keys | Move player |
+| Space | Jump |
+| Z | Attack |
+| ESC | Pause / Resume |
+| Enter | Confirm menu selection |
 
 ## Skills
 
@@ -45,5 +65,5 @@ just release          # Build for all platforms
 ## Documentation
 
 - [Developer Guide](docs/developer-guide.md) — For programmers
-- [Designer Guide](docs/designer-guide.md) — For game designers (YAML map editing)
+- [Designer Guide](docs/designer-guide.md) — For game designers (YAML editing)
 - [Project Structure](docs/project-structure.md) — Codebase architecture
