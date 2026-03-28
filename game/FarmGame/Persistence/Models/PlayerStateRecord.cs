@@ -2,7 +2,7 @@ using SQLite;
 
 namespace FarmGame.Persistence.Models;
 
-[Table("player_state")]
+[Table("player")]
 public class PlayerStateRecord
 {
     [PrimaryKey, AutoIncrement]
