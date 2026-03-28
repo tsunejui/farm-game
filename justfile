@@ -36,7 +36,10 @@ map-generate:
 	pip3 install -q -r tools/requirements.txt
 	mkdir -p build/maps
 	for f in game/FarmGame/Content/Maps/*.yaml; do \
-		python3 tools/yaml_to_tmx.py "$f" --output build/maps/; \
+		python3 tools/yaml_to_tmx.py "$f" \
+			--terrains-dir game/FarmGame/Content/Terrains \
+			--items-dir game/FarmGame/Content/Items \
+			--output build/maps/; \
 	done
 
 # Validate and export all TMX maps to JSON via Tiled CLI

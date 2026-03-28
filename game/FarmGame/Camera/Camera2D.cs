@@ -26,7 +26,7 @@ public class Camera2D
         _viewportHeight = viewport.Height;
     }
 
-    public void Update(Player player, TileMap map)
+    public void Update(Player player, GameMap map)
     {
         _position = player.PixelPosition + new Vector2(GameConstants.TileSize / 2f);
 

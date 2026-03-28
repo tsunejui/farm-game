@@ -8,7 +8,7 @@ namespace FarmGame.Entities;
 
 public class Player
 {
-    private readonly TileMap _tileMap;
+    private readonly GameMap _tileMap;
     private Point _gridPosition;
     private Point _targetGridPosition;
     private float _moveProgress;
@@ -17,7 +17,7 @@ public class Player
 
     public Vector2 PixelPosition { get; private set; }
 
-    public Player(Point startPosition, TileMap tileMap)
+    public Player(Point startPosition, GameMap tileMap)
     {
         _tileMap = tileMap;
         _gridPosition = startPosition;
@@ -103,31 +103,33 @@ public class Player
 
     public void Draw(SpriteBatch spriteBatch, Texture2D pixel)
     {
-        // Player body (28x28 centered in 32x32 tile)
+        int pad = GameConstants.PlayerBodyPadding;
         var bodyRect = new Rectangle(
-            (int)PixelPosition.X + 2,
-            (int)PixelPosition.Y + 2,
-            GameConstants.TileSize - 4,
-            GameConstants.TileSize - 4);
-        spriteBatch.Draw(pixel, bodyRect, Color.OrangeRed);
+            (int)PixelPosition.X + pad,
+            (int)PixelPosition.Y + pad,
+            GameConstants.TileSize - pad * 2,
+            GameConstants.TileSize - pad * 2);
+        spriteBatch.Draw(pixel, bodyRect, GameConstants.PlayerColor);
 
-        // Direction indicator (small 8x8 square showing facing direction)
         var indicatorRect = GetDirectionIndicatorRect();
         spriteBatch.Draw(pixel, indicatorRect, Color.White);
     }
 
     private Rectangle GetDirectionIndicatorRect()
     {
-        int cx = (int)PixelPosition.X + GameConstants.TileSize / 2 - 4;
-        int cy = (int)PixelPosition.Y + GameConstants.TileSize / 2 - 4;
+        int sz = GameConstants.PlayerIndicatorSize;
+        int pad = GameConstants.PlayerBodyPadding;
+        int half = sz / 2;
+        int cx = (int)PixelPosition.X + GameConstants.TileSize / 2 - half;
+        int cy = (int)PixelPosition.Y + GameConstants.TileSize / 2 - half;
 
         return _facingDirection switch
         {
-            Direction.Up => new Rectangle(cx, (int)PixelPosition.Y + 2, 8, 8),
-            Direction.Down => new Rectangle(cx, (int)PixelPosition.Y + GameConstants.TileSize - 10, 8, 8),
-            Direction.Left => new Rectangle((int)PixelPosition.X + 2, cy, 8, 8),
-            Direction.Right => new Rectangle((int)PixelPosition.X + GameConstants.TileSize - 10, cy, 8, 8),
-            _ => new Rectangle(cx, cy, 8, 8),
+            Direction.Up => new Rectangle(cx, (int)PixelPosition.Y + pad, sz, sz),
+            Direction.Down => new Rectangle(cx, (int)PixelPosition.Y + GameConstants.TileSize - pad - sz, sz, sz),
+            Direction.Left => new Rectangle((int)PixelPosition.X + pad, cy, sz, sz),
+            Direction.Right => new Rectangle((int)PixelPosition.X + GameConstants.TileSize - pad - sz, cy, sz, sz),
+            _ => new Rectangle(cx, cy, sz, sz),
         };
     }
 }

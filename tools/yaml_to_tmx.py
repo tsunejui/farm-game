@@ -3,13 +3,10 @@
 yaml_to_tmx.py — Convert YAML map source files to Tiled TMX + TSX format.
 
 Usage:
-    python3 tools/yaml_to_tmx.py <yaml_file> --output <output_dir>
-
-Reads a YAML map definition with region-based tile placement and generates:
-  - A .tsx tileset file with tile properties
-  - A .tmx map file with CSV-encoded layers and an object group for spawns
-
-The output can then be validated and exported to JSON via the Tiled CLI.
+    python3 tools/yaml_to_tmx.py <yaml_file> \
+        --terrains-dir <terrains_dir> \
+        --items-dir <items_dir> \
+        --output <output_dir>
 """
 
 import argparse
@@ -23,6 +20,8 @@ import yaml
 def parse_args():
     parser = argparse.ArgumentParser(description="Convert YAML map to TMX + TSX")
     parser.add_argument("yaml_file", help="Path to the YAML map file")
+    parser.add_argument("--terrains-dir", "-t", required=True, help="Path to Terrains YAML directory")
+    parser.add_argument("--items-dir", "-i", required=True, help="Path to Items YAML directory")
     parser.add_argument("--output", "-o", required=True, help="Output directory")
     return parser.parse_args()
 
@@ -32,281 +31,229 @@ def load_yaml(path):
         return yaml.safe_load(f)
 
 
-def build_tile_catalog(data):
-    """
-    Build a catalog of unique tile types from terrain and object entries.
-    Returns:
-        catalog: list of tile info dicts (id, gid, layer, type, properties)
-        type_to_gid: dict mapping (layer, type) -> GID (1-based)
-    """
+def load_all_defs(directory, id_field):
+    """Load all YAML files from directory, keyed by metadata.<id_field>."""
+    defs = {}
+    if not os.path.isdir(directory):
+        return defs
+    for filename in os.listdir(directory):
+        if not filename.endswith(".yaml"):
+            continue
+        data = load_yaml(os.path.join(directory, filename))
+        def_id = data.get("metadata", {}).get(id_field, "")
+        if def_id:
+            defs[def_id] = data
+    return defs
+
+
+def build_tile_catalog(map_data, terrains, items):
+    """Build tile catalog from terrain and item definitions."""
     catalog = []
     type_to_gid = {}
 
-    # Collect all terrain types (default_terrain first)
-    terrain_types = set()
-    default_terrain = data.get("default_terrain", "grass")
-    terrain_types.add(default_terrain)
-    for entry in data.get("terrain", []):
-        terrain_types.add(entry["type"])
+    # Collect terrain types used in this map
+    default_terrain = map_data.get("config", {}).get("default_terrain", "grass")
+    terrain_ids = {default_terrain}
+    for entry in map_data.get("terrains", []):
+        terrain_ids.add(entry["terrain"])
 
-    for t in sorted(terrain_types):
-        props = {}
-        # Find properties from terrain entries
-        for entry in data.get("terrain", []):
-            if entry["type"] == t and "properties" in entry:
-                props = entry["properties"]
-                break
+    for tid in sorted(terrain_ids):
         gid = len(catalog) + 1
-        type_to_gid[("terrain", t)] = gid
+        type_to_gid[("terrain", tid)] = gid
+        terrain_def = terrains.get(tid, {})
+        color = terrain_def.get("visuals", {}).get("color", "#FF00FF")
         catalog.append({
-            "id": len(catalog),
-            "gid": gid,
-            "layer": "terrain",
-            "type": t,
-            "properties": props,
+            "id": len(catalog), "gid": gid, "layer": "terrain",
+            "type": tid, "properties": {},
+            "color": color,
         })
 
-    # Collect all object types
-    object_types = {}
-    for entry in data.get("objects", []):
-        if entry["type"] not in object_types:
-            object_types[entry["type"]] = entry.get("properties", {})
+    # Collect item types used in this map
+    seen_items = set()
+    for entity in map_data.get("entities", []):
+        item_id = entity.get("item", "")
+        if item_id in seen_items:
+            continue
+        seen_items.add(item_id)
 
-    for t in sorted(object_types.keys()):
+        item_def = items.get(item_id, {})
+        color = item_def.get("visuals", {}).get("color", "#FF00FF")
+        is_collidable = item_def.get("physics", {}).get("is_collidable", False)
+
         gid = len(catalog) + 1
-        type_to_gid[("object", t)] = gid
+        type_to_gid[("entity", item_id)] = gid
         catalog.append({
-            "id": len(catalog),
-            "gid": gid,
-            "layer": "object",
-            "type": t,
-            "properties": object_types[t],
+            "id": len(catalog), "gid": gid, "layer": "object",
+            "type": item_id,
+            "properties": {"is_collidable": is_collidable},
+            "color": color,
         })
 
     return catalog, type_to_gid
 
 
-def regions_to_grid(data, type_to_gid):
-    """
-    Convert region-based definitions into two 2D GID grids (terrain + objects).
-    """
-    width = data["width"]
-    height = data["height"]
-    default_terrain = data.get("default_terrain", "grass")
+def build_grids(map_data, items, type_to_gid):
+    """Build terrain and object grids from map data."""
+    config = map_data.get("config", {})
+    width = config["width"]
+    height = config["height"]
+    default_terrain = config.get("default_terrain", "grass")
     default_gid = type_to_gid[("terrain", default_terrain)]
 
-    # Initialize terrain grid with default
     terrain_grid = [[default_gid] * width for _ in range(height)]
+    object_grid = [[0] * width for _ in range(height)]
 
-    # Apply terrain regions
-    for entry in data.get("terrain", []):
-        gid = type_to_gid[("terrain", entry["type"])]
+    # Terrain placements
+    for entry in map_data.get("terrains", []):
+        tid = entry["terrain"]
+        if ("terrain", tid) not in type_to_gid:
+            continue
+        gid = type_to_gid[("terrain", tid)]
         for r in entry.get("regions", []):
             for y in range(r["y"], r["y"] + r["h"]):
                 for x in range(r["x"], r["x"] + r["w"]):
                     if 0 <= x < width and 0 <= y < height:
                         terrain_grid[y][x] = gid
 
-    # Initialize object grid with 0 (empty)
-    object_grid = [[0] * width for _ in range(height)]
+    # Entity placements
+    for entity in map_data.get("entities", []):
+        item_id = entity.get("item", "")
+        if ("entity", item_id) not in type_to_gid:
+            continue
+        gid = type_to_gid[("entity", item_id)]
+        item_def = items.get(item_id, {})
 
-    # Apply object regions
-    for entry in data.get("objects", []):
-        gid = type_to_gid[("object", entry["type"])]
-        for r in entry.get("regions", []):
-            for y in range(r["y"], r["y"] + r["h"]):
-                for x in range(r["x"], r["x"] + r["w"]):
-                    if 0 <= x < width and 0 <= y < height:
-                        object_grid[y][x] = gid
+        ew = item_def.get("physics", {}).get("occupy_width", 1)
+        eh = item_def.get("physics", {}).get("occupy_height", 1)
+        props = entity.get("properties", {})
+        ew = props.get("fill_width", ew)
+        eh = props.get("fill_height", eh)
+
+        tx = entity["tile_x"]
+        ty = entity["tile_y"]
+        for y in range(ty, ty + eh):
+            for x in range(tx, tx + ew):
+                if 0 <= x < width and 0 <= y < height:
+                    object_grid[y][x] = gid
 
     return terrain_grid, object_grid
 
 
 def grid_to_csv(grid):
-    """Convert a 2D GID grid to Tiled CSV format."""
-    csv_lines = []
+    lines = []
     for i, row in enumerate(grid):
         line = ",".join(str(g) for g in row)
         if i < len(grid) - 1:
             line += ","
-        csv_lines.append(line)
-    return "\n".join(csv_lines)
+        lines.append(line)
+    return "\n".join(lines)
 
 
-def generate_tsx(catalog, tileset_cfg, colors):
-    """Generate a TSX (Tileset XML) element tree."""
-    tile_count = len(catalog)
-    cols = min(tile_count, 4)
-    tw = tileset_cfg["tile_width"]
-    th = tileset_cfg["tile_height"]
-    img_w = cols * tw
-    img_h = ((tile_count + cols - 1) // cols) * th
-
+def generate_tsx(catalog, tileset_name, tile_size):
+    count = len(catalog)
+    cols = min(count, 4)
     tileset = ET.Element("tileset", {
-        "name": tileset_cfg["name"],
-        "tilewidth": str(tw),
-        "tileheight": str(th),
-        "tilecount": str(tile_count),
-        "columns": str(cols),
+        "name": tileset_name,
+        "tilewidth": str(tile_size), "tileheight": str(tile_size),
+        "tilecount": str(count), "columns": str(cols),
     })
-
-    image_source = tileset_cfg.get("image", f"{tileset_cfg['name']}.png")
     ET.SubElement(tileset, "image", {
-        "source": image_source,
-        "width": str(img_w),
-        "height": str(img_h),
+        "source": f"{tileset_name}.png",
+        "width": str(cols * tile_size),
+        "height": str(((count + cols - 1) // cols) * tile_size),
     })
 
-    all_colors = {}
-    all_colors.update(colors.get("terrain", {}))
-    all_colors.update(colors.get("object", {}))
-
-    for tile_info in catalog:
-        tile_el = ET.SubElement(tileset, "tile", {"id": str(tile_info["id"])})
+    for tile in catalog:
+        tile_el = ET.SubElement(tileset, "tile", {"id": str(tile["id"])})
         props_el = ET.SubElement(tile_el, "properties")
-
+        ET.SubElement(props_el, "property", {"name": "type", "value": tile["type"]})
+        ET.SubElement(props_el, "property", {"name": "layer", "value": tile["layer"]})
         ET.SubElement(props_el, "property", {
-            "name": "type",
-            "value": tile_info["type"],
+            "name": "color", "value": tile["color"]
         })
-        ET.SubElement(props_el, "property", {
-            "name": "layer",
-            "value": tile_info["layer"],
-        })
-
-        type_name = tile_info["type"]
-        if type_name in all_colors:
-            rgb = all_colors[type_name]
-            ET.SubElement(props_el, "property", {
-                "name": "color",
-                "value": f"{rgb[0]},{rgb[1]},{rgb[2]}",
-            })
-
-        for key, value in tile_info["properties"].items():
-            prop_attrs = {"name": key}
-            if isinstance(value, bool):
-                prop_attrs["type"] = "bool"
-                prop_attrs["value"] = "true" if value else "false"
-            elif isinstance(value, int):
-                prop_attrs["type"] = "int"
-                prop_attrs["value"] = str(value)
-            elif isinstance(value, float):
-                prop_attrs["type"] = "float"
-                prop_attrs["value"] = str(value)
+        for k, v in tile["properties"].items():
+            attrs = {"name": k}
+            if isinstance(v, bool):
+                attrs["type"] = "bool"
+                attrs["value"] = "true" if v else "false"
             else:
-                prop_attrs["value"] = str(value)
-            ET.SubElement(props_el, "property", prop_attrs)
+                attrs["value"] = str(v)
+            ET.SubElement(props_el, "property", attrs)
 
     return tileset
 
 
-def generate_tmx(data, terrain_grid, object_grid, tsx_filename):
-    """Generate a TMX (Map XML) element tree."""
-    width = data["width"]
-    height = data["height"]
-    tw = data["tile_size"]
+def generate_tmx(map_data, terrain_grid, object_grid, tsx_filename):
+    config = map_data["config"]
+    w, h, ts = config["width"], config["height"], config["tile_size"]
 
     map_el = ET.Element("map", {
-        "version": "1.10",
-        "tiledversion": "1.12.1",
-        "orientation": "orthogonal",
-        "renderorder": "right-down",
-        "width": str(width),
-        "height": str(height),
-        "tilewidth": str(tw),
-        "tileheight": str(tw),
-        "infinite": "0",
+        "version": "1.10", "tiledversion": "1.12.1",
+        "orientation": "orthogonal", "renderorder": "right-down",
+        "width": str(w), "height": str(h),
+        "tilewidth": str(ts), "tileheight": str(ts), "infinite": "0",
     })
+    ET.SubElement(map_el, "tileset", {"firstgid": "1", "source": tsx_filename})
 
-    ET.SubElement(map_el, "tileset", {
-        "firstgid": "1",
-        "source": tsx_filename,
-    })
+    for name, grid in [("terrain", terrain_grid), ("objects", object_grid)]:
+        layer = ET.SubElement(map_el, "layer", {
+            "name": name, "width": str(w), "height": str(h),
+        })
+        data = ET.SubElement(layer, "data", {"encoding": "csv"})
+        data.text = "\n" + grid_to_csv(grid) + "\n"
 
-    # Terrain layer
-    terrain_layer = ET.SubElement(map_el, "layer", {
-        "name": "terrain",
-        "width": str(width),
-        "height": str(height),
-    })
-    terrain_data = ET.SubElement(terrain_layer, "data", {"encoding": "csv"})
-    terrain_data.text = "\n" + grid_to_csv(terrain_grid) + "\n"
-
-    # Object layer
-    object_layer = ET.SubElement(map_el, "layer", {
-        "name": "objects",
-        "width": str(width),
-        "height": str(height),
-    })
-    object_data = ET.SubElement(object_layer, "data", {"encoding": "csv"})
-    object_data.text = "\n" + grid_to_csv(object_grid) + "\n"
-
-    # Spawn object group
-    player_start = data.get("player_start", [0, 0])
-    obj_group = ET.SubElement(map_el, "objectgroup", {"name": "spawns"})
-    ET.SubElement(obj_group, "object", {
+    ps = config.get("player_start", [0, 0])
+    grp = ET.SubElement(map_el, "objectgroup", {"name": "spawns"})
+    ET.SubElement(grp, "object", {
         "name": "player_start",
-        "x": str(player_start[0] * tw),
-        "y": str(player_start[1] * tw),
-        "width": str(tw),
-        "height": str(tw),
+        "x": str(ps[0] * ts), "y": str(ps[1] * ts),
+        "width": str(ts), "height": str(ts),
     })
 
     return map_el
 
 
 def write_xml(element, path):
-    """Write XML to file, preserving CSV data content without indentation corruption."""
     data_texts = {}
-    for data_el in element.iter("data"):
-        data_texts[data_el] = data_el.text
-        data_el.text = "PLACEHOLDER"
-
+    for el in element.iter("data"):
+        data_texts[el] = el.text
+        el.text = "PLACEHOLDER"
     tree = ET.ElementTree(element)
     ET.indent(tree, space=" ")
-
-    for data_el, text in data_texts.items():
-        data_el.text = text
-
+    for el, text in data_texts.items():
+        el.text = text
     tree.write(path, encoding="unicode", xml_declaration=True)
 
 
 def main():
     args = parse_args()
-    data = load_yaml(args.yaml_file)
+    map_data = load_yaml(args.yaml_file)
+    terrains = load_all_defs(args.terrains_dir, "terrain_id")
+    items = load_all_defs(args.items_dir, "item_id")
 
-    for field in ["name", "width", "height", "tile_size"]:
-        if field not in data:
-            print(f"Error: missing required field '{field}' in {args.yaml_file}", file=sys.stderr)
+    for field in ["metadata", "config"]:
+        if field not in map_data:
+            print(f"Error: missing '{field}' in {args.yaml_file}", file=sys.stderr)
             sys.exit(1)
 
     os.makedirs(args.output, exist_ok=True)
 
-    map_name = data["name"].lower().replace(" ", "_")
-    tileset_cfg = data.get("tileset", {
-        "name": f"{map_name}_tiles",
-        "tile_width": data["tile_size"],
-        "tile_height": data["tile_size"],
-    })
+    map_id = map_data["metadata"]["map_id"]
+    config = map_data["config"]
+    tileset_name = f"{map_id}_tiles"
 
-    colors = {
-        "terrain": data.get("terrain_colors", {}),
-        "object": data.get("object_colors", {}),
-    }
+    catalog, type_to_gid = build_tile_catalog(map_data, terrains, items)
+    terrain_grid, object_grid = build_grids(map_data, items, type_to_gid)
 
-    catalog, type_to_gid = build_tile_catalog(data)
-    terrain_grid, object_grid = regions_to_grid(data, type_to_gid)
+    tsx_file = f"{tileset_name}.tsx"
+    write_xml(generate_tsx(catalog, tileset_name, config["tile_size"]),
+              os.path.join(args.output, tsx_file))
+    print(f"Generated: {os.path.join(args.output, tsx_file)}")
 
-    # Generate TSX
-    tsx_filename = f"{tileset_cfg['name']}.tsx"
-    tsx_path = os.path.join(args.output, tsx_filename)
-    write_xml(generate_tsx(catalog, tileset_cfg, colors), tsx_path)
-    print(f"Generated: {tsx_path}")
-
-    # Generate TMX
-    tmx_path = os.path.join(args.output, f"{map_name}.tmx")
-    write_xml(generate_tmx(data, terrain_grid, object_grid, tsx_filename), tmx_path)
-    print(f"Generated: {tmx_path}")
+    tmx_file = f"{map_id}.tmx"
+    write_xml(generate_tmx(map_data, terrain_grid, object_grid, tsx_file),
+              os.path.join(args.output, tmx_file))
+    print(f"Generated: {os.path.join(args.output, tmx_file)}")
 
 
 if __name__ == "__main__":

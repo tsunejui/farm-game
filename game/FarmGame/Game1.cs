@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using FarmGame.Camera;
 using FarmGame.Core;
+using FarmGame.Data;
 using FarmGame.Entities;
 using FarmGame.Screens;
 using FarmGame.World;
@@ -24,8 +25,11 @@ public class Game1 : Game
     private PauseScreen _pauseScreen;
     private KeyboardState _previousKeyboard;
 
+    // Data
+    private DataRegistry _registry;
+
     // Gameplay
-    private TileMap _tileMap;
+    private GameMap _currentMap;
     private Player _player;
     private Camera2D _camera;
 
@@ -38,6 +42,11 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
+        // Load config from YAML before initializing graphics
+        var contentDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
+        var config = GameConfig.Load(Path.Combine(contentDir, "config.yaml"));
+        GameConstants.LoadFrom(config);
+
         _graphics.PreferredBackBufferWidth = GameConstants.ScreenWidth;
         _graphics.PreferredBackBufferHeight = GameConstants.ScreenHeight;
         _graphics.ApplyChanges();
@@ -58,15 +67,21 @@ public class Game1 : Game
 
         _titleScreen = new TitleScreen();
         _pauseScreen = new PauseScreen();
+
+        // Load all data at startup
+        var contentDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
+        _registry = DataRegistry.LoadAll(contentDir);
     }
 
     private void StartGame()
     {
-        var contentDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
-        var (map, playerStart) = TiledMapLoader.Load(
-            Path.Combine(contentDir, "Maps", "farm.json"));
-        _tileMap = map;
-        _player = new Player(playerStart, _tileMap);
+        var mapDef = _registry.Maps[GameConstants.StartMap];
+        _currentMap = MapBuilder.Build(mapDef, _registry, Content.Load<Texture2D>);
+
+        var config = mapDef.Config;
+        var playerStart = new Point(config.PlayerStart[0], config.PlayerStart[1]);
+
+        _player = new Player(playerStart, _currentMap);
         _camera = new Camera2D(GraphicsDevice.Viewport);
         _gameState = GameState.Playing;
     }
@@ -96,7 +111,7 @@ public class Game1 : Game
                 else
                 {
                     _player.Update(gameTime);
-                    _camera.Update(_player, _tileMap);
+                    _camera.Update(_player, _currentMap);
                 }
                 _previousKeyboard = keyboard;
                 break;
@@ -129,7 +144,7 @@ public class Game1 : Game
                 _spriteBatch.Begin(
                     transformMatrix: _camera.TransformMatrix,
                     samplerState: SamplerState.PointClamp);
-                _tileMap.Draw(_spriteBatch, _pixel, _camera);
+                _currentMap.Draw(_spriteBatch, _pixel, _camera);
                 _player.Draw(_spriteBatch, _pixel);
                 _spriteBatch.End();
                 break;
@@ -138,10 +153,9 @@ public class Game1 : Game
                 _spriteBatch.Begin(
                     transformMatrix: _camera.TransformMatrix,
                     samplerState: SamplerState.PointClamp);
-                _tileMap.Draw(_spriteBatch, _pixel, _camera);
+                _currentMap.Draw(_spriteBatch, _pixel, _camera);
                 _player.Draw(_spriteBatch, _pixel);
                 _spriteBatch.End();
-                // Overlay pause menu (no transform, screen-space)
                 _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
                 _pauseScreen.Draw(_spriteBatch, _pixel, _font);
                 _spriteBatch.End();
