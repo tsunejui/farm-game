@@ -63,8 +63,8 @@ public class Game1 : Game
     private void StartGame()
     {
         var contentDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
-        var (map, playerStart) = MapLoader.Load(
-            Path.Combine(contentDir, "Maps", "farm.yaml"));
+        var (map, playerStart) = TiledMapLoader.Load(
+            Path.Combine(contentDir, "Maps", "farm.json"));
         _tileMap = map;
         _player = new Player(playerStart, _tileMap);
         _camera = new Camera2D(GraphicsDevice.Viewport);

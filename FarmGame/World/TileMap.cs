@@ -13,6 +13,7 @@ public class TileMap
     private readonly ObjectType?[,] _objects;
     private readonly Dictionary<TerrainType, Color> _terrainColors;
     private readonly Dictionary<ObjectType, Color> _objectColors;
+    private readonly Dictionary<(int, int), Dictionary<string, object>> _tileProperties = new();
 
     public int Width { get; }
     public int Height { get; }
@@ -55,6 +56,27 @@ public class TileMap
         if (x < 0 || x >= Width || y < 0 || y >= Height)
             return null;
         return _objects[x, y];
+    }
+
+    public void SetTileProperty(int x, int y, string name, object value)
+    {
+        if (x < 0 || x >= Width || y < 0 || y >= Height) return;
+        var key = (x, y);
+        if (!_tileProperties.ContainsKey(key))
+            _tileProperties[key] = new Dictionary<string, object>();
+        _tileProperties[key][name] = value;
+    }
+
+    public bool HasProperty(int x, int y, string name)
+    {
+        return _tileProperties.TryGetValue((x, y), out var props) && props.ContainsKey(name);
+    }
+
+    public object GetProperty(int x, int y, string name)
+    {
+        if (_tileProperties.TryGetValue((x, y), out var props) && props.TryGetValue(name, out var val))
+            return val;
+        return null;
     }
 
     public bool IsPassable(int x, int y)
