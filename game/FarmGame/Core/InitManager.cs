@@ -71,6 +71,7 @@ public class InitManager
         pauseScreen.Initialize();
 
         var settingsScreen = new SettingsScreen();
+        settingsScreen.HasSavedState = () => Session?.HasSavedState ?? false;
         settingsScreen.OnLanguageChanged = (lang) =>
         {
             Session?.ChangeLanguage(lang, _contentDir);

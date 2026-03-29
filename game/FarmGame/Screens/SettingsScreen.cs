@@ -20,6 +20,7 @@ public class SettingsScreen : IScreen
 
     public Action<string> OnLanguageChanged { get; set; }
     public Action OnDeleteCharacter { get; set; }
+    public Func<bool> HasSavedState { get; set; }
     public GameState ReturnState { get; set; } = GameState.TitleScreen;
 
     public void Initialize() { _selectedIndex = 0; BuildUI(); }
@@ -74,13 +75,18 @@ public class SettingsScreen : IScreen
         langRow.Widgets.Add(zhBtn);
         root.Widgets.Add(langRow);
 
+        bool canDelete = HasSavedState?.Invoke() ?? false;
         var deleteBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "delete_character"));
-        deleteBtn.Click += (_, _) =>
+        deleteBtn.Enabled = canDelete;
+        if (canDelete)
         {
-            _showDeleteConfirmation = true;
-            _selectedIndex = 0;
-            BuildUI();
-        };
+            deleteBtn.Click += (_, _) =>
+            {
+                _showDeleteConfirmation = true;
+                _selectedIndex = 0;
+                BuildUI();
+            };
+        }
         deleteBtn.Margin = new Myra.Graphics2D.Thickness(0, 12, 0, 0);
         root.Widgets.Add(deleteBtn);
 
@@ -190,6 +196,8 @@ public class SettingsScreen : IScreen
             // deleteBtn is index 2, backBtn is index 3
             if (_selectedIndex == 2)
             {
+                if (!(HasSavedState?.Invoke() ?? false))
+                    return ScreenTransition.None; // disabled, ignore
                 _showDeleteConfirmation = true;
                 _selectedIndex = 0;
                 BuildUI();
@@ -227,7 +235,11 @@ public class SettingsScreen : IScreen
         for (int i = 0; i < _buttons.Length; i++)
         {
             var label = (Label)_buttons[i].Content;
-            if (i == _selectedIndex)
+            bool disabled = !_buttons[i].Enabled;
+
+            if (disabled)
+                label.TextColor = new Color(60, 60, 60);
+            else if (i == _selectedIndex)
                 label.TextColor = Color.White;
             else if (!_showDeleteConfirmation && _buttonLangs[i] != null && _buttonLangs[i] == LocaleManager.CurrentLanguage)
                 label.TextColor = new Color(34, 200, 34);

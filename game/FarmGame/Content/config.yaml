@@ -27,9 +27,9 @@ player:
   attack_width: 20        # attack effect width in pixels
   attack_color: "#FFD700" # Gold (attack effect color)
   max_hp: 20              # player starting/max HP
-  strength: 5             # base STR (contributes to ATK)
-  dexterity: 3            # base DEX (contributes to ATK)
-  weapon_atk: 2           # base weapon ATK (added to STR+DEX)
+  strength: 2             # base STR (contributes to ATK)
+  dexterity: 1            # base DEX (contributes to ATK)
+  weapon_atk: 1           # base weapon ATK (added to STR+DEX)
   buff_percent: 0.0       # equipment/buff ATK% bonus (0.1 = +10%)
   crit_rate: 0.1          # critical hit chance (0.0 ~ 1.0)
   crit_damage: 1.5        # critical hit damage multiplier
@@ -55,12 +55,12 @@ combat:
 # Entity info display (name + HP bar shown when player is nearby)
 entity_info:
   proximity_tiles: 2            # show info when player is within this tile distance
-  font_size: 16                 # entity name font size
-  hp_font_size: 12              # HP text font size
-  hp_bar_width: 32              # HP bar width in pixels
-  hp_bar_height: 4              # HP bar height in pixels
-  hp_bar_offset_y: 2            # gap between entity bottom and HP bar top
-  name_offset_y: 4              # gap between entity top and name bottom
+  font_size: 20                 # entity name font size
+  hp_font_size: 14              # HP text font size
+  hp_bar_width: 40              # HP bar width in pixels
+  hp_bar_height: 5              # HP bar height in pixels
+  hp_bar_offset_y: 3            # gap between entity bottom and HP bar top
+  name_offset_y: 5              # gap between entity top and name bottom
 
 # HUD overlay settings
 hud:

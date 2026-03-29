@@ -283,6 +283,30 @@ public class GameMap
                 new Vector2(textX, textY),
                 Color.White);
 
+            // --- Draw floating damage number above the name ---
+            if (entity.State.ShowDamageNumber)
+            {
+                float progress = entity.State.DamageNumberProgress;
+                float alpha = 1f - progress;           // fade out
+                float floatUp = progress * 16f;        // drift 16px upward
+
+                string dmgText = entity.State.LastDamageWasCrit
+                    ? $"{entity.State.LastDamageAmount}!"
+                    : entity.State.LastDamageAmount.ToString();
+                Color dmgColor = entity.State.LastDamageWasCrit ? Color.Orange : Color.Red;
+
+                var dmgSize = font.MeasureString(dmgText);
+                float dmgX = entityCenterX - dmgSize.X / 2f;
+                float dmgY = textY - dmgSize.Y - 2 - floatUp;
+
+                font.DrawText(spriteBatch, dmgText,
+                    new Vector2(dmgX + 1, dmgY + 1),
+                    Color.Black * (alpha * 0.6f));
+                font.DrawText(spriteBatch, dmgText,
+                    new Vector2(dmgX, dmgY),
+                    dmgColor * alpha);
+            }
+
             // --- Draw HP bar below entity ---
             int barW = GameConstants.EntityInfoHpBarWidth;
             int barH = GameConstants.EntityInfoHpBarHeight;

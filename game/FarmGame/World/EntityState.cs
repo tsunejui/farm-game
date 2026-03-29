@@ -42,6 +42,18 @@ public class EntityState
     // Rapid on/off toggle for visual flicker during damage (toggles every ~60ms)
     public bool FlickerVisible { get; private set; }
 
+    // Floating damage number display
+    public int LastDamageAmount { get; private set; }
+    public bool LastDamageWasCrit { get; private set; }
+    private float _damageNumberTimer;
+    private const float DamageNumberDurationMs = 800f;
+
+    // True while the floating damage number should be visible
+    public bool ShowDamageNumber => _damageNumberTimer > 0f;
+
+    // 0.0 (just appeared) → 1.0 (about to disappear), used for float-up animation
+    public float DamageNumberProgress => 1f - _damageNumberTimer / DamageNumberDurationMs;
+
     public EntityState(int maxHp, Faction faction)
     {
         MaxHp = maxHp;
@@ -61,7 +73,7 @@ public class EntityState
     /// Apply damage. The actual HP deduction is spread over DamageTickDurationMs.
     /// If already taking damage, remaining + new damage are combined and the timer restarts.
     /// </summary>
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount, bool isCritical = false)
     {
         if (!IsAlive || amount <= 0) return;
 
@@ -70,6 +82,11 @@ public class EntityState
         int tickMs = Core.GameConstants.DamageTickDurationMs;
         _damageTickRemainMs = tickMs;
         _damagePerMs = _pendingDamage / tickMs;
+
+        // Trigger floating damage number
+        LastDamageAmount = amount;
+        LastDamageWasCrit = isCritical;
+        _damageNumberTimer = DamageNumberDurationMs;
     }
 
     /// <summary>
@@ -77,6 +94,10 @@ public class EntityState
     /// </summary>
     public void Update(float deltaTimeSeconds)
     {
+        // Tick floating damage number timer (independent of damage ticks)
+        if (_damageNumberTimer > 0f)
+            _damageNumberTimer -= deltaTimeSeconds * 1000f;
+
         if (_damageTickRemainMs <= 0f)
         {
             FlickerVisible = false;

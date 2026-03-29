@@ -132,7 +132,7 @@ public class AttackAction : IPlayerAction
         };
 
         int damage = DamagePipeline.CalculateDamage(ctx);
-        entity.State.TakeDamage(damage);
+        entity.State.TakeDamage(damage, ctx.IsCritical);
 
         Log.Debug("Attack: {ItemId} took {Damage} damage{Crit}, hp={Hp}/{MaxHp}",
             entity.ItemId, damage, ctx.IsCritical ? " (CRIT!)" : "",
