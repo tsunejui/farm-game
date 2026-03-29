@@ -16,7 +16,7 @@ tile:
 
 # Player defaults
 player:
-  move_speed: 4.0         # tiles per second
+  move_speed: 6.0         # tiles per second
   color: "#FF4500"         # OrangeRed (body color)
   body_padding: 2         # pixels inset from tile edge
   indicator_size: 8       # direction indicator size in pixels

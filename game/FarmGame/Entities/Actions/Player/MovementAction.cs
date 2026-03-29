@@ -38,12 +38,18 @@ public class MovementAction : IPlayerAction
             _moveProgress += GameConstants.PlayerMoveSpeed * deltaTime;
             if (_moveProgress >= 1f)
             {
-                _moveProgress = 0f;
+                // Snap to target, carry over excess progress
+                float overflow = _moveProgress - 1f;
                 _gridPosition = _targetGridPosition;
                 IsActive = false;
                 PixelPosition = new Vector2(
                     _gridPosition.X * GameConstants.TileSize,
                     _gridPosition.Y * GameConstants.TileSize);
+
+                // Immediately try next move so held keys chain without delay
+                TryMove(keyboard);
+                if (IsActive)
+                    _moveProgress = overflow;
             }
             else
             {
