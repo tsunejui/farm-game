@@ -17,7 +17,7 @@ namespace FarmGame.Persistence.Models;
 // =============================================================================
 public class PlayerState
 {
-    public const int CurrentVersion = 1;
+    public const int CurrentVersion = 2;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -46,6 +46,10 @@ public class PlayerState
     [JsonPropertyName("play_time_seconds")]
     public double PlayTimeSeconds { get; set; }
 
+    // UUID linking to the map_state table; null means first visit to this map
+    [JsonPropertyName("current_map_state_id")]
+    public string CurrentMapStateId { get; set; }
+
     public string ToJson()
     {
         return JsonSerializer.Serialize(this, JsonOptions);
@@ -62,9 +66,12 @@ public class PlayerState
 
     private static PlayerState Migrate(PlayerState state)
     {
-        // Future version migrations go here:
-        // if (state.Version < 2) { /* migrate v1 → v2 */ state.Version = 2; }
-        // if (state.Version < 3) { /* migrate v2 → v3 */ state.Version = 3; }
+        if (state.Version < 2)
+        {
+            // v1 → v2: added current_map_state_id (null = first visit)
+            state.CurrentMapStateId = null;
+            state.Version = 2;
+        }
 
         state.Version = CurrentVersion;
         return state;

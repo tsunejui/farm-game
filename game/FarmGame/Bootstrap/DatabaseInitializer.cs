@@ -12,6 +12,7 @@ public class DatabaseInitResult
     public DatabaseBootstrapper Database { get; init; }
     public SettingRepository Settings { get; init; }
     public PlayerStateRepository PlayerStateRepo { get; init; }
+    public MapStateRepository MapStateRepo { get; init; }
     public string PlayerUuid { get; init; }
     public PlayerState SavedState { get; init; }
     public string Error { get; init; }
@@ -48,6 +49,7 @@ public static class DatabaseInitializer
 
         var settings = new SettingRepository(database);
         var playerStateRepo = new PlayerStateRepository(database);
+        var mapStateRepo = new MapStateRepository(database);
 
         var playerUuid = settings.Get("player_uuid");
         if (string.IsNullOrEmpty(playerUuid))
@@ -82,6 +84,7 @@ public static class DatabaseInitializer
             Database = database,
             Settings = settings,
             PlayerStateRepo = playerStateRepo,
+            MapStateRepo = mapStateRepo,
             PlayerUuid = playerUuid,
             SavedState = savedState,
         };
