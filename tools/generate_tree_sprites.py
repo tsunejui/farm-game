@@ -660,6 +660,9 @@ def generate_tree(W, H, tree_type, palette, variant=0, state='normal'):
     # ── Post-process: remove orphan pixels (no adjacent neighbors) ──
     pixels = remove_orphans(pixels, W, H)
 
+    # ── Post-process: remove dark border artifacts ──
+    pixels = remove_dark_edge_pixels(pixels, W, H)
+
     return pixels
 
 
@@ -676,6 +679,37 @@ def remove_orphans(pixels, W, H, min_neighbors=1):
                 if 0 <= nx < W and 0 <= ny < H and pixels[ny][nx] is not None:
                     count += 1
             if count < min_neighbors:
+                to_clear.append((x, y))
+    for x, y in to_clear:
+        pixels[y][x] = None
+    return pixels
+
+
+def remove_dark_edge_pixels(pixels, W, H, threshold=100):
+    """Remove very dark pixels at edges adjacent to transparent pixels.
+
+    Pixels with R+G+B < threshold that border at least one transparent pixel
+    are removed to prevent black border artifacts.
+    """
+    to_clear = []
+    for y in range(H):
+        for x in range(W):
+            if pixels[y][x] is None:
+                continue
+            r, g, b = hex_to_rgb(pixels[y][x])
+            if r + g + b >= threshold:
+                continue
+            # Check if adjacent to any transparent pixel
+            has_transparent_neighbor = False
+            for dx, dy in [(-1,0),(1,0),(0,-1),(0,1),(-1,-1),(1,-1),(-1,1),(1,1)]:
+                nx, ny = x + dx, y + dy
+                if nx < 0 or nx >= W or ny < 0 or ny >= H:
+                    has_transparent_neighbor = True
+                    break
+                if pixels[ny][nx] is None:
+                    has_transparent_neighbor = True
+                    break
+            if has_transparent_neighbor:
                 to_clear.append((x, y))
     for x, y in to_clear:
         pixels[y][x] = None

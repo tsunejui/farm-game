@@ -64,12 +64,45 @@ public class MapStateRepository
                 return DatabaseResult<MapStateRecord>.Fail(DatabaseErrorKind.None,
                     $"No map state found for '{mapId}'");
 
+            // Check TTL expiry: if TtlUtc > 0 and current time has passed it, delete and return not found
+            if (record.TtlUtc > 0)
+            {
+                long nowUtc = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                if (nowUtc > record.TtlUtc)
+                {
+                    // Expired — delete the stale record and its objects/effects
+                    db.Execute("DELETE FROM map_object WHERE map_state_id = ?", record.Id);
+                    db.Execute("DELETE FROM map_state WHERE id = ?", record.Id);
+                    return DatabaseResult<MapStateRecord>.Fail(DatabaseErrorKind.None,
+                        $"Map state for '{mapId}' expired (TTL)");
+                }
+            }
+
             return DatabaseResult<MapStateRecord>.Ok(record);
         }
         catch (Exception ex)
         {
             return DatabaseResult<MapStateRecord>.Fail(DatabaseErrorKind.ConnectionFailed,
                 $"Failed to find map state: {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// Set the TTL (time-to-live) on a map state record.
+    /// Use ttlUtc = 0 to mark as active (no expiry).
+    /// </summary>
+    public DatabaseResult SetTtl(string mapStateId, long ttlUtc)
+    {
+        try
+        {
+            using var db = _db.CreateConnection();
+            db.Execute("UPDATE map_state SET TtlUtc = ? WHERE id = ?", ttlUtc, mapStateId);
+            return DatabaseResult.Ok();
+        }
+        catch (Exception ex)
+        {
+            return DatabaseResult.Fail(DatabaseErrorKind.ConnectionFailed,
+                $"Failed to set TTL: {ex.Message}");
         }
     }
 

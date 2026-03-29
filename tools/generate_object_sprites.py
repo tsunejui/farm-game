@@ -554,9 +554,9 @@ def generate_fence(W, H, variant=0, state='normal'):
                     light = 0.25 + 0.45 * math.sin(rel * math.pi)
                     grain = fbm(x, y * 3, seed, 2, 3.0) * 0.08
                     light = max(0.0, min(1.0, light + grain))
-                    r = int(lerp(55, 165, light))
-                    g = int(lerp(35, 110, light))
-                    b = int(lerp(18, 60, light))
+                    r = int(lerp(120, 195, light))
+                    g = int(lerp(65, 125, light))
+                    b = int(lerp(50, 100, light))
                     if state == 'damaged' and random.Random(x * H + y).random() < 0.08:
                         continue
                     if state == 'dead' and random.Random(x * H + y).random() < 0.2:
@@ -570,9 +570,9 @@ def generate_fence(W, H, variant=0, state='normal'):
                 y = cap_y + dy
                 if 0 <= x < W and 0 <= y < H:
                     light = 0.5 + 0.15 * (dx / max(1, post_w))
-                    r = int(lerp(70, 175, light))
-                    g = int(lerp(45, 120, light))
-                    b = int(lerp(22, 65, light))
+                    r = int(lerp(130, 200, light))
+                    g = int(lerp(70, 130, light))
+                    b = int(lerp(55, 105, light))
                     pixels[y][x] = rgb_to_hex(r, g, b)
 
     # Three horizontal rails between posts
@@ -587,9 +587,9 @@ def generate_fence(W, H, variant=0, state='normal'):
                     light = 0.3 + 0.35 * math.sin(rel_y * math.pi)
                     grain = fbm(x * 3, y * 0.5, seed + 30, 2, 4.0) * 0.08
                     light = max(0.0, min(1.0, light + grain))
-                    r = int(lerp(60, 170, light))
-                    g = int(lerp(38, 115, light))
-                    b = int(lerp(20, 62, light))
+                    r = int(lerp(125, 192, light))
+                    g = int(lerp(68, 122, light))
+                    b = int(lerp(52, 98, light))
                     if state == 'damaged' and random.Random(x * H + y).random() < 0.06:
                         continue
                     if state == 'dead' and random.Random(x * H + y).random() < 0.15:
@@ -627,9 +627,9 @@ def generate_fence_rail(W, H, variant=0, state='normal'):
                     if abs(knot_n) < 0.05:
                         light -= 0.12
                     light = max(0.0, min(1.0, light + grain))
-                    r = int(lerp(55, 168, light))
-                    g = int(lerp(35, 112, light))
-                    b = int(lerp(18, 60, light))
+                    r = int(lerp(122, 190, light))
+                    g = int(lerp(65, 120, light))
+                    b = int(lerp(50, 96, light))
                     # Top/bottom edge darkening
                     if y == plank_top or y == plank_bot:
                         r = max(0, r - 25)
@@ -1518,6 +1518,246 @@ def generate_path_base(W, H, variant=0, state='normal'):
 
 
 # ────────────────────────────────────────────────────────────
+# SAND BASE (tiling 32x32 sand terrain texture)
+# ────────────────────────────────────────────────────────────
+def generate_sand_base(W, H, variant=0, state='normal'):
+    pixels = [[None] * W for _ in range(H)]
+    seed = 1700 + variant * 43
+
+    for y in range(H):
+        for x in range(W):
+            # Tileable noise via wrapped coordinates
+            wx = math.sin(2 * math.pi * x / W) * W / (2 * math.pi)
+            wy = math.sin(2 * math.pi * y / H) * H / (2 * math.pi)
+            cx_t = math.cos(2 * math.pi * x / W) * W / (2 * math.pi)
+            cy_t = math.cos(2 * math.pi * y / H) * H / (2 * math.pi)
+
+            # Sand grain texture: multiple noise layers
+            n1 = fbm(wx * 2, wy * 2, seed, 3, 5.0) * 0.25
+            n2 = fbm(cx_t * 3, cy_t * 3, seed + 100, 2, 3.0) * 0.12
+            n3 = fbm(wx * 6 + cx_t, wy * 6 + cy_t, seed + 200, 2, 2.0) * 0.08
+
+            base = 0.5 + n1 + n2 + n3
+            base = max(0.0, min(1.0, base))
+
+            # Sandy colors: #DFC89E to #F5E2BF centered on #EED6AF
+            r = int(lerp(223, 245, base))
+            g = int(lerp(200, 226, base))
+            b = int(lerp(158, 191, base))
+
+            # Tiny darker pebble spots
+            pebble = noise2d(x * 9, y * 9, seed + 300)
+            if pebble > 0.75:
+                r = max(0, r - 18)
+                g = max(0, g - 16)
+                b = max(0, b - 12)
+
+            # Subtle warm/cool shift for variety
+            shift = noise2d(x * 5, y * 5, seed + 400) * 5
+            r = max(0, min(255, r + int(shift)))
+            b = max(0, min(255, b - int(shift)))
+
+            pixels[y][x] = rgb_to_hex(r, g, b)
+
+    return pixels
+
+
+# ────────────────────────────────────────────────────────────
+# DIRT BASE (tiling 32x32 dirt/soil terrain texture)
+# ────────────────────────────────────────────────────────────
+def generate_dirt_base(W, H, variant=0, state='normal'):
+    pixels = [[None] * W for _ in range(H)]
+    seed = 1800 + variant * 47
+
+    for y in range(H):
+        for x in range(W):
+            # Tileable noise
+            wx = math.sin(2 * math.pi * x / W) * W / (2 * math.pi)
+            wy = math.sin(2 * math.pi * y / H) * H / (2 * math.pi)
+            cx_t = math.cos(2 * math.pi * x / W) * W / (2 * math.pi)
+            cy_t = math.cos(2 * math.pi * y / H) * H / (2 * math.pi)
+
+            # Lumpy soil texture
+            n1 = fbm(wx * 2, wy * 2, seed, 3, 5.0) * 0.28
+            n2 = fbm(cx_t * 3, cy_t * 3, seed + 100, 2, 3.0) * 0.14
+            n3 = fbm(wx * 5 + cx_t * 2, wy * 5 + cy_t * 2, seed + 200, 2, 2.0) * 0.08
+
+            base = 0.5 + n1 + n2 + n3
+            base = max(0.0, min(1.0, base))
+
+            # Brown earth: base #8B7765 with variations
+            r = int(lerp(100, 155, base))
+            g = int(lerp(82, 132, base))
+            b = int(lerp(65, 115, base))
+
+            # Darker patches
+            dark = noise2d(x * 7, y * 7, seed + 300)
+            if dark > 0.7:
+                r = max(0, r - 15)
+                g = max(0, g - 13)
+                b = max(0, b - 10)
+
+            # Warm shift
+            shift = noise2d(x * 4, y * 4, seed + 400) * 6
+            r = max(0, min(255, r + int(shift)))
+            b = max(0, min(255, b - int(shift * 0.5)))
+
+            pixels[y][x] = rgb_to_hex(r, g, b)
+
+    return pixels
+
+
+# ────────────────────────────────────────────────────────────
+# DARK GRASS BASE (tiling 32x32 dark forest grass texture)
+# ────────────────────────────────────────────────────────────
+def generate_dark_grass_base(W, H, variant=0, state='normal'):
+    pixels = [[None] * W for _ in range(H)]
+    seed = 1900 + variant * 53
+
+    for y in range(H):
+        for x in range(W):
+            # Tileable noise
+            wx = math.sin(2 * math.pi * x / W) * W / (2 * math.pi)
+            wy = math.sin(2 * math.pi * y / H) * H / (2 * math.pi)
+            cx_t = math.cos(2 * math.pi * x / W) * W / (2 * math.pi)
+            cy_t = math.cos(2 * math.pi * y / H) * H / (2 * math.pi)
+
+            # Dense grass texture
+            n1 = fbm(wx * 2, wy * 2, seed, 3, 5.0) * 0.3
+            n2 = fbm(cx_t * 3, cy_t * 3, seed + 100, 2, 3.0) * 0.15
+            n3 = fbm(wx * 5 + cx_t * 2, wy * 5 + cy_t * 2, seed + 200, 2, 2.0) * 0.1
+
+            base = 0.5 + n1 + n2 + n3
+            base = max(0.0, min(1.0, base))
+
+            # Dark green: #153D15 to #1F551F centered on #1A4A1A
+            r = int(lerp(16, 38, base))
+            g = int(lerp(48, 95, base))
+            b = int(lerp(16, 38, base))
+
+            # Darker shadow/moss patches
+            spot = noise2d(x * 7, y * 7, seed + 300)
+            if spot > 0.65:
+                r = max(0, r - 6)
+                g = max(0, g - 12)
+                b = max(0, b - 4)
+
+            # Occasional lighter blade hints
+            blade = noise2d(x * 11, y * 13, seed + 400)
+            if blade > 0.65:
+                g = min(255, g + 10)
+
+            pixels[y][x] = rgb_to_hex(r, g, b)
+
+    return pixels
+
+
+# ────────────────────────────────────────────────────────────
+# WATER BASE (tiling 32x32 animated water terrain texture)
+# ────────────────────────────────────────────────────────────
+def generate_water_base(W, H, variant=0, state='normal', frame=0):
+    pixels = [[None] * W for _ in range(H)]
+    seed = 2000 + variant * 59 + frame * 7
+
+    for y in range(H):
+        for x in range(W):
+            # Tileable noise
+            wx = math.sin(2 * math.pi * x / W) * W / (2 * math.pi)
+            wy = math.sin(2 * math.pi * y / H) * H / (2 * math.pi)
+            cx_t = math.cos(2 * math.pi * x / W) * W / (2 * math.pi)
+            cy_t = math.cos(2 * math.pi * y / H) * H / (2 * math.pi)
+
+            # Water base with ripples that shift per frame
+            n1 = fbm(wx * 1.5, wy * 1.5, seed, 3, 6.0) * 0.3
+            # Ripple pattern shifting between frames
+            ripple = math.sin((wx * 0.4 + wy * 0.2 + frame * 2.5) +
+                              fbm(cx_t, cy_t, seed + 50, 2, 4.0) * 2.0) * 0.2
+
+            intensity = 0.5 + n1 + ripple
+            intensity = max(0.0, min(1.0, intensity))
+
+            # Blue water: #2266AA to #77BBEE
+            r = int(lerp(34, 119, intensity))
+            g = int(lerp(102, 187, intensity))
+            b = int(lerp(170, 238, intensity))
+
+            # Sun reflection highlights
+            highlight = fbm(cx_t * 3 + frame * 4, cy_t * 3, seed + 100, 2, 3.0)
+            if highlight > 0.4:
+                boost = (highlight - 0.4) * 0.6
+                r = min(255, int(r + boost * 100))
+                g = min(255, int(g + boost * 80))
+                b = min(255, int(b + boost * 50))
+
+            pixels[y][x] = rgb_to_hex(r, g, b)
+
+    return pixels
+
+
+# ────────────────────────────────────────────────────────────
+# BUSH (2 tiles wide, 1 tile tall - 64x32)
+# ────────────────────────────────────────────────────────────
+def generate_bush(W, H, variant=0, state='normal'):
+    pixels = [[None] * W for _ in range(H)]
+    rng = random.Random(42 + variant * 73)
+    seed = 2100 + variant * 37
+
+    cx, cy = W / 2.0, H * 0.55
+    rx, ry = W * 0.46, H * 0.42
+
+    for y in range(H):
+        for x in range(W):
+            dx = (x - cx) / rx
+            dy = (y - cy) / ry
+            d = math.sqrt(dx * dx + dy * dy)
+
+            # Noise on edge for organic shape
+            angle = math.atan2(y - cy, x - cx)
+            edge_noise = fbm(angle * 4, 0, seed, 3, 2.0) * 0.1
+            d += edge_noise
+
+            if d < 0.88:
+                # Fully opaque interior
+                light = 0.38 + 0.22 * dx - 0.10 * dy + (1.0 - d) * 0.2
+                # Leaf texture noise
+                n1 = fbm(x * 3, y * 3, seed, 3, 4.0) * 0.12
+                n2 = fbm(x * 6, y * 6, seed + 100, 2, 2.0) * 0.06
+                light = max(0.0, min(1.0, light + n1 + n2))
+
+                # Dark green bush: #1A4A1A to #2D6B2D
+                r = int(lerp(22, 55, light))
+                g = int(lerp(60, 130, light))
+                b = int(lerp(20, 52, light))
+
+                # Highlight on top
+                if dy < -0.3:
+                    top_boost = (-dy - 0.3) / 0.7 * 0.15
+                    g = min(255, int(g + top_boost * 60))
+                    r = min(255, int(r + top_boost * 15))
+
+                if state == 'damaged' and rng.random() < 0.08:
+                    continue
+                if state == 'dead':
+                    # Brown/dried
+                    r = min(255, r + 40)
+                    g = max(0, g - 30)
+                    b = max(0, b - 10)
+
+                pixels[y][x] = rgb_to_hex(r, g, b)
+            elif d < 0.96:
+                # Smooth edge fade
+                fade = (d - 0.88) / 0.08
+                if fade < 0.6:
+                    light = 0.32 + 0.12 * (1.0 - fade)
+                    r = int(lerp(25, 48, light))
+                    g = int(lerp(55, 110, light))
+                    b = int(lerp(18, 45, light))
+                    pixels[y][x] = rgb_to_hex(r, g, b)
+
+    return pixels
+
+
+# ────────────────────────────────────────────────────────────
 # SLIME
 # ────────────────────────────────────────────────────────────
 def generate_slime(W, H, variant=0, state='normal', frame=0):
@@ -1809,6 +2049,7 @@ def generate_all():
         ('street_lamp',     'street_lamps',   (32,64),  generate_street_lamp, False, ['normal']),
         ('water_body',      'water',          (32,16),  None,              True,  ['normal']),
         ('slime',           'slimes',         (32,32),  None,              True,  ['normal','damaged','dead']),
+        ('bush',            'bushes',         (64,32),  generate_bush,     False, ['normal']),
     ]
 
     for obj_name, img_dir, (W, H), gen_fn, has_frames, states in OBJECTS:
@@ -1928,11 +2169,27 @@ def generate_all():
         ('grass_base',      'terrain_bases', (32, 32), generate_grass_base),
         ('stone_road_base', 'terrain_bases', (32, 32), generate_stone_road_base),
         ('path_base',       'terrain_bases', (32, 32), generate_path_base),
+        ('sand_base',       'terrain_bases', (32, 32), generate_sand_base),
+        ('dirt_base',       'terrain_bases', (32, 32), generate_dirt_base),
+        ('dark_grass_base', 'terrain_bases', (32, 32), generate_dark_grass_base),
     ]
     for base_name, img_dir, (W, H), gen_fn in TERRAIN_BASES:
         print(f'\n── {base_name} ──')
         pixels = gen_fn(W, H)
         emit(pixels, base_name, img_dir, yaml_base, png_base)
+
+    # Animated terrain base: water
+    print('\n── water_base ──')
+    water_frames = []
+    for frame in range(3):
+        pixels = generate_water_base(32, 32, frame=frame)
+        pixels = remove_orphans(pixels)
+        pixels = quantize_pixels(pixels, max_colors=30)
+        water_frames.append(pixels)
+        png_path = os.path.join(png_base, 'terrain_bases', f'water_base_frame{frame}.png')
+        pixels_to_png(pixels, png_path)
+    # Also emit a static version (frame 0) for fallback
+    emit(water_frames[0], 'water_base', 'terrain_bases', yaml_base, png_base)
 
 
 if __name__ == '__main__':

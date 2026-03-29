@@ -221,8 +221,9 @@ public class PlayingScreen : IScreen, IWorldRenderer
 
     private void HandleTeleport(InteractionRequest req)
     {
-        // Save current map state before leaving
+        // Save current map state before leaving and set TTL for expiry
         SaveState();
+        _session.SetMapStateTtlOnLeave();
 
         _isLoading = true;
         _loadingFrameCount = 0;

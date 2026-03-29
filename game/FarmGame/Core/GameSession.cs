@@ -89,6 +89,17 @@ public class GameSession
         Log.Debug("LoadOrCreateMapState: mapId={MapId}, savedMapStateId={StateId}",
             mapId, mapStateId ?? "null");
 
+        // If no saved map state ID, try to find an existing one by map_id (handles TTL checks)
+        if (mapStateId == null)
+        {
+            var findResult = _mapStateRepo.FindByMapId(mapId);
+            if (findResult.Success)
+            {
+                mapStateId = findResult.Value.Id;
+                Log.Debug("Found existing map state via FindByMapId: {StateId}", mapStateId);
+            }
+        }
+
         if (mapStateId != null)
         {
             // Restore object states from DB
@@ -131,13 +142,17 @@ public class GameSession
                 }
 
                 CurrentMapStateId = mapStateId;
+
+                // Reset TTL to 0 — player is now on this map (active)
+                _mapStateRepo.SetTtl(mapStateId, 0);
+
                 Log.Information("Map state restored: {MapId}, stateId={StateId}, objects={Count}",
                     mapId, mapStateId, loadResult.Value.Count);
                 return;
             }
         }
 
-        // First visit: create new map state
+        // First visit or expired state: create new map state
         var createResult = _mapStateRepo.CreateMapState(mapId);
         if (createResult.Success)
         {
@@ -186,6 +201,22 @@ public class GameSession
         }
         else
             Log.Error("Failed to save map objects: {Error}", result.ErrorMessage);
+    }
+
+    /// <summary>
+    /// Mark the current map state as expiring in 5 minutes (player is leaving this map).
+    /// </summary>
+    public void SetMapStateTtlOnLeave()
+    {
+        if (_mapStateRepo == null || CurrentMapStateId == null) return;
+
+        long ttlUtc = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 300; // 5 minutes
+        var result = _mapStateRepo.SetTtl(CurrentMapStateId, ttlUtc);
+        if (result.Success)
+            Log.Information("Map state TTL set: stateId={StateId}, expiresAt={TtlUtc}",
+                CurrentMapStateId, ttlUtc);
+        else
+            Log.Error("Failed to set map state TTL: {Error}", result.ErrorMessage);
     }
 
     private void ApplyDefaultEffects(WorldObject obj)

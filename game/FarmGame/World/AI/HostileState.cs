@@ -19,6 +19,8 @@ public class HostileState : ICreatureState
     {
         _moveTimer = 0f;
         _attackCooldownTimer = 0f;
+        // Remove rest effect when becoming hostile
+        creature.Effects.RemoveAll(e => e.EffectId == "rest");
     }
 
     public ICreatureState Update(WorldObject creature, GameMap map, float deltaTime)

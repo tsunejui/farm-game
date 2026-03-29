@@ -45,67 +45,23 @@ terrains:
       - { x: 38, y: 6, w: 3, h: 1 }
       - { x: 5, y: 31, w: 3, h: 1 }
 
+  # Water pools (irregular shapes)
+  - terrain: "water"
+    regions:
+      # Northeast pool
+      - { x: 45, y: 5, w: 5, h: 3 }
+      - { x: 44, y: 6, w: 2, h: 3 }
+      - { x: 47, y: 8, w: 4, h: 2 }
+      # Southwest pool
+      - { x: 4, y: 32, w: 4, h: 2 }
+      - { x: 3, y: 33, w: 3, h: 3 }
+      - { x: 6, y: 34, w: 2, h: 2 }
+      # Crossroad pond
+      - { x: 35, y: 25, w: 3, h: 2 }
+      - { x: 34, y: 26, w: 4, h: 2 }
+      - { x: 35, y: 28, w: 2, h: 1 }
+
 entities:
-  # === Water features — irregular pools ===
-  # Northeast pool (irregular shape)
-  - item: "water_body"
-    tile_x: 45
-    tile_y: 5
-    properties:
-      fill_width: 5
-      fill_height: 3
-  - item: "water_body"
-    tile_x: 44
-    tile_y: 6
-    properties:
-      fill_width: 2
-      fill_height: 3
-  - item: "water_body"
-    tile_x: 47
-    tile_y: 8
-    properties:
-      fill_width: 4
-      fill_height: 2
-
-  # Southwest pool (irregular)
-  - item: "water_body"
-    tile_x: 4
-    tile_y: 32
-    properties:
-      fill_width: 4
-      fill_height: 2
-  - item: "water_body"
-    tile_x: 3
-    tile_y: 33
-    properties:
-      fill_width: 3
-      fill_height: 3
-  - item: "water_body"
-    tile_x: 6
-    tile_y: 34
-    properties:
-      fill_width: 2
-      fill_height: 2
-
-  # Crossroad pond (irregular)
-  - item: "water_body"
-    tile_x: 35
-    tile_y: 25
-    properties:
-      fill_width: 3
-      fill_height: 2
-  - item: "water_body"
-    tile_x: 34
-    tile_y: 26
-    properties:
-      fill_width: 4
-      fill_height: 2
-  - item: "water_body"
-    tile_x: 35
-    tile_y: 28
-    properties:
-      fill_width: 2
-      fill_height: 1
 
   # === Animated tree variants — mixed across the map ===
   # Northwest grove
@@ -339,6 +295,23 @@ entities:
     tile_x: 15
     tile_y: 28
 
+  # === Bushes ===
+  - item: "bush"
+    tile_x: 5
+    tile_y: 5
+  - item: "bush"
+    tile_x: 18
+    tile_y: 3
+  - item: "bush"
+    tile_x: 40
+    tile_y: 14
+  - item: "bush"
+    tile_x: 8
+    tile_y: 26
+  - item: "bush"
+    tile_x: 46
+    tile_y: 30
+
   # === Campfire area — centered in clearing ===
   - item: "campfire"
     tile_x: 14
@@ -382,40 +355,35 @@ entities:
         - "signpost_farm_portal_left"
 
   # === Street Lamps along road ===
+  # North side (y:14, so lamp occupies y:14-15, clear of fences at y:16)
   - item: "street_lamp"
-    tile_x: 3
-    tile_y: 15
+    tile_x: 8
+    tile_y: 14
   - item: "street_lamp"
-    tile_x: 11
-    tile_y: 15
+    tile_x: 13
+    tile_y: 14
   - item: "street_lamp"
-    tile_x: 19
-    tile_y: 15
-  - item: "street_lamp"
-    tile_x: 35
-    tile_y: 15
+    tile_x: 23
+    tile_y: 14
   - item: "street_lamp"
     tile_x: 43
-    tile_y: 15
+    tile_y: 14
   - item: "street_lamp"
-    tile_x: 51
-    tile_y: 15
-  # South side
+    tile_x: 48
+    tile_y: 14
+  # South side (y:24, clear of fences at y:22)
   - item: "street_lamp"
     tile_x: 10
-    tile_y: 23
+    tile_y: 24
   - item: "street_lamp"
-    tile_x: 18
-    tile_y: 23
+    tile_x: 16
+    tile_y: 24
   - item: "street_lamp"
     tile_x: 34
-    tile_y: 23
+    tile_y: 24
   - item: "street_lamp"
-    tile_x: 42
-    tile_y: 23
-  - item: "street_lamp"
-    tile_x: 50
-    tile_y: 23
+    tile_x: 45
+    tile_y: 24
 
   # === Slimes ===
   - item: "slime"

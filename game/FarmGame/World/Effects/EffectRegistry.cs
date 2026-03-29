@@ -22,6 +22,7 @@ public static class EffectRegistry
     {
         Register(new IndestructibleEffect());
         Register(new HighTemperatureEffect());
+        Register(new RestEffect());
     }
 
     public static void Register(IEffect effect)
