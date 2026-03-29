@@ -120,3 +120,7 @@ entities:
   - item: "chrysanthemum"
     tile_x: 29
     tile_y: 12
+
+  - item: "portal"
+    tile_x: 38
+    tile_y: 14
