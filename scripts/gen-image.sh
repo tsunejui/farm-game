@@ -1,9 +1,12 @@
 #!/bin/sh
 # =============================================================================
-# gen-image.sh — Batch generate PNG images from YAML pixel art definitions
+# gen-image.sh — Batch generate PNG/GIF images from YAML pixel art definitions
 #
 # Reads all YAML files under assets/images/*/ (excluding palette.yaml),
-# generates PNG files to game/FarmGame/Content/Images/<category>/<name>.png
+# generates images to game/FarmGame/Content/Images/<category>/<name>.[png|gif]
+#
+# For GIF definitions, also exports individual frame PNGs.
+# The output file extension is determined by the YAML 'type' field.
 #
 # Usage:
 #   ./scripts/gen-image.sh
@@ -32,7 +35,14 @@ for dir in "$ASSETS_DIR"/*/; do
     for yaml_file in "$dir"*.yaml; do
         [ -f "$yaml_file" ] || continue
         name=$(basename "$yaml_file" .yaml)
-        output="$OUTPUT_BASE/$category/$name.png"
+
+        # Check if YAML has output_dir override (relative to Content/)
+        output_dir=$(grep "^output_dir:" "$yaml_file" 2>/dev/null | sed 's/output_dir: *"//' | sed 's/".*//' || true)
+        if [ -n "$output_dir" ]; then
+            output="game/FarmGame/Content/$output_dir/$name"
+        else
+            output="$OUTPUT_BASE/$category/$name"
+        fi
 
         python3 "$TOOL" "$yaml_file" --palette "$PALETTE_FILE" --output "$output"
         count=$((count + 1))

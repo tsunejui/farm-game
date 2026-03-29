@@ -80,11 +80,26 @@ Add the effect description to both locale files:
 - `game/FarmGame/Content/Locales/en/effects.json` — English description
 - `game/FarmGame/Content/Locales/zh-TW/effects.json` — Chinese description
 
-## 7. Generate Icon Image
+## 7. Create Icon Image
 
-Create a 16x16 pixel art icon using ImageMagick or pixel_artify.py:
-- Save to `game/FarmGame/Content/Images/effects/<effect_id>.png`
-- The icon appears in the object status panel when the effect is active
+Create a 16x16 pixel art YAML definition in `assets/images/effects/<effect_id>.yaml`:
+
+```yaml
+metadata:
+  name: "<effect_id>"
+type: "png"
+output_dir: "Images/effects"
+palette:
+  "R": "#FF0000"
+data:
+  - |
+    ................
+    ....RRRR........
+    ...
+```
+
+Then run `just image-generate` to render to `game/FarmGame/Content/Images/effects/<effect_id>.png`.
+The icon appears in the object status panel when the effect is active.
 
 ## 8. Key Rules
 

@@ -78,12 +78,18 @@ Add the item name to both locale files:
 
 ## 5. Create Images (if applicable)
 
-Place images in `game/FarmGame/Content/Images/<folder>/`:
-- `<item_id>_normal.png` — default alive state
-- `<item_id>_damaged.png` — while taking damage (cracked/worn look)
-- `<item_id>_dead.png` — destroyed/dead state
+Create pixel art YAML definitions in `assets/images/<folder>/`:
+- `<item_id>_normal.yaml` — default alive state
+- `<item_id>_damaged.yaml` — while taking damage
+- `<item_id>_dead.yaml` — destroyed/dead state
 
-Image naming convention: `<item_id>_<state>.png`
+Each YAML uses the pixel_artify format with `type` (png/gif), `palette`, and `data` array.
+Set `output_dir: "Images/<folder>"` so images render to the correct Content directory.
+
+Then run `just image-generate` (or `./scripts/gen-image.sh`) to render all images to
+`game/FarmGame/Content/Images/<folder>/<item_id>_<state>.[png|gif]`.
+
+Image naming convention: `<item_id>_<state>.[png|gif]`
 
 ## 6. Key Rules
 
