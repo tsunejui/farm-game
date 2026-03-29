@@ -5,6 +5,7 @@ using Myra;
 using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 using MonoGame.Extended.Input;
+using FarmGame.Core;
 
 namespace FarmGame.Screens;
 
@@ -26,7 +27,17 @@ public class PauseScreen
     {
         SelectedAction = null;
         _selectedIndex = 0;
+        BuildUI();
+    }
 
+    public void Rebuild()
+    {
+        _selectedIndex = 0;
+        BuildUI();
+    }
+
+    private void BuildUI()
+    {
         var overlay = new Panel();
 
         var panel = new VerticalStackPanel
@@ -44,7 +55,7 @@ public class PauseScreen
         // Title
         panel.Widgets.Add(new Label
         {
-            Text = "Paused",
+            Text = LocaleManager.Get("ui", "paused"),
             HorizontalAlignment = HorizontalAlignment.Center,
             Scale = new Vector2(2f),
             TextColor = new Color(200, 220, 200),
@@ -52,11 +63,11 @@ public class PauseScreen
         });
 
         // Buttons
-        var resumeBtn = CreateButton("Resume");
+        var resumeBtn = CreateButton(LocaleManager.Get("ui", "resume"));
         resumeBtn.Click += (_, _) => SelectedAction = PauseMenuOption.Resume;
         panel.Widgets.Add(resumeBtn);
 
-        var exitBtn = CreateButton("Exit Game");
+        var exitBtn = CreateButton(LocaleManager.Get("ui", "exit_game"));
         exitBtn.Click += (_, _) => SelectedAction = PauseMenuOption.ExitGame;
         panel.Widgets.Add(exitBtn);
 

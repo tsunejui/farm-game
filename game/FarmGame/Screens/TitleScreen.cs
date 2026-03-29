@@ -4,12 +4,14 @@ using Microsoft.Xna.Framework.Input;
 using Myra;
 using Myra.Graphics2D.UI;
 using MonoGame.Extended.Input;
+using FarmGame.Core;
 
 namespace FarmGame.Screens;
 
 public enum TitleMenuOption
 {
     StartGame,
+    Settings,
     ExitGame
 }
 
@@ -26,7 +28,17 @@ public class TitleScreen
     {
         SelectedAction = null;
         _selectedIndex = 0;
+        BuildUI();
+    }
 
+    public void Rebuild()
+    {
+        _selectedIndex = 0;
+        BuildUI();
+    }
+
+    private void BuildUI()
+    {
         var root = new VerticalStackPanel
         {
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -37,7 +49,7 @@ public class TitleScreen
         // Title
         root.Widgets.Add(new Label
         {
-            Text = "Farm Game",
+            Text = LocaleManager.Get("ui", "game_title"),
             HorizontalAlignment = HorizontalAlignment.Center,
             Scale = new Vector2(3f),
             TextColor = new Color(34, 200, 34),
@@ -45,20 +57,24 @@ public class TitleScreen
         });
 
         // Buttons
-        var startBtn = CreateButton("Start Game");
+        var startBtn = CreateButton(LocaleManager.Get("ui", "start_game"));
         startBtn.Click += (_, _) => SelectedAction = TitleMenuOption.StartGame;
         root.Widgets.Add(startBtn);
 
-        var exitBtn = CreateButton("Exit Game");
+        var settingsBtn = CreateButton(LocaleManager.Get("ui", "settings"));
+        settingsBtn.Click += (_, _) => SelectedAction = TitleMenuOption.Settings;
+        root.Widgets.Add(settingsBtn);
+
+        var exitBtn = CreateButton(LocaleManager.Get("ui", "exit_game"));
         exitBtn.Click += (_, _) => SelectedAction = TitleMenuOption.ExitGame;
         root.Widgets.Add(exitBtn);
 
-        _buttons = new[] { startBtn, exitBtn };
+        _buttons = new[] { startBtn, settingsBtn, exitBtn };
 
         // Hint
         root.Widgets.Add(new Label
         {
-            Text = "W/S or Arrow Keys to select, Enter to confirm",
+            Text = LocaleManager.Get("ui", "hint_menu"),
             HorizontalAlignment = HorizontalAlignment.Center,
             TextColor = new Color(80, 80, 80),
             Margin = new Myra.Graphics2D.Thickness(0, 30, 0, 0),

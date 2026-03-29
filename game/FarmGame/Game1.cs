@@ -1,21 +1,5 @@
 // =============================================================================
 // Game1.cs — Main game entry class
-//
-// Inherits from MonoGame's Game class and manages the entire game lifecycle,
-// including initialization, content loading, the game state machine
-// (TitleScreen → Playing → Paused), and per-frame update and render logic.
-//
-// Functions:
-//   - Game1()        : Constructor. Initializes GraphicsDeviceManager and sets Content root directory.
-//   - Initialize()   : Loads game config from YAML, sets window size and initial state.
-//                       see: https://docs.monogame.net/api/Microsoft.Xna.Framework.Game.html#Microsoft_Xna_Framework_Game_Initialize
-//   - LoadContent()  : Creates SpriteBatch, 1x1 white pixel texture, font, and loads all data via DataRegistry.
-//                       see: https://docs.monogame.net/api/Microsoft.Xna.Framework.Game.html#Microsoft_Xna_Framework_Game_LoadContent
-//   - StartGame()    : Builds the map, player, and camera from DataRegistry, then transitions to Playing state.
-//   - Update()       : Per-frame update. Handles menu actions, player movement, and pause toggle based on game state.
-//                       see: https://docs.monogame.net/api/Microsoft.Xna.Framework.Game.html#Microsoft_Xna_Framework_Game_Update_Microsoft_Xna_Framework_GameTime_
-//   - Draw()         : Per-frame render. Draws title screen, game scene, or pause overlay based on game state.
-//                       see: https://docs.monogame.net/api/Microsoft.Xna.Framework.Game.html#Microsoft_Xna_Framework_Game_Draw_Microsoft_Xna_Framework_GameTime_
 // =============================================================================
 
 using System;
@@ -34,6 +18,7 @@ using FarmGame.Persistence;
 using FarmGame.Persistence.Models;
 using FarmGame.Persistence.Repositories;
 using FarmGame.Screens;
+using FarmGame.Screens.HUD;
 using FarmGame.World;
 
 namespace FarmGame;
@@ -43,10 +28,14 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     private GameState _gameState;
+    private string _contentDir;
 
     // Screens
     private TitleScreen _titleScreen;
     private PauseScreen _pauseScreen;
+    private SettingsScreen _settingsScreen;
+    private MapTransitionOverlay _mapTransition;
+    private ToastAlert _toast;
 
     // Data
     private DataRegistry _registry;
@@ -70,9 +59,8 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-        // Load config from YAML before initializing graphics
-        var contentDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
-        var config = GameConfig.Load(Path.Combine(contentDir, "config.yaml"));
+        _contentDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
+        var config = GameConfig.Load(Path.Combine(_contentDir, "config.yaml"));
         GameConstants.LoadFrom(config);
         Log.Information("Config loaded: {Width}x{Height}, tile size {TileSize}",
             config.Screen.Width, config.Screen.Height, config.Tile.Size);
@@ -81,8 +69,11 @@ public class Game1 : Game
         _graphics.PreferredBackBufferHeight = GameConstants.ScreenHeight;
         _graphics.ApplyChanges();
 
-        // Initialize database
         InitializeDatabase();
+
+        // Load locale: DB setting > config default > "en"
+        var language = _settings?.Get("language", GameConstants.DefaultLanguage) ?? GameConstants.DefaultLanguage;
+        LocaleManager.Load(_contentDir, language);
 
         _gameState = GameState.TitleScreen;
 
@@ -93,18 +84,10 @@ public class Game1 : Game
     {
         var dbDir = DatabasePathResolver.GetDatabaseDirectory(GameConstants.GameTitle);
         var dirResult = DatabasePathResolver.EnsureDirectoryExists(dbDir);
-        if (!dirResult.Success)
-        {
-            _databaseError = dirResult.ErrorMessage;
-            return;
-        }
+        if (!dirResult.Success) { _databaseError = dirResult.ErrorMessage; return; }
 
         var permResult = DatabasePathResolver.CheckWritePermission(dbDir);
-        if (!permResult.Success)
-        {
-            _databaseError = permResult.ErrorMessage;
-            return;
-        }
+        if (!permResult.Success) { _databaseError = permResult.ErrorMessage; return; }
 
         var dbPath = DatabasePathResolver.GetDatabasePath(GameConstants.GameTitle);
         Log.Information("Database path: {DbPath}", dbPath);
@@ -121,7 +104,6 @@ public class Game1 : Game
         _settings = new SettingRepository(_database);
         _playerStateRepo = new PlayerStateRepository(_database);
 
-        // Create or load player UUID
         _playerUuid = _settings.Get("player_uuid");
         if (string.IsNullOrEmpty(_playerUuid))
         {
@@ -140,6 +122,7 @@ public class Game1 : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
         MyraEnvironment.Game = this;
+        FontManager.Initialize(GraphicsDevice, _contentDir);
 
         _titleScreen = new TitleScreen();
         _titleScreen.Initialize();
@@ -149,21 +132,23 @@ public class Game1 : Game
         _pauseScreen = new PauseScreen();
         _pauseScreen.Initialize();
 
-        // Load all data at startup
-        var contentDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
-        _registry = DataRegistry.LoadAll(contentDir);
+        _settingsScreen = new SettingsScreen();
+        _settingsScreen.Initialize();
+
+        _mapTransition = new MapTransitionOverlay();
+        _toast = new ToastAlert();
+
+        _registry = DataRegistry.LoadAll(_contentDir);
     }
 
     private void StartGame()
     {
-        // Backup database before starting gameplay
         if (_database != null)
         {
             var dbPath = DatabasePathResolver.GetDatabasePath(GameConstants.GameTitle);
             DatabaseBackup.Backup(dbPath);
         }
 
-        // Load saved state if exists
         PlayerState savedState = null;
         if (_playerStateRepo != null && _playerUuid != null)
         {
@@ -196,13 +181,18 @@ public class Game1 : Game
 
         _player = new Player(playerStart, _currentMap, facingDirection);
         _camera = new Camera2D(GraphicsDevice);
+
+        // Map name from locale, fallback to definition display_name
+        var mapName = LocaleManager.Get("maps", mapId, mapDef.Metadata.DisplayName ?? mapId);
+        _mapTransition.Start(mapName);
+        _toast.Show(LocaleManager.Format("ui", "entered_map", mapName));
+
         _gameState = GameState.Playing;
     }
 
     private Texture2D LoadTexture(string path)
     {
-        var contentDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
-        var pngPath = Path.Combine(contentDir, path + ".png");
+        var pngPath = Path.Combine(_contentDir, path + ".png");
         if (File.Exists(pngPath))
         {
             using var stream = File.OpenRead(pngPath);
@@ -239,6 +229,18 @@ public class Game1 : Game
             Log.Error("Failed to save player state: {Error}", result.ErrorMessage);
     }
 
+    private void ChangeLanguage(string language)
+    {
+        LocaleManager.Load(_contentDir, language);
+        _settings?.Set("language", language);
+        Log.Information("Language changed to: {Language}", language);
+
+        // Rebuild all screens with new locale
+        _titleScreen.Rebuild();
+        _pauseScreen.Rebuild();
+        _settingsScreen.Rebuild();
+    }
+
     protected override void Update(GameTime gameTime)
     {
         KeyboardExtended.Update();
@@ -255,13 +257,36 @@ public class Game1 : Game
                     _titleScreen.ConsumeAction();
                     StartGame();
                 }
+                else if (_titleScreen.SelectedAction == TitleMenuOption.Settings)
+                {
+                    _titleScreen.ConsumeAction();
+                    _settingsScreen.Rebuild();
+                    _gameState = GameState.Settings;
+                }
                 else if (_titleScreen.SelectedAction == TitleMenuOption.ExitGame)
                 {
                     Exit();
                 }
                 break;
 
+            case GameState.Settings:
+                _settingsScreen.Update(gameTime);
+                if (_settingsScreen.SelectedAction == SettingsAction.LanguageChanged)
+                {
+                    _settingsScreen.ConsumeAction();
+                    ChangeLanguage(_settingsScreen.SelectedLanguage);
+                }
+                else if (_settingsScreen.SelectedAction == SettingsAction.Back)
+                {
+                    _settingsScreen.ConsumeAction();
+                    _gameState = GameState.TitleScreen;
+                }
+                break;
+
             case GameState.Playing:
+                float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _mapTransition.Update(dt);
+                _toast.Update(dt);
                 var keyboard = KeyboardExtended.GetState();
                 if (keyboard.WasKeyPressed(Keys.Escape))
                 {
@@ -302,12 +327,21 @@ public class Game1 : Game
                 _titleScreen.Draw();
                 break;
 
+            case GameState.Settings:
+                _settingsScreen.Draw();
+                break;
+
             case GameState.Playing:
                 _spriteBatch.Begin(
                     transformMatrix: _camera.TransformMatrix,
                     samplerState: SamplerState.PointClamp);
                 _currentMap.Draw(_spriteBatch, _camera);
                 _player.Draw(_spriteBatch);
+                _spriteBatch.End();
+                _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+                _toast.Draw(_spriteBatch);
+                if (_mapTransition.IsActive)
+                    _mapTransition.Draw(_spriteBatch);
                 _spriteBatch.End();
                 break;
 
