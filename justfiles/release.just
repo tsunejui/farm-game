@@ -87,17 +87,33 @@ release-version:
 	echo "$version" > VERSION
 	echo "Version set to: $version"
 
-# Package all installers into a zip for release
+# Package each platform installer into separate zip files
 release-zip:
 	#!/bin/sh
 	version="$(cat VERSION)"
 	mkdir -p dist/release
-	cd dist/installer
-	zip -r "../release/FarmGame_${version}_installers.zip" . -x ".*"
-	cd ../..
-	cd dist/linux-x64
-	zip -r "../release/FarmGame_${version}_linux-x64.zip" . -x ".*"
-	echo "Release artifacts in dist/release/"
+	# Windows x64 installer
+	if [ -f "dist/installer/FarmGame_Setup_${version}_x64.exe" ]; then \
+		cd dist/installer && zip -j "../release/FarmGame_${version}_windows-x64.zip" "FarmGame_Setup_${version}_x64.exe" && cd ../..; \
+	fi
+	# Windows ARM64 installer
+	if [ -f "dist/installer/FarmGame_Setup_${version}_arm64.exe" ]; then \
+		cd dist/installer && zip -j "../release/FarmGame_${version}_windows-arm64.zip" "FarmGame_Setup_${version}_arm64.exe" && cd ../..; \
+	fi
+	# macOS ARM64 DMG
+	if [ -f "dist/installer/FarmGame_${version}_arm64.dmg" ]; then \
+		cd dist/installer && zip -j "../release/FarmGame_${version}_macos-arm64.zip" "FarmGame_${version}_arm64.dmg" && cd ../..; \
+	fi
+	# macOS x64 DMG
+	if [ -f "dist/installer/FarmGame_${version}_x64.dmg" ]; then \
+		cd dist/installer && zip -j "../release/FarmGame_${version}_macos-x64.zip" "FarmGame_${version}_x64.dmg" && cd ../..; \
+	fi
+	# Linux x64
+	if [ -d "dist/linux-x64" ]; then \
+		cd dist/linux-x64 && zip -r "../release/FarmGame_${version}_linux-x64.zip" . -x ".*" && cd ../..; \
+	fi
+	echo "Release artifacts:"
+	ls -lh dist/release/FarmGame_${version}_*.zip 2>/dev/null
 
 # Commit VERSION and create git tag
 release-tag:
@@ -111,7 +127,7 @@ release-tag:
 	git push origin "${tag}"
 	echo "Committed and tagged: ${tag}"
 
-# Create GitHub release and upload artifacts
+# Create GitHub release and upload all platform zips
 release-publish:
 	#!/bin/sh
 	version="$(cat VERSION)"
@@ -119,6 +135,5 @@ release-publish:
 	gh release create "${tag}" \
 		--title "${tag}" \
 		--generate-notes \
-		dist/release/FarmGame_${version}_installers.zip \
-		dist/release/FarmGame_${version}_linux-x64.zip
+		dist/release/FarmGame_${version}_*.zip
 	echo "Published release ${tag}"
