@@ -71,6 +71,7 @@ public class InitManager
         // 7. Screens
         var titleScreen = new TitleScreen();
         titleScreen.OnStartGame = startGameCallback;
+        titleScreen.HasSavedState = _initialSavedState != null;
         titleScreen.Initialize();
         if (!string.IsNullOrEmpty(_databaseError))
             titleScreen.SetError(_databaseError);

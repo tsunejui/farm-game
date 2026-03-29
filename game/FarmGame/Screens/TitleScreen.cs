@@ -17,6 +17,7 @@ public class TitleScreen : IScreen
     private ScreenTransition _pendingTransition;
 
     public Action OnStartGame { get; set; }
+    public bool HasSavedState { get; set; }
 
     public void Initialize() { _selectedIndex = 0; BuildUI(); }
     public void Rebuild() { _selectedIndex = 0; BuildUI(); }
@@ -37,7 +38,8 @@ public class TitleScreen : IScreen
         title.Margin = new Myra.Graphics2D.Thickness(0, 0, 0, 40);
         root.Widgets.Add(title);
 
-        var startBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "start_game"));
+        var startKey = HasSavedState ? "continue_game" : "start_game";
+        var startBtn = UIHelper.CreateButton(LocaleManager.Get("ui", startKey));
         startBtn.Click += (_, _) => { OnStartGame?.Invoke(); };
         root.Widgets.Add(startBtn);
 
@@ -45,7 +47,7 @@ public class TitleScreen : IScreen
         settingsBtn.Click += (_, _) => _pendingTransition = ScreenTransition.To(GameState.Settings);
         root.Widgets.Add(settingsBtn);
 
-        var exitBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "exit_game"));
+        var exitBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "close_game"));
         exitBtn.Click += (_, _) => _pendingTransition = ScreenTransition.ExitGame();
         root.Widgets.Add(exitBtn);
 

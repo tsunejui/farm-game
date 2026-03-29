@@ -52,7 +52,7 @@ public class PauseScreen : IScreen
         settingsBtn.Click += (_, _) => _pendingTransition = ScreenTransition.To(GameState.Settings);
         panel.Widgets.Add(settingsBtn);
 
-        var exitBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "exit_game"));
+        var exitBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "leave_game"));
         exitBtn.Click += (_, _) => _pendingTransition = ScreenTransition.To(GameState.TitleScreen);
         panel.Widgets.Add(exitBtn);
 
