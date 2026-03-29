@@ -15,6 +15,7 @@ using FarmGame.Persistence.Models;
 using FarmGame.Screens.HUD;
 using FarmGame.World;
 using FarmGame.World.Interactions;
+using Serilog;
 
 namespace FarmGame.Screens;
 
@@ -27,6 +28,7 @@ public class PlayingScreen : IScreen, IWorldRenderer
     private readonly MapTransitionOverlay _mapTransition;
     private readonly ToastAlert _toast;
     private readonly ObjectInspector _inspector;
+    private readonly DialogueOverlay _dialogue;
 
     private GameMap _currentMap;
     private Entities.Player _player;
@@ -50,6 +52,7 @@ public class PlayingScreen : IScreen, IWorldRenderer
         _mapTransition = new MapTransitionOverlay();
         _toast = new ToastAlert();
         _inspector = new ObjectInspector();
+        _dialogue = new DialogueOverlay();
     }
 
     public void Initialize() { }
@@ -85,8 +88,16 @@ public class PlayingScreen : IScreen, IWorldRenderer
         // Wire interaction callback for interactable objects
         _player.OnInteract = obj =>
         {
-            string name = LocaleManager.Get("items", obj.ItemId, obj.Definition.Metadata.DisplayName);
-            MessageQueue.Enqueue(LocaleManager.Format("ui", "interact", name));
+            if (obj.InteractionBehavior is DialogueBehavior db)
+            {
+                string name = LocaleManager.Get("items", obj.ItemId, obj.Definition.Metadata.DisplayName);
+                _dialogue.Open(name, db.GetLines());
+            }
+            else
+            {
+                string name = LocaleManager.Get("items", obj.ItemId, obj.Definition.Metadata.DisplayName);
+                MessageQueue.Enqueue(LocaleManager.Format("ui", "interact", name));
+            }
         };
 
         _mapTransition.Start(result.MapName);
@@ -119,6 +130,10 @@ public class PlayingScreen : IScreen, IWorldRenderer
             }
         }
 
+        // Dialogue overlay blocks all game input while open
+        if (_dialogue.Update())
+            return ScreenTransition.None;
+
         var keyboard = KeyboardExtended.GetState();
         if (keyboard.WasKeyPressed(Keys.Escape))
             return ScreenTransition.To(GameState.Paused);
@@ -148,6 +163,7 @@ public class PlayingScreen : IScreen, IWorldRenderer
         _toast.Draw(spriteBatch);
         if (_mapTransition.IsActive)
             _mapTransition.Draw(spriteBatch);
+        _dialogue.Draw(spriteBatch);
         spriteBatch.End();
     }
 

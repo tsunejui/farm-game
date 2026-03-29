@@ -1,0 +1,30 @@
+metadata:
+  item_id: "signpost"
+  display_name: "Signpost"
+  category: "structure"
+
+visuals:
+  color: ""
+  origin_point: "top_left"
+  background:
+    enabled: true
+    display_mode: "stretch"
+    offset_x: 0
+    offset_y: 0
+    states:
+      normal:
+        image_path: "Images/signposts/signpost_normal"
+
+physics:
+  occupy_width: 1
+  occupy_height: 1
+  is_collidable: true
+
+logic:
+  default_effects: []
+  interaction_behavior: "dialogue"
+  is_interactable: true
+  is_invincible: true
+  action_handler: "none"
+  max_health: 0
+  faction: "friendly"

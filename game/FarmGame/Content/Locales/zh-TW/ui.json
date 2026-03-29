@@ -26,5 +26,6 @@
   "dead_suffix": "(死亡)",
   "corpse": "屍體",
   "effect_label": "效果",
-  "teleporting": "正在傳送至 {0}..."
+  "teleporting": "正在傳送至 {0}...",
+  "close_dialogue": "離開"
 }

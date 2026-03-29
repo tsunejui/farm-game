@@ -105,6 +105,17 @@ public class WorldObject
                 if (!string.IsNullOrEmpty(targetMap))
                     InteractionBehavior = new TeleportBehavior(targetMap, targetX, targetY, logic.ChargeTime);
                 break;
+
+            case "dialogue":
+                // Read dialogue lines from instance properties
+                var lines = new List<string>();
+                if (Properties.TryGetValue("dialogue_lines", out var dlObj) && dlObj is List<object> dlList)
+                {
+                    foreach (var item in dlList)
+                        lines.Add(item.ToString());
+                }
+                InteractionBehavior = new DialogueBehavior(lines);
+                break;
         }
     }
 

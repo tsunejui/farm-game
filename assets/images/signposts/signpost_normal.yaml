@@ -1,0 +1,29 @@
+metadata:
+  name: "signpost_normal"
+type: "png"
+output_dir: "Images/signposts"
+palette:
+  "B": "#8B4513"
+  "D": "#6B3510"
+  "L": "#C4944A"
+  "T": "#A07838"
+  "W": "#D4B87A"
+  "K": "#4A2808"
+data:
+  - |
+    ................
+    .LLLLLLLLLLLLLL.
+    .LWWWWWWWWWWWWL.
+    .LWWWWWWWWWWWWL.
+    .LTTTTTTTTTTTBL.
+    .LLLLLLLLLLLLLL.
+    ................
+    .LLLLLLLLLLLLLL.
+    .LWWWWWWWWWWWWL.
+    .LWWWWWWWWWWWWL.
+    .LTTTTTTTTTTTBL.
+    .LLLLLLLLLLLLLL.
+    ......BB........
+    ......BB........
+    ......BD........
+    ......BK........

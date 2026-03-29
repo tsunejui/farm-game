@@ -121,6 +121,15 @@ entities:
     tile_x: 29
     tile_y: 12
 
+  # Signpost next to portal
+  - item: "signpost"
+    tile_x: 37
+    tile_y: 15
+    properties:
+      dialogue_lines:
+        - "> Right: Black Forest"
+        - "< Left: Starter Farm"
+
   # Portal to Black Forest — lands right of dark_forest portal (24,22)
   - item: "portal"
     tile_x: 38
