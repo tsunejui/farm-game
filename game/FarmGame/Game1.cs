@@ -37,11 +37,9 @@ public class Game1 : Game
 
     // Data
     private DataRegistry _registry;
-    private DatabaseBootstrapper _database;
     private string _databaseError;
-    private string _playerUuid;
     private SettingRepository _settings;
-    private PlayerStateRepository _playerStateRepo;
+    private PlayerStateSaver _stateSaver;
     private PlayerState _savedState;
 
     // Gameplay
@@ -66,10 +64,8 @@ public class Game1 : Game
         var dbResult = DatabaseInitializer.Run();
         if (dbResult.Success)
         {
-            _database = dbResult.Database;
             _settings = dbResult.Settings;
-            _playerStateRepo = dbResult.PlayerStateRepo;
-            _playerUuid = dbResult.PlayerUuid;
+            _stateSaver = new PlayerStateSaver(dbResult.PlayerStateRepo, dbResult.PlayerUuid);
             _savedState = dbResult.SavedState;
         }
         else
@@ -148,24 +144,7 @@ public class Game1 : Game
 
     private void SavePlayerState()
     {
-        if (_database == null || _playerStateRepo == null || _player == null)
-            return;
-
-        var state = new PlayerState
-        {
-            Uuid = _playerUuid,
-            PositionX = _player.GridPosition.X,
-            PositionY = _player.GridPosition.Y,
-            FacingDirection = _player.FacingDirection.ToString(),
-            CurrentMap = GameConstants.StartMap,
-        };
-
-        var result = _playerStateRepo.Save(_playerUuid, state, GameConstants.GameTitle);
-        if (result.Success)
-            Log.Information("Player state saved: pos=({X},{Y}), dir={Dir}",
-                state.PositionX, state.PositionY, state.FacingDirection);
-        else
-            Log.Error("Failed to save player state: {Error}", result.ErrorMessage);
+        _stateSaver?.Save(_player, _currentMap?.MapId ?? GameConstants.StartMap);
     }
 
     private void HandleTransition(ScreenTransition transition)
