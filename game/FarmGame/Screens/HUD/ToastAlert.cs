@@ -39,6 +39,10 @@ public class ToastAlert
 
     public void Update(float deltaTime)
     {
+        // Drain pending messages from the centralized queue
+        while (MessageQueue.TryDequeue(out var msg, out var dur))
+            Show(msg, dur);
+
         int deltaMs = (int)(deltaTime * 1000);
 
         for (int i = _toasts.Count - 1; i >= 0; i--)

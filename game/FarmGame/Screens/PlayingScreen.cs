@@ -84,11 +84,11 @@ public class PlayingScreen : IScreen, IWorldRenderer
         _player.OnInteract = obj =>
         {
             string name = LocaleManager.Get("items", obj.ItemId, obj.Definition.Metadata.DisplayName);
-            _toast.Show(LocaleManager.Format("ui", "interact", name));
+            MessageQueue.Enqueue(LocaleManager.Format("ui", "interact", name));
         };
 
         _mapTransition.Start(result.MapName);
-        _toast.Show(LocaleManager.Format("ui", "entered_map", result.MapName));
+        MessageQueue.Enqueue(LocaleManager.Format("ui", "entered_map", result.MapName));
     }
 
     public void SaveState()
@@ -113,7 +113,7 @@ public class PlayingScreen : IScreen, IWorldRenderer
             {
                 _autoSaveTimer = 0f;
                 SaveState();
-                _toast.Show(LocaleManager.Get("ui", "auto_saved", "Auto-saved"));
+                MessageQueue.Enqueue(LocaleManager.Get("ui", "auto_saved", "Auto-saved"));
             }
         }
 
