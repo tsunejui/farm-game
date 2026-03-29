@@ -93,6 +93,13 @@ public class WorldObject
     // Tick effect TTLs and periodically enqueue a RefreshEffectsEvent
     public void UpdateEffects(float deltaTime)
     {
+        // Remove all effects on death
+        if (!State.IsAlive)
+        {
+            if (Effects.Count > 0) Effects.Clear();
+            return;
+        }
+
         // Tick all effect TTLs
         foreach (var ae in Effects)
             ae.Update(deltaTime);
