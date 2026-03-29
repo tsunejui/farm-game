@@ -1,14 +1,12 @@
 // =============================================================================
 // ObjectInspector.cs — Mouse-driven object inspection HUD
 //
-// Hover: shows object name + category at bottom-right of screen
-// Click: opens status panel at top-center with name + HP + close button
-//        Draws gold marker under selected object
-//        Renders effect icons below HP bar
+// Hover object: info panel at bottom-right (name, category, death status)
+// Hover effect icon: info panel shows effect description
+// Click object: status panel at top-center (name, HP, effects)
 // =============================================================================
 
 using System;
-using System.Collections.Generic;
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,8 +25,9 @@ public class ObjectInspector
     private WorldObject _selectedObject;
     private WorldObject _playerObject;
     private MouseState _prevMouse;
+    private string _hoveredEffectDesc;  // set when hovering an effect icon
+    private bool _closeHovered;
 
-    // Status panel layout constants
     private const int PanelW = 220;
     private const int PanelY = 10;
     private const int Padding = 10;
@@ -38,11 +37,7 @@ public class ObjectInspector
 
     public WorldObject SelectedObject => _selectedObject;
 
-    // Set the player as a clickable/hoverable object
-    public void SetPlayerObject(WorldObject playerObj)
-    {
-        _playerObject = playerObj;
-    }
+    public void SetPlayerObject(WorldObject playerObj) { _playerObject = playerObj; }
 
     public void Update(GameMap map, Camera2D camera)
     {
@@ -50,20 +45,30 @@ public class ObjectInspector
         bool clicked = mouse.LeftButton == ButtonState.Pressed &&
                        _prevMouse.LeftButton == ButtonState.Released;
 
-        // Check close button FIRST (before world click)
-        if (clicked && _selectedObject != null)
-        {
-            int panelX = GameConstants.ScreenWidth / 2 - PanelW / 2;
-            int closeX = panelX + PanelW - CloseSize - 4;
-            int closeY = PanelY + 4;
+        _hoveredEffectDesc = null;
+        _closeHovered = false;
 
+        int panelX = GameConstants.ScreenWidth / 2 - PanelW / 2;
+        int closeX = panelX + PanelW - CloseSize - 4;
+        int closeY = PanelY + 4;
+
+        // Close button hover + click
+        if (_selectedObject != null)
+        {
             if (mouse.X >= closeX && mouse.X <= closeX + CloseSize &&
                 mouse.Y >= closeY && mouse.Y <= closeY + CloseSize)
             {
-                _selectedObject = null;
-                _prevMouse = mouse;
-                return;
+                _closeHovered = true;
+                if (clicked)
+                {
+                    _selectedObject = null;
+                    _prevMouse = mouse;
+                    return;
+                }
             }
+
+            // Effect icon hover detection
+            DetectEffectHover(mouse, panelX);
         }
 
         // World-space hover/click
@@ -71,17 +76,45 @@ public class ObjectInspector
         int tileX = (int)worldPos.X / GameConstants.TileSize;
         int tileY = (int)worldPos.Y / GameConstants.TileSize;
 
-        // Hover: check map objects, then player
         _hoveredObject = map.GetObjectAt(tileX, tileY);
         if (_hoveredObject == null && _playerObject != null &&
             tileX == _playerObject.TileX && tileY == _playerObject.TileY)
             _hoveredObject = _playerObject;
 
-        // Click: select hovered object
         if (clicked && _hoveredObject != null)
             _selectedObject = _hoveredObject;
 
         _prevMouse = mouse;
+    }
+
+    private void DetectEffectHover(MouseState mouse, int panelX)
+    {
+        int effectCount = _selectedObject.Effects.Count;
+        if (effectCount == 0) return;
+
+        int iconsPerRow = (PanelW - Padding * 2) / (IconSize + IconSpacing);
+        if (iconsPerRow < 1) iconsPerRow = 1;
+        int barY = PanelY + Padding + 24;
+        int iconStartY = barY + 6 + 22;
+
+        for (int i = 0; i < effectCount; i++)
+        {
+            int row = i / iconsPerRow;
+            int col = i % iconsPerRow;
+            int ix = panelX + Padding + col * (IconSize + IconSpacing);
+            int iy = iconStartY + row * (IconSize + IconSpacing);
+
+            if (mouse.X >= ix && mouse.X <= ix + IconSize &&
+                mouse.Y >= iy && mouse.Y <= iy + IconSize)
+            {
+                var def = EffectRegistry.GetDefinition(_selectedObject.Effects[i].EffectId);
+                if (def != null)
+                    _hoveredEffectDesc = def.Description;
+                else
+                    _hoveredEffectDesc = _selectedObject.Effects[i].EffectId;
+                break;
+            }
+        }
     }
 
     public void DrawWorldMarker(SpriteBatch spriteBatch)
@@ -94,10 +127,8 @@ public class ObjectInspector
         int pw = _selectedObject.EffectiveWidth * ts;
         int ph = _selectedObject.EffectiveHeight * ts;
 
-        // Gold underline
         spriteBatch.FillRectangle(new Rectangle(px, py + ph + 1, pw, 3), Color.Gold);
 
-        // Gold corner brackets
         int bl = 6;
         var gold = Color.Gold * 0.8f;
         spriteBatch.FillRectangle(new Rectangle(px - 1, py - 1, bl, 1), gold);
@@ -112,27 +143,48 @@ public class ObjectInspector
 
     public void DrawHUD(SpriteBatch spriteBatch)
     {
-        DrawHoverTooltip(spriteBatch);
+        DrawInfoPanel(spriteBatch);
         DrawStatusPanel(spriteBatch);
     }
 
-    private void DrawHoverTooltip(SpriteBatch spriteBatch)
+    // Bottom-right info panel: object hover OR effect hover description
+    private void DrawInfoPanel(SpriteBatch spriteBatch)
     {
+        // Priority: effect description > object hover
+        if (_hoveredEffectDesc != null)
+        {
+            DrawInfoBox(spriteBatch,
+                LocaleManager.Get("ui", "effect_label", "Effect"),
+                _hoveredEffectDesc);
+            return;
+        }
+
         if (_hoveredObject == null) return;
 
+        bool isDead = !_hoveredObject.State.IsAlive;
+        string name = GetLocalizedName(_hoveredObject);
+        if (isDead)
+            name += " " + LocaleManager.Get("ui", "dead_suffix", "(Dead)");
+
+        string category = isDead
+            ? LocaleManager.Get("ui", "corpse", "Corpse")
+            : GetLocalizedCategory(_hoveredObject);
+
+        DrawInfoBox(spriteBatch, name, category);
+    }
+
+    private void DrawInfoBox(SpriteBatch spriteBatch, string line1, string line2)
+    {
         var font = FontManager.GetFont(14);
         if (font == null) return;
 
-        string name = LocaleManager.Get("items", _hoveredObject.ItemId,
-            _hoveredObject.Definition.Metadata.DisplayName);
-        string category = _hoveredObject.Category.ToString();
-
         int pad = 8;
         int lineSpacing = 4;
-        var nameSize = font.MeasureString(name);
-        var catSize = font.MeasureString(category);
-        int boxW = (int)Math.Max(nameSize.X, catSize.X) + pad * 2;
-        int boxH = (int)(nameSize.Y + catSize.Y) + lineSpacing + pad * 2;
+        var s1 = font.MeasureString(line1);
+        var catFont = FontManager.GetFont(12);
+        var s2 = catFont?.MeasureString(line2) ?? Vector2.Zero;
+        int boxW = (int)Math.Max(s1.X, s2.X) + pad * 2;
+        int boxH = (int)(s1.Y + s2.Y) + lineSpacing + pad * 2;
 
         int boxX = GameConstants.ScreenWidth - boxW - 12;
         int boxY = GameConstants.ScreenHeight - boxH - 12;
@@ -140,12 +192,10 @@ public class ObjectInspector
         spriteBatch.FillRectangle(new Rectangle(boxX, boxY, boxW, boxH), Color.Black * 0.7f);
         spriteBatch.DrawRectangle(new Rectangle(boxX, boxY, boxW, boxH), Color.Gray * 0.5f);
 
-        font.DrawText(spriteBatch, name,
+        font.DrawText(spriteBatch, line1,
             new Vector2(boxX + pad, boxY + pad), Color.White);
-
-        var catFont = FontManager.GetFont(12);
-        catFont?.DrawText(spriteBatch, category,
-            new Vector2(boxX + pad, boxY + pad + nameSize.Y + lineSpacing),
+        catFont?.DrawText(spriteBatch, line2,
+            new Vector2(boxX + pad, boxY + pad + s1.Y + lineSpacing),
             Color.LightGray * 0.8f);
     }
 
@@ -157,11 +207,13 @@ public class ObjectInspector
         var hpFont = FontManager.GetFont(14);
         if (titleFont == null || hpFont == null) return;
 
-        string name = LocaleManager.Get("items", _selectedObject.ItemId,
-            _selectedObject.Definition.Metadata.DisplayName);
+        bool isDead = !_selectedObject.State.IsAlive;
+        string name = GetLocalizedName(_selectedObject);
+        if (isDead)
+            name += " " + LocaleManager.Get("ui", "dead_suffix", "(Dead)");
+
         string hpText = $"HP: {_selectedObject.State.CurrentHp} / {_selectedObject.State.MaxHp}";
 
-        // Calculate panel height based on effect icon rows
         int effectCount = _selectedObject.Effects.Count;
         int iconsPerRow = (PanelW - Padding * 2) / (IconSize + IconSpacing);
         if (iconsPerRow < 1) iconsPerRow = 1;
@@ -178,8 +230,9 @@ public class ObjectInspector
             Color.Gold * 0.6f);
 
         // Name
+        Color nameColor = isDead ? Color.Gray : Color.White;
         titleFont.DrawText(spriteBatch, name,
-            new Vector2(panelX + Padding, PanelY + Padding), Color.White);
+            new Vector2(panelX + Padding, PanelY + Padding), nameColor);
 
         // HP bar
         int barW = PanelW - Padding * 2;
@@ -205,7 +258,6 @@ public class ObjectInspector
         if (effectCount > 0)
         {
             int iconStartY = barY + barH + 22;
-            var iconFont = FontManager.GetFont(8);
 
             for (int i = 0; i < effectCount; i++)
             {
@@ -221,9 +273,9 @@ public class ObjectInspector
                 spriteBatch.DrawRectangle(new Rectangle(ix, iy, IconSize, IconSize),
                     Color.Gray * 0.4f);
 
-                // Effect icon image (if loaded via EffectDefinition)
+                // Effect icon texture
                 var def = EffectRegistry.GetDefinition(ae.EffectId);
-                if (def != null && def.Texture != null)
+                if (def?.Texture != null)
                 {
                     spriteBatch.Draw(def.Texture,
                         new Rectangle(ix + 2, iy + 2, IconSize - 4, IconSize - 4),
@@ -231,26 +283,45 @@ public class ObjectInspector
                 }
                 else
                 {
-                    // Fallback: first letter of effect ID
+                    var iconFont = FontManager.GetFont(10);
                     iconFont?.DrawText(spriteBatch, ae.EffectId[..1].ToUpper(),
-                        new Vector2(ix + 5, iy + 4), Color.White * 0.7f);
+                        new Vector2(ix + 4, iy + 3), Color.White * 0.7f);
                 }
             }
         }
 
-        // Close button [X] at top-right — centered text
+        // Close button [X] — hover/click color feedback
         int closeX = panelX + PanelW - CloseSize - 4;
-        int closeY = PanelY + 4;
-        spriteBatch.FillRectangle(new Rectangle(closeX, closeY, CloseSize, CloseSize),
-            Color.DarkRed * 0.8f);
+        int closeY2 = PanelY + 4;
+
+        bool closePressed = _closeHovered &&
+            Mouse.GetState().LeftButton == ButtonState.Pressed;
+        Color closeBg = closePressed ? Color.Red
+            : _closeHovered ? new Color(180, 40, 40)
+            : Color.DarkRed * 0.8f;
+        Color closeFg = _closeHovered ? Color.White : Color.White * 0.8f;
+
+        spriteBatch.FillRectangle(new Rectangle(closeX, closeY2, CloseSize, CloseSize), closeBg);
 
         var closeFont = FontManager.GetFont(12);
         if (closeFont != null)
         {
             var xSize = closeFont.MeasureString("X");
             float xTextX = closeX + (CloseSize - xSize.X) / 2f;
-            float xTextY = closeY + (CloseSize - xSize.Y) / 2f;
-            closeFont.DrawText(spriteBatch, "X", new Vector2(xTextX, xTextY), Color.White);
+            float xTextY = closeY2 + (CloseSize - xSize.Y) / 2f;
+            closeFont.DrawText(spriteBatch, "X", new Vector2(xTextX, xTextY), closeFg);
         }
+    }
+
+    private static string GetLocalizedName(WorldObject obj)
+    {
+        return LocaleManager.Get("items", obj.ItemId,
+            obj.Definition.Metadata.DisplayName);
+    }
+
+    private static string GetLocalizedCategory(WorldObject obj)
+    {
+        string catKey = obj.Category.ToString().ToLowerInvariant();
+        return LocaleManager.Get("ui", "category_" + catKey, obj.Category.ToString());
     }
 }

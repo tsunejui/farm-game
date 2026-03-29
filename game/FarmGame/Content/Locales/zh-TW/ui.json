@@ -20,5 +20,10 @@
   "cancel": "取消",
   "loading": "載入中...",
   "auto_saved": "已自動存檔",
-  "interact": "正在與 {0} 互動..."
+  "interact": "正在與 {0} 互動...",
+  "category_item": "物品",
+  "category_creature": "生物",
+  "dead_suffix": "(死亡)",
+  "corpse": "屍體",
+  "effect_label": "效果"
 }

@@ -20,5 +20,10 @@
   "cancel": "Cancel",
   "loading": "Loading...",
   "auto_saved": "Auto-saved",
-  "interact": "Interacting with {0}..."
+  "interact": "Interacting with {0}...",
+  "category_item": "Item",
+  "category_creature": "Creature",
+  "dead_suffix": "(Dead)",
+  "corpse": "Corpse",
+  "effect_label": "Effect"
 }
