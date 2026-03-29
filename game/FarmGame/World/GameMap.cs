@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using FarmGame.Camera;
 using FarmGame.Core;
+using FarmGame.World.AI;
 
 namespace FarmGame.World;
 
@@ -34,6 +35,9 @@ public class GameMap
     private readonly Dictionary<string, List<AnimatedTexture>> _decoAnimTextures = new();
 
     public List<WorldObject> Objects { get; } = new();
+
+    // Creature AI brains — keyed by the WorldObject they control
+    private readonly Dictionary<WorldObject, CreatureBrain> _creatureBrains = new();
 
     // Player proxy for effects that interact with the player (not in Objects list)
     public WorldObject PlayerProxy { get; set; }
@@ -153,6 +157,10 @@ public class GameMap
         for (int x = obj.TileX; x < obj.TileX + obj.EffectiveWidth; x++)
             for (int y = obj.TileY; y < obj.TileY + obj.EffectiveHeight; y++)
                 _objectGrid[(x, y)] = obj;
+
+        // Auto-create AI brain for creatures with move_speed > 0
+        if (obj.Category == ObjectCategory.Creature && obj.Definition.Logic.MoveSpeed > 0)
+            _creatureBrains[obj] = CreatureBrainFactory.Create(obj);
     }
 
     public WorldObject GetObjectAt(int x, int y)
@@ -231,6 +239,13 @@ public class GameMap
                     break;
                 }
             }
+        }
+
+        // Update creature AI brains
+        foreach (var (obj, brain) in _creatureBrains)
+        {
+            if (obj.State.IsAlive)
+                brain.Update(this, deltaTime);
         }
 
         foreach (var anim in _animatedTextures.Values)

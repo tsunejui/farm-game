@@ -1,0 +1,46 @@
+metadata:
+  item_id: "slime"
+  display_name: "Slime"
+  category: "creature"
+
+visuals:
+  color: ""
+  origin_point: "top_left"
+  background:
+    enabled: true
+    display_mode: "stretch"
+    offset_x: 0
+    offset_y: 0
+    states:
+      normal:
+        image_path: "Images/slimes/slime_normal"
+        file_type: "gif"
+        frame_delay: 600
+      damaged:
+        image_path: "Images/slimes/slime_damaged"
+      dead:
+        image_path: "Images/slimes/slime_dead"
+
+physics:
+  occupy_width: 1
+  occupy_height: 1
+  is_collidable: true
+  is_knockbackable: true
+
+logic:
+  action_handler: "none"
+  max_health: 8
+  defense: 1
+  level: 1
+  faction: "neutral"
+  default_behavior: "neutral"
+  move_speed: 1.5
+  aggro_range: 5
+  attack_damage: 2
+  attack_range: 1
+  attack_cooldown: 1.5
+  hostile_speed_multiplier: 2.0
+  default_effects: []
+  drops:
+    - item: "slime_gel"
+      amount: 1

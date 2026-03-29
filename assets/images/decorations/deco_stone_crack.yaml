@@ -4,19 +4,19 @@ type: "png"
 output_dir: "Images/decorations"
 palette:
   ".": "#00000000"
-  "A": "#7c7a77"
-  "B": "#868481"
-  "C": "#918f8c"
-  "D": "#7f7d7a"
-  "E": "#82807d"
-  "F": "#9a9895"
-  "G": "#8c8a87"
-  "H": "#7e7c79"
-  "I": "#8f8d8a"
-  "J": "#92908d"
-  "K": "#959390"
-  "L": "#908e8b"
-  "M": "#9c9a97"
+  "A": "#797774"
+  "B": "#7c7a77"
+  "C": "#868481"
+  "D": "#918f8c"
+  "E": "#7f7d7a"
+  "F": "#82807d"
+  "G": "#9a9895"
+  "H": "#8c8a87"
+  "I": "#7e7c79"
+  "J": "#8f8d8a"
+  "K": "#92908d"
+  "L": "#969491"
+  "M": "#908e8b"
   "N": "#8e8c89"
   "O": "#898784"
   "P": "#8b8986"
@@ -32,23 +32,23 @@ palette:
   "Z": "#84827f"
   "a": "#83817e"
   "b": "#979592"
-  "c": "#807e7b"
-  "d": "#999794"
+  "c": "#999794"
+  "d": "#959390"
 data:
   - |
-    AABCDEFCGHIJKLMN
-    OPEECKQRSTEUGVGW
-    LQWAXXBSTMGYMXWZ
-    GAWBKNDSTMQPFUEI
-    AaQGBGGJSTbLQcDG
-    YRCBGGVSTKXPGERI
-    bNCMWDSTKNOAYPNP
-    MVFQYSTNVMYaMBUC
-    MMVXUcSTILOOFBQd
-    XdMVPGSTcNXJAXbd
-    OPKMLSTGZHPIbCFM
-    UUPMBGSTNRGRVJCK
-    ALGXIOSTVMZBMVdc
-    NGYaGRaSTHaWRCJA
-    QIGAUPAGSTZOJIOA
-    AKFRWUHJISTKMOZA
+    ABCDEFGDHIJKLMGN
+    OPFFDLQRSTFUHVHW
+    MQWAXXCWOSTYGXWZ
+    HBWCLNEYSTQPGUFJ
+    AaQHCHHKHSTMQWEH
+    YRDCHHVGbSTPHFRJ
+    bNDGWEGLSTOBYPNP
+    GVGQYAYNVSTaGCUD
+    GGVXUWICSTOOGCQc
+    XcGVPHKBSTXKAXbc
+    OPdGMJXSTIPJbDGG
+    UUPGCHSTNRHRVKDd
+    BMHXJOSTVGZCGVcW
+    NHYaHRaSTIaWRDKA
+    QJHBUPBSTZZOKJOB
+    BdGRWUSTJJKdGOZA

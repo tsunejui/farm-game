@@ -417,6 +417,20 @@ entities:
     tile_x: 50
     tile_y: 23
 
+  # === Slimes ===
+  - item: "slime"
+    tile_x: 6
+    tile_y: 8
+  - item: "slime"
+    tile_x: 38
+    tile_y: 28
+  - item: "slime"
+    tile_x: 45
+    tile_y: 35
+  - item: "slime"
+    tile_x: 10
+    tile_y: 35
+
   # === Portal to Black Forest ===
   - item: "portal"
     tile_x: 56

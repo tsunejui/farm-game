@@ -1517,6 +1517,133 @@ def generate_path_base(W, H, variant=0, state='normal'):
     return pixels
 
 
+# ────────────────────────────────────────────────────────────
+# SLIME
+# ────────────────────────────────────────────────────────────
+def generate_slime(W, H, variant=0, state='normal', frame=0):
+    pixels = [[None]*W for _ in range(H)]
+    rng = random.Random(42 + variant * 59 + frame * 11)
+    seed = 800 + variant * 31
+
+    # Animation offsets per frame
+    if frame == 1:
+        # Squished: shorter, wider
+        h_off = 2
+        w_off = 1
+    elif frame == 2:
+        # Stretched: taller, narrower
+        h_off = -2
+        w_off = -1
+    else:
+        h_off = 0
+        w_off = 0
+
+    # Body shape parameters
+    cx = W / 2.0
+    cy = H * 0.55 + h_off * 0.5
+    rx = W * 0.38 + w_off
+    ry = H * 0.40 - h_off
+
+    # Color palette
+    light_blue = hex_to_rgb('#4FC3F7')
+    dark_blue = hex_to_rgb('#0288D1')
+    highlight = hex_to_rgb('#B3E5FC')
+    outline_color = hex_to_rgb('#0277BD')
+
+    # Eye parameters
+    eye_ly = H * 0.40 + h_off * 0.3
+    eye_ry = eye_ly
+    eye_lx = W * 0.38
+    eye_rx = W * 0.62
+    eye_r = W * 0.08
+    pupil_r = W * 0.04
+
+    if state == 'dead':
+        # Flattened puddle
+        cy = H * 0.75
+        ry = H * 0.15
+        rx = W * 0.44
+
+    for y in range(H):
+        for x in range(W):
+            dx = (x - cx) / rx
+            # Dome shape: only top half is rounded, bottom is flat-ish
+            if y > cy:
+                # Below center — gentle curve
+                dy = (y - cy) / (ry * 0.6)
+            else:
+                dy = (y - cy) / ry
+
+            d = math.sqrt(dx*dx + dy*dy)
+
+            # Add slight noise to edge for jelly look
+            edge_noise = smooth_noise(x * 2, y * 2, seed, 6.0) * 0.08
+            d += edge_noise
+
+            if d < 1.0:
+                # Vertical gradient: light at top, dark at bottom
+                vert_t = max(0.0, min(1.0, (y - (cy - ry)) / (2.0 * ry)))
+                r = int(lerp(light_blue[0], dark_blue[0], vert_t))
+                g = int(lerp(light_blue[1], dark_blue[1], vert_t))
+                b = int(lerp(light_blue[2], dark_blue[2], vert_t))
+
+                # Jelly texture noise
+                tex = fbm(x * 3, y * 3, seed + 50, 3, 5.0) * 0.08
+                r = int(max(0, min(255, r + tex * 40)))
+                g = int(max(0, min(255, g + tex * 40)))
+                b = int(max(0, min(255, b + tex * 40)))
+
+                # Highlight near top-left (specular)
+                hl_dist = dist(x, y, cx - rx * 0.3, cy - ry * 0.4)
+                hl_radius = min(rx, ry) * 0.4
+                if hl_dist < hl_radius:
+                    hl_t = 1.0 - hl_dist / hl_radius
+                    hl_t = hl_t * hl_t * 0.6  # soft falloff
+                    r = int(lerp(r, highlight[0], hl_t))
+                    g = int(lerp(g, highlight[1], hl_t))
+                    b = int(lerp(b, highlight[2], hl_t))
+
+                # Darker outline at edges
+                if d > 0.85:
+                    edge_t = (d - 0.85) / 0.15
+                    r = int(lerp(r, outline_color[0], edge_t * 0.6))
+                    g = int(lerp(g, outline_color[1], edge_t * 0.6))
+                    b = int(lerp(b, outline_color[2], edge_t * 0.6))
+
+                # State modifiers
+                if state == 'damaged':
+                    # Reddish tint
+                    r = min(255, r + 40)
+                    g = max(0, g - 20)
+                    b = max(0, b - 20)
+                elif state == 'dead':
+                    # Desaturated
+                    gray = int(0.3 * r + 0.59 * g + 0.11 * b)
+                    r = int(lerp(gray, r, 0.3))
+                    g = int(lerp(gray, g, 0.3))
+                    b = int(lerp(gray, b, 0.3))
+
+                pixels[y][x] = rgb_to_hex(r, g, b)
+
+    # Eyes (skip for dead state — puddle has no eyes)
+    if state != 'dead':
+        for (ex, ey) in [(eye_lx, eye_ly), (eye_rx, eye_ry)]:
+            for y in range(H):
+                for x in range(W):
+                    d_eye = dist(x, y, ex, ey)
+                    if d_eye < eye_r:
+                        # White eye
+                        edge_t = d_eye / eye_r
+                        wv = int(lerp(255, 240, edge_t))
+                        pixels[y][x] = rgb_to_hex(wv, wv, wv)
+                    # Pupil — positioned slightly lower
+                    d_pupil = dist(x, y, ex, ey + eye_r * 0.25)
+                    if d_pupil < pupil_r:
+                        pixels[y][x] = rgb_to_hex(17, 17, 17)
+
+    return pixels
+
+
 # Output helpers (same as tree generator)
 # ────────────────────────────────────────────────────────────
 def remove_orphans(pixels, min_neighbors=1):
@@ -1681,6 +1808,7 @@ def generate_all():
         ('firewood',        'firewoods',      (64,32),  None,              True,  ['normal','damaged','dead']),
         ('street_lamp',     'street_lamps',   (32,64),  generate_street_lamp, False, ['normal']),
         ('water_body',      'water',          (32,16),  None,              True,  ['normal']),
+        ('slime',           'slimes',         (32,32),  None,              True,  ['normal','damaged','dead']),
     ]
 
     for obj_name, img_dir, (W, H), gen_fn, has_frames, states in OBJECTS:
@@ -1699,6 +1827,8 @@ def generate_all():
                 pixels = generate_firewood(W, H, variant=0, state=state, frame=0)
             elif obj_name == 'water_body':
                 pixels = generate_water(W, H, variant=0, state=state, frame=0)
+            elif obj_name == 'slime':
+                pixels = generate_slime(W, H, variant=0, state=state, frame=0)
             else:
                 continue
 
@@ -1707,8 +1837,8 @@ def generate_all():
 
         # Animated frames — write combined GIF YAML + individual frame PNGs
         if has_frames and 'normal' in states:
-            FRAME_DELAYS = {'campfire': 200, 'firewood': 200, 'portal': 400, 'water_body': 500}
-            NUM_FRAMES = {'firewood': 4, 'portal': 6, 'water_body': 3}
+            FRAME_DELAYS = {'campfire': 200, 'firewood': 200, 'portal': 400, 'water_body': 500, 'slime': 600}
+            NUM_FRAMES = {'firewood': 4, 'portal': 6, 'water_body': 3, 'slime': 3}
             num_frames = NUM_FRAMES.get(obj_name, 3)
             frame_delay = FRAME_DELAYS.get(obj_name, 200)
             base_name = f'{obj_name}_normal'
@@ -1723,6 +1853,8 @@ def generate_all():
                     pixels = generate_firewood(W, H, variant=0, state='normal', frame=frame)
                 elif obj_name == 'water_body':
                     pixels = generate_water(W, H, variant=0, state='normal', frame=frame)
+                elif obj_name == 'slime':
+                    pixels = generate_slime(W, H, variant=0, state='normal', frame=frame)
                 else:
                     continue
                 pixels = remove_orphans(pixels)

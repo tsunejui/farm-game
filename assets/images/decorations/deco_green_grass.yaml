@@ -4,51 +4,51 @@ type: "png"
 output_dir: "Images/decorations"
 palette:
   ".": "#00000000"
-  "A": "#2d9f1d"
-  "B": "#2b8d1c"
-  "C": "#2b9e1c"
-  "D": "#2d941c"
-  "E": "#2b9b1c"
-  "F": "#2d8a1c"
-  "G": "#257e18"
-  "H": "#2a891b"
-  "I": "#2a9a1b"
-  "J": "#2d7c1c"
-  "K": "#257018"
-  "L": "#2a971b"
-  "M": "#2b851b"
-  "N": "#237917"
-  "O": "#2d7b1c"
-  "P": "#28961a"
-  "Q": "#2b771b"
-  "R": "#236b17"
-  "S": "#28931a"
-  "T": "#2c921c"
-  "U": "#2c951c"
-  "V": "#217416"
-  "W": "#2b761b"
-  "X": "#279119"
-  "Y": "#29721a"
-  "Z": "#216616"
-  "a": "#278e19"
-  "b": "#2a8c1b"
-  "c": "#227416"
-  "d": "#1b4a11"
+  "A": "#2d971c"
+  "B": "#258b18"
+  "C": "#2d7f1c"
+  "D": "#2d791c"
+  "E": "#2d9b1c"
+  "F": "#258f18"
+  "G": "#238617"
+  "H": "#2b741b"
+  "I": "#2b961b"
+  "J": "#238a17"
+  "K": "#218116"
+  "L": "#296f1a"
+  "M": "#29891a"
+  "N": "#29901a"
+  "O": "#218416"
+  "P": "#1f7c15"
+  "Q": "#276a19"
+  "R": "#278419"
+  "S": "#2c6e1c"
+  "T": "#278b19"
+  "U": "#1f7f15"
+  "V": "#1d7714"
+  "W": "#256518"
+  "X": "#257f18"
+  "Y": "#2c8b1c"
+  "Z": "#247f18"
+  "a": "#29661a"
+  "b": "#258517"
+  "c": "#1d7913"
+  "d": "#1d6313"
 data:
   - |
     ................
     ................
     ................
-    ...............A
-    ....BC......D..E
-    .FG.HI.....JK..L
-    .MN.OP.....QR..S
-    TUVWX......YZ..a
-    bBMYa...TG.KZGa.
-    MHRGa...HG.RZGH.
-    KGZGc..BGV.ZdNG.
-    GZ.URZM.NV.ZdVNZ
-    VZ.HRZM.cL.ZdVNd
-    dRVGZZc.RHdddRVd
-    dZVVZZZ.ZNdddZVd
-    ddZZ.ZZd.ZddddRd
+    ................
+    ................
+    .AB.CD..........
+    .EFGH...........
+    .IJKLM..........
+    .NOPQR..........
+    STUVWX..YZ......
+    abcWWZCVRV.E....
+    WKVddVHQXVZNY...
+    dPVdCVLdVdV.XN..
+    dVddLdWdQdd.Vb..
+    dVddddddddd.dV..
+    .ddddddddddddV..

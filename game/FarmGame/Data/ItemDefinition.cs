@@ -131,6 +131,30 @@ public class ItemLogic
     [YamlMember(Alias = "charge_time")]
     public float ChargeTime { get; set; } = 1f;
 
+    [YamlMember(Alias = "level")]
+    public int Level { get; set; } = 1;
+
+    [YamlMember(Alias = "default_behavior")]
+    public string DefaultBehavior { get; set; } = "neutral";
+
+    [YamlMember(Alias = "move_speed")]
+    public float MoveSpeed { get; set; } = 0f;
+
+    [YamlMember(Alias = "aggro_range")]
+    public int AggroRange { get; set; } = 0;
+
+    [YamlMember(Alias = "attack_damage")]
+    public int AttackDamage { get; set; } = 0;
+
+    [YamlMember(Alias = "attack_range")]
+    public int AttackRange { get; set; } = 1;
+
+    [YamlMember(Alias = "attack_cooldown")]
+    public float AttackCooldown { get; set; } = 1.0f;
+
+    [YamlMember(Alias = "hostile_speed_multiplier")]
+    public float HostileSpeedMultiplier { get; set; } = 1.5f;
+
     public List<DropEntry> Drops { get; set; } = new();
 
     [YamlMember(Alias = "default_effects")]
