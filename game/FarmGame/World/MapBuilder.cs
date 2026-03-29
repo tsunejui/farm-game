@@ -81,22 +81,22 @@ public static class MapBuilder
                 continue;
             }
 
-            var entity = new EntityInstance(
+            var obj = new WorldObject(
                 placement.Item, itemDef,
                 placement.TileX, placement.TileY,
                 placement.Properties);
 
-            map.RegisterEntity(entity);
+            map.RegisterObject(obj);
             Log.Debug("Entity created: {ItemId} at ({X},{Y}), hp={Hp}, faction={Faction}, size={W}x{H}",
-                entity.ItemId, entity.TileX, entity.TileY,
-                entity.State.MaxHp, entity.State.Faction,
-                entity.EffectiveWidth, entity.EffectiveHeight);
+                obj.ItemId, obj.TileX, obj.TileY,
+                obj.State.MaxHp, obj.State.Faction,
+                obj.EffectiveWidth, obj.EffectiveHeight);
 
             // Apply collision grid
             if (itemDef.Physics.IsCollidable)
             {
-                for (int x = placement.TileX; x < placement.TileX + entity.EffectiveWidth; x++)
-                    for (int y = placement.TileY; y < placement.TileY + entity.EffectiveHeight; y++)
+                for (int x = placement.TileX; x < placement.TileX + obj.EffectiveWidth; x++)
+                    for (int y = placement.TileY; y < placement.TileY + obj.EffectiveHeight; y++)
                         map.SetCollision(x, y, true);
             }
 

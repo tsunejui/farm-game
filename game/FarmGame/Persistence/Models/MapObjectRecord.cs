@@ -2,8 +2,8 @@ using SQLite;
 
 namespace FarmGame.Persistence.Models;
 
-[Table("map_entity")]
-public class MapEntityRecord
+[Table("map_object")]
+public class MapObjectRecord
 {
     [PrimaryKey]
     [Column("id")]
@@ -15,6 +15,9 @@ public class MapEntityRecord
 
     [Column("item_id")]
     public string ItemId { get; set; }
+
+    [Column("category")]
+    public string Category { get; set; }   // "item" or "creature"
 
     [Column("tile_x")]
     public int TileX { get; set; }

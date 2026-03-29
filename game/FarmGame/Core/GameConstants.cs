@@ -38,13 +38,13 @@ public static class GameConstants
     public static int ToastFontSize { get; private set; } = 16;
 
     // Entity info display
-    public static int EntityInfoProximityTiles { get; private set; } = 2;
-    public static int EntityInfoFontSize { get; private set; } = 12;
-    public static int EntityInfoHpFontSize { get; private set; } = 8;
-    public static int EntityInfoHpBarWidth { get; private set; } = 24;
-    public static int EntityInfoHpBarHeight { get; private set; } = 3;
-    public static int EntityInfoHpBarOffsetY { get; private set; } = 2;
-    public static int EntityInfoNameOffsetY { get; private set; } = 4;
+    public static int ObjectInfoProximityTiles { get; private set; } = 2;
+    public static int ObjectInfoFontSize { get; private set; } = 12;
+    public static int ObjectInfoHpFontSize { get; private set; } = 8;
+    public static int ObjectInfoHpBarWidth { get; private set; } = 24;
+    public static int ObjectInfoHpBarHeight { get; private set; } = 3;
+    public static int ObjectInfoHpBarOffsetY { get; private set; } = 2;
+    public static int ObjectInfoNameOffsetY { get; private set; } = 4;
 
     // Combat
     public static int DamageTickDurationMs { get; private set; } = 500;
@@ -98,13 +98,13 @@ public static class GameConstants
         MapTransitionFadeOutMs = config.Hud.MapTransition.FadeOutMs;
         MapTransitionFontSize = config.Hud.MapTransition.FontSize;
 
-        EntityInfoProximityTiles = config.EntityInfo.ProximityTiles;
-        EntityInfoFontSize = config.EntityInfo.FontSize;
-        EntityInfoHpFontSize = config.EntityInfo.HpFontSize;
-        EntityInfoHpBarWidth = config.EntityInfo.HpBarWidth;
-        EntityInfoHpBarHeight = config.EntityInfo.HpBarHeight;
-        EntityInfoHpBarOffsetY = config.EntityInfo.HpBarOffsetY;
-        EntityInfoNameOffsetY = config.EntityInfo.NameOffsetY;
+        ObjectInfoProximityTiles = config.ObjectInfo.ProximityTiles;
+        ObjectInfoFontSize = config.ObjectInfo.FontSize;
+        ObjectInfoHpFontSize = config.ObjectInfo.HpFontSize;
+        ObjectInfoHpBarWidth = config.ObjectInfo.HpBarWidth;
+        ObjectInfoHpBarHeight = config.ObjectInfo.HpBarHeight;
+        ObjectInfoHpBarOffsetY = config.ObjectInfo.HpBarOffsetY;
+        ObjectInfoNameOffsetY = config.ObjectInfo.NameOffsetY;
 
         DamageTickDurationMs = config.Combat.DamageTickDurationMs;
         DefenseModel = config.Combat.DefenseModel;

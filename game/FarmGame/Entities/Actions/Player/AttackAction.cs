@@ -1,5 +1,5 @@
 // =============================================================================
-// AttackAction.cs — Player attack action with entity damage
+// AttackAction.cs — Player attack action with object damage
 //
 // Triggered by Z key. Plays a directional visual effect and checks for
 // entities in the attack area. Damages non-friendly entities with a random
@@ -53,7 +53,7 @@ public class AttackAction : IPlayerAction
             if (!_hasDealtDamage && _attackProgress >= 0.3f)
             {
                 _hasDealtDamage = true;
-                DealDamageToEntitiesInRange();
+                DealDamageToObjectsInRange();
             }
 
             if (_attackProgress >= 1f)
@@ -95,7 +95,7 @@ public class AttackAction : IPlayerAction
         context.SpriteBatch.FillRectangle(effectRect, GameConstants.PlayerAttackColor * alpha);
     }
 
-    private void DealDamageToEntitiesInRange()
+    private void DealDamageToObjectsInRange()
     {
         var pos = _getGridPosition();
         var dir = _getFacingDirection();
@@ -110,12 +110,12 @@ public class AttackAction : IPlayerAction
             _ => pos,
         };
 
-        var entity = _map.GetEntityAt(target.X, target.Y);
-        if (entity == null) return;
-        if (entity.State.Faction == Faction.Friendly) return;
+        var obj = _map.GetObjectAt(target.X, target.Y);
+        if (obj == null) return;
+        if (obj.State.Faction == Faction.Friendly) return;
 
         // Deal damage to alive entities with HP
-        if (entity.State.IsAlive && entity.Definition.Logic.MaxHealth > 0)
+        if (obj.State.IsAlive && obj.Definition.Logic.MaxHealth > 0)
         {
             var ctx = new DamageContext
             {
@@ -126,19 +126,19 @@ public class AttackAction : IPlayerAction
                 SkillPowerPercent = 1f,
                 CritRate = GameConstants.PlayerCritRate,
                 CritDamageMultiplier = GameConstants.PlayerCritDamage,
-                TargetDefense = entity.Definition.Logic.Defense,
+                TargetDefense = obj.Definition.Logic.Defense,
             };
 
             int damage = DamagePipeline.CalculateDamage(ctx);
-            entity.State.TakeDamage(damage, ctx.IsCritical);
+            obj.State.TakeDamage(damage, ctx.IsCritical);
 
             Log.Debug("Attack: {ItemId} took {Damage} damage{Crit}, hp={Hp}/{MaxHp}",
-                entity.ItemId, damage, ctx.IsCritical ? " (CRIT!)" : "",
-                entity.State.CurrentHp, entity.State.MaxHp);
+                obj.ItemId, damage, ctx.IsCritical ? " (CRIT!)" : "",
+                obj.State.CurrentHp, obj.State.MaxHp);
         }
 
-        // Knockback: push entity regardless of alive/dead
-        if (entity.Definition.Physics.IsKnockbackable)
+        // Knockback: push object regardless of alive/dead
+        if (obj.Definition.Physics.IsKnockbackable)
         {
             int kb = GameConstants.KnockbackTiles;
             Point knockDir = dir switch
@@ -150,13 +150,13 @@ public class AttackAction : IPlayerAction
                 _ => Point.Zero,
             };
 
-            int newX = entity.TileX + knockDir.X;
-            int newY = entity.TileY + knockDir.Y;
-            if (_map.MoveEntity(entity, newX, newY))
+            int newX = obj.TileX + knockDir.X;
+            int newY = obj.TileY + knockDir.Y;
+            if (_map.MoveObject(obj, newX, newY))
             {
-                if (entity.State.IsAlive)
-                    entity.State.TriggerBounce();
-                Log.Debug("Knockback: {ItemId} pushed to ({X},{Y})", entity.ItemId, newX, newY);
+                if (obj.State.IsAlive)
+                    obj.State.TriggerBounce();
+                Log.Debug("Knockback: {ItemId} pushed to ({X},{Y})", obj.ItemId, newX, newY);
             }
         }
     }

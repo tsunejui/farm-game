@@ -27,7 +27,7 @@ public class DatabaseBootstrapper
             db.CreateTable<Setting>();
             db.CreateTable<PlayerStateRecord>();
             db.CreateTable<MapStateRecord>();
-            db.CreateTable<MapEntityRecord>();
+            db.CreateTable<MapObjectRecord>();
             return DatabaseResult.Ok();
         }
         catch (Exception ex)

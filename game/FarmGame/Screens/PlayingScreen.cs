@@ -76,7 +76,7 @@ public class PlayingScreen : IScreen, IWorldRenderer
     {
         _session.SavePlayer(_player, _currentMap?.MapId ?? GameConstants.StartMap);
         if (_currentMap != null)
-            _session.SaveMapEntities(_currentMap);
+            _session.SaveMapObjects(_currentMap);
     }
 
     public ScreenTransition Update(GameTime gameTime)
@@ -127,7 +127,7 @@ public class PlayingScreen : IScreen, IWorldRenderer
             samplerState: SamplerState.PointClamp);
         _currentMap.Draw(spriteBatch, _camera);
         _player.Draw(spriteBatch);
-        _currentMap.DrawEntityInfo(spriteBatch, _player.GridPosition);
+        _currentMap.DrawObjectInfo(spriteBatch, _player.GridPosition);
         spriteBatch.End();
     }
 }

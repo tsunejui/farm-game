@@ -117,8 +117,8 @@ public class Player
     private void DrawHpBar(SpriteBatch spriteBatch)
     {
         int ts = GameConstants.TileSize;
-        int barW = GameConstants.EntityInfoHpBarWidth;
-        int barH = GameConstants.EntityInfoHpBarHeight;
+        int barW = GameConstants.ObjectInfoHpBarWidth;
+        int barH = GameConstants.ObjectInfoHpBarHeight;
         int yOffset = (int)_jump.Offset;
 
         // Center below the player tile
@@ -139,7 +139,7 @@ public class Player
             spriteBatch.FillRectangle(new Rectangle(barX, bottomY, fillW, barH), barColor);
 
         // HP text
-        var hpFont = FontManager.GetFont(GameConstants.EntityInfoHpFontSize);
+        var hpFont = FontManager.GetFont(GameConstants.ObjectInfoHpFontSize);
         if (hpFont != null)
         {
             string hpText = $"{CurrentHp} / {MaxHp}";

@@ -16,7 +16,8 @@ just release          # Build for all platforms
 
 - **Data-driven design**: Terrain, items, and maps defined in YAML configs, loaded by `DataRegistry`
 - **Map system**: `GameMap` built from `MapDefinition` via `MapBuilder`, using string-based terrain/item IDs
-- **Spatial indexing**: `GameMap._entityGrid` provides O(1) entity lookup by tile coordinate; `EntityInstance` pre-computes `EffectiveWidth`/`EffectiveHeight` at construction
+- **Object system**: Everything in the world is a `WorldObject` with `ObjectState` (HP, faction, damage). Objects have categories: `Item` (rocks, trees, boxes) or `Creature` (player)
+- **Spatial indexing**: `GameMap._objectGrid` provides O(1) object lookup by tile coordinate; `WorldObject` pre-computes `EffectiveWidth`/`EffectiveHeight` at construction
 - **Action system**: Player behaviors (movement, jump, attack) are separate `IPlayerAction` implementations
 - **Persistence**: SQLite database via sqlite-net-pcl ORM for player state and settings
 - **Game loop**: MonoGame standard `Initialize → LoadContent → [Update → Draw]`
@@ -31,13 +32,14 @@ just release          # Build for all platforms
 
 - `game/FarmGame/Core/` — GameConstants, GameState, ColorHelper, LocaleManager, FontManager
 - `game/FarmGame/Data/` — DataRegistry, GameConfig, terrain/item/map definitions
-- `game/FarmGame/World/` — GameMap, MapBuilder, EntityInstance
+- `game/FarmGame/World/` — GameMap, MapBuilder, WorldObject, ObjectState
+- `game/FarmGame/Combat/` — DamagePipeline, DamageContext, IDamageStep, Steps/
 - `game/FarmGame/Entities/` — Player coordinator, Direction enum
 - `game/FarmGame/Entities/Actions/` — IPlayerAction interface, ActionDrawContext
 - `game/FarmGame/Entities/Actions/Player/` — MovementAction, JumpAction, AttackAction
 - `game/FarmGame/Persistence/` — DatabaseBootstrapper, DatabasePathResolver, MigrationManager
-- `game/FarmGame/Persistence/Models/` — PlayerState, PlayerStateRecord, Setting, SchemaVersion
-- `game/FarmGame/Persistence/Repositories/` — PlayerStateRepository, SettingRepository
+- `game/FarmGame/Persistence/Models/` — PlayerState, PlayerStateRecord, MapStateRecord, MapObjectRecord, Setting, SchemaVersion
+- `game/FarmGame/Persistence/Repositories/` — PlayerStateRepository, MapStateRepository, SettingRepository
 - `game/FarmGame/Camera/` — 2D camera with boundary clamping
 - `game/FarmGame/Screens/` — TitleScreen, PauseScreen, SettingsScreen (Myra UI)
 - `game/FarmGame/Screens/HUD/` — MapTransitionOverlay, ToastAlert (in-game overlays)

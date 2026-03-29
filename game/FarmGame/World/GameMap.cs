@@ -21,9 +21,9 @@ public class GameMap
     private readonly Dictionary<(int, int), Dictionary<string, object>> _tileProperties = new();
     // Key: (itemId, state) where state is "alive" or "dead"
     private readonly Dictionary<(string, string), Texture2D> _backgroundTextures = new();
-    private readonly Dictionary<(int, int), EntityInstance> _entityGrid = new();
+    private readonly Dictionary<(int, int), WorldObject> _objectGrid = new();
 
-    public List<EntityInstance> Entities { get; } = new();
+    public List<WorldObject> Objects { get; } = new();
 
     public GameMap(string mapId, int width, int height, Dictionary<string, Color> terrainColors)
     {
@@ -80,54 +80,54 @@ public class GameMap
         return _tileProperties.TryGetValue((x, y), out var props) && props.ContainsKey(name);
     }
 
-    public void RegisterEntity(EntityInstance entity)
+    public void RegisterObject(WorldObject obj)
     {
-        Entities.Add(entity);
-        for (int x = entity.TileX; x < entity.TileX + entity.EffectiveWidth; x++)
-            for (int y = entity.TileY; y < entity.TileY + entity.EffectiveHeight; y++)
-                _entityGrid[(x, y)] = entity;
+        Objects.Add(obj);
+        for (int x = obj.TileX; x < obj.TileX + obj.EffectiveWidth; x++)
+            for (int y = obj.TileY; y < obj.TileY + obj.EffectiveHeight; y++)
+                _objectGrid[(x, y)] = obj;
     }
 
-    public EntityInstance GetEntityAt(int x, int y)
+    public WorldObject GetObjectAt(int x, int y)
     {
-        return _entityGrid.GetValueOrDefault((x, y));
+        return _objectGrid.GetValueOrDefault((x, y));
     }
 
     /// <summary>
-    /// Move an entity from its current tile to a new tile.
+    /// Move an object from its current tile to a new tile.
     /// Updates the spatial index and collision grid.
     /// Returns false if the target position is blocked.
     /// </summary>
-    public bool MoveEntity(EntityInstance entity, int newX, int newY)
+    public bool MoveObject(WorldObject obj, int newX, int newY)
     {
-        // Check all target tiles are passable (and not occupied by another entity)
-        for (int x = newX; x < newX + entity.EffectiveWidth; x++)
-            for (int y = newY; y < newY + entity.EffectiveHeight; y++)
+        // Check all target tiles are passable (and not occupied by another object)
+        for (int x = newX; x < newX + obj.EffectiveWidth; x++)
+            for (int y = newY; y < newY + obj.EffectiveHeight; y++)
             {
                 if (x < 0 || x >= Width || y < 0 || y >= Height) return false;
-                var occupant = _entityGrid.GetValueOrDefault((x, y));
-                if (occupant != null && occupant != entity) return false;
+                var occupant = _objectGrid.GetValueOrDefault((x, y));
+                if (occupant != null && occupant != obj) return false;
             }
 
         // Clear old grid entries and collision
-        for (int x = entity.TileX; x < entity.TileX + entity.EffectiveWidth; x++)
-            for (int y = entity.TileY; y < entity.TileY + entity.EffectiveHeight; y++)
+        for (int x = obj.TileX; x < obj.TileX + obj.EffectiveWidth; x++)
+            for (int y = obj.TileY; y < obj.TileY + obj.EffectiveHeight; y++)
             {
-                _entityGrid.Remove((x, y));
-                if (entity.Definition.Physics.IsCollidable)
+                _objectGrid.Remove((x, y));
+                if (obj.Definition.Physics.IsCollidable)
                     _collisionGrid[x, y] = false;
             }
 
         // Update position
-        entity.TileX = newX;
-        entity.TileY = newY;
+        obj.TileX = newX;
+        obj.TileY = newY;
 
         // Set new grid entries and collision
-        for (int x = newX; x < newX + entity.EffectiveWidth; x++)
-            for (int y = newY; y < newY + entity.EffectiveHeight; y++)
+        for (int x = newX; x < newX + obj.EffectiveWidth; x++)
+            for (int y = newY; y < newY + obj.EffectiveHeight; y++)
             {
-                _entityGrid[(x, y)] = entity;
-                if (entity.Definition.Physics.IsCollidable)
+                _objectGrid[(x, y)] = obj;
+                if (obj.Definition.Physics.IsCollidable)
                     _collisionGrid[x, y] = true;
             }
 
@@ -137,8 +137,8 @@ public class GameMap
     // Update all entity states (damage-over-time ticks)
     public void Update(float deltaTime)
     {
-        foreach (var entity in Entities)
-            entity.State.Update(deltaTime);
+        foreach (var obj in Objects)
+            obj.State.Update(deltaTime);
     }
 
     public void Draw(SpriteBatch spriteBatch, Camera2D camera)
@@ -167,27 +167,27 @@ public class GameMap
         }
 
         // Draw entities
-        foreach (var entity in Entities)
+        foreach (var obj in Objects)
         {
-            var def = entity.Definition;
-            int px = entity.TileX * GameConstants.TileSize;
-            int py = entity.TileY * GameConstants.TileSize;
-            int pw = entity.EffectiveWidth * GameConstants.TileSize;
-            int ph = entity.EffectiveHeight * GameConstants.TileSize;
+            var def = obj.Definition;
+            int px = obj.TileX * GameConstants.TileSize;
+            int py = obj.TileY * GameConstants.TileSize;
+            int pw = obj.EffectiveWidth * GameConstants.TileSize;
+            int ph = obj.EffectiveHeight * GameConstants.TileSize;
 
             if (px + pw < visible.Left || px > visible.Right ||
                 py + ph < visible.Top || py > visible.Bottom)
                 continue;
 
             // Apply bounce offset (parabolic arc while being knocked back alive)
-            int bounceY = (int)entity.State.BounceOffsetY;
+            int bounceY = (int)obj.State.BounceOffsetY;
             var entityArea = new Rectangle(px, py + bounceY, pw, ph);
 
             // Select texture by entity state: damaged → dead → alive fallback chain
             string texState;
-            if (!entity.State.IsAlive)
+            if (!obj.State.IsAlive)
                 texState = "dead";
-            else if (entity.State.IsTakingDamage)
+            else if (obj.State.IsTakingDamage)
                 texState = "damaged";
             else
                 texState = "alive";
@@ -196,8 +196,8 @@ public class GameMap
             if (bg.Enabled)
             {
                 // Try state-specific texture first, fall back to alive texture
-                if (!_backgroundTextures.TryGetValue((entity.ItemId, texState), out var bgTex))
-                    _backgroundTextures.TryGetValue((entity.ItemId, "alive"), out bgTex);
+                if (!_backgroundTextures.TryGetValue((obj.ItemId, texState), out var bgTex))
+                    _backgroundTextures.TryGetValue((obj.ItemId, "alive"), out bgTex);
 
                 if (bgTex != null)
                 {
@@ -238,20 +238,20 @@ public class GameMap
             }
 
             // Draw foreground color on top (only for alive entities)
-            if (entity.State.IsAlive && !string.IsNullOrEmpty(def.Visuals.Color))
+            if (obj.State.IsAlive && !string.IsNullOrEmpty(def.Visuals.Color))
             {
                 var entityColor = Core.ColorHelper.FromHex(def.Visuals.Color);
                 spriteBatch.FillRectangle(entityArea, entityColor);
             }
 
             // Dead entity without a dead texture: gray overlay fallback
-            if (!entity.State.IsAlive && !_backgroundTextures.ContainsKey((entity.ItemId, "dead")))
+            if (!obj.State.IsAlive && !_backgroundTextures.ContainsKey((obj.ItemId, "dead")))
             {
                 spriteBatch.FillRectangle(entityArea, Color.DarkGray * 0.5f);
                 continue;
             }
 
-            if (!entity.State.IsAlive) continue;
+            if (!obj.State.IsAlive) continue;
         }
     }
 
@@ -266,32 +266,32 @@ public class GameMap
     ///     both name and HP bar are clamped to player_height * 3
     ///     above/below the entity center.
     /// </summary>
-    public void DrawEntityInfo(SpriteBatch spriteBatch, Point playerGridPos)
+    public void DrawObjectInfo(SpriteBatch spriteBatch, Point playerGridPos)
     {
-        int proximity = GameConstants.EntityInfoProximityTiles;
+        int proximity = GameConstants.ObjectInfoProximityTiles;
         int ts = GameConstants.TileSize;
         int playerHeight = ts; // player occupies 1 tile
         int maxHalfDisplay = playerHeight * 3;
 
-        var font = FontManager.GetFont(GameConstants.EntityInfoFontSize);
+        var font = FontManager.GetFont(GameConstants.ObjectInfoFontSize);
         if (font == null) return;
 
-        foreach (var entity in Entities)
+        foreach (var obj in Objects)
         {
             // Skip entities with no HP (indestructible / terrain features)
-            if (entity.Definition.Logic.MaxHealth <= 0) continue;
+            if (obj.Definition.Logic.MaxHealth <= 0) continue;
 
             // Proximity check (Chebyshev distance from player to nearest entity tile)
-            int nearestX = Math.Clamp(playerGridPos.X, entity.TileX, entity.TileX + entity.EffectiveWidth - 1);
-            int nearestY = Math.Clamp(playerGridPos.Y, entity.TileY, entity.TileY + entity.EffectiveHeight - 1);
+            int nearestX = Math.Clamp(playerGridPos.X, obj.TileX, obj.TileX + obj.EffectiveWidth - 1);
+            int nearestY = Math.Clamp(playerGridPos.Y, obj.TileY, obj.TileY + obj.EffectiveHeight - 1);
             int dist = Math.Max(Math.Abs(playerGridPos.X - nearestX), Math.Abs(playerGridPos.Y - nearestY));
             if (dist > proximity) continue;
 
             // Entity pixel bounds
-            int px = entity.TileX * ts;
-            int py = entity.TileY * ts;
-            int pw = entity.EffectiveWidth * ts;
-            int ph = entity.EffectiveHeight * ts;
+            int px = obj.TileX * ts;
+            int py = obj.TileY * ts;
+            int pw = obj.EffectiveWidth * ts;
+            int ph = obj.EffectiveHeight * ts;
             int entityCenterX = px + pw / 2;
             int entityCenterY = py + ph / 2;
             int entityHalfH = ph / 2;
@@ -313,9 +313,9 @@ public class GameMap
             }
 
             // --- Draw name above entity ---
-            string name = LocaleManager.Get("items", entity.ItemId, entity.Definition.Metadata.DisplayName);
+            string name = LocaleManager.Get("items", obj.ItemId, obj.Definition.Metadata.DisplayName);
             var textSize = font.MeasureString(name);
-            int nameOffsetY = GameConstants.EntityInfoNameOffsetY;
+            int nameOffsetY = GameConstants.ObjectInfoNameOffsetY;
             float textX = entityCenterX - textSize.X / 2f;
             float textY = nameY - textSize.Y - nameOffsetY;
 
@@ -328,16 +328,16 @@ public class GameMap
                 Color.White);
 
             // --- Draw floating damage number above the name ---
-            if (entity.State.ShowDamageNumber)
+            if (obj.State.ShowDamageNumber)
             {
-                float progress = entity.State.DamageNumberProgress;
+                float progress = obj.State.DamageNumberProgress;
                 float alpha = 1f - progress;           // fade out
                 float floatUp = progress * 16f;        // drift 16px upward
 
-                string dmgText = entity.State.LastDamageWasCrit
-                    ? $"{entity.State.LastDamageAmount}!"
-                    : entity.State.LastDamageAmount.ToString();
-                Color dmgColor = entity.State.LastDamageWasCrit ? Color.Orange : Color.Red;
+                string dmgText = obj.State.LastDamageWasCrit
+                    ? $"{obj.State.LastDamageAmount}!"
+                    : obj.State.LastDamageAmount.ToString();
+                Color dmgColor = obj.State.LastDamageWasCrit ? Color.Orange : Color.Red;
 
                 var dmgSize = font.MeasureString(dmgText);
                 float dmgX = entityCenterX - dmgSize.X / 2f;
@@ -352,9 +352,9 @@ public class GameMap
             }
 
             // --- Draw HP bar below entity ---
-            int barW = GameConstants.EntityInfoHpBarWidth;
-            int barH = GameConstants.EntityInfoHpBarHeight;
-            int barOffsetY = GameConstants.EntityInfoHpBarOffsetY;
+            int barW = GameConstants.ObjectInfoHpBarWidth;
+            int barH = GameConstants.ObjectInfoHpBarHeight;
+            int barOffsetY = GameConstants.ObjectInfoHpBarOffsetY;
             int barX = entityCenterX - barW / 2;
             int barY2 = hpBarY + barOffsetY;
 
@@ -362,7 +362,7 @@ public class GameMap
             spriteBatch.FillRectangle(new Rectangle(barX, barY2, barW, barH), Color.Black * 0.6f);
 
             // Foreground (green → red based on HP ratio)
-            float hpRatio = (float)entity.State.CurrentHp / entity.State.MaxHp;
+            float hpRatio = (float)obj.State.CurrentHp / obj.State.MaxHp;
             hpRatio = Math.Clamp(hpRatio, 0f, 1f);
             int fillW = (int)(barW * hpRatio);
             Color barColor = hpRatio > 0.5f
@@ -373,10 +373,10 @@ public class GameMap
                 spriteBatch.FillRectangle(new Rectangle(barX, barY2, fillW, barH), barColor);
 
             // --- Draw HP text below the bar: "current / max" ---
-            var hpFont = FontManager.GetFont(GameConstants.EntityInfoHpFontSize);
+            var hpFont = FontManager.GetFont(GameConstants.ObjectInfoHpFontSize);
             if (hpFont != null)
             {
-                string hpText = $"{entity.State.CurrentHp} / {entity.State.MaxHp}";
+                string hpText = $"{obj.State.CurrentHp} / {obj.State.MaxHp}";
                 var hpTextSize = hpFont.MeasureString(hpText);
                 float hpTextX = entityCenterX - hpTextSize.X / 2f;
                 float hpTextY = barY2 + barH + 1;

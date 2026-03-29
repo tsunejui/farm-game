@@ -82,45 +82,44 @@ public class GameSession
 
         if (mapStateId != null)
         {
-            // Restore entity states from DB
-            var loadResult = _mapStateRepo.LoadEntities(mapStateId);
-            Log.Debug("LoadEntities result: success={Success}, count={Count}",
+            // Restore object states from DB
+            var loadResult = _mapStateRepo.LoadObjects(mapStateId);
+            Log.Debug("LoadObjects result: success={Success}, count={Count}",
                 loadResult.Success, loadResult.Success ? loadResult.Value.Count : 0);
             if (loadResult.Success && loadResult.Value.Count > 0)
             {
-                // Match saved entities to map entities by item_id + creation order
-                // (handles knockback position changes since DB stores moved positions)
-                var savedByItem = new Dictionary<string, List<MapEntityRecord>>();
+                // Match saved objects to map objects by item_id + creation order
+                var savedByItem = new Dictionary<string, List<MapObjectRecord>>();
                 foreach (var r in loadResult.Value)
                 {
                     if (!savedByItem.ContainsKey(r.ItemId))
-                        savedByItem[r.ItemId] = new List<MapEntityRecord>();
+                        savedByItem[r.ItemId] = new List<MapObjectRecord>();
                     savedByItem[r.ItemId].Add(r);
                 }
 
                 var usedByItem = new Dictionary<string, int>();
-                foreach (var entity in map.Entities)
+                foreach (var obj in map.Objects)
                 {
-                    if (!savedByItem.TryGetValue(entity.ItemId, out var records))
+                    if (!savedByItem.TryGetValue(obj.ItemId, out var records))
                         continue;
-                    if (!usedByItem.ContainsKey(entity.ItemId))
-                        usedByItem[entity.ItemId] = 0;
-                    int idx = usedByItem[entity.ItemId];
+                    if (!usedByItem.ContainsKey(obj.ItemId))
+                        usedByItem[obj.ItemId] = 0;
+                    int idx = usedByItem[obj.ItemId];
                     if (idx >= records.Count) continue;
 
                     var record = records[idx];
-                    usedByItem[entity.ItemId] = idx + 1;
+                    usedByItem[obj.ItemId] = idx + 1;
 
-                    entity.InstanceId = record.Id;
-                    entity.RestoreState(record.Hp);
+                    obj.InstanceId = record.Id;
+                    obj.RestoreState(record.Hp);
 
                     // Restore saved position (may differ from YAML due to knockback)
-                    if (entity.TileX != record.TileX || entity.TileY != record.TileY)
-                        map.MoveEntity(entity, record.TileX, record.TileY);
+                    if (obj.TileX != record.TileX || obj.TileY != record.TileY)
+                        map.MoveObject(obj, record.TileX, record.TileY);
                 }
 
                 CurrentMapStateId = mapStateId;
-                Log.Information("Map state restored: {MapId}, stateId={StateId}, entities={Count}",
+                Log.Information("Map state restored: {MapId}, stateId={StateId}, objects={Count}",
                     mapId, mapStateId, loadResult.Value.Count);
                 return;
             }
@@ -132,34 +131,35 @@ public class GameSession
         {
             CurrentMapStateId = createResult.Value;
 
-            // Assign instance IDs to all entities
-            foreach (var entity in map.Entities)
-                entity.InstanceId = Guid.NewGuid().ToString();
+            // Assign instance IDs to all objects
+            foreach (var obj in map.Objects)
+                obj.InstanceId = Guid.NewGuid().ToString();
 
-            // Persist initial entity states
-            SaveMapEntities(map);
+            // Persist initial object states
+            SaveMapObjects(map);
             Log.Information("Map state created: {MapId}, stateId={StateId}", mapId, CurrentMapStateId);
         }
     }
 
     /// <summary>
-    /// Persist current entity states to the map_entity table.
+    /// Persist current object states to the map_object table.
     /// </summary>
-    public void SaveMapEntities(GameMap map)
+    public void SaveMapObjects(GameMap map)
     {
         if (_mapStateRepo == null || CurrentMapStateId == null) return;
 
-        var records = map.Entities.Select(e => new MapEntityRecord
+        var records = map.Objects.Select(o => new MapObjectRecord
         {
-            Id = e.InstanceId ?? Guid.NewGuid().ToString(),
-            ItemId = e.ItemId,
-            TileX = e.TileX,
-            TileY = e.TileY,
-            Hp = e.State.CurrentHp,
+            Id = o.InstanceId ?? Guid.NewGuid().ToString(),
+            ItemId = o.ItemId,
+            Category = o.Category.ToString().ToLowerInvariant(),
+            TileX = o.TileX,
+            TileY = o.TileY,
+            Hp = o.State.CurrentHp,
             StateJson = "{}",
         }).ToList();
 
-        var result = _mapStateRepo.SaveEntities(CurrentMapStateId, records);
+        var result = _mapStateRepo.SaveObjects(CurrentMapStateId, records);
         if (result.Success)
             Log.Debug("Map entities saved: stateId={StateId}, count={Count}",
                 CurrentMapStateId, records.Count);

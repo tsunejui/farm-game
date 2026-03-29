@@ -17,8 +17,8 @@ public class GameConfig
     public HudConfig Hud { get; set; } = new();
     public CombatConfig Combat { get; set; } = new();
 
-    [YamlMember(Alias = "entity_info")]
-    public EntityInfoConfig EntityInfo { get; set; } = new();
+    [YamlMember(Alias = "object_info")]
+    public ObjectInfoConfig ObjectInfo { get; set; } = new();
 
     public static GameConfig Load(string yamlPath)
     {
@@ -149,7 +149,7 @@ public class MapTransitionConfig
     public int FontSize { get; set; } = 32;
 }
 
-public class EntityInfoConfig
+public class ObjectInfoConfig
 {
     [YamlMember(Alias = "proximity_tiles")]
     public int ProximityTiles { get; set; } = 2;

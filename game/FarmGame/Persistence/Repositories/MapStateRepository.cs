@@ -1,12 +1,11 @@
 // =============================================================================
-// MapStateRepository.cs — Persist and restore per-map entity states
+// MapStateRepository.cs — Persist and restore per-map object states
 //
 // Functions:
-//   - CreateMapState(mapId)             : Create a new map_state record, returns its UUID.
-//   - LoadMapState(mapStateId)          : Load a map_state record by UUID.
-//   - SaveEntities(mapStateId, entities): Bulk upsert entity records for a map.
-//   - LoadEntities(mapStateId)          : Load all entity records for a map.
-//   - FindMapStateByMapId(mapId)        : Find the most recent map_state for a map ID.
+//   - CreateMapState(mapId)              : Create a new map_state record, returns its UUID.
+//   - FindByMapId(mapId)                 : Find the most recent map_state for a map ID.
+//   - SaveObjects(mapStateId, objects)   : Bulk upsert object records for a map.
+//   - LoadObjects(mapStateId)            : Load all object records for a map.
 // =============================================================================
 
 using System;
@@ -74,29 +73,26 @@ public class MapStateRepository
         }
     }
 
-    public DatabaseResult SaveEntities(string mapStateId, List<MapEntityRecord> entities)
+    public DatabaseResult SaveObjects(string mapStateId, List<MapObjectRecord> objects)
     {
         try
         {
             using var db = _db.CreateConnection();
             var now = DateTime.UtcNow.ToString("o");
 
-            // Delete existing entities for this map state
-            db.Execute("DELETE FROM map_entity WHERE map_state_id = ?", mapStateId);
+            db.Execute("DELETE FROM map_object WHERE map_state_id = ?", mapStateId);
 
-            // Insert all current entities
-            foreach (var entity in entities)
+            foreach (var obj in objects)
             {
-                entity.MapStateId = mapStateId;
-                if (string.IsNullOrEmpty(entity.Id))
-                    entity.Id = Guid.NewGuid().ToString();
-                if (string.IsNullOrEmpty(entity.CreatedAt))
-                    entity.CreatedAt = now;
-                entity.UpdatedAt = now;
-                db.Insert(entity);
+                obj.MapStateId = mapStateId;
+                if (string.IsNullOrEmpty(obj.Id))
+                    obj.Id = Guid.NewGuid().ToString();
+                if (string.IsNullOrEmpty(obj.CreatedAt))
+                    obj.CreatedAt = now;
+                obj.UpdatedAt = now;
+                db.Insert(obj);
             }
 
-            // Update map_state timestamp
             db.Execute("UPDATE map_state SET updated_at = ? WHERE id = ?", now, mapStateId);
 
             return DatabaseResult.Ok();
@@ -104,25 +100,25 @@ public class MapStateRepository
         catch (Exception ex)
         {
             return DatabaseResult.Fail(DatabaseErrorKind.ConnectionFailed,
-                $"Failed to save entities: {ex.Message}");
+                $"Failed to save objects: {ex.Message}");
         }
     }
 
-    public DatabaseResult<List<MapEntityRecord>> LoadEntities(string mapStateId)
+    public DatabaseResult<List<MapObjectRecord>> LoadObjects(string mapStateId)
     {
         try
         {
             using var db = _db.CreateConnection();
-            var records = db.Table<MapEntityRecord>()
+            var records = db.Table<MapObjectRecord>()
                 .Where(r => r.MapStateId == mapStateId)
                 .ToList();
 
-            return DatabaseResult<List<MapEntityRecord>>.Ok(records);
+            return DatabaseResult<List<MapObjectRecord>>.Ok(records);
         }
         catch (Exception ex)
         {
-            return DatabaseResult<List<MapEntityRecord>>.Fail(DatabaseErrorKind.ConnectionFailed,
-                $"Failed to load entities: {ex.Message}");
+            return DatabaseResult<List<MapObjectRecord>>.Fail(DatabaseErrorKind.ConnectionFailed,
+                $"Failed to load objects: {ex.Message}");
         }
     }
 }
