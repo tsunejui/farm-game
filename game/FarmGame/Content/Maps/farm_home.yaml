@@ -121,10 +121,11 @@ entities:
     tile_x: 29
     tile_y: 12
 
+  # Portal to Black Forest — lands right of dark_forest portal (24,22)
   - item: "portal"
     tile_x: 38
     tile_y: 14
     properties:
       target_map: "dark_forest"
-      target_x: 25
-      target_y: 20
+      target_x: 26
+      target_y: 23
