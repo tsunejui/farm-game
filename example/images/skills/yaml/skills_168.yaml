@@ -1,0 +1,84 @@
+metadata:
+  name: skills_168
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#071723'
+  b: '#616462'
+  c: '#ebeeeb'
+  d: '#000b15'
+  e: '#14191d'
+  f: '#a3a6a4'
+  g: '#a7aba8'
+  h: '#d7dad7'
+  i: '#b1b4b1'
+  j: '#5c605d'
+  k: '#636866'
+  l: '#04111b'
+  m: '#c3c6c3'
+  n: '#9a9e9b'
+  o: '#595d5c'
+  p: '#070c0e'
+  q: '#7d827d'
+  r: '#6e736f'
+  s: '#686e6a'
+  t: '#5d625f'
+  u: '#545958'
+  v: '#656b67'
+  w: '#1a1f21'
+  x: '#555c5b'
+  y: '#676b68'
+  z: '#0d1215'
+  '0': '#4f5453'
+  '1': '#01050a'
+  '2': '#3b3f3e'
+  '3': '#5e6463'
+  '4': '#232727'
+  '5': '#000000'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .........................aaa....b..c
+  .........................ade..ffgggf
+  ...............................hccij
+  .......................a.......hhhik
+  ......................ld.......imino
+  ...................aa.ap.k..gifqrrrb
+  ...................ll..k....mmnssktb
+  ...................ld.....ihccnrrjuo
+  ..................alp....nmcchqvsbtb
+  ..................eew....fgmmiqssrox
+  ...............dl.........yybrrysu..
+  ...............dd.ffn..ff.juujyyb.zz
+  ...............ez.....mhmyj0u...y.pp
+  ............aak.......ccmqrv...j0.p1
+  ...........dda.......nmhnvysvv......
+  ...........ae.....immqnnqtjrt..ww...
+  ..................cccqkbxkyy0epzz...
+  ........dd........cchqbjo...0wee2j..
+  .......adl........mmfr3oou......b...
+  ....a.........iim..vqskr3.....b...n.
+  ....l..x...joiccc..b03uk0wpz4.b.....
+  ....d1......jgchh..oxsts0wpp4o......
+  ....dd....y..gm...vxt00u04422y......
+  ...ad1....ghcgfyb...t4ee42orov....fg
+  .aa.x.x..fhccfqsxy.vt4ppw03rk...ffgi
+  .ld......gmhmnqso..yt4p1e00buy.nn...
+  .ad....gihfqqtjt0....4ew2x3u0...gv..
+  ..33...mhcivbob.j.epz23bt.kjk.g.gk..
+  w...igiiggqvtj....p1z0rrs..s........
+  wy..hchnrrssrvkbt.p1z0ky..fnf....wz4
+  .k..hhhnj3ubyx....422o....gfg.....ew
+  bb..hhmnsttrk0.pp.xjs.........x.....
+  ......nqkjjtxu.11.0x.....g......xxku
+  s..v.srrvso2eezzz.xxox...g......u...
+  .....kvqsrr41pz..yrvut...f...3x.....
+  o.sbkotyxo0wp5e..sqsuk..............
+  w42jsrj04w4......xvk3s...g..........
+  554brro4p5z.30ovtj.......g.......x..
+  154tovy411z...x3u..................e
+  114sj00wppe..........3....f........z
+  dpw24wwepzpzw.....eew.....mm.x.wzezd
+  ...z111...ldl....weez.....ff.iop11ll
+  ...ld1d....aa....ze.4..k.....gx11d..
+  ..............l111....yts..giirz1d..

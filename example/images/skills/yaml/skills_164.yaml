@@ -1,0 +1,83 @@
+metadata:
+  name: skills_164
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#5d625e'
+  b: '#555c5b'
+  c: '#515755'
+  d: '#646964'
+  e: '#000b15'
+  f: '#151b1f'
+  g: '#c3c6c1'
+  h: '#ccd0cc'
+  i: '#9da39d'
+  j: '#e1e4df'
+  k: '#091116'
+  l: '#041019'
+  m: '#02070c'
+  n: '#b9bdb8'
+  o: '#aeb3ad'
+  p: '#131619'
+  q: '#939790'
+  r: '#787c76'
+  s: '#091721'
+  t: '#a6aba5'
+  u: '#5a5e5a'
+  v: '#555856'
+  w: '#616560'
+  x: '#474a46'
+  y: '#000008'
+  z: '#6d726b'
+  '0': '#0e1115'
+  '1': '#070c10'
+  '2': '#82857f'
+  '3': '#24292b'
+  '4': '#505350'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  aaabcbd....................eef...ghi
+  jhhjjhhg..klel.............emf..njji
+  jjjjjjjo..kkme............fp...iqiir
+  jhhhhhhi.d............slek...hhtuvuw
+  iii........t...ss..........v.gjndxxv
+  ........igghh..mmleyf...bighgnhtzxu.
+  ........thjjht.010myf.bcrhjjhqq2zw..
+  .......iiooggh.011yy0.vu2gjjgrzraa..
+  .............odmmfp03bua2qqiqzzw33..
+  .....vwdd..z..u1yc22q2iq2ddzzzrapme.
+  10pp..........w3..ghhgjgquuzrzqz0me.
+  010p..cbc.vuv.....ohgjjh2zda4vzckel.
+  333fppkkkkxdu....otiionoruw310pff...
+  ff3ffssk1kb......gnqrrq2rzz3mmme....
+  sssssssllf.....4.ggqzrzazzz301es....
+  .........f..c....tt2zuaaw44x31e.....
+  .........s11..nonot2w4vxx3xxp1l.....
+  .........smy3ignttqrdu4xxxxxfme.....
+  ..........km32tqrrrzzu4x4vcxf1l.....
+  .........f34ur2zwuwwduxudz2zf0l.....
+  ........ekx22rrzuwwu44xcd2i2f1l.....
+  ........m13r2wuuudwv4uvxzonqf1l.....
+  ......bbbcxwduvv4....uucron231ks....
+  ..slsfrgnnrwwv4cx3f3.wuvzohq011sls..
+  ..slsfrgnnraauwd4f1p.dc4rohq3p33ss..
+  ..s033rtq2rzdzdd4f10.avcznhozz2xkl..
+  .sl0aqqqqigozvvvxfm0.ub4dthgttnwke..
+  .ee0zti22tjgd3pfp0pp..acztgo.i.uke..
+  .lm1wqruuz22x1mmm1pp..awrtgo....0l..
+  .sll.dwv4vv431mmm0ff.dczrint...4fe..
+  .........ccb.1mklfpf.wcwzino...4pe..
+  .....lk..av...s...k1.dbcdini...v0l..
+  .....ek...........sp..au.igo...v0e..
+  ......sfff........ek..aa.ogt...40e..
+  ........ss........e1..wb.tno...cke..
+  ..................sf..va.tgo...cke..
+  ..................lf..dw.tgi....ke..
+  ................sssfu........dd.pl..
+  ................s33.u.....ad..a.ke..
+  .............ss..a.......wcu.cb.pl..
+  .............ll...no....dc4ubaa.ke..
+  .............ek...t......ba.....ll..
+  .............ff....acbuaaba.pfffll..
+  ell......ss.w.....wav...caa.pkk.....

@@ -1,0 +1,72 @@
+metadata:
+  name: skills_127
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#041721'
+  b: '#001019'
+  c: '#03141c'
+  d: '#0b1c23'
+  e: '#192227'
+  f: '#1f2527'
+  g: '#182125'
+  h: '#111d22'
+  i: '#586061'
+  j: '#656a67'
+  k: '#09151a'
+  l: '#a8aca6'
+  m: '#cdd0cd'
+  n: '#dadedb'
+  o: '#c8cbc7'
+  p: '#c2c4c1'
+  q: '#061115'
+  r: '#b3b6b2'
+  s: '#a5a7a2'
+  t: '#8c8f8b'
+  u: '#787b7a'
+  v: '#a1a29c'
+  w: '#bbbdb8'
+  x: '#0e171a'
+  y: '#9c9d97'
+  z: '#5f6260'
+  '0': '#2e3333'
+  '1': '#171e21'
+  '2': '#535755'
+  '3': '#adb0ac'
+  '4': '#010b11'
+  '5': '#000000'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .......................abcaaaadac.......
+  .......................defggeehd..a.....
+  .......................iiijjii...kca....
+  ....................b.lmmnopmmnm.qqdd...
+  ....................h.rmnnmnnnno....d...
+  ......................rsltutvlwmmnn.xa..
+  ....................rppytuuuuuypmpmjqka.
+  .................i..wvuijjzjtuuyvow.....
+  ...............a..prou0ff1fffff02..3....
+  ...............ch.p3vzgx4qq4kq41f2.pmm3.
+  .............ccxe.r...1kk.d..dkxg..wom..
+  .............c4h..w...1x...........rv3..
+  .............xffg.3..ixd.........f.lypw.
+  .............10fx.r..zgx...........yvmpj
+  ........bad..jzzz.s..j1x........e..l.33.
+  .......b44xi.rmmors...fkc......hf..s..vr
+  ......d......onnoo3...f1d....a...2.y..yr
+  .....b..nmllv3wplv....i.....d..j.y......
+  ....dk..mpoml............ihkq1...v......
+  ...dx..3rlmnr.......l...3......v.....zz.
+  ......woooolz......2....v.....v.ys.2.gg1
+  .b..rlwwwlrt2hqqxxqx..ls..........j0kxqq
+  dbe.m3ytytui0hkkdkqk.i.....z2zz22..ekh..
+  bb..3ytvj0xeh......g.1f.z.....z01e......
+  bb..p3vvix4kd......dh4q.i.....2fx1a.....
+  ab..orlt0kqa........hx1......j..e.......
+  ab..wsvt044d........c...i....j..x.......
+  ak..3tyy2q4............i........qd......
+  cq.sltys214h........dkgi........1.......
+  ak.swlv.2q54...........j........xh......
+  ab..or...14h...................j........
+  .b.................bk....ss.....z.......

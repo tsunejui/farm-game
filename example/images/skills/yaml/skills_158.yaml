@@ -1,0 +1,71 @@
+metadata:
+  name: skills_158
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#051522'
+  b: '#01111d'
+  c: '#0c151f'
+  d: '#060f18'
+  e: '#030b13'
+  f: '#bbbfc3'
+  g: '#a9acae'
+  h: '#020810'
+  i: '#000b15'
+  j: '#061924'
+  k: '#5d6469'
+  l: '#696b6b'
+  m: '#121d25'
+  n: '#11151a'
+  o: '#52575b'
+  p: '#0a1016'
+  q: '#011522'
+  r: '#010d18'
+  s: '#25292d'
+  t: '#525557'
+  u: '#111921'
+  v: '#5b5d5f'
+  w: '#666869'
+  x: '#5e6062'
+  y: '#616465'
+  z: '#575c60'
+  '0': '#8d9092'
+  '1': '#646465'
+  '2': '#4f5154'
+  '3': '#56585b'
+  '4': '#575a60'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ..........abcdee.ffg.heeij..........
+  ..........kklmhno....pn.............
+  ......qrd.ffg.hem....st..kmbbj......
+  ......bie.ff..hpuepu......ciij......
+  .........v......mhhm.tvw.kmcd.......
+  ...qa..gglmpn..k.rd.kxt...ylwk......
+  ..bib.ffflnhe.z..qj..oo....gg..irq..
+  ..bic.gf0xnpu............t.....dhb..
+  ..adc.gg012snpm.....jru..1.....hhr..
+  ..acc.gf0llspij.....qrc..x33.lshhij.
+  .....y..wwxsmj.......qc..y3tttsssm..
+  ba4.g..vsssm..................1.....
+  bckffg..nhpu...........ahu...2l...db
+  rcoff...ped............bhn.3..3.vseb
+  bd2gg...mep............jhn....23tsha
+  ruogg...npdc...........jdu..3t2yzsdb
+  rm.gg...nnnm...............3xtt13.ia
+  rc.gg..o..o..............z33v3vy3.ia
+  bd..g..xw...cj.........j..xt3tvwv.dq
+  bd.....l1...mm.........u.v423zv1t.cj
+  bc.....wxw..udm.....j.cd.tvtxwxxt.ra
+  bm.....1v..2nndeduurhcpn..33xlvlk.ij
+  ba.....y3yw3..............2t3otwz.iq
+  qj.....yvx1......g......y..33.....rj
+  .....kw..xw..g0ggffg..g.1ttwv.ncumb.
+  ......z..ll........1..l113z3t.pdb...
+  ....jc..y1.1l......2..xxx22kz.dr....
+  ....am...l.1w......y1.l1xx3x..ir....
+  ....qa............lyl.wxto....j.....
+  .........z.ywyww...xoz3oz.su........
+  ........mm....w.w.w.....k.dhb.......
+  .......bdh.z....xxz.......dia.......

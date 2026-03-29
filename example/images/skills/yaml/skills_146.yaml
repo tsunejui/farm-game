@@ -1,0 +1,77 @@
+metadata:
+  name: skills_146
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#08161f'
+  b: '#10191e'
+  c: '#060d14'
+  d: '#131111'
+  e: '#201b18'
+  f: '#423b31'
+  g: '#372b23'
+  h: '#645240'
+  i: '#9c8167'
+  j: '#9c7a5d'
+  k: '#8b6a4e'
+  l: '#725741'
+  m: '#6c5c4c'
+  n: '#6d6863'
+  o: '#b39d87'
+  p: '#b78e67'
+  q: '#9b7655'
+  r: '#b3885f'
+  s: '#ac805a'
+  t: '#9b714d'
+  u: '#c5c7c3'
+  v: '#dadad9'
+  w: '#abafac'
+  x: '#976d49'
+  y: '#58412f'
+  z: '#876146'
+  '0': '#805e44'
+  '1': '#7e593f'
+  '2': '#765339'
+  '3': '#624b37'
+  '4': '#e9eceb'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .............a.............aa..aa.............
+  .............aabcabbbaababbbbbbcc.............
+  .............ccdddddccccccdddddccaa...........
+  .............cdeeeeeeeeeedddeeddddb...........
+  ............fghiiijiijiikkkkjklmnmf...........
+  ..........b.nmkooooooooooppoopiioifecb........
+  ........acbemkqpprppppppprrrprsspkgddb........
+  ........bdeeqppppppprrppprssstsqjkfdeeba......
+  ........bddgksprrppprrrppprssssqqjikihdb......
+  .........miopstsspprsrrssrrsssrqsouuvof.......
+  .....abenwuvoqxqrprsrrprrsststtsspouuomyeca...
+  .....cbekooopxzxtrrrrrrrsssxtttsqqsspp0mfda...
+  ....acdemiqstxzzxsqsstttttqttxxtttqtqkkkfda...
+  .....cdgkjxtsxzxtttttxzzxxxxxxttqqsqt00mfdb...
+  .....deelijttttqqttttxxxxxxxxsssqtxzz1lhgda...
+  ....abeehjqzxxtsqssqtxxtttxqqsssqz2323lhgda...
+  ....acdehkkkqzkxtspsxxxxxxxqsstqq23yyylhgda...
+  ....acde3l1001220sprssssjjsssxzz233333lmfdb...
+  ....acdghl1122220joooooooooosz13yyy3l3lhgda...
+  ....acdghm0222112ztqqsssjjqtk12yyyy3lhhhfed...
+  ....ccce3mll21122222212212222333y323lhmnydca..
+  ...acegfhhh010022101112211222322211233mnheca..
+  .....mnhhy3hl00220011111111232221zzl3yymnn....
+  ac.wvwwnfgffyll11122222112122112200l3gfhouuuna
+  aa.v4v.n.ggff3lzz0121110011120z11100ygfhowuunc
+  ab.v4v.m.gfff3lkzz011012122210z0221h3ffhiwuuhc
+  cb.uvu.m..fff3001zz011z0zz0012222ll33ffmowwwhc
+  cc.u4v.n...ggyl00kkkzkkkkk00z123333yfgfmwwuunb
+  cc.v4u...nmff3lkz000zkkzz010z23yfffffffm.wuuna
+  ac.v4u.....hhh3lhl332ll332l01lhfffgfhmm..wuuna
+  cb.uvu.....nmyfyy333333yyyyyyy3fffffm....www.c
+  cc.wu..w.....ffffggffffggfgfgfff3fffn..w.....b
+  cc.wu.........nfgggggggggggggffhnnnn.....w...c
+  ca.ww.....wwwwoinnnnnnnnnnnninnniiowww.www.wmc
+  cc...w....u4444444vvvvvvvvvv4vvvvuuuuwww.....a
+  aa.n....w.u444444444v4vvv4vvvvvvvuuuuwuw......
+  ........uuv444uwwwwwwwww.wwwww.wwwwwwuuw.ccb..
+  ....cab.vuuuuuw..................w.w.ww..bba..

@@ -1,0 +1,80 @@
+metadata:
+  name: skills_117
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#040d12'
+  b: '#02070a'
+  c: '#0b0e10'
+  d: '#232626'
+  e: '#c7cbc7'
+  f: '#dfe2dd'
+  g: '#d0d3ce'
+  h: '#d7d9d3'
+  i: '#e5e6e0'
+  j: '#eeefe9'
+  k: '#a3acaa'
+  l: '#0f1213'
+  m: '#464848'
+  n: '#596061'
+  o: '#5e6465'
+  p: '#636a6a'
+  q: '#bcc2be'
+  r: '#fafbf6'
+  s: '#f3f5ef'
+  t: '#101b21'
+  u: '#1b1f21'
+  v: '#111619'
+  w: '#16191c'
+  x: '#989d9a'
+  y: '#b1bab7'
+  z: '#071117'
+  '0': '#eaebe5'
+  '1': '#09151c'
+  '2': '#dbddd8'
+  '3': '#0a1a23'
+  '4': '#acb3b0'
+  '5': '#000000'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ...abcd................................efghijk.
+  ...abl.m.n...........................opqrffss..
+  ....tu....p...no.......................gshgrr.v
+  ......wlu.p...no............no...pno..xeiqysj.w
+  ......zbc.o..pn.............oo....np.qe0jeeji.d
+  ......1bc.o...o.................n.opny2jr2eif.u
+  ......1bc.n.....................o.onpkgjrfgsj.w
+  ......1bc.o.........................kehij0jrs.u
+  ......1bc.o.................op...h2fhih0rssss.w
+  ......tbl...................onon.hfihhgjrjsfi.v
+  ......1bl....................n...e22ehisry.....
+  ......3bl.p......................h0ighsrrxduwu.
+  ......3bc.o..................x..420igh0ssxlcb1.
+  ......3bc.o................keq22h2hhifsrrxlvat.
+  ......1bl.p................kegf022iij0jsrxcaa3.
+  ......3bl.o................y2fghegjj0qxk4pvt1..
+  ......1bl.o................4hhghg2j0jplclcv....
+  ......3bl.o...............yqgeefi0sjjpccbbz....
+  ......tbl................kg22gf0fss0sob5bbz....
+  .....3uw.n.....k.....kkyqqh0ifrjhkxxpmaauu.....
+  ....11......44kyykkk..kghegf0ijrg.ddlwat...z...
+  ....az......y4k444yyk44ggq20rj0re.dwlzz.......z
+  ....za.....kyyykyqifjf2i22jsrjrrh.wc.du.1up.k.b
+  .33.tu.....kyyykeg0jrs0ih0jexx4x..du..utbzokk.a
+  3zz.......kkk44kq200rjjsrsskdddd......zbcln...1
+  1aanqqeey4yy44q4yisrrrrjrsr4dlwvu.n...tbcln.k.v
+  3aloqeegqyyykky4q02q44yk4yq.dcuu..m...zalvm...v
+  3zwoeiggqqeeqqeygr0ndddddu...duunp..1t..uc....1
+  3alp2js0f20iff02fsfmlbbbw1t..uvu.o..zt..dl....v
+  3avp2f0ffhhhgg2gei2mcbb1a.....cv..p.....wbm...t
+  3zv..ppoooooooooopndtt3.......alm...n..owbm...t
+  ....wvwvwwvvvvvwwllt.........3awm.......dc....t
+  ....11aaccaabbaaaaa3..........zw....n..ndl....t
+  ......13tttttttttt3..........3av..yk.dvduwn...1
+  .............................31w..4k.vblcwn...t
+  ..............................zv.....wlbld....t
+  ..............................1w.....dvcud....t
+  .............................3zv.....wvlwuo...t
+  ..............................zt....dcwlcwo.k.1
+  .............................3z1...pdu....p..nt

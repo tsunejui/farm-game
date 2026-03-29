@@ -1,0 +1,83 @@
+metadata:
+  name: skills_132
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#051620'
+  b: '#031119'
+  c: '#010508'
+  d: '#010000'
+  e: '#000000'
+  f: '#000a15'
+  g: '#131311'
+  h: '#1b1d1b'
+  i: '#302921'
+  j: '#423b32'
+  k: '#85735f'
+  l: '#a1896e'
+  m: '#070d10'
+  n: '#605050'
+  o: '#c8a983'
+  p: '#b8956e'
+  q: '#583d45'
+  r: '#c39f76'
+  s: '#765e50'
+  t: '#b18e66'
+  u: '#bab1a5'
+  v: '#a07e57'
+  w: '#967551'
+  x: '#a8a49e'
+  y: '#785a3f'
+  z: '#6f5142'
+  '0': '#57494d'
+  '1': '#babcbc'
+  '2': '#d8d5d7'
+  '3': '#5e6269'
+  '4': '#68494a'
+  '5': '#5c5a5e'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ............aaaabbbbbbbb............
+  ...........bcccdddeeeeccfa..........
+  ..........aghiiiiiiiiiihhg..........
+  .........hhhjklkkkkkkklkimgha.......
+  ........cegnllooooooooopqiihmh......
+  ........hgikoooooooooorlkskngm......
+  .....bhnksklooprrppppppttppkjj......
+  .....chkuoorrptvvvvvvvvvttpplkima...
+  ....acikpppptvvwwvvvvvvvttoouxjcb...
+  ....aciklvwvttvvvvvvvvvvpproolimb...
+  ....aeiklwwvvvtprppppppprpttlkjcb...
+  ....amiklwwvwvtpoooorrooptvtlkidm...
+  ....bcjkwyywwvpooooooooorwwwykjgm...
+  ....bejkkyyyyvtoorrrroortwwyysjgc...
+  ....bgqsyzzzzwvprptprrorrwyzjjigm...
+  .....mjqjjqqzywvttpttppptwyjjjgdm...
+  ....amgjsqyyzzzswvvvwwywwwyzyzigga..
+  ....fmgqszsszzzzzyyyyzzyyyyyys0jhmb.
+  ......0jjqzzzzzqqzzzzjjzywwzjqluxib.
+  .a...1.jjjqzyszzqzzzzjjzyllzijx2x33.
+  .fa.11.jjqqqzyzzzzyzzzzzykkqiil1x1..
+  af.x2x.ijsqzzzzzzzzzzzsyyss4iilux1..
+  bf.u1...j0jqszqqzzzzqzszzzzjjjl1xx..
+  bc.xux..ijij4zzzzzzzzzzzssjiijl1lx..
+  ab.11..5050jj4nsn44nz44skkjhiil1xx..
+  af.u1..xxxnhgiiiiiihiiijijii00x1x...
+  bf.uu.x2213iijigcggggghhmmgjkxu1....
+  ac.11..1111u11l0005553355533lxx.....
+  af.....12222221uxxxxxxx11xu11xx.....
+  .bbaa.x222222221111xxu1111111......a
+  ..bfc..1x111222u...........x.3...aa.
+  ....ba....3..x..................bf..
+  ....bch.3...3..........33..5....bf..
+  ....bc......553553355555533.5...hfa.
+  ....ac....335..555500055....3...bf..
+  ....af......5..550000553........bb..
+  ....af....335...0005333.....3...ff..
+  ....af...33.3....053333.....3...bf..
+  ....af......35..q..00.......3...af..
+  ....af.........35...........3...af..
+  ....af....3....33535.........1..bf..
+  ....af.......x.3333533.......1x.bf..
+  ....af........3k33..3....3...1..bf..

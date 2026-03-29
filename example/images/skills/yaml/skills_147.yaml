@@ -1,0 +1,78 @@
+metadata:
+  name: skills_147
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#1c1d1c'
+  b: '#161716'
+  c: '#060e14'
+  d: '#0f0f0e'
+  e: '#2f2316'
+  f: '#685643'
+  g: '#8a7159'
+  h: '#a17e5e'
+  i: '#a7876b'
+  j: '#393024'
+  k: '#c7a583'
+  l: '#be976e'
+  m: '#ba9168'
+  n: '#000000'
+  o: '#b78d63'
+  p: '#b4885f'
+  q: '#97714e'
+  r: '#6f5137'
+  s: '#543f2c'
+  t: '#a37752'
+  u: '#bac1bf'
+  v: '#8a684a'
+  w: '#9f714f'
+  x: '#72695c'
+  y: '#816045'
+  z: '#684a31'
+  '0': '#745d47'
+  '1': '#74583e'
+  '2': '#664f38'
+  '3': '#594836'
+  '4': '#a6aba7'
+  '5': '#dee1df'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ............a........bba............
+  ........cccbbaaccccbabbaaccc........
+  ........ccdddddcccddddddddcc........
+  ........bbabaaabbaabdbbebaba........
+  ....a..fgghihiiiiiiihhihggifj.......
+  ....cdagkkkkkkkkkkkkkkkkkkkgebbb....
+  ...bddegillmlkklllkllkkllkkgeddca...
+  ...bndbgklmlmllmllllmmloplkgeddda...
+  ...abeeqllollmmomllmomlmmoohrssj....
+  .a..iiiimopolmopoooooppoothhlkkkg...
+  ccjiukkpqvhooppmopooppptttwhlkkkxjcc
+  cdjikkktrrtlmppomppphtttttqqtqmlyjbc
+  cdegioovzrtmppoppptthtwqqqvqqvqv0sbc
+  cbjgihhtrrqhpppttwwthwqqwqqvqvvy0sbb
+  cdjghvqqyywhppptttttttwwttqyy1112jbb
+  cdj0vvqvvtqttwwttwtqqqwtttq1zzz1fjbc
+  cbj0vvvqvwwwtqqwwqqvvwqwqtqrzss2fjdc
+  cdjfy1yy11ypohhpopiipptqyyyzzz323jac
+  bbjfv11rzzvmlmllmmllllihyzzssz2ffjac
+  cbjx0y0rrryqqqghqvvvyyy1rszss22f2sab
+  cdjffy0ryr111r111r2rzzsszssssz3203bc
+  bdjx02301vy1yyy10001rzss2211rzsff3ab
+  ..3f3ss20yy10y0100012ss3z1yv03ss3f..
+  4..3jees01yr11r22ff2r23zz11003eejx.4
+  u...ebe31yy1y112r012r2s32020vseejx.u
+  u...jej31v1yyrzrrrrzz2222f1x03ees..4
+  4...jjjj2y11y1rrr101r1y23ss33see...4
+  u..xx3eesyvvvyyvvyyy1yy03eeeej3jf...
+  u....3jj20yvyyyvyy001110seeeesx....4
+  u.....ffff21222f2z33200ffjeeb......u
+  u.....xff33333s33ssss3ssxig3j......4
+  u44......xjjejeejjeeeeeegu43j......4
+  u44....44xjeaeeeeeeeeeeaxu4xxx.....4
+  ..uuu4u444gxxxxxxxxxxxxx4u4.....4...
+  ..uu555555555555555555555uu.4...u4.a
+  axu5555555555555555555555uu4uu444..b
+  axu555555u..........4.....4u4uu4uu.c
+  a.uuuuu55u.................444..4..c

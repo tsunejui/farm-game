@@ -1,0 +1,87 @@
+metadata:
+  name: skills_131
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#041520'
+  b: '#000d18'
+  c: '#0b161d'
+  d: '#02101b'
+  e: '#00060b'
+  f: '#000002'
+  g: '#000000'
+  h: '#020001'
+  i: '#060403'
+  j: '#0d0c0a'
+  k: '#1f1711'
+  l: '#25221f'
+  m: '#3e3024'
+  n: '#5b4f45'
+  o: '#7d624a'
+  p: '#765a44'
+  q: '#72543d'
+  r: '#856e55'
+  s: '#c0ac90'
+  t: '#b79b78'
+  u: '#bf9f77'
+  v: '#867e63'
+  w: '#b2916b'
+  x: '#544133'
+  y: '#595d5c'
+  z: '#a2835d'
+  '0': '#6d4f38'
+  '1': '#bdc4c3'
+  '2': '#a2acac'
+  '3': '#b1bcb8'
+  '4': '#576967'
+  '5': '#ced9d6'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ............abccddcccdcbda........
+  ...........cefgffhhhighfee........
+  ...........jijkjjjkkkjkjjjl.......
+  ........aclmnnoppppppqponljc......
+  ........eijrsttssutuuussvljicc....
+  .......ljjkvsssssssssssswxmxn.....
+  .....dcxynqzuuuuuuuuutuuwwwttrje..
+  .....ejrstttwwzwzzzwwzzzwssssvkjc.
+  ....dekrssttzzzzzzzzzzrzztuwtvmje.
+  ....cjlrwwstzzzrzzzzzzrzzzzwtrlje.
+  ....cfmvzztzzzzzzzzzzzzzzzzwsvkge.
+  ....bikozooozwwwttttuuuwzwzwtrkhe.
+  ....cjkqoq0qzuuuuuuuuuuwwwrrrpkie.
+  ....bhkpo0qozuuuuuuuuuuuuwrprojiea
+  ....bjlxqrortuttttwwttwwuwzzz0khe.
+  ....dilnpoprztwtttwtttwzzzrzrvmhe.
+  ....bilppo00ozzzzzzzzzzopqropnlhja
+  ...bejkxxx00popopooooooq00oonxlice
+  .a....ynmlx0op000qqq00qq000xmmny..
+  dac.111rllmx0qqpqpopqqqp0xnmlmv22.
+  abc.311ylkmm00popqqqpp00qpxxkln23.
+  dbl4352yllmx00qqq000ppq0qonnmly23.
+  aal4151vlkxxqx000xx00q0x0qnxmly31.
+  aal4311ylkmm00ppppppppq0qnxmlly21.
+  abl43134lllmnpooopoopponnxnnmx431.
+  adl4353vyvnxmllklkkllllllkmnvv233.
+  .ac41513222yjihiiiiiiiiijimy22333.
+  aba.2315122vyynynyyynyyyy.......3.
+  .d..4..1555511133333333131322....4
+  ....dc.155555551111111113332......
+  ....bb.35113133333322222222...4.c.
+  ....bb........................4cba
+  ....ad........4yy4444y44...4y4..d.
+  ....dd........y..yy4yy44yy4y4...a.
+  ....da...444..................4cd.
+  ....ad...4yy..................4cd.
+  ....db....444................24cd.
+  ....db.22.444.4..............24ca.
+  ....bd.23.4yy23..............24cd.
+  ....dc.23..4y25..............24cd.
+  ....dd.212....24.............24cd.
+  ....db..3..33..4.............24cb.
+  ....dd.22..224....4...44.....24cb.
+  ....bb.22..224..4444.........2ydb.
+  ....bb.224.55...444....4.4.y..ycb.
+  ....bd..2..55...............2.ycb.
+  ...abb.315555................2ydba

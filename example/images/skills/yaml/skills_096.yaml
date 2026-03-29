@@ -1,0 +1,119 @@
+metadata:
+  name: skills_096
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#3b7755'
+  b: '#3b7954'
+  c: '#377550'
+  d: '#3a774f'
+  e: '#437e58'
+  f: '#367851'
+  g: '#377951'
+  h: '#3b7d53'
+  i: '#3e7d53'
+  j: '#377750'
+  k: '#387b50'
+  l: '#357447'
+  m: '#3e7651'
+  n: '#41765a'
+  o: '#2f6b3c'
+  p: '#4b8a55'
+  q: '#98e08c'
+  r: '#b1ed90'
+  s: '#bcfa9d'
+  t: '#63a564'
+  u: '#57975b'
+  v: '#b3f796'
+  w: '#a4ec8c'
+  x: '#a5e889'
+  y: '#75b775'
+  z: '#7cc880'
+  '0': '#b2f28f'
+  '1': '#95d68a'
+  '2': '#a8f18e'
+  '3': '#9ae686'
+  '4': '#83d588'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ..a.....b...............................
+  b....cdc.....b....befb..................
+  bf...bd......fggcghbhb..................
+  ......dddbdihicjklffllfghgaaa...........
+  .......amaamcd..khkflfkghbcfbb.ab.en....
+  ...............jkkkkfkhffgjchhbfcfim....
+  na........o....hijhkjkgfgkbbbbgfbfca...n
+  ...b...d....idlllhhlllffjjbc.....fcaa..n
+  m.cb...pqrsstlloogllccjhggf..f.....a...n
+  mcei...uqvvwulolllolddcggj.............n
+  ccei..ouqssxyyutlpeldiclj..........a...n
+  cldi..ouxssrsxrrytpollllddc.j...f..a...n
+  djied.ouqvvvsrsrzuooodidddlbh..........n
+  kieid.lurv0wxvsrtpoooldm.dbbbhb.ffa....n
+  iipe..ltws0xx0rr11yztm....eb.jg..bb....n
+  ehei..luqssxx0vsssvs1l...........bcaa..n
+  pieh..luqs0xx0vssssszoo..i..cc....bb...n
+  piied.iuqsv00v00r0sryuue.lc........j...n
+  pige..duqsv20svxxrrrxrstld.........a...n
+  eeeem.ouqss200000000ssvuo..bj..gf..a...n
+  mmmm..ltrsssv00xx000ssqoo..ic......b...n
+  .......p1vqrxx0000000s1ppl.......bg....n
+  ..........ttt1rv00000vr1xyl..jkfbhgj...n
+  ........dloopzsv0x00000sssto..j.fhkh...n
+  uut.m..el..opzvv222xxx000xuo.kk..j......
+  zqs1o..e..m.ly1qqx3wxx3x01plollf........
+  rrrzlo...m...uyytyz3xxx00xuooooj...a...a
+  sssryyu.....lppuptz32x20vwtlolo..g.....n
+  111rq1.......miiit43wx000x1zyyp.........
+  yyyzzyp......eellu1w220xxxvwvvto..gf...n
+  ttuuuun......epllt4w220xxx02swto.gff....
+  memm.m....n.aeelkt4w2x0xxx30s2to........
+  m.........nacicolu12220xxxx0srto.......a
+  ..........aecbdllu1v2v00xx3xv2to.......a
+  ..........ajfeiloptyzx20x3xxv2to...a....
+  ..........bgebbllloluz0vx3x0vwto.c.....n
+  ......aeebebkfbjdllopz2vx332vwto.c.....n
+  ..naeaabidhbhhbbebd.i4rv333xv2to.......n
+  ...jihebjgbgkihkhj..lzwv3332v2to...a...n
+  ..aehhgbchibjhhgfhd.izqvx33xvwto.......n
+  ..aebfclcbibkkhgkid.lt1v3332vwto.......n
+  ...iblcccdbikkchjjc.ou1v3332vwto.......n
+  ...bdccaccbihjjhghb..u12333wvwt....a...n
+  ..dajjbdcbbbbjjcji...u1w333xvwt....a...n
+  ...aa.bcchihhfcgdbd..u12333xvwto.......n
+  ..ne..jcghbbbbgbbb...u4v333xvwto.cgb...n
+  ...bj..jkhbagfhgkd...u42333xvwto..f....n
+  ..nab....ffcffgf.....u4w33x0vrto...f...n
+  ..aa.....jjjjjccdb...u12x330s2yl..bb...n
+  ...b....c.cccjbcci..ot4vx3x0vryp.bba...n
+  ...a......cdldf.dcm..p4www2svsyideda..an
+  .........ccddd.......pz332wv2s...daa..ae
+  ...a.....j..c.cc.d..ouzwww4yyyu..bbj..an
+  ...a...........bc...ouzwvwylkil....b...e
+  ...a..........b.....opzqvwylie....aa...n
+  ...a...........a...put41wwzpee..a......n
+  ..................iz44qq2qti.c.....a...n
+  .........c........iz141wvqu...aaaa.a...n
+  ..............a...iz1z4wvwu...mcabaa..an
+  ..............a...k4q44qq4p...mcaaaa..an
+  ..................i4qqq21zd...aa.......n
+  ...............p.ut4qw414yd.....a......e
+  ...........b...u44q4qqyuped.....a......n
+  ...........d...p4qqqw2yo....n...aa.....n
+  .........a.....pz444w2t.....n..........n
+  ............epitzzyqq1....nn.nn.......n.
+  ......a....etzzq4yy4q2....nn..n...n...n.
+  ...........pz4qv44ztt.............nn....
+  .......n...p444qqszl.l...a....n.........
+  .....a.....pzzz4qwzk.....a.......n......
+  ...........lz444qw4h....a.n......n......
+  ....a...eelpz4q4zyth....................
+  ...nea...qz4444ypki.....................
+  ...neclkyqqqzz4.l....a..................
+  ...ad.py4q4444q.........................
+  ..an..u4444q4z..j.......................
+  ...e..u4z4ztuue.........................
+  ......zqqqzp.....aa.a.................n.
+  ...e...qq4yl.....a..aa................n.
+  ..ae...4z4yh..aa......................n.

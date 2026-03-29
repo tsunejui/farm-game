@@ -1,0 +1,70 @@
+metadata:
+  name: skills_169
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#636967'
+  b: '#555b5b'
+  c: '#1e2026'
+  d: '#13161a'
+  e: '#18191f'
+  f: '#17171d'
+  g: '#17161c'
+  h: '#16181d'
+  i: '#23242a'
+  j: '#0a0d12'
+  k: '#0f1116'
+  l: '#1d1e24'
+  m: '#1d1b21'
+  n: '#111318'
+  o: '#26272b'
+  p: '#5d6765'
+  q: '#191b20'
+  r: '#131319'
+  s: '#0d0d13'
+  t: '#212128'
+  u: '#5c6362'
+  v: '#121117'
+  w: '#575e5e'
+  x: '#07070d'
+  y: '#646c67'
+  z: '#cfd2d1'
+  '0': '#bcc2bf'
+  '1': '#afb5b2'
+  '2': '#a1a8a4'
+  '3': '#000000'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .............................a..
+  .................bcdeeefghddib..
+  ..................djklmfhhnk....
+  ..................ndoooioileo...
+  ................p.jfioiioilqmgr.
+  ................p.jsrlcqqlcttde.
+  ................u.ssrttqerfdeveb
+  ................u.nnioitcltelgew
+  ................a.xkioclctclfsgb
+  ..................kkseciiliiereb
+  .............w....jxsretctqlrvmw
+  ......yay..uu..jkjqvxjnfrfrgvxmu
+  ............ab.jkvrjsfqeeddqrriu
+  ............ww.ttkrrdlldnjrhl..u
+  ..........ab.....ffssrllqnkec..b
+  .....u......dhqocfm............u
+  ..........olxxsrsj.....a....a...
+  ......dkntolgkvsxxuz0z1.pwuy....
+  .20...dkrnvtlksxx3b0001.........
+  .002..dnvgrfgjs...w.............
+  .112......geeksa.....a..........
+  .220zzzz1.jhfxja2...............
+  p..1zzzz2osvnxxb...............y
+  ...20122.okskggw...............y
+  .ba....2.....on.................
+  .......00zzz...b................
+  w......10z00.yy.................
+  ..........2.....................
+  .....wpuy..2.ya.y...........yy.y
+  uw.bu...b.11..ayy...........yy.y
+  pw..b...w.22......y.........y..y
+  ....b..bpppu..2.........yyyyyy..
