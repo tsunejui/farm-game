@@ -2,7 +2,6 @@
 // Game1.cs — Main game entry class
 // =============================================================================
 
-using System;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,16 +9,12 @@ using Microsoft.Xna.Framework.Input;
 using Serilog;
 using MonoGame.Extended.Input;
 using FarmGame.Bootstrap;
-using FarmGame.Camera;
 using FarmGame.Core;
 using FarmGame.Data;
-using FarmGame.Entities;
 using FarmGame.Persistence;
 using FarmGame.Persistence.Models;
 using FarmGame.Persistence.Repositories;
 using FarmGame.Screens;
-using FarmGame.Screens.HUD;
-using FarmGame.World;
 
 namespace FarmGame;
 
@@ -32,8 +27,7 @@ public class Game1 : Game
 
     // Screens
     private ScreenManager _screenManager;
-    private MapTransitionOverlay _mapTransition;
-    private ToastAlert _toast;
+    private PlayingScreen _playingScreen;
 
     // Data
     private DataRegistry _registry;
@@ -41,11 +35,6 @@ public class Game1 : Game
     private SettingRepository _settings;
     private PlayerStateSaver _stateSaver;
     private PlayerState _savedState;
-
-    // Gameplay
-    private GameMap _currentMap;
-    private Player _player;
-    private Camera2D _camera;
 
     public Game1()
     {
@@ -57,7 +46,7 @@ public class Game1 : Game
     protected override void Initialize()
     {
         // 1. Config
-        _contentDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
+        _contentDir = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
         ConfigInitializer.Run(_contentDir);
 
         // 2. Database
@@ -85,7 +74,10 @@ public class Game1 : Game
         // 4. Graphics + Font + Myra
         _spriteBatch = GraphicsInitializer.Run(this, _graphics, _contentDir);
 
-        // 5. Screens
+        // 5. Data Registry
+        _registry = DataInitializer.Run(_contentDir);
+
+        // 6. Screens
         var titleScreen = new TitleScreen();
         titleScreen.OnStartGame = StartGame;
         titleScreen.Initialize();
@@ -99,29 +91,20 @@ public class Game1 : Game
         _screenManager = new ScreenManager(_contentDir, _settings);
         settingsScreen.OnLanguageChanged = _screenManager.ChangeLanguage;
         settingsScreen.Initialize();
+
+        _playingScreen = new PlayingScreen(GraphicsDevice, _registry, LoadTexture);
+
         _screenManager.Register(GameState.TitleScreen, titleScreen);
         _screenManager.Register(GameState.Settings, settingsScreen);
         _screenManager.Register(GameState.Paused, pauseScreen);
-
-        _mapTransition = new MapTransitionOverlay();
-        _toast = new ToastAlert();
+        _screenManager.Register(GameState.Playing, _playingScreen);
 
         Log.Information("[Init] Screens initialized");
-
-        // 6. Data Registry
-        _registry = DataInitializer.Run(_contentDir);
     }
 
     private void StartGame()
     {
-        var result = GameplayInitializer.Run(_savedState, _registry, LoadTexture, GraphicsDevice);
-        _currentMap = result.Map;
-        _player = result.Player;
-        _camera = result.Camera;
-
-        _mapTransition.Start(result.MapName);
-        _toast.Show(LocaleManager.Format("ui", "entered_map", result.MapName));
-
+        _playingScreen.StartGame(_savedState);
         _gameState = GameState.Playing;
     }
 
@@ -144,7 +127,7 @@ public class Game1 : Game
 
     private void SavePlayerState()
     {
-        _stateSaver?.Save(_player, _currentMap?.MapId ?? GameConstants.StartMap);
+        _stateSaver?.Save(_playingScreen?.Player, _playingScreen?.CurrentMap?.MapId ?? GameConstants.StartMap);
     }
 
     private void HandleTransition(ScreenTransition transition)
@@ -176,23 +159,7 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
             Exit();
 
-        if (_gameState == GameState.Playing)
-        {
-            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _mapTransition.Update(dt);
-            _toast.Update(dt);
-            var keyboard = KeyboardExtended.GetState();
-            if (keyboard.WasKeyPressed(Keys.Escape))
-            {
-                HandleTransition(ScreenTransition.To(GameState.Paused));
-            }
-            else
-            {
-                _player.Update(gameTime);
-                _camera.Update(_player, _currentMap);
-            }
-        }
-        else if (_screenManager.TryGet(_gameState, out var screen))
+        if (_screenManager.TryGet(_gameState, out var screen))
         {
             var transition = screen.Update(gameTime);
             if (transition != ScreenTransition.None)
@@ -206,29 +173,11 @@ public class Game1 : Game
     {
         GraphicsDevice.Clear(Color.Black);
 
-        if (_gameState == GameState.Playing || _gameState == GameState.Paused)
-        {
-            _spriteBatch.Begin(
-                transformMatrix: _camera.TransformMatrix,
-                samplerState: SamplerState.PointClamp);
-            _currentMap.Draw(_spriteBatch, _camera);
-            _player.Draw(_spriteBatch);
-            _spriteBatch.End();
-        }
-
-        if (_gameState == GameState.Playing)
-        {
-            _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-            _toast.Draw(_spriteBatch);
-            if (_mapTransition.IsActive)
-                _mapTransition.Draw(_spriteBatch);
-            _spriteBatch.End();
-        }
+        if (_gameState == GameState.Paused)
+            _playingScreen.DrawWorld(_spriteBatch);
 
         if (_screenManager.TryGet(_gameState, out var activeScreen))
-        {
             activeScreen.Draw(_spriteBatch);
-        }
 
         base.Draw(gameTime);
     }
