@@ -20,5 +20,7 @@ physics:
 
 logic:
   action_handler: "none"
+  max_health: 0
+  faction: "neutral"
   properties:
     is_water: true

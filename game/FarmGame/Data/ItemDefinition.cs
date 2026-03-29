@@ -76,6 +76,9 @@ public class ItemLogic
     [YamlMember(Alias = "max_health")]
     public int MaxHealth { get; set; }
 
+    // Faction: "neutral" (default), "friendly" (cannot be attacked), "enemy" (can be attacked)
+    public string Faction { get; set; } = "neutral";
+
     public List<DropEntry> Drops { get; set; } = new();
     public Dictionary<string, object> Properties { get; set; } = new();
 }

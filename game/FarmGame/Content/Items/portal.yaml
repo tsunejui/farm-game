@@ -20,3 +20,5 @@ physics:
 
 logic:
   action_handler: "portal_logic"
+  max_health: 0
+  faction: "friendly"

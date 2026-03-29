@@ -62,6 +62,12 @@ logic:
   # Health for destructible items (0 = indestructible)
   max_health: 0
 
+  # Faction determines attack interaction:
+  #   "neutral"  — can be attacked by the player
+  #   "friendly" — cannot be attacked
+  #   "enemy"    — can be attacked, may attack back in future
+  faction: "neutral"
+
   # Items dropped when destroyed
   drops:
     - item: "wood"                 # item_id of the drop

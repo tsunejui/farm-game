@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -20,6 +19,7 @@ public class GameMap
     private readonly Dictionary<string, Color> _terrainColors;
     private readonly Dictionary<(int, int), Dictionary<string, object>> _tileProperties = new();
     private readonly Dictionary<string, Texture2D> _backgroundTextures = new();
+    private readonly Dictionary<(int, int), EntityInstance> _entityGrid = new();
 
     public List<EntityInstance> Entities { get; } = new();
 
@@ -78,19 +78,24 @@ public class GameMap
         return _tileProperties.TryGetValue((x, y), out var props) && props.ContainsKey(name);
     }
 
+    public void RegisterEntity(EntityInstance entity)
+    {
+        Entities.Add(entity);
+        for (int x = entity.TileX; x < entity.TileX + entity.EffectiveWidth; x++)
+            for (int y = entity.TileY; y < entity.TileY + entity.EffectiveHeight; y++)
+                _entityGrid[(x, y)] = entity;
+    }
+
     public EntityInstance GetEntityAt(int x, int y)
     {
-        return Entities.FirstOrDefault(e =>
-        {
-            int ew = e.Definition.Physics.OccupyWidth;
-            int eh = e.Definition.Physics.OccupyHeight;
-            if (e.Properties.TryGetValue("fill_width", out var fw))
-                ew = Convert.ToInt32(fw);
-            if (e.Properties.TryGetValue("fill_height", out var fh))
-                eh = Convert.ToInt32(fh);
-            return x >= e.TileX && x < e.TileX + ew
-                && y >= e.TileY && y < e.TileY + eh;
-        });
+        return _entityGrid.GetValueOrDefault((x, y));
+    }
+
+    // Update all entity states (damage-over-time ticks)
+    public void Update(float deltaTime)
+    {
+        foreach (var entity in Entities)
+            entity.State.Update(deltaTime);
     }
 
     public void Draw(SpriteBatch spriteBatch, Camera2D camera)
@@ -122,17 +127,10 @@ public class GameMap
         foreach (var entity in Entities)
         {
             var def = entity.Definition;
-            int ew = def.Physics.OccupyWidth;
-            int eh = def.Physics.OccupyHeight;
-            if (entity.Properties.TryGetValue("fill_width", out var fw))
-                ew = Convert.ToInt32(fw);
-            if (entity.Properties.TryGetValue("fill_height", out var fh))
-                eh = Convert.ToInt32(fh);
-
             int px = entity.TileX * GameConstants.TileSize;
             int py = entity.TileY * GameConstants.TileSize;
-            int pw = ew * GameConstants.TileSize;
-            int ph = eh * GameConstants.TileSize;
+            int pw = entity.EffectiveWidth * GameConstants.TileSize;
+            int ph = entity.EffectiveHeight * GameConstants.TileSize;
 
             if (px + pw < visible.Left || px > visible.Right ||
                 py + ph < visible.Top || py > visible.Bottom)
@@ -183,6 +181,20 @@ public class GameMap
             {
                 var entityColor = Core.ColorHelper.FromHex(def.Visuals.Color);
                 spriteBatch.FillRectangle(entityArea, entityColor);
+            }
+
+            // Death state: gray overlay at 50% opacity
+            if (!entity.State.IsAlive)
+            {
+                spriteBatch.FillRectangle(entityArea, Color.DarkGray * 0.5f);
+                continue;
+            }
+
+            // Damage flash: semi-transparent dark gray overlay while taking damage
+            if (entity.State.IsTakingDamage)
+            {
+                spriteBatch.FillRectangle(entityArea,
+                    Color.DarkGray * GameConstants.DamageFlashOpacity);
             }
         }
     }

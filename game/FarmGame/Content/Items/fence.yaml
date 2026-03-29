@@ -20,3 +20,5 @@ physics:
 
 logic:
   action_handler: "none"
+  max_health: 5
+  faction: "friendly"

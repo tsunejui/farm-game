@@ -38,7 +38,7 @@ public class Player
     {
         _movement = new MovementAction(startPosition, tileMap, facingDirection);
         _jump = new JumpAction();
-        _attack = new AttackAction();
+        _attack = new AttackAction(tileMap, () => _movement.GridPosition, () => _movement.FacingDirection);
         _actions = new IPlayerAction[] { _movement, _jump, _attack };
     }
 

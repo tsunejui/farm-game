@@ -21,6 +21,7 @@ physics:
 logic:
   action_handler: "rock_logic"
   max_health: 8
+  faction: "neutral"
   drops:
     - item: "stone"
       amount: 2

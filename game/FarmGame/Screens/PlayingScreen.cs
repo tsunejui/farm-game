@@ -29,6 +29,7 @@ public class PlayingScreen : IScreen, IWorldRenderer
     private GameMap _currentMap;
     private Entities.Player _player;
     private Camera2D _camera;
+    private float _autoSaveTimer;
 
     public PlayingScreen(
         GraphicsDevice graphicsDevice,
@@ -48,12 +49,24 @@ public class PlayingScreen : IScreen, IWorldRenderer
     public void Rebuild() { }
     public void OnEnter(GameState fromState) { }
 
+    public void OnExit(GameState toState)
+    {
+        SaveState();
+    }
+
     public void StartGame(PlayerState savedState)
     {
         var result = GameplayInitializer.Run(savedState, _registry, _loadTexture, _graphicsDevice);
         _currentMap = result.Map;
         _player = result.Player;
         _camera = result.Camera;
+        _autoSaveTimer = 0f;
+
+        // Load or create persisted map entity state (HP, alive/dead)
+        _session.LoadOrCreateMapState(result.Map.MapId, result.Map, savedState);
+
+        // Set world bounds once at map load (not per-frame)
+        _camera.SetWorldBounds(_currentMap);
 
         _mapTransition.Start(result.MapName);
         _toast.Show(LocaleManager.Format("ui", "entered_map", result.MapName));
@@ -62,6 +75,8 @@ public class PlayingScreen : IScreen, IWorldRenderer
     public void SaveState()
     {
         _session.SavePlayer(_player, _currentMap?.MapId ?? GameConstants.StartMap);
+        if (_currentMap != null)
+            _session.SaveMapEntities(_currentMap);
     }
 
     public ScreenTransition Update(GameTime gameTime)
@@ -70,12 +85,26 @@ public class PlayingScreen : IScreen, IWorldRenderer
         _mapTransition.Update(dt);
         _toast.Update(dt);
 
+        // Auto-save on configurable interval
+        float interval = GameConstants.AutoSaveInterval;
+        if (interval > 0f)
+        {
+            _autoSaveTimer += dt;
+            if (_autoSaveTimer >= interval)
+            {
+                _autoSaveTimer = 0f;
+                SaveState();
+                _toast.Show(LocaleManager.Get("ui", "auto_saved", "Auto-saved"));
+            }
+        }
+
         var keyboard = KeyboardExtended.GetState();
         if (keyboard.WasKeyPressed(Keys.Escape))
             return ScreenTransition.To(GameState.Paused);
 
         _player.Update(gameTime);
-        _camera.Update(_player, _currentMap);
+        _currentMap.Update(dt);
+        _camera.Update(_player);
 
         return ScreenTransition.None;
     }

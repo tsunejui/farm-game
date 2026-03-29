@@ -1,17 +1,40 @@
+// =============================================================================
+// AttackAction.cs — Player attack action with entity damage
+//
+// Triggered by Z key. Plays a directional visual effect and checks for
+// entities in the attack area. Damages non-friendly entities with a random
+// amount distributed over DamageTickDurationMs.
+// =============================================================================
+
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.Input;
 using FarmGame.Core;
+using FarmGame.World;
 
 namespace FarmGame.Entities.Actions.Player;
 
 public class AttackAction : IPlayerAction
 {
+    private static readonly Random Rng = new();
+
+    private readonly GameMap _map;
+    private readonly Func<Point> _getGridPosition;
+    private readonly Func<Direction> _getFacingDirection;
     private float _attackProgress;
+    private bool _hasDealtDamage;
 
     public bool IsActive { get; private set; }
     public float Progress => _attackProgress;
+
+    public AttackAction(GameMap map, Func<Point> getGridPosition, Func<Direction> getFacingDirection)
+    {
+        _map = map;
+        _getGridPosition = getGridPosition;
+        _getFacingDirection = getFacingDirection;
+    }
 
     public void Update(float deltaTime, KeyboardStateExtended keyboard)
     {
@@ -19,11 +42,20 @@ public class AttackAction : IPlayerAction
         {
             IsActive = true;
             _attackProgress = 0f;
+            _hasDealtDamage = false;
         }
 
         if (IsActive)
         {
             _attackProgress += deltaTime / GameConstants.PlayerAttackDuration;
+
+            // Deal damage once at ~30% into the animation (impact frame)
+            if (!_hasDealtDamage && _attackProgress >= 0.3f)
+            {
+                _hasDealtDamage = true;
+                DealDamageToEntitiesInRange();
+            }
+
             if (_attackProgress >= 1f)
             {
                 Reset();
@@ -35,6 +67,7 @@ public class AttackAction : IPlayerAction
     {
         _attackProgress = 0f;
         IsActive = false;
+        _hasDealtDamage = false;
     }
 
     public void Draw(ActionDrawContext context)
@@ -60,5 +93,32 @@ public class AttackAction : IPlayerAction
         };
 
         context.SpriteBatch.FillRectangle(effectRect, GameConstants.PlayerAttackColor * alpha);
+    }
+
+    private void DealDamageToEntitiesInRange()
+    {
+        var pos = _getGridPosition();
+        var dir = _getFacingDirection();
+
+        // Check the tile in front of the player
+        Point target = dir switch
+        {
+            Direction.Up => new Point(pos.X, pos.Y - 1),
+            Direction.Down => new Point(pos.X, pos.Y + 1),
+            Direction.Left => new Point(pos.X - 1, pos.Y),
+            Direction.Right => new Point(pos.X + 1, pos.Y),
+            _ => pos,
+        };
+
+        var entity = _map.GetEntityAt(target.X, target.Y);
+        if (entity == null) return;
+
+        // Only damage non-friendly, alive entities with HP > 0
+        if (entity.State.Faction == Faction.Friendly) return;
+        if (!entity.State.IsAlive) return;
+        if (entity.Definition.Logic.MaxHealth <= 0) return;
+
+        int damage = Rng.Next(GameConstants.DefaultMinDamage, GameConstants.DefaultMaxDamage + 1);
+        entity.State.TakeDamage(damage);
     }
 }

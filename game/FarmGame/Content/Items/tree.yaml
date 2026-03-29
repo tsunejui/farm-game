@@ -21,6 +21,7 @@ physics:
 logic:
   action_handler: "tree_logic"
   max_health: 12
+  faction: "neutral"
   drops:
     - item: "wood"
       amount: 4
