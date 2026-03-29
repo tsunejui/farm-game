@@ -331,24 +331,35 @@ public class GameMap
             if (obj.State.ShowDamageNumber)
             {
                 float progress = obj.State.DamageNumberProgress;
-                float alpha = 1f - progress;           // fade out
-                float floatUp = progress * 16f;        // drift 16px upward
+                float alpha = 1f - progress;
+                float floatUp = progress * 16f;
 
-                string dmgText = obj.State.LastDamageWasCrit
+                bool isCrit = obj.State.LastDamageWasCrit;
+                string dmgText = isCrit
                     ? $"{obj.State.LastDamageAmount}!"
                     : obj.State.LastDamageAmount.ToString();
-                Color dmgColor = obj.State.LastDamageWasCrit ? Color.Orange : Color.Red;
 
-                var dmgSize = font.MeasureString(dmgText);
-                float dmgX = entityCenterX - dmgSize.X / 2f;
-                float dmgY = textY - dmgSize.Y - 2 - floatUp;
+                // Crit: larger font + light red; Normal: same font + red
+                var dmgFont = isCrit
+                    ? FontManager.GetFont(GameConstants.ObjectInfoFontSize + 8)
+                    : font;
+                Color dmgColor = isCrit
+                    ? new Color(255, 120, 120)   // light red
+                    : Color.Red;
 
-                font.DrawText(spriteBatch, dmgText,
-                    new Vector2(dmgX + 1, dmgY + 1),
-                    Color.Black * (alpha * 0.6f));
-                font.DrawText(spriteBatch, dmgText,
-                    new Vector2(dmgX, dmgY),
-                    dmgColor * alpha);
+                if (dmgFont != null)
+                {
+                    var dmgSize = dmgFont.MeasureString(dmgText);
+                    float dmgX = entityCenterX - dmgSize.X / 2f;
+                    float dmgY = textY - dmgSize.Y - 2 - floatUp;
+
+                    dmgFont.DrawText(spriteBatch, dmgText,
+                        new Vector2(dmgX + 1, dmgY + 1),
+                        Color.Black * (alpha * 0.6f));
+                    dmgFont.DrawText(spriteBatch, dmgText,
+                        new Vector2(dmgX, dmgY),
+                        dmgColor * alpha);
+                }
             }
 
             // --- Draw HP bar below entity ---

@@ -197,4 +197,7 @@ public class CombatConfig
 
     [YamlMember(Alias = "knockback_tiles")]
     public int KnockbackTiles { get; set; } = 1;
+
+    [YamlMember(Alias = "crit_knockback_bonus")]
+    public int CritKnockbackBonus { get; set; } = 1;
 }

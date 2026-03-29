@@ -132,6 +132,8 @@ public class AttackAction : IPlayerAction
         // Invincible objects take no damage
         if (obj.Definition.Logic.IsInvincible) return;
 
+        bool isCritical = false;
+
         // Deal damage to alive objects with HP
         if (obj.State.IsAlive && obj.Definition.Logic.MaxHealth > 0)
         {
@@ -149,18 +151,22 @@ public class AttackAction : IPlayerAction
             };
 
             int damage = DamagePipeline.CalculateDamage(ctx);
-            obj.State.TakeDamage(damage, ctx.IsCritical);
+            isCritical = ctx.IsCritical;
+            obj.State.TakeDamage(damage, isCritical);
 
             Log.Debug("Attack: {ItemId} took {Damage} damage{Crit}, hp={Hp}/{MaxHp}",
-                obj.ItemId, damage, ctx.IsCritical ? " (CRIT!)" : "",
+                obj.ItemId, damage, isCritical ? " (CRIT!)" : "",
                 obj.State.CurrentHp, obj.State.MaxHp);
         }
 
-        // Knockback
+        // Knockback — critical hits push further
         if (obj.Definition.Physics.IsKnockbackable)
         {
             var dir = _getFacingDirection();
             int kb = GameConstants.KnockbackTiles;
+            if (isCritical)
+                kb += GameConstants.CritKnockbackBonus;
+
             Point knockDir = dir switch
             {
                 Direction.Up => new Point(0, -kb),
@@ -170,13 +176,27 @@ public class AttackAction : IPlayerAction
                 _ => Point.Zero,
             };
 
-            int newX = obj.TileX + knockDir.X;
-            int newY = obj.TileY + knockDir.Y;
-            if (_map.MoveObject(obj, newX, newY))
+            // Try full knockback distance, then reduce if blocked
+            for (int dist = kb; dist > 0; dist--)
             {
-                if (obj.State.IsAlive)
-                    obj.State.TriggerBounce();
-                Log.Debug("Knockback: {ItemId} pushed to ({X},{Y})", obj.ItemId, newX, newY);
+                Point tryDir = dir switch
+                {
+                    Direction.Up => new Point(0, -dist),
+                    Direction.Down => new Point(0, dist),
+                    Direction.Left => new Point(-dist, 0),
+                    Direction.Right => new Point(dist, 0),
+                    _ => Point.Zero,
+                };
+                int newX = obj.TileX + tryDir.X;
+                int newY = obj.TileY + tryDir.Y;
+                if (_map.MoveObject(obj, newX, newY))
+                {
+                    if (obj.State.IsAlive)
+                        obj.State.TriggerBounce();
+                    Log.Debug("Knockback: {ItemId} pushed {Dist} tiles to ({X},{Y}){Crit}",
+                        obj.ItemId, dist, newX, newY, isCritical ? " (CRIT)" : "");
+                    break;
+                }
             }
         }
     }

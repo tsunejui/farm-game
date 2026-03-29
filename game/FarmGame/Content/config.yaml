@@ -55,6 +55,7 @@ combat:
   damage_variance: 0.05          # random fluctuation range (0.05 = 95%~105%)
   flash_opacity: 0.01            # dark gray overlay opacity during damage (1% per spec)
   knockback_tiles: 1             # how many tiles an entity is pushed back on hit
+  crit_knockback_bonus: 1        # extra knockback tiles on critical hit
 
 # Object info display (name + HP bar shown when player is nearby)
 object_info:

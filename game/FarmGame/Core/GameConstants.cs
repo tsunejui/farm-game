@@ -53,6 +53,7 @@ public static class GameConstants
     public static float DamageVariance { get; private set; } = 0.05f;
     public static float DamageFlashOpacity { get; private set; } = 0.01f;
     public static int KnockbackTiles { get; private set; } = 1;
+    public static int CritKnockbackBonus { get; private set; } = 1;
 
     // HUD — Map Transition
     public static int MapTransitionFadeInMs { get; private set; } = 300;
@@ -112,5 +113,6 @@ public static class GameConstants
         DamageVariance = config.Combat.DamageVariance;
         DamageFlashOpacity = config.Combat.FlashOpacity;
         KnockbackTiles = config.Combat.KnockbackTiles;
+        CritKnockbackBonus = config.Combat.CritKnockbackBonus;
     }
 }
