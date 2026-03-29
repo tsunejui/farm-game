@@ -118,31 +118,13 @@ public class Game1 : Game
 
     private void StartGame()
     {
-        var mapId = _savedState?.CurrentMap ?? GameConstants.StartMap;
-        var mapDef = _registry.Maps[mapId];
-        _currentMap = MapBuilder.Build(mapDef, _registry, LoadTexture);
+        var result = GameplayInitializer.Run(_savedState, _registry, LoadTexture, GraphicsDevice);
+        _currentMap = result.Map;
+        _player = result.Player;
+        _camera = result.Camera;
 
-        var config = mapDef.Config;
-        Point playerStart;
-        Direction facingDirection;
-
-        if (_savedState != null)
-        {
-            playerStart = new Point(_savedState.PositionX, _savedState.PositionY);
-            Enum.TryParse(_savedState.FacingDirection, out facingDirection);
-        }
-        else
-        {
-            playerStart = new Point(config.PlayerStart[0], config.PlayerStart[1]);
-            facingDirection = Direction.Down;
-        }
-
-        _player = new Player(playerStart, _currentMap, facingDirection);
-        _camera = new Camera2D(GraphicsDevice);
-
-        var mapName = LocaleManager.Get("maps", mapId, mapDef.Metadata.DisplayName ?? mapId);
-        _mapTransition.Start(mapName);
-        _toast.Show(LocaleManager.Format("ui", "entered_map", mapName));
+        _mapTransition.Start(result.MapName);
+        _toast.Show(LocaleManager.Format("ui", "entered_map", result.MapName));
 
         _gameState = GameState.Playing;
     }
