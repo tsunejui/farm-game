@@ -239,9 +239,14 @@ public class Game1 : Game
             case GameState.TitleScreen:
                 _titleScreen.Update(gameTime);
                 if (_titleScreen.SelectedAction == TitleMenuOption.StartGame)
+                {
+                    _titleScreen.ConsumeAction();
                     StartGame();
+                }
                 else if (_titleScreen.SelectedAction == TitleMenuOption.ExitGame)
+                {
                     Exit();
+                }
                 break;
 
             case GameState.Playing:
@@ -261,9 +266,14 @@ public class Game1 : Game
             case GameState.Paused:
                 _pauseScreen.Update(gameTime);
                 if (_pauseScreen.SelectedAction == PauseMenuOption.Resume)
+                {
+                    _pauseScreen.ConsumeAction();
                     _gameState = GameState.Playing;
+                }
                 else if (_pauseScreen.SelectedAction == PauseMenuOption.ExitGame)
+                {
                     Exit();
+                }
                 break;
         }
 

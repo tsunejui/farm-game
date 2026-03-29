@@ -1,8 +1,10 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Myra;
 using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
+using MonoGame.Extended.Input;
 
 namespace FarmGame.Screens;
 
@@ -15,16 +17,18 @@ public enum PauseMenuOption
 public class PauseScreen
 {
     private Desktop _desktop;
+    private Button[] _buttons;
+    private int _selectedIndex;
 
     public PauseMenuOption? SelectedAction { get; private set; }
 
     public void Initialize()
     {
         SelectedAction = null;
+        _selectedIndex = 0;
 
         var overlay = new Panel();
 
-        // Center panel
         var panel = new VerticalStackPanel
         {
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -47,28 +51,60 @@ public class PauseScreen
             Margin = new Myra.Graphics2D.Thickness(0, 0, 0, 20),
         });
 
-        // Resume button
+        // Buttons
         var resumeBtn = CreateButton("Resume");
         resumeBtn.Click += (_, _) => SelectedAction = PauseMenuOption.Resume;
         panel.Widgets.Add(resumeBtn);
 
-        // Exit Game button
         var exitBtn = CreateButton("Exit Game");
         exitBtn.Click += (_, _) => SelectedAction = PauseMenuOption.ExitGame;
         panel.Widgets.Add(exitBtn);
+
+        _buttons = new[] { resumeBtn, exitBtn };
 
         overlay.Widgets.Add(panel);
 
         _desktop = new Desktop();
         _desktop.Root = overlay;
+
+        UpdateButtonFocus();
     }
 
     public void Reset()
     {
         SelectedAction = null;
+        _selectedIndex = 0;
+        UpdateButtonFocus();
     }
 
     public void Update(GameTime gameTime)
+    {
+        var keyboard = KeyboardExtended.GetState();
+
+        if (keyboard.WasKeyPressed(Keys.Up) || keyboard.WasKeyPressed(Keys.W))
+        {
+            _selectedIndex = (_selectedIndex - 1 + _buttons.Length) % _buttons.Length;
+            UpdateButtonFocus();
+        }
+
+        if (keyboard.WasKeyPressed(Keys.Down) || keyboard.WasKeyPressed(Keys.S))
+        {
+            _selectedIndex = (_selectedIndex + 1) % _buttons.Length;
+            UpdateButtonFocus();
+        }
+
+        if (keyboard.WasKeyPressed(Keys.Enter) || keyboard.WasKeyPressed(Keys.Space))
+        {
+            SelectedAction = (PauseMenuOption)_selectedIndex;
+        }
+
+        if (keyboard.WasKeyPressed(Keys.Escape))
+        {
+            SelectedAction = PauseMenuOption.Resume;
+        }
+    }
+
+    public void ConsumeAction()
     {
         SelectedAction = null;
     }
@@ -78,9 +114,18 @@ public class PauseScreen
         _desktop?.Render();
     }
 
+    private void UpdateButtonFocus()
+    {
+        for (int i = 0; i < _buttons.Length; i++)
+        {
+            var label = (Label)_buttons[i].Content;
+            label.TextColor = i == _selectedIndex ? Color.White : new Color(120, 120, 120);
+        }
+    }
+
     private static Button CreateButton(string text)
     {
-        var btn = new Button
+        return new Button
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             Width = 200,
@@ -92,6 +137,5 @@ public class PauseScreen
                 VerticalAlignment = VerticalAlignment.Center,
             },
         };
-        return btn;
     }
 }

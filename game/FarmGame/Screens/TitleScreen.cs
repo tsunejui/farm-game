@@ -1,7 +1,9 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Myra;
 using Myra.Graphics2D.UI;
+using MonoGame.Extended.Input;
 
 namespace FarmGame.Screens;
 
@@ -15,12 +17,15 @@ public class TitleScreen
 {
     private Desktop _desktop;
     private Label _errorLabel;
+    private Button[] _buttons;
+    private int _selectedIndex;
 
     public TitleMenuOption? SelectedAction { get; private set; }
 
     public void Initialize()
     {
         SelectedAction = null;
+        _selectedIndex = 0;
 
         var root = new VerticalStackPanel
         {
@@ -39,26 +44,27 @@ public class TitleScreen
             Margin = new Myra.Graphics2D.Thickness(0, 0, 0, 40),
         });
 
-        // Start Game button
+        // Buttons
         var startBtn = CreateButton("Start Game");
         startBtn.Click += (_, _) => SelectedAction = TitleMenuOption.StartGame;
         root.Widgets.Add(startBtn);
 
-        // Exit Game button
         var exitBtn = CreateButton("Exit Game");
         exitBtn.Click += (_, _) => SelectedAction = TitleMenuOption.ExitGame;
         root.Widgets.Add(exitBtn);
 
+        _buttons = new[] { startBtn, exitBtn };
+
         // Hint
         root.Widgets.Add(new Label
         {
-            Text = "Click to select",
+            Text = "W/S or Arrow Keys to select, Enter to confirm",
             HorizontalAlignment = HorizontalAlignment.Center,
             TextColor = new Color(80, 80, 80),
             Margin = new Myra.Graphics2D.Thickness(0, 30, 0, 0),
         });
 
-        // Error label (hidden by default)
+        // Error label
         _errorLabel = new Label
         {
             Text = "",
@@ -69,9 +75,33 @@ public class TitleScreen
 
         _desktop = new Desktop();
         _desktop.Root = root;
+
+        UpdateButtonFocus();
     }
 
     public void Update(GameTime gameTime)
+    {
+        var keyboard = KeyboardExtended.GetState();
+
+        if (keyboard.WasKeyPressed(Keys.Up) || keyboard.WasKeyPressed(Keys.W))
+        {
+            _selectedIndex = (_selectedIndex - 1 + _buttons.Length) % _buttons.Length;
+            UpdateButtonFocus();
+        }
+
+        if (keyboard.WasKeyPressed(Keys.Down) || keyboard.WasKeyPressed(Keys.S))
+        {
+            _selectedIndex = (_selectedIndex + 1) % _buttons.Length;
+            UpdateButtonFocus();
+        }
+
+        if (keyboard.WasKeyPressed(Keys.Enter) || keyboard.WasKeyPressed(Keys.Space))
+        {
+            SelectedAction = (TitleMenuOption)_selectedIndex;
+        }
+    }
+
+    public void ConsumeAction()
     {
         SelectedAction = null;
     }
@@ -87,9 +117,18 @@ public class TitleScreen
         _desktop?.Render();
     }
 
+    private void UpdateButtonFocus()
+    {
+        for (int i = 0; i < _buttons.Length; i++)
+        {
+            var label = (Label)_buttons[i].Content;
+            label.TextColor = i == _selectedIndex ? Color.White : new Color(120, 120, 120);
+        }
+    }
+
     private static Button CreateButton(string text)
     {
-        var btn = new Button
+        return new Button
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             Width = 200,
@@ -101,6 +140,5 @@ public class TitleScreen
                 VerticalAlignment = VerticalAlignment.Center,
             },
         };
-        return btn;
     }
 }
