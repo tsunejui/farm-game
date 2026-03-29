@@ -100,22 +100,41 @@ public static class MapBuilder
                         map.SetCollision(x, y, true);
             }
 
-            // Load background texture if enabled
+            // Load background textures (alive + state variants) if enabled
             if (itemDef.Visuals.Background.Enabled && loadTexture != null)
             {
-                var imagePath = itemDef.Visuals.Background.ImagePath;
-                if (!string.IsNullOrEmpty(imagePath))
+                var bg = itemDef.Visuals.Background;
+
+                // Load default (alive) texture
+                if (!string.IsNullOrEmpty(bg.ImagePath))
                 {
                     try
                     {
-                        var texture = loadTexture(imagePath);
+                        var texture = loadTexture(bg.ImagePath);
                         if (texture != null)
-                            map.SetBackgroundTexture(placement.Item, texture);
+                            map.SetBackgroundTexture(placement.Item, "alive", texture);
                     }
                     catch (Exception ex)
                     {
                         Log.Warning("Failed to load background '{ImagePath}' for '{ItemId}': {Error}",
-                            imagePath, placement.Item, ex.Message);
+                            bg.ImagePath, placement.Item, ex.Message);
+                    }
+                }
+
+                // Load state-specific textures (e.g. "dead")
+                foreach (var (state, stateConfig) in bg.States)
+                {
+                    if (string.IsNullOrEmpty(stateConfig.ImagePath)) continue;
+                    try
+                    {
+                        var texture = loadTexture(stateConfig.ImagePath);
+                        if (texture != null)
+                            map.SetBackgroundTexture(placement.Item, state, texture);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warning("Failed to load {State} background '{ImagePath}' for '{ItemId}': {Error}",
+                            state, stateConfig.ImagePath, placement.Item, ex.Message);
                     }
                 }
             }

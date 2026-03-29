@@ -54,6 +54,15 @@ public class ItemBackground
 
     [YamlMember(Alias = "offset_y")]
     public int OffsetY { get; set; }
+
+    // State-specific image overrides (e.g. "dead" → different image)
+    public Dictionary<string, ItemBackgroundState> States { get; set; } = new();
+}
+
+public class ItemBackgroundState
+{
+    [YamlMember(Alias = "image_path")]
+    public string ImagePath { get; set; } = "";
 }
 
 public class ItemPhysics

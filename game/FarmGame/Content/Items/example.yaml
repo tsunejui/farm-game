@@ -45,6 +45,14 @@ visuals:
     offset_x: 0
     offset_y: 0
 
+    # State-specific image overrides. When the entity enters a state,
+    # the renderer uses the matching image instead of the default.
+    # If no state image is defined, falls back to the default image_path.
+    # Supported states: "dead"
+    states:
+      dead:
+        image_path: "textures/backgrounds/example_dead"
+
 # --- Physics -----------------------------------------------------------------
 # Size and collision behavior.
 physics:

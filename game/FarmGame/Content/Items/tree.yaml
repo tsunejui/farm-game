@@ -12,6 +12,9 @@ visuals:
     display_mode: "stretch"
     offset_x: 0
     offset_y: 0
+    states:
+      dead:
+        image_path: "Images/trees/tree_dead"
 
 physics:
   occupy_width: 2

@@ -19,7 +19,8 @@ public class GameMap
     private readonly bool[,] _collisionGrid;
     private readonly Dictionary<string, Color> _terrainColors;
     private readonly Dictionary<(int, int), Dictionary<string, object>> _tileProperties = new();
-    private readonly Dictionary<string, Texture2D> _backgroundTextures = new();
+    // Key: (itemId, state) where state is "alive" or "dead"
+    private readonly Dictionary<(string, string), Texture2D> _backgroundTextures = new();
     private readonly Dictionary<(int, int), EntityInstance> _entityGrid = new();
 
     public List<EntityInstance> Entities { get; } = new();
@@ -34,9 +35,9 @@ public class GameMap
         _terrainColors = terrainColors;
     }
 
-    public void SetBackgroundTexture(string itemId, Texture2D texture)
+    public void SetBackgroundTexture(string itemId, string state, Texture2D texture)
     {
-        _backgroundTextures[itemId] = texture;
+        _backgroundTextures[(itemId, state)] = texture;
     }
 
     public void SetTerrain(int x, int y, string terrainId)
@@ -139,57 +140,68 @@ public class GameMap
 
             var entityArea = new Rectangle(px, py, pw, ph);
 
-            // Draw background image if enabled
+            // Select texture by entity state: dead entities use "dead" texture if available
+            string texState = entity.State.IsAlive ? "alive" : "dead";
             var bg = def.Visuals.Background;
-            if (bg.Enabled && _backgroundTextures.TryGetValue(entity.ItemId, out var bgTex))
+
+            if (bg.Enabled)
             {
-                int ox = bg.OffsetX;
-                int oy = bg.OffsetY;
+                // Try state-specific texture first, fall back to alive texture
+                if (!_backgroundTextures.TryGetValue((entity.ItemId, texState), out var bgTex))
+                    _backgroundTextures.TryGetValue((entity.ItemId, "alive"), out bgTex);
 
-                switch (bg.DisplayMode)
+                if (bgTex != null)
                 {
-                    case "stretch":
-                        spriteBatch.Draw(bgTex,
-                            new Rectangle(px + ox, py + oy, pw, ph),
-                            Color.White);
-                        break;
+                    int ox = bg.OffsetX;
+                    int oy = bg.OffsetY;
 
-                    case "tile":
-                        for (int ty = py + oy; ty < py + ph; ty += bgTex.Height)
-                            for (int tx = px + ox; tx < px + pw; tx += bgTex.Width)
-                            {
-                                int dw = Math.Min(bgTex.Width, px + pw - tx);
-                                int dh = Math.Min(bgTex.Height, py + ph - ty);
-                                spriteBatch.Draw(bgTex,
-                                    new Rectangle(tx, ty, dw, dh),
-                                    new Rectangle(0, 0, dw, dh),
-                                    Color.White);
-                            }
-                        break;
+                    switch (bg.DisplayMode)
+                    {
+                        case "stretch":
+                            spriteBatch.Draw(bgTex,
+                                new Rectangle(px + ox, py + oy, pw, ph),
+                                Color.White);
+                            break;
 
-                    case "center":
-                        int cx = px + (pw - bgTex.Width) / 2 + ox;
-                        int cy = py + (ph - bgTex.Height) / 2 + oy;
-                        spriteBatch.Draw(bgTex,
-                            new Vector2(cx, cy),
-                            Color.White);
-                        break;
+                        case "tile":
+                            for (int ty = py + oy; ty < py + ph; ty += bgTex.Height)
+                                for (int tx = px + ox; tx < px + pw; tx += bgTex.Width)
+                                {
+                                    int dw = Math.Min(bgTex.Width, px + pw - tx);
+                                    int dh = Math.Min(bgTex.Height, py + ph - ty);
+                                    spriteBatch.Draw(bgTex,
+                                        new Rectangle(tx, ty, dw, dh),
+                                        new Rectangle(0, 0, dw, dh),
+                                        Color.White);
+                                }
+                            break;
+
+                        case "center":
+                            int cx = px + (pw - bgTex.Width) / 2 + ox;
+                            int cy = py + (ph - bgTex.Height) / 2 + oy;
+                            spriteBatch.Draw(bgTex,
+                                new Vector2(cx, cy),
+                                Color.White);
+                            break;
+                    }
                 }
             }
 
-            // Draw foreground color on top
-            if (!string.IsNullOrEmpty(def.Visuals.Color))
+            // Draw foreground color on top (only for alive entities)
+            if (entity.State.IsAlive && !string.IsNullOrEmpty(def.Visuals.Color))
             {
                 var entityColor = Core.ColorHelper.FromHex(def.Visuals.Color);
                 spriteBatch.FillRectangle(entityArea, entityColor);
             }
 
-            // Death state: gray overlay at 50% opacity
-            if (!entity.State.IsAlive)
+            // Dead entity without a dead texture: gray overlay fallback
+            if (!entity.State.IsAlive && !_backgroundTextures.ContainsKey((entity.ItemId, "dead")))
             {
                 spriteBatch.FillRectangle(entityArea, Color.DarkGray * 0.5f);
                 continue;
             }
+
+            if (!entity.State.IsAlive) continue;
 
             // Damage flash: semi-transparent dark gray overlay while taking damage
             if (entity.State.IsTakingDamage)
