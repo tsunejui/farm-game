@@ -65,8 +65,27 @@ installer-mac-x64: build-osx-x64
 
 # --- Release ---
 
-# Build everything, package, and create GitHub release
-release: build-all installer release-zip release-publish
+# Full release: bump version, build, package, commit, tag, publish
+release: release-version build-all installer release-zip release-tag release-publish
+
+# Bump patch version and confirm via interactive prompt
+release-version:
+	#!/bin/sh
+	current=$(cat VERSION)
+	major=$(echo "$current" | cut -d. -f1)
+	minor=$(echo "$current" | cut -d. -f2)
+	patch=$(echo "$current" | cut -d. -f3)
+	next_patch=$((patch + 1))
+	suggested="${major}.${minor}.${next_patch}"
+	echo "Current version: $current"
+	echo "Suggested next:  $suggested"
+	version=$(gum input --placeholder "$suggested" --value "$suggested" --header "Enter release version:")
+	if [ -z "$version" ]; then \
+		echo "Cancelled."; \
+		exit 1; \
+	fi
+	echo "$version" > VERSION
+	echo "Version set to: $version"
 
 # Package all installers into a zip for release
 release-zip:
@@ -79,6 +98,18 @@ release-zip:
 	cd dist/linux-x64
 	zip -r "../release/FarmGame_${version}_linux-x64.zip" . -x ".*"
 	echo "Release artifacts in dist/release/"
+
+# Commit VERSION and create git tag
+release-tag:
+	#!/bin/sh
+	version="$(cat VERSION)"
+	tag="v${version}"
+	git add VERSION
+	git commit -m "release: ${tag}"
+	git tag -a "${tag}" -m "Release ${tag}"
+	git push
+	git push origin "${tag}"
+	echo "Committed and tagged: ${tag}"
 
 # Create GitHub release and upload artifacts
 release-publish:
