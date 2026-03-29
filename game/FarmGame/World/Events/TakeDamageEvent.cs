@@ -1,9 +1,12 @@
 // =============================================================================
 // TakeDamageEvent.cs — Applies pre-calculated damage to an object
 //
+// Carries AttackInfo (category + element) for effect filtering.
 // Damage = 0: shows "0" damage number but does not deduct HP.
 // Damage > 0: distributes over DamageTickDurationMs via ObjectState.TakeDamage.
 // =============================================================================
+
+using FarmGame.Combat;
 
 namespace FarmGame.World.Events;
 
@@ -11,29 +14,33 @@ public class TakeDamageEvent : IObjectEvent
 {
     private readonly int _amount;
     private readonly bool _isCritical;
+    private readonly AttackInfo _attackInfo;
     private bool _started;
 
     public bool IsComplete { get; private set; }
 
-    public TakeDamageEvent(int amount, bool isCritical = false)
+    public TakeDamageEvent(int amount, bool isCritical = false, AttackInfo attackInfo = null)
     {
         _amount = amount;
         _isCritical = isCritical;
+        _attackInfo = attackInfo ?? AttackInfo.Physical;
     }
 
     public void Start(WorldObject obj, GameMap map)
     {
         _started = true;
 
-        if (_amount <= 0)
+        // Let effects filter damage based on attack type
+        int finalAmount = obj.ApplyEffectsToDamage(_amount, _attackInfo);
+
+        if (finalAmount <= 0)
         {
-            // Show "0" damage number but don't deduct HP
             obj.State.ShowDamageNumberOnly(0, _isCritical);
             IsComplete = true;
             return;
         }
 
-        obj.State.TakeDamage(_amount, _isCritical);
+        obj.State.TakeDamage(finalAmount, _isCritical);
     }
 
     public void Update(WorldObject obj, GameMap map, float deltaTime)

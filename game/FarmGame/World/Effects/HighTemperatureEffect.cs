@@ -1,13 +1,12 @@
 // =============================================================================
-// HighTemperatureEffect.cs — Deals 1-3 damage to adjacent objects
+// HighTemperatureEffect.cs — Deals 1-3 fire damage to adjacent objects
 //
 // On each tick (~1 second), objects within 1 tile of the owner
-// have a 50% chance to take 1-3 fire damage.
-// Range includes adjacent tiles (distance <= 1), not just same tile,
-// since the owner may be collidable (player can't stand on it).
+// have a 50% chance to take 1-3 fire damage (Natural/Fire attack).
 // =============================================================================
 
 using System;
+using FarmGame.Combat;
 using FarmGame.World.Events;
 
 namespace FarmGame.World.Effects;
@@ -21,11 +20,10 @@ public class HighTemperatureEffect : IEffect
 
     public void OnTick(WorldObject owner, GameMap map)
     {
-        // Adjacent area: owner tiles + 1 tile border around it
         int minX = owner.TileX - 1;
-        int maxX = owner.TileX + owner.EffectiveWidth;  // inclusive
+        int maxX = owner.TileX + owner.EffectiveWidth;
         int minY = owner.TileY - 1;
-        int maxY = owner.TileY + owner.EffectiveHeight;  // inclusive
+        int maxY = owner.TileY + owner.EffectiveHeight;
 
         foreach (var obj in map.Objects)
             TryDamage(obj, owner, minX, maxX, minY, maxY);
@@ -40,7 +38,6 @@ public class HighTemperatureEffect : IEffect
         if (target == owner) return;
         if (!target.State.IsAlive) return;
 
-        // Check if target occupies any tile in the adjacent area
         bool overlaps = target.TileX <= maxX
             && target.TileX + target.EffectiveWidth - 1 >= minX
             && target.TileY <= maxY
@@ -50,6 +47,6 @@ public class HighTemperatureEffect : IEffect
         if (Rng.NextDouble() >= 0.5) return;
 
         int damage = Rng.Next(1, 4);
-        target.EnqueueEvent(new TakeDamageEvent(damage));
+        target.EnqueueEvent(new TakeDamageEvent(damage, false, AttackInfo.NaturalFire));
     }
 }
