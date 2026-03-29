@@ -112,34 +112,33 @@ public class AttackAction : IPlayerAction
 
         var entity = _map.GetEntityAt(target.X, target.Y);
         if (entity == null) return;
-
-        // Only damage non-friendly, alive entities with HP > 0
         if (entity.State.Faction == Faction.Friendly) return;
-        if (!entity.State.IsAlive) return;
-        if (entity.Definition.Logic.MaxHealth <= 0) return;
 
-        // Build damage context from player stats + target defense
-        var ctx = new DamageContext
+        // Deal damage to alive entities with HP
+        if (entity.State.IsAlive && entity.Definition.Logic.MaxHealth > 0)
         {
-            Strength = GameConstants.PlayerStrength,
-            Dexterity = GameConstants.PlayerDexterity,
-            WeaponAtk = GameConstants.PlayerWeaponAtk,
-            BuffPercent = GameConstants.PlayerBuffPercent,
-            SkillPowerPercent = 1f,
-            CritRate = GameConstants.PlayerCritRate,
-            CritDamageMultiplier = GameConstants.PlayerCritDamage,
-            TargetDefense = entity.Definition.Logic.Defense,
-        };
+            var ctx = new DamageContext
+            {
+                Strength = GameConstants.PlayerStrength,
+                Dexterity = GameConstants.PlayerDexterity,
+                WeaponAtk = GameConstants.PlayerWeaponAtk,
+                BuffPercent = GameConstants.PlayerBuffPercent,
+                SkillPowerPercent = 1f,
+                CritRate = GameConstants.PlayerCritRate,
+                CritDamageMultiplier = GameConstants.PlayerCritDamage,
+                TargetDefense = entity.Definition.Logic.Defense,
+            };
 
-        int damage = DamagePipeline.CalculateDamage(ctx);
-        entity.State.TakeDamage(damage, ctx.IsCritical);
+            int damage = DamagePipeline.CalculateDamage(ctx);
+            entity.State.TakeDamage(damage, ctx.IsCritical);
 
-        Log.Debug("Attack: {ItemId} took {Damage} damage{Crit}, hp={Hp}/{MaxHp}",
-            entity.ItemId, damage, ctx.IsCritical ? " (CRIT!)" : "",
-            entity.State.CurrentHp, entity.State.MaxHp);
+            Log.Debug("Attack: {ItemId} took {Damage} damage{Crit}, hp={Hp}/{MaxHp}",
+                entity.ItemId, damage, ctx.IsCritical ? " (CRIT!)" : "",
+                entity.State.CurrentHp, entity.State.MaxHp);
+        }
 
-        // Knockback: push entity away from the player if knockbackable
-        if (entity.Definition.Physics.IsKnockbackable && entity.State.IsAlive)
+        // Knockback: push entity regardless of alive/dead
+        if (entity.Definition.Physics.IsKnockbackable)
         {
             int kb = GameConstants.KnockbackTiles;
             Point knockDir = dir switch
