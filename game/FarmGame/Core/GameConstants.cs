@@ -20,6 +20,7 @@ public static class GameConstants
     public static int PlayerAttackRange { get; private set; } = 16;
     public static int PlayerAttackWidth { get; private set; } = 20;
     public static Color PlayerAttackColor { get; private set; } = Color.Gold;
+    public static int PlayerMaxHp { get; private set; } = 20;
     public static string DefaultLanguage { get; private set; } = "en";
     public static float AutoSaveInterval { get; private set; } = 60f;
 
@@ -32,7 +33,8 @@ public static class GameConstants
 
     // Entity info display
     public static int EntityInfoProximityTiles { get; private set; } = 2;
-    public static int EntityInfoFontSize { get; private set; } = 10;
+    public static int EntityInfoFontSize { get; private set; } = 12;
+    public static int EntityInfoHpFontSize { get; private set; } = 8;
     public static int EntityInfoHpBarWidth { get; private set; } = 24;
     public static int EntityInfoHpBarHeight { get; private set; } = 3;
     public static int EntityInfoHpBarOffsetY { get; private set; } = 2;
@@ -67,6 +69,7 @@ public static class GameConstants
         PlayerAttackRange = config.Player.AttackRange;
         PlayerAttackWidth = config.Player.AttackWidth;
         PlayerAttackColor = ColorHelper.FromHex(config.Player.AttackColor);
+        PlayerMaxHp = config.Player.MaxHp;
         DefaultLanguage = config.Game.DefaultLanguage;
         AutoSaveInterval = config.Save.AutoSaveInterval;
 
@@ -83,6 +86,7 @@ public static class GameConstants
 
         EntityInfoProximityTiles = config.EntityInfo.ProximityTiles;
         EntityInfoFontSize = config.EntityInfo.FontSize;
+        EntityInfoHpFontSize = config.EntityInfo.HpFontSize;
         EntityInfoHpBarWidth = config.EntityInfo.HpBarWidth;
         EntityInfoHpBarHeight = config.EntityInfo.HpBarHeight;
         EntityInfoHpBarOffsetY = config.EntityInfo.HpBarOffsetY;

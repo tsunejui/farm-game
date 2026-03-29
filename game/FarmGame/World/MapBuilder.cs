@@ -100,36 +100,21 @@ public static class MapBuilder
                         map.SetCollision(x, y, true);
             }
 
-            // Load background textures (alive + state variants) if enabled
+            // Load all state-based background textures
             if (itemDef.Visuals.Background.Enabled && loadTexture != null)
             {
                 var bg = itemDef.Visuals.Background;
-
-                // Load default (alive) texture
-                if (!string.IsNullOrEmpty(bg.ImagePath))
-                {
-                    try
-                    {
-                        var texture = loadTexture(bg.ImagePath);
-                        if (texture != null)
-                            map.SetBackgroundTexture(placement.Item, "alive", texture);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Warning("Failed to load background '{ImagePath}' for '{ItemId}': {Error}",
-                            bg.ImagePath, placement.Item, ex.Message);
-                    }
-                }
-
-                // Load state-specific textures (e.g. "dead")
                 foreach (var (state, stateConfig) in bg.States)
                 {
                     if (string.IsNullOrEmpty(stateConfig.ImagePath)) continue;
+
+                    // Map "normal" state to internal "alive" key for renderer lookup
+                    string texKey = state == "normal" ? "alive" : state;
                     try
                     {
                         var texture = loadTexture(stateConfig.ImagePath);
                         if (texture != null)
-                            map.SetBackgroundTexture(placement.Item, state, texture);
+                            map.SetBackgroundTexture(placement.Item, texKey, texture);
                     }
                     catch (Exception ex)
                     {

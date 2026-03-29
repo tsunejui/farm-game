@@ -8,11 +8,12 @@ visuals:
   origin_point: "top_left"
   background:
     enabled: true
-    image_path: "Images/trees/tree"
     display_mode: "stretch"
     offset_x: 0
     offset_y: 0
     states:
+      normal:
+        image_path: "Images/trees/tree"
       dead:
         image_path: "Images/trees/tree_dead"
 

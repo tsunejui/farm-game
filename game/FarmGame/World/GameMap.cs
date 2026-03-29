@@ -203,11 +203,10 @@ public class GameMap
 
             if (!entity.State.IsAlive) continue;
 
-            // Damage flash: semi-transparent dark gray overlay while taking damage
-            if (entity.State.IsTakingDamage)
+            // Damage flicker: rapid white flash overlay while taking damage
+            if (entity.State.IsTakingDamage && entity.State.FlickerVisible)
             {
-                spriteBatch.FillRectangle(entityArea,
-                    Color.DarkGray * GameConstants.DamageFlashOpacity);
+                spriteBatch.FillRectangle(entityArea, Color.White * 0.5f);
             }
         }
     }
@@ -304,6 +303,23 @@ public class GameMap
 
             if (fillW > 0)
                 spriteBatch.FillRectangle(new Rectangle(barX, barY2, fillW, barH), barColor);
+
+            // --- Draw HP text below the bar: "current / max" ---
+            var hpFont = FontManager.GetFont(GameConstants.EntityInfoHpFontSize);
+            if (hpFont != null)
+            {
+                string hpText = $"{entity.State.CurrentHp} / {entity.State.MaxHp}";
+                var hpTextSize = hpFont.MeasureString(hpText);
+                float hpTextX = entityCenterX - hpTextSize.X / 2f;
+                float hpTextY = barY2 + barH + 1;
+
+                hpFont.DrawText(spriteBatch, hpText,
+                    new Vector2(hpTextX + 1, hpTextY + 1),
+                    Color.Black * 0.5f);
+                hpFont.DrawText(spriteBatch, hpText,
+                    new Vector2(hpTextX, hpTextY),
+                    Color.White * 0.9f);
+            }
         }
     }
 }

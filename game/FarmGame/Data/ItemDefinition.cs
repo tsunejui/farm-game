@@ -39,9 +39,6 @@ public class ItemBackground
 {
     public bool Enabled { get; set; }
 
-    [YamlMember(Alias = "image_path")]
-    public string ImagePath { get; set; } = "";
-
     // "stretch" = scale to fill occupy area
     // "tile"    = repeat pattern across occupy area
     // "center"  = draw once at center, no scaling
@@ -55,8 +52,14 @@ public class ItemBackground
     [YamlMember(Alias = "offset_y")]
     public int OffsetY { get; set; }
 
-    // State-specific image overrides (e.g. "dead" → different image)
+    // State-specific images: "normal" (alive default), "dead", etc.
+    // Each state maps to its own image_path.
     public Dictionary<string, ItemBackgroundState> States { get; set; } = new();
+
+    // Helper: get the image path for the "normal" state (backward compat)
+    [YamlIgnore]
+    public string NormalImagePath =>
+        States.TryGetValue("normal", out var s) ? s.ImagePath : "";
 }
 
 public class ItemBackgroundState

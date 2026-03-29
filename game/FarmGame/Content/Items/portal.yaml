@@ -8,10 +8,12 @@ visuals:
   origin_point: "top_left"
   background:
     enabled: true
-    image_path: "Images/portals/portal"
     display_mode: "stretch"
     offset_x: 0
     offset_y: 0
+    states:
+      normal:
+        image_path: "Images/portals/portal"
 
 physics:
   occupy_width: 1

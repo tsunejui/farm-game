@@ -26,6 +26,7 @@ player:
   attack_range: 16        # attack effect length in pixels
   attack_width: 20        # attack effect width in pixels
   attack_color: "#FFD700" # Gold (attack effect color)
+  max_hp: 20              # player starting/max HP
 
 # Game startup
 game:
@@ -47,7 +48,8 @@ combat:
 # Entity info display (name + HP bar shown when player is nearby)
 entity_info:
   proximity_tiles: 2            # show info when player is within this tile distance
-  font_size: 10                 # entity name font size
+  font_size: 12                 # entity name font size
+  hp_font_size: 8               # HP text font size
   hp_bar_width: 24              # HP bar width in pixels
   hp_bar_height: 3              # HP bar height in pixels
   hp_bar_offset_y: 2            # gap between entity bottom and HP bar top

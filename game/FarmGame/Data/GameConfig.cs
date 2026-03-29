@@ -71,6 +71,9 @@ public class PlayerConfig
 
     [YamlMember(Alias = "attack_color")]
     public string AttackColor { get; set; } = "#FFD700";
+
+    [YamlMember(Alias = "max_hp")]
+    public int MaxHp { get; set; } = 20;
 }
 
 public class GameStartConfig
@@ -137,7 +140,10 @@ public class EntityInfoConfig
     public int ProximityTiles { get; set; } = 2;
 
     [YamlMember(Alias = "font_size")]
-    public int FontSize { get; set; } = 10;
+    public int FontSize { get; set; } = 12;
+
+    [YamlMember(Alias = "hp_font_size")]
+    public int HpFontSize { get; set; } = 8;
 
     [YamlMember(Alias = "hp_bar_width")]
     public int HpBarWidth { get; set; } = 24;

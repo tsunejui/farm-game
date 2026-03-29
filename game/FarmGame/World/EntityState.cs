@@ -34,9 +34,13 @@ public class EntityState
     private float _pendingDamage;       // Total HP still to be deducted
     private float _damageTickRemainMs;  // Remaining flash/tick window
     private float _damagePerMs;         // HP to deduct per millisecond
+    private float _flickerTimer;        // Accumulator for rapid flash toggle
 
-    // True while the entity is in a damage tick window (used for flash rendering)
+    // True while the entity is in a damage tick window
     public bool IsTakingDamage => _damageTickRemainMs > 0f && IsAlive;
+
+    // Rapid on/off toggle for visual flicker during damage (toggles every ~60ms)
+    public bool FlickerVisible { get; private set; }
 
     public EntityState(int maxHp, Faction faction)
     {
@@ -73,7 +77,11 @@ public class EntityState
     /// </summary>
     public void Update(float deltaTimeSeconds)
     {
-        if (_damageTickRemainMs <= 0f) return;
+        if (_damageTickRemainMs <= 0f)
+        {
+            FlickerVisible = false;
+            return;
+        }
 
         float deltaMs = deltaTimeSeconds * 1000f;
         float deduct = _damagePerMs * deltaMs;
@@ -84,6 +92,15 @@ public class EntityState
         _pendingDamage -= deduct;
         CurrentHp -= (int)Math.Ceiling(deduct);
         if (CurrentHp < 0) CurrentHp = 0;
+
+        // Rapid flicker: toggle visibility every ~60ms for a fast flash effect
+        _flickerTimer += deltaMs;
+        const float flickerIntervalMs = 60f;
+        if (_flickerTimer >= flickerIntervalMs)
+        {
+            FlickerVisible = !FlickerVisible;
+            _flickerTimer -= flickerIntervalMs;
+        }
 
         _damageTickRemainMs -= deltaMs;
         if (_damageTickRemainMs <= 0f)
@@ -96,6 +113,8 @@ public class EntityState
                 _pendingDamage = 0f;
             }
             _damageTickRemainMs = 0f;
+            FlickerVisible = false;
+            _flickerTimer = 0f;
         }
     }
 

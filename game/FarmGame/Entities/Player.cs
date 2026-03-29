@@ -1,3 +1,5 @@
+using System;
+using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -34,12 +36,20 @@ public class Player
     public Point GridPosition => _movement.GridPosition;
     public Direction FacingDirection => _movement.FacingDirection;
 
+    // Player combat state
+    public int MaxHp { get; }
+    public int CurrentHp { get; set; }
+    public bool IsAlive => CurrentHp > 0;
+
     public Player(Point startPosition, GameMap tileMap, Direction facingDirection = Direction.Down)
     {
         _movement = new MovementAction(startPosition, tileMap, facingDirection);
         _jump = new JumpAction();
         _attack = new AttackAction(tileMap, () => _movement.GridPosition, () => _movement.FacingDirection);
         _actions = new IPlayerAction[] { _movement, _jump, _attack };
+
+        MaxHp = GameConstants.PlayerMaxHp;
+        CurrentHp = MaxHp;
     }
 
     public void Update(GameTime gameTime)
@@ -68,6 +78,7 @@ public class Player
         // Body and direction indicator on top
         DrawBody(spriteBatch);
         DrawDirectionIndicator(spriteBatch);
+        DrawHpBar(spriteBatch);
     }
 
     private void DrawBody(SpriteBatch spriteBatch)
@@ -101,5 +112,44 @@ public class Player
         };
 
         spriteBatch.FillRectangle(rect, Color.White);
+    }
+
+    private void DrawHpBar(SpriteBatch spriteBatch)
+    {
+        int ts = GameConstants.TileSize;
+        int barW = GameConstants.EntityInfoHpBarWidth;
+        int barH = GameConstants.EntityInfoHpBarHeight;
+        int yOffset = (int)_jump.Offset;
+
+        // Center below the player tile
+        int centerX = (int)_movement.PixelPosition.X + ts / 2;
+        int bottomY = (int)_movement.PixelPosition.Y + ts + yOffset + 2;
+        int barX = centerX - barW / 2;
+
+        // Background
+        spriteBatch.FillRectangle(new Rectangle(barX, bottomY, barW, barH), Color.Black * 0.6f);
+
+        // Fill
+        float ratio = Math.Clamp((float)CurrentHp / MaxHp, 0f, 1f);
+        int fillW = (int)(barW * ratio);
+        Color barColor = ratio > 0.5f
+            ? Color.Lerp(Color.Yellow, Color.LimeGreen, (ratio - 0.5f) * 2f)
+            : Color.Lerp(Color.Red, Color.Yellow, ratio * 2f);
+        if (fillW > 0)
+            spriteBatch.FillRectangle(new Rectangle(barX, bottomY, fillW, barH), barColor);
+
+        // HP text
+        var hpFont = FontManager.GetFont(GameConstants.EntityInfoHpFontSize);
+        if (hpFont != null)
+        {
+            string hpText = $"{CurrentHp} / {MaxHp}";
+            var textSize = hpFont.MeasureString(hpText);
+            float textX = centerX - textSize.X / 2f;
+            float textY = bottomY + barH + 1;
+            hpFont.DrawText(spriteBatch, hpText,
+                new Vector2(textX + 1, textY + 1), Color.Black * 0.5f);
+            hpFont.DrawText(spriteBatch, hpText,
+                new Vector2(textX, textY), Color.White * 0.9f);
+        }
     }
 }
