@@ -4,6 +4,7 @@ just = "1.46.0"
 python = "3.12"
 gum = "0.17.0"
 "pipx:litecli" = "1.17.1"
+vendir = "0.45.0"
 
 # GUI tools (install manually):
 #   brew install --cask tiled   # Tiled map editor (https://github.com/mapeditor/tiled)

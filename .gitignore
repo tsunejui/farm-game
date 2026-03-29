@@ -32,6 +32,10 @@ build/
 # Generated map JSON (output of Tiled CLI)
 game/FarmGame/Content/Maps/*.json
 
+# Vendir
+vendir.lock.yml
+fonts/
+
 # mise local config
 .mise.local.toml
 

@@ -2,6 +2,7 @@ set shell := ['/bin/sh', '-cu']
 
 import 'justfiles/env.just'
 import 'justfiles/db.just'
+import 'justfiles/font.just'
 import 'justfiles/image.just'
 import 'justfiles/map.just'
 import 'justfiles/release.just'
@@ -13,6 +14,10 @@ default:
 # Start the game
 start: env
 	dotnet run --no-restore --project game/FarmGame/FarmGame.csproj
+
+# Sync vendored dependencies via vendir
+vendor-sync:
+	mise exec -- vendir sync
 
 # Build the project
 build:
