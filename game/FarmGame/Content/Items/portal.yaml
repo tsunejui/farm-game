@@ -15,7 +15,7 @@ visuals:
       normal:
         image_path: "Images/portals/portal_normal"
         file_type: "gif"
-        frame_delay: 3000
+        frame_delay: 4000
 
 physics:
   occupy_width: 2
