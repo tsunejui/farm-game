@@ -1,0 +1,87 @@
+metadata:
+  name: magic_023
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#7d7c70'
+  b: '#8b908a'
+  c: '#787366'
+  d: '#30312c'
+  e: '#747062'
+  f: '#7d7a6c'
+  g: '#7c786a'
+  h: '#7a7769'
+  i: '#787668'
+  j: '#747264'
+  k: '#848174'
+  l: '#898679'
+  m: '#787265'
+  n: '#7c7568'
+  o: '#9a9b91'
+  p: '#828074'
+  q: '#585549'
+  r: '#6f6b5d'
+  s: '#85857b'
+  t: '#8d8a7e'
+  u: '#969387'
+  v: '#a8a598'
+  w: '#817e6f'
+  x: '#7c796b'
+  y: '#1c2121'
+  z: '#817b6e'
+  '0': '#787566'
+  '1': '#0d171d'
+  '2': '#0f1e26'
+  '3': '#020c14'
+  '4': '#041219'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  a...b..................c..d.efgg
+  hi..bb...............jkl.dd..cmn
+  i...ob...............apae.....qr
+  h..sob................tuott..qqq
+  kj..ob................uvvvoc.dqq
+  li..b.............ar.jluuutnrq.q
+  li..b....bbsa....lukwimnremcjr..
+  k..s.......sa....lutlhrrrrrrelt.
+  pc.p............xkllpxhrrrrrctu.
+  khpbs.........iutllklpwigeeeftt.
+  ukpob.......y.pulklkkwzznmceitl.
+  otsus.......y.kutfzwwxnfzzfmhlui
+  upxa........ydxlkxfpzxfzwwggkvoa
+  .............qfkpwwpwwzfggmclvo.
+  .........dy.sskzwwffwpwzigmnzts.
+  .........yy.utlpkzxgfwzzwkkze...
+  .........yy.utkwwgnzfwzfluvuq...
+  .........dy.tlwxwxfgigi0wovu....
+  ............kkpzwzwxngncwuvu....
+  ........y..pkwzzzwzfnwzkwllf....
+  .......y1.atpcgnhgggcfztlx......
+  222....13.atw0fnj0gfn0zooeq.....
+  .......y1.jpf0cm0gfgmjaoo.d.....
+  .....y...qikwxheggzhhxkut......y
+  .....1y..jfffiigh0fhcput.......1
+  .....3y.tlpx00xc0ee0zuvt.......2
+  .....4y.tlkiihx0xjjizovtq.......
+  .....4y.tkw0i0gfhfxxwuvl.....2..
+  .....4y.lpfzx0ihcfgxfptj....y4..
+  .....3y.lkzzx0jjjxllmqq.....y1..
+  .....4y.llzwxcei0ptleqq.....y4..
+  .....yd.kwfihjh0ikou..q......1..
+  ........wffi00xh0fooe........1..
+  ..12.spih0mm00fimlvveq....y.....
+  ..42.bshmmchieceelvve....y12....
+  ..4y.okeemeccemnmkvu.....y42....
+  ..32.oarrerejeecegulqq....12....
+  ..4y.okerrje00niehtlqq....12....
+  ..4y.oolkltlttuuluvoh.....1.....
+  ..3y.ovuovvvvvvvvvvvu....y1.....
+  ..4y.spxplkspppstslti....y1.....
+  ..31.....................y12....
+  ..31.....................212....
+  ..31....................y222....
+  ..31....................112.....
+  ..31....................12......
+  ..41............................
+  ...2............................

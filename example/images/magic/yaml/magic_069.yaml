@@ -1,0 +1,167 @@
+metadata:
+  name: magic_069
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#060b0f'
+  b: '#494841'
+  c: '#817e77'
+  d: '#8a8a7b'
+  e: '#868375'
+  f: '#8b9b8d'
+  g: '#0d181d'
+  h: '#000000'
+  i: '#babcab'
+  j: '#a09b88'
+  k: '#1a2121'
+  l: '#746f62'
+  m: '#58544b'
+  n: '#5e5d54'
+  o: '#777568'
+  p: '#6c685c'
+  q: '#817d6f'
+  r: '#807c66'
+  s: '#7a7666'
+  t: '#777265'
+  u: '#7d786b'
+  v: '#7d7b6d'
+  w: '#403d37'
+  x: '#7a7669'
+  y: '#706e62'
+  z: '#504d45'
+  '0': '#2c322c'
+  '1': '#747264'
+  '2': '#727a6d'
+  '3': '#606660'
+  '4': '#001f1f'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ....................................aaaaaaaa...............
+  ...................................bcddceef......g.........
+  .................................ahiijjjjjiiakkkkaga.......
+  ...................................jdeddeeeedjjjjii..g.....
+  ................................hjijjjjjjjjjjjjjjjjjbb.....
+  ..............................h.ijdjjjjjjjjjjjjjjjdjjii....
+  .............................bejijjjjjjjjjjjjjjjjjjjjjji...
+  .............................iijjjjjjjjjjjjjjjjjjjjjjjji.a.
+  ............................kijddjdjjjjjjjjjjjjjjjjjjjjlm.g
+  .............................iijjjjjjjjjjjjjjjjjjjjjjjeno.g
+  .............................djiiiiiiiiiiiijdjiiiijjijnp.gg
+  ..........................g.qprdjeeiijjjjjjjiijjjjjjepp..kg
+  .........................gg.qlslrnnedjjtsrqjjdrppdiebnn...g
+  ...........................oeluusstnljjddeeddeetndjpmp...kg
+  .......................hg...pequsvvuslqjijerjjjjqpnmp....gg
+  .....................kmi.....dequqvrrlsejjdedjjjjpmnnn.....
+  ...................hhmif...wkkudedeevssnsiiedjjjje...n..k..
+  ....................ije...xyyymbzzztexustdjddjjjjm......ak.
+  ..................iiid0weequqxwwbwwzpqquuyldjjjij.....k0.kg
+  .................jddjw0oeutxtyppppmwwmyxxulejjjjx........kg
+  ...............anidezwm1usssotxxxuypm0bxvvuujjjjz...0....gg
+  .............g0jddjy0wlustsvx11yll1u1mzpquqsqjdy.........kg
+  .............a0id1m0potussuyoqussxoovqmbluqtqjdz.........kg
+  .............g0jjx0noxsttq2zyduuqvxuxqnwpqq1rjjy.........gg
+  .............g0djmzqxtsuvyn223cvssxotqnwpvvoqjj1.........gg
+  ..............bjnblttulqy32ifb32utuoxxvpmoq1sjjl.........gg
+  ............g.ivwpulsto22fiffi23couuuoqnwpqlsdjl.........gg
+  ............azjwnvlutp232ii33iim3uuquounwzvo1jjx.........gg
+  ............g1mmulltt232ii22222ypvvuu1vqzbqxsjdq.........gg
+  ...........midkzqltsyc22if32c23ou1vqvtuezzqxsjdu...........
+  ...........0oewwotsvy2f3f33212f33quuu1vczzqvsjju........kg.
+  .........a.jutwbxluybfi23fcqy3if3v1vvlvczzqxsjjx.........gg
+  .........amjqlwzqtv2bfi232vv2ncf2322uxqqbbqs1ddq.........gg
+  .........amds1wzvlu2bfi332ym3c32f222vxvqzbqxlddv.........gg
+  .........azdsywzxluybfi3y23222c3fif2vuvqzbqutjdv.........gg
+  .........azdspwzutv2bfi3333if323fifmcvvvbbqusjju.........gg
+  .........amdsywzvlvybfi332mc3bc3fifncxuvzbqsljds.........gg
+  .........azdtpwzulxy32ff33cnnn23fif3coxvzbqstjdr.........gg
+  .........amdtpwzvttvcb3i23c22c23fif3cuxubbquldjx.........gg
+  .........amdsywzvll1v32i23vo22c3fifncuoubbqvynov.........gg
+  .........azdtpwzvlttu23fi33m33n2iic3cxxvzbquledd.00......gg
+  .........amdppwzulxtod33f33333bfif3cvxuuzzesljje..0......gg
+  .........azdppwzqlstlxc33ifff23if32vuoxuzbqvsddy.........gg
+  .........amjsywzqts1uvv32if33fif33vvxxxuzbqqsdd1.........gg
+  .........anjxywzqttttyz322fb2if33cxxxxuuzzqvtdj1.........gg
+  .........anjslwmevutyoyyy3fffi33cotuxtuubzqvtdd1.........gg
+  .........amdslwzynxussttvy3fff221xooxoxxzzqqodjo.........gg
+  .........amfxywbbwnxsvvulyy332xuoooxxxxxzzeqtdj1.........gg
+  .........a.dxlwzpnnmznnpxxoovvoytvtsuoxozzqvyedl.........gg
+  .........g.uu1wzeq1mzbwmxnvquvvup1uux11xzzqupqdl.........gg
+  .........azqtywzqtuv1nmyobvnbnxqyyuttttxzzcvpej1.........gg
+  .........g..vywzqsxxvvsvxpvmbzmyvquxuttxzzcvlejo.........gg
+  .........g.dvywzcsouuqquvqvvvnznnnptxttxzzqq1dj..........gg
+  .........amfuywzqovlmplvssuvutpzzmmbnxxuzzqqtdjs.........gg
+  .........amdxywzetuynnmnmpqvqeulsqymmmnnwzqutdjr.........gg
+  .........amdulwzexosvlt1zzynp1vequvtpnnmwzqusdjp......0..g.
+  .........amdulwzeyxqvqqupplzbbzlusssqvqpwbqstddp.........g.
+  .........azdotwzebplnxqusuxymnpttuqqulx1bbqsldj......0.....
+  .........azdxlwzczopwbnsuuvstuqvtqpnltxuzzeutdjy...kk.kgg..
+  .........azdxywzqlvlppbytnqxqqttp1lnzzsxbzeqsjj.....0....g4
+  .........amdx1wbqtsuqqpxxzyvmnovltqvpmtxbzertjj...0......gg
+  .........anju1wzenpeqsqsqnyxwbnouqulutttbbqrsjj.kk0......gg
+  .........amdutwzqzzmpvutuqqtmnbzvn1utlsxbzersjl.0k.......gg
+  .........amdo1wbqunbbmmputlqxvppxbnqltstbzeusjp0.j.......gg
+  .........a.dxywzquxtypnbpupousqvvmnvym1ubbqsuj...v.......gg
+  .........g.evpwzvxvuuqtnxvzzmyxotysuuzpvbzeep0.vt........gg
+  .........andxywzqyytsusxqymmppbzmqvuupltbzespz...........gg
+  .........andxywzenbznylllxxuvqnmnnppxeqlbzqleiid.........gg
+  .........amdxywzqlpyzbyslxuttuvvnbbbnnytbzqsrjjx.........gg
+  .........amdxlwzqtvqpysxmn11qqosltpmwwpubzqxsddy.........gg
+  .........amdxywzqsuuvxlupzmynnoqsutypntxbbvssddl.........gg
+  .........amdxywzqlmptxstx11ombzpuovxq1ttbzqxudj..........gg
+  .........amdxywzqlmbwpvttsvxqnwn1nnnxttxbzqssdjx.........gg
+  .........andxpwzqsqnbzzmqtyutyp1tbwbmnttbbqssddy.........gg
+  .........amdxpwzqtsxpmzmenzuxvqx1pppnpt1bbqstddl.........gg
+  .........amdoywzqtsuxvxlqpbupnouuqvqult1bzqssjjs.........gg
+  .........amdxywzutxslxvuutpqmwypnyuuxut1bbqssjjs.........gg
+  .........anfuywzqlvpbnuuqsuupppmbmnyqlyxbzqstdjt.........gg
+  .........amdxywzqluymzbzpnnqxxtulommeppxbbqlldjl........g..
+  .........amdopwzuytvupnbmtmyvuxssqpmqnpxbbqtldjl......0.g..
+  .........andtpwzvyxxtsqx1vpptppvvsqsunyobzqopejs......k....
+  .........amduowznnouxstxsssqpzmnnptuuytobzqu1ejl..........g
+  .........amddvbpwwoxou1ppllsxoynzwntnttobbqxlejl..........g
+  .........a.eqe1czbbwwzp11lyysx1vypvywmsobbqsldj1..........g
+  .......a.0...edejvw0wznppyottxlttxoupnt1bzqsldjl.........kg
+  .......3f......peduyozwwwnypttyly11xvt1obbusydj...........g
+  ......fjc........oddjpzzmmbwbpu11tlxsy1xbbvxue1...........g
+  ...gaifce........1y..cdjdzwwwnpnptxxttl1bzqvqn0...........g
+  ...ggjjdep...gk......yovqxqcvzwwb1y1tpyxbbuqtw............g
+  ...gkdejid..d...kk....llpxedjyzzmzwbnxqubzeueybc..........g
+  ...gg.yeddiijvn..z....nxyypnpdjjdb00bnn1mzesejdq...........
+  ...gg.ypplejijtqde1w00mpppnppyyyvoxoz00pnzexsjjs..........g
+  ...gg.pppppqddedeeexoxmkk0not1ppnxdfqyvnwzeuudds..........g
+  ...gk.oppyt1nmojjidxvuynzmzwwbyuypnpddjpzpexsdjs...........
+  ...gg.zvtpytyp1ddexddqqqlpz0kwznpppypy1ededssdjs...........
+  ..g0nwz1yyolyl1pnp1jiijerqe1x1w00bylppnluqdvsdjx...........
+  gg0vdxw0bbzpo1oypyyvxxqijjqpy1ynzbbwby1ppnvesjjs.......k...
+  agcepxpnw0wzmmnppp1pnnpedjjjeqveenwwwbbmppsqsdjs...........
+  gg.ejqpppxowk0wyotyypypnp1qdjjdssvedmkkwnntrsjjl...g...n...
+  gg...jdeevuyypnwwbn1llppppnsjjjddjdexyoywkwotdjnkk....eyejv
+  gg...fjdduxxvvowk0zmnpypy1oulppeiijredevpmmw0nt.0...p.djdu.
+  gg......djdtoxqcqvb0kwpyyty11ypqjdvjduseddxmb00............
+  gg.......oqvdexty1pnnnw0wnttux1q.h.jjjjdqstqeceqyveo.......
+  gg.....npplzpjdddqoxvlw0wzmnntd..k..oeddjjddeqqvecee.......
+  gg....nnp....jjdjjjjupyqqyw0k...kk..pnndiijijdedq..e.......
+  gg...np........ndiiijddeqqvq.0k.0k..npnoddjjjjjjq..........
+  gg...p..........oosdjjidvqqeuxy.0k......stypdiiie.......00.
+  gg...np.........qppye2.djddjdv...a.....mxuttluqu.......00..
+  gg.....n.n.....oeued2..edjjijyy..d.w..0wpqsxslyy.........m.
+  .ggk....pnyo...uvvv2...qsseqdijdqvqc....wnlltqsx...k0....nx
+  .kgg...........xsd.....es1xlvjjdjdqeovv....0meev........edv
+  kg...g..........eo...d1sssoxxypsijjj.............0...n1d...
+  g......gg.......22...qllsltedtpp1ejj.....qqc.bww...plejnw..
+  g....................rltttup.nlypyx......jqqequeqpsqjjj.w..
+  ..........g..........ersuee...tylv....f1qjjjdsrddqeijp.....
+  .......................oq.....lpqyww0bdjdejijjderji........
+  .............4.............0..tylv..n...nnlsjijjjje........
+  .............................tty..1xx.....npldijjjz......0.
+  k..........................dvypp.....2.....xnyiqed.......k.
+  aaaa......................................pyp1ijjd...k.....
+  jjjj.ag....................................ylyijje...k.....
+  jjjjpz0a.............4...4.................lppdjje.........
+  jddddd...................gg..................mljje.........
+  dddddnpd.g...........................d........ljjq.........
+  ddddjdtn..g................4..................ujju.......g.
+  dddddjd....g.................................zpdjq.....k...
+  dddddjj....a..................................pdjv...gg....
+  ddjddjd....g...................................dje..kg.....

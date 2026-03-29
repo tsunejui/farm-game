@@ -1,0 +1,119 @@
+metadata:
+  name: magic_108
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#625342'
+  b: '#978270'
+  c: '#97958d'
+  d: '#735f4d'
+  e: '#3e3c36'
+  f: '#03131e'
+  g: '#abada9'
+  h: '#8a6f57'
+  i: '#061b28'
+  j: '#c0d7d3'
+  k: '#b5c1c3'
+  l: '#4a544e'
+  m: '#1e2121'
+  n: '#6a8981'
+  o: '#98abb1'
+  p: '#e0f8f3'
+  q: '#79949b'
+  r: '#5d7369'
+  s: '#82979f'
+  t: '#89a2a8'
+  u: '#9fc0b3'
+  v: '#c8efcf'
+  w: '#80b18e'
+  x: '#6bae6b'
+  y: '#61a166'
+  z: '#6fb46e'
+  '0': '#9dd69a'
+  '1': '#7dc07b'
+  '2': '#76b974'
+  '3': '#65a866'
+  '4': '#58965e'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ..........................abbbbbbccbbbccde......
+  ......................f.bggbbbhbhbbbhhhbbgg..i..
+  ......................i.gjkggbhhbbbhhhhbcggb.f..
+  ......................f.ckggcbhbbbbbbbbbbbblmf..
+  ......................fmahhbbbbhbbbcgggbhdemmf..
+  ......................immeadhbhhhhhbcbbbdaemff..
+  ......................immeeddhhhhddhhhhddaemff..
+  ......................immeaddddhhhddddddhda.ff..
+  ......................fmeadhhdhhbhddaaaddda.ff..
+  ......................fmeadhhdhhbhdaaaaaaae.....
+  ........................eaddhhhhhddaaaaaaee.no.i
+  ...................f..kgleadhhhdddaadaaaaem.cgnm
+  ...................finpkleadddhddaaaaaaaaemmnkq.
+  ...................fi.jkemlddddaddaaaddaaemmnkq.
+  ...................fi.jgemeeeaaaaaaaaaaalemengn.
+  ...................ff.kkremmmeeaaaaaaeeellllckq.
+  ...................ff.ogcnrlemmeeeeeeemmlncccg..
+  ...................fi.soggkgrmmmmmmmmmmmlckgoo..
+  ...................ff.stokkgnleeeeeeeeeernccct..
+  ...................fi.ssqogkgotccssqnctoocqnton.
+  ...................fi.qssogkkkkkkkkkkukkktssgk..
+  ...................fi.tosqnnqogkkkkkjutqsqsost..
+  ...................fi.ootn...tukkuukko..........
+  ...................i........sukjkkkuuo..........
+  ......................ii....sottttssq.......if..
+  ......................ff....................ff..
+  ......................if....................if..
+  ......................if....................if..
+  ......................if....................if..
+  ......................ff..tsout..........qq.if..
+  ......................if.qtojpkq........qss.if..
+  ......................if.qstjpjo........sts.if..
+  ......................if.qqqkppk........tos.if..
+  ......................if.qqqkppk........sot.if..
+  ......................ii.qqqkppk........tot.if..
+  ......................ii.qqqkppk........sos.if..
+  ......................ii.stsjppk........sot.ii..
+  .......................i.qssjppuq.......too.if..
+  ......................ii.sssjppu........ooo.if..
+  .......................i.qqsjppu........tuo..i..
+  .......................i.qqqkppo........qoo..i..
+  ......................ii.tsqkppu........sot.ii..
+  ......................ii.qqqjppo........sot.....
+  .........................qqqtjktq.......qq......
+  .......................ttsq....q........q...qq..
+  ....................f.skoq..................to.i
+  ....................f.skt...tooq............st.i
+  ....................i.skt..spppt............to..
+  ..................i...oks..qpppt...........qoo..
+  .................ff..ukjs..qpppu...........qooq.
+  ....................nttoqqquppjo............qqst
+  .................tjpkrlrtjpppktq.............qso
+  .................oppullloppppt................qt
+  .............fi.qujjorlropppps..................
+  ............ifiqjkjutrrrtjvppo..................
+  ............ifiqjkqrnquukkkpvt..................
+  ...............qqnrlropppkwouw..................
+  .............uoonlrlrupppkwxyxxwzy..............
+  .........i..ttqqnrquuvpppv0yyxx123yyzxy.........
+  ........if.jjnllnnupppvvpv0xx2zzxyy333y4........
+  ........ffqpjrerukjvppvvpp0xx2zxzxzxxxxxy44y22ww
+  ..........sjjrenvpvvvvvvvv0x3xz22222z222zxxz210w
+  .........qokurenvpv00000001zzz2z22z22222zz2z3zzz
+  .....ff.kjsrrllwvvv0000111122xxzzzxzz2zx3xz34444
+  ......i.kjrelrn0vvv00012zz222zzzzzx3xzzx3z2x4444
+  ...i.qttoorelukvvv00001zxzzxxxx33333y33333x3y444
+  ..if.kjktnrrw00vv000001zzzzx33yyyyyyy4y3yy333444
+  ..if.jjuqlln0v0011100012zzzx33y3333333x33x22zx22
+  .....kkoqrly1002x3200011112zxxxz2zxz22zz2222z222
+  i.qju....ww1112y44y10001111112111111111011zy44yy
+  i.sju....w011zx4444200001111122212222211123.....
+  f.spu....ww3y444y44420012zzzzy4.4.4.............
+  fi.kt....ww24l.....4y22y4444....................
+  i..ts.....w0yl..4..44444........................
+  i....q....wwy...yyy4.4..........................
+  ...........y....y2zy............................
+  i...........y...y12x............................
+  ............xz..y111y...........................
+  ............nx.yy4y2.........................yww
+  ....qoq......................................yww

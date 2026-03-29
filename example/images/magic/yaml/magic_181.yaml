@@ -1,0 +1,78 @@
+metadata:
+  name: magic_181
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#071a27'
+  b: '#82868b'
+  c: '#00131f'
+  d: '#0e1a24'
+  e: '#05121c'
+  f: '#918588'
+  g: '#d8cac6'
+  h: '#c3b3b1'
+  i: '#ac9e9d'
+  j: '#836f70'
+  k: '#623338'
+  l: '#644b4e'
+  m: '#7f5f5f'
+  n: '#683f40'
+  o: '#b88a82'
+  p: '#af6660'
+  q: '#724d4e'
+  r: '#7e5756'
+  s: '#d46b5e'
+  t: '#8b4a4b'
+  u: '#83393c'
+  v: '#b25851'
+  w: '#a44e49'
+  x: '#1f2028'
+  y: '#b54f48'
+  z: '#a6443f'
+  '0': '#763338'
+  '1': '#742c32'
+  '2': '#742526'
+  '3': '#612a2f'
+  '4': '#612427'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .............aa..bbb.........a..........
+  ..............a..b.b.........a..........
+  .............cd..b...........aa.........
+  .............ed.bb............c.........
+  ...............fghb.......bb............
+  .........aa..bihghi.......iibbb.........
+  .........ae.fgghifb.......bbbih..ca.....
+  ............iggjkl...........bb..ac.....
+  ......ad.iihgghmnnll....................
+  ......ee.ggggggooppmm............bii.ca.
+  ......dd.iihggghhhopqkkl..lll....fii.d..
+  ........jrqohgghoooprqqrmmmmmqlr.jbb....
+  ...c..hginnphggosspppttmpmmpmrrqrmjjfibd
+  ..aed.ggirupooossssvvwwppppwwwtrmrqmfibx
+  ...dx.ighpuposssyvyywwwwvvvwwwttmrqmfi.x
+  .....ffiopvssssssyyyvvwzwzzwwwwwprqrmj..
+  ae.fifjjpwwvsssssyyzyvwzwzzzwwvwwttrml..
+  ce.hhjlnpwuyssssyzzzyzzwwzzzzwwwwwrqqn.f
+  ad.himkntuuyssssyzzyzzzzzzzzzzvwwwtqqlmf
+  a..himnn0wzzvvyvyyyzzzzzzzzzzypvwttqqnl.
+  a..himnnupvuuuuzysvyvyvyyyyyvvvwu10nqnk.
+  ...hilkntpvu2222zssssssvvvvsspw1220unkk.
+  ..bgil3nttwu1022uwwwwwwwwzwwzzu2440tq33.
+  a..gil3nn0u0utu2122222211u222224200tqk3.
+  cd.ifmlnn330ttt014222222222242240u0qqkk.
+  ....bffqn30utuu001111110100111110u0nqll.
+  .....firknnttuu0u0011000000000011ukkqr..
+  ...e.bimnkkntttu00u1u1100010utt030knmff.
+  ...e.bijlnkknqu00twwtu000010tpwu43kqmff.
+  ...ed.ibjnk3nqq30tppwu011111upt03kkrjfj.
+  ...ad.bbflknmrq01uttt01100110tt0nqnqjfb.
+  .......bfjqmfjnk100110000kk0000rmrmfj...
+  .........bjjijk343k33k33k3333n3qjifb....
+  ......d..bihifn3333433334344k33rfhib.xd.
+  .....aad...ibjrqlqqlllllqqlqqqlqjff..ec.
+  ..............jfffffffffffffffj......a..
+  .........deed..................xeeed....
+  .........adeedxxxxxx....xxxxx..deea.....
+  ............dddeeeeeeadaaedddd..........

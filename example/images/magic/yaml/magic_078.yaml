@@ -1,0 +1,71 @@
+metadata:
+  name: magic_078
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#767369'
+  b: '#727064'
+  c: '#6e6b5f'
+  d: '#626054'
+  e: '#706d61'
+  f: '#7c796d'
+  g: '#8a8a7e'
+  h: '#858376'
+  i: '#807d73'
+  j: '#1f2424'
+  k: '#8f9188'
+  l: '#85857a'
+  m: '#828075'
+  n: '#96958a'
+  o: '#a1a49b'
+  p: '#151c22'
+  q: '#313029'
+  r: '#78786f'
+  s: '#7d7b6e'
+  t: '#888679'
+  u: '#8e8c7f'
+  v: '#828277'
+  w: '#817e70'
+  x: '#939184'
+  y: '#abafab'
+  z: '#9d9c8d'
+  '0': '#7c8692'
+  '1': '#48453c'
+  '2': '#8593a8'
+  '3': '#7c7e7a'
+  '4': '#969a96'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .......................a.abc...d..ebfghfig..j..klmino..
+  pp.......q....rlisrabe.....b...e.d..tuugvl..j.rghwago..
+  pp.............rb..b.....ccc......d.htuulv..j..htwfxo..
+  pp.......................b..........bbvtvi..j..ttssxyr.
+  ........r..ba............ccecceb.....attiv..j.rlwwwuo..
+  ..............d...........ccee..eb.b.assmg..j.rtwsfxz..
+  ..........ddd.........cc.cc.e...eb.a.b..rl..j.atwfsxo.j
+  .0........dd...........c.c..............ri..j1fghwfny.j
+  .2.........................ccccc.....d..iv..j1iutmszyrj
+  .2..........................cc..e....cc.ar..j1igwwhnyrj
+  .2...........d.ccc...............b..becc...11dmghswno3j
+  .2.................................eebb......aihhffzy3j
+  .2..............d.........................1.biihtwwzy3j
+  .222......................................1..ffttsszy3j
+  .222.....................................111.asugwsnyrj
+  .222...........................1.11......11..aftgwszy3j
+  .2202....j...............q..qqqq.qqqqqqqqq1..sfhhsfzy3j
+  .y2020................................qq.11.effmhsmoy3j
+  .y20000..................................d..fwwhwwhzy3j
+  .y220024kkgkggggllglvlvvvillvvmiivglvhtgtgguhtttuuuoy..
+  .yyy2244444znnkkkgxuuukgggnxnxullgnxzoxuxnxxtuttzzoyy..
+  .yyy4oo444nnnzonlimmlmtllvttghlfihuxzozxuxnzzznzooyoo.j
+  .220244knkunooozifarfriuxi..basthwmxzzxtuxzzzzzzzzgll.j
+  ......33nn4nzxxgr......xnm.dd.aiibbfuxnzxuggmmttmi....j
+  .......0k4o4k..........rm........ddexzzzzhb...........p
+  ........33kll.......................tnuxue.....d......j
+  .................................dd..a...d.dddd........
+  .....................................dd..d..dd.........
+  ......................................d...............j
+  .......................................................
+  ..................r..........................a.d......p
+  ......................................................p

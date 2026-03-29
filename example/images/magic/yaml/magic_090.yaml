@@ -1,0 +1,76 @@
+metadata:
+  name: magic_090
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#2b2a26'
+  b: '#21201d'
+  c: '#171d21'
+  d: '#0d0f0f'
+  e: '#615d52'
+  f: '#666357'
+  g: '#000000'
+  h: '#797569'
+  i: '#7f7c70'
+  j: '#94907e'
+  k: '#9a9583'
+  l: '#a5a18f'
+  m: '#a19c8b'
+  n: '#8f8b7a'
+  o: '#898676'
+  p: '#757165'
+  q: '#938d7c'
+  r: '#97927f'
+  s: '#9d9987'
+  t: '#777267'
+  u: '#9a9280'
+  v: '#978f7d'
+  w: '#948e7c'
+  x: '#4e4b42'
+  y: '#6e6a5e'
+  z: '#928b79'
+  '0': '#aba796'
+  '1': '#b3b09d'
+  '2': '#bfbba8'
+  '3': '#716d61'
+  '4': '#756f63'
+  '5': '#737063'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ..............abbbbbbbcda........e...e.e..fee..e.e.f
+  .............bdgggggggggdda..........e.e...f........
+  .............abbbaaabbbbdd..........ee..e..........e
+  .................hiih.......abb................e..e.
+  ........cdb..jkllmllknoooni.dggb......ee.e......e...
+  ......abbba.pqrlllmsskslssj.adgb..........ee....ef..
+  ...bddbaepthiiokmuvwvrqrqjo.............ee......ee..
+  ...abbaxikkqnowkkuwusuohhiiino.addbb.....f......f...
+  ....ytoojsmrqnjqqnzvkriptioqljhxaaxaa............e..
+  bbi01l0lmkvvrkkwjwwqwwzojkkkmsohiinfbdd.........e.ef
+  dbi120llmksurkkjnnzjuuuusmsvqzqkmssfbdd.............
+  gbi12lkssssuwjjjnnnjrqvsuvrwwnvksno3.............x..
+  .xo110lmrkvvwjurwqqrjnzwwzwzzzqqwi4hono..a..........
+  jssm00lszwznwrkrwwqqqnzzvuuqquuzzooql00.adba........
+  00koookmmmmkrkjnwjqqrqzvvuvzzwuwwoorl0ltxddb........
+  oihyf5s2221swrmrjrqruuuuukurjrukuvvwzsskpbdb........
+  ......s111lsm00snnwrvkkkkkkuwruuvuuwznqqhxxaaaa.bccc
+  ......iohokm122snqwuvrvuuvuvwvvwzvvziihiioiebddcccdc
+  ...e..eeeps1121mrssskvvkkurrurvwvuuzoihioqqfaddcccc.
+  ........fhqmjonm112lurvuuvqkurvwwuvzjoiiioopeaddc...
+  ...e.ph54hhhyf3k222mwwuuvruvrvuvwvquksluoqzjn.cdc...
+  ...e5hhtth5yfeyk000lml0mjzzrrkuvrvzzk11011l0j.dd....
+  ....3th43tpyfy5osmms022lzonqzurwnnoonm00ll00j.ddc...
+  ...5p544tpt3p5ht5yy3j12lzonzzzzrnnnoonnohhhoi.dgc...
+  .hitp54t535ptht3eeefiksmlllmlmm00101lno.xa....adc...
+  5hit5y3443533p5yyfyyyf5m2221110122221nn.aba.....cc..
+  hth335334pp555tphphpye5s121122lnqsmljii..........c..
+  itt335433pp33y5tphhtyf3iins222mxx..e................
+  ..ttpt333pp33543p5p33yyyfin012jxa.xx.a..............
+  ..ip5h44ppptp543y553t5h3pp3tyip.....................
+  ..oh535phttttp5335ttphhhhy..x.......................
+  .io..fff.53335pyy3pt53thhy..........................
+  .........feef55p535pphhii3..i...................cc..
+  ..........eeefytt5p35hh55y.in...................cc..
+  cdc..........e3htp5pthi5y..ij...................cc..
+  .dc............p535t533yfe.in...................c...

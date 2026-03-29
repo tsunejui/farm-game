@@ -1,0 +1,101 @@
+metadata:
+  name: magic_122
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#022019'
+  b: '#011816'
+  c: '#072e1b'
+  d: '#88c787'
+  e: '#80bd7d'
+  f: '#abdea3'
+  g: '#b4e9a8'
+  h: '#caf6bf'
+  i: '#91d18d'
+  j: '#001212'
+  k: '#99e296'
+  l: '#b7f4ae'
+  m: '#60a76d'
+  n: '#4a9652'
+  o: '#90d98e'
+  p: '#71ba7a'
+  q: '#73c77d'
+  r: '#54a55e'
+  s: '#22652f'
+  t: '#7dd084'
+  u: '#65c36c'
+  v: '#4ca954'
+  w: '#54ad62'
+  x: '#6fa873'
+  y: '#5fb467'
+  z: '#479d53'
+  '0': '#3b8548'
+  '1': '#3f9c4f'
+  '2': '#3b944f'
+  '3': '#63bb6f'
+  '4': '#49a259'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ................aaaa............
+  ...............bb...c...........
+  ..................d..a..........
+  ...............efghi.a..........
+  .............b.ghhhi............
+  ............aj.ghhffd..aa.......
+  ............aa.fhfklfm.a........
+  ..............nilgkoip...a......
+  .........bc.ffgfggkqrrpd..c.....
+  ........aasehhlkottuvwoli.bb....
+  .......ccnxigfkdqyuvzvqkd.caa...
+  .....abb0flkkiooquuv1vvqexnca...
+  .....abcnflkokkouuuwwv1vrex.....
+  ....bjcneiieiggtyvwuuv11zqee.aa.
+  ....jjsigdeuekgtuvvwyv222zpi.ca.
+  .abcs0xffeuedkfouvvyuyv11zrpr...
+  .bj.xggfoppkgglkuvvuuuyww10nmex.
+  .bj.ihleyrpflllkuzvuuuuuuv0neld.
+  .bj.dlirnrxfhhlkuvvwuyyuuz00xgi.
+  .bj.xfdxrxdghhlfqv1vwvvqqyrnxix.
+  .bj.xdikffghhhhfqv1wyvytkgkpedx.
+  .bj..xkhhhhhhhlfuvvwy3qolhlode..
+  .bj..xfhhhhhllhf3vvyytokkgoppx..
+  .bj...dglhhhhhhfynzytglimn000x..
+  .bj..mppeifglhgkynnuokkm.ss..r..
+  .bj..pprnreglhloyypoimn......m..
+  .bb..xqr0nyoofffdoodx...........
+  .ba..ptwzzzymeohhfx0.........m..
+  .ba..pqy412nnydfix0..........p..
+  .jb..ptw141zydoe0s..........md..
+  .bb..xqwz1zwqkimss..........mi..
+  .jb..mqw124ytkkmss..........xe..
+  .jb..xqw11zwqkk3s...........pix.
+  .jb..ptw111wqkors...........eix.
+  .jb..ptw411wqkors...............
+  aja..ptwz11wqotrss.............c
+  jjb..xqw111wuttwss.............c
+  ajb..xqw114wuttwss..............
+  .cba.xqwz14wqotwss0.............
+  ..aa.ptw11zwqkorss..............
+  x....xqw111wqotrs...............
+  pe...xqy122wqotrs...............
+  .m...mqw221w3otrs...............
+  ......pr224wuttrs...............
+  ......pr22zwutqrs...............
+  ......p4222wyqpzs...............
+  ......pw222wyq3n................
+  .....mpw221r333z...............a
+  ......pr22zwyu3n...............b
+  ......pr222r3qpn...............a
+  ......pw202r3q3n...............a
+  ......pr221r3qp4...............a
+  ......pr22zyyqq4..............cc
+  ......qm22ry3ttr................
+  ...c..qm44w3toom............c..i
+  ......m.444qooqr............cc.f
+  .........22w3qw.............c.mi
+  ..........02z4................po
+  ..........2221...............met
+  .........2.21w4.............pddq
+  cc.......2.24w4.............ptpt
+  ...........2144..........c.mtp3t

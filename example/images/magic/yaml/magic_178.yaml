@@ -1,0 +1,83 @@
+metadata:
+  name: magic_178
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#88877e'
+  b: '#8c918a'
+  c: '#9ea59a'
+  d: '#78786f'
+  e: '#817c72'
+  f: '#848178'
+  g: '#898379'
+  h: '#78756a'
+  i: '#101f27'
+  j: '#6a6c62'
+  k: '#716b60'
+  l: '#716e62'
+  m: '#767266'
+  n: '#6b685c'
+  o: '#70695e'
+  p: '#7a7468'
+  q: '#797266'
+  r: '#756f64'
+  s: '#0d1820'
+  t: '#686358'
+  u: '#69665a'
+  v: '#746c62'
+  w: '#6d665b'
+  x: '#061923'
+  y: '#626156'
+  z: '#565549'
+  '0': '#595e55'
+  '1': '#797d76'
+  '2': '#c4cbbe'
+  '3': '#4e5147'
+  '4': '#3d4239'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ......aabcbbbadeaaafeaabaagehegaabbcc......
+  .i.bcfjklhhhhhhllmmlknlmlolmdmpqorkleac....
+  .s.bcentkrorqppknrhlmnnlrkkrddhkuvkwdbc..ix
+  .s..fjywpvwvtuyz0yyunyyulutnllnuwyttof1...i
+  xs..dntnvrwyzyy0zyuyzyohmokmrowrvkwwqe...sx
+  xs..foynvruzzb2cab1z3zuhmkrrlnwvrpvwlfd..sx
+  xs..ektvhluz3c22ccbjy0yyyntmprrqlmkwle...ix
+  is..eruvmpkz3c22ajbbaz0340lldqqqoounhe...ix
+  xs..fkuwqmkzzc22z41b104440hhmkvmrownhe...ii
+  xs..frtkpptzzc22343jjabjz0ummoumqwttod...ix
+  xs..fktkpqu3zc22344312210ah00ynlvwuwmed..ix
+  is..flwuqou3zc2204z0jccc22144zyokrvwmf1..ix
+  xs..gmooqvu3zc22b10033jc22j443ylkqvwrf1..ix
+  xs..gmwopmkzzc22c2b4444jcaj33jyuukowre...ix
+  xs..amkwrrnzzc2ccca34i431c2c1hyykmvwred..ix
+  xs..gmwvpmt3zc2cb100443y1ccbccchdloomfe..ii
+  xs..flyopmt3zc2cajjj0jbh0y0b22cfal0uhfd..ix
+  xs..eowwply43c2cdbccdfcm3331c210dt3ymfh..ix
+  xs..frtumry33c2c0a2cbyy00j11fj34z03thfd..i.
+  xs..amtopmn3zc2c30ubd443jccj333zroyumed..ix
+  xs..fmwormn3zc2cz4311344jcd343zhaektre1..ii
+  xs..frwwkmtz0c2c0430yj1acy44zkodaewkrf1..ii
+  xs.1gromrht3zc2cyz03lb2cb4i4yhoqpvrtled..i.
+  xs.dgmorrrt3zc2cz3340a2ca043znkvkkwwhed..ix
+  xs.1apkvqrt3zc2c343z00djhyyu0nmqookkmed..ix
+  xs..fptorpn3yc2c3443yz33yccbyyvkwkvwme...ix
+  xs..drukmmuzzc2b344yj3440ccbyyvvkmvkhdd..ix
+  xs..eloumly30c2cz3zyyz4jjaaj0jlpqqqvhf1..ii
+  xs..fmwvppy3yc2c03zjuhfj0110zulqpqvkmf1..ix
+  xs..gekvppyz0bcbuyldm1cbdyj0ykqvvqmvef1..ix
+  xsi.gdrrrqyzz0yuyllumaafyzynomrvqpqregf..ix
+  xs..gekrpqlyy330thhntnjjtyormmqvqqvvdaf..sx
+  xs..gervpppoy3zkkrmny0yyyomrrppqqqvodge..ix
+  xs..fpvvqppkz4zwktuuttotukvvqpppqoowrfe..ix
+  xs.hgqovpqvowzywooonuuwwunokrqqrvwwwpae..ix
+  xs.meprrqqqovkvokvklmrrokkrvkvrkvkwoeae..ix
+  xs.dgeppppqppppqppqmhhpmqpppmppqqkkqeaf..sx
+  xi.abggggeggggaggggggfgggggfggggfegaaaaf.ix
+  xs.abagggggaaaaaaagaagggaaggfffggggagaa1.sx
+  xi.......................................ii
+  0ii......................................i.
+  ba0ii.................................ii...
+  ccbb..................................ss...
+  cccbbcb...............................sx...

@@ -1,0 +1,84 @@
+metadata:
+  name: magic_170
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#0c1d27'
+  b: '#06131c'
+  c: '#010e17'
+  d: '#0b161d'
+  e: '#051722'
+  f: '#080e14'
+  g: '#b3b3b0'
+  h: '#a6a5a1'
+  i: '#9a9892'
+  j: '#868a89'
+  k: '#82827e'
+  l: '#928e86'
+  m: '#7f786f'
+  n: '#837d74'
+  o: '#70685d'
+  p: '#161d23'
+  q: '#151718'
+  r: '#02070b'
+  s: '#777168'
+  t: '#423d36'
+  u: '#2c2924'
+  v: '#665a4e'
+  w: '#6a6055'
+  x: '#000000'
+  y: '#3a342c'
+  z: '#c7c8c7'
+  '0': '#1d2020'
+  '1': '#564b40'
+  '2': '#54473c'
+  '3': '#585147'
+  '4': '#4e4236'
+  '5': '#625244'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ..........abcadce.................
+  .................ae...............
+  ........bf.ghijjk.ce..............
+  ........ff.ggilik.b...............
+  ...........llmmjj.................
+  ....eb.gghlnom....................
+  ....eb.hgilmmm....................
+  ....dp.iikilk..de.................
+  .abbqp.lillmm.pce.................
+  eecdfr.ihhs...qd..................
+  eattuu.kihvrrqpp....accbba........
+  cujjl...iiwrxrffp..dcrrrcca.......
+  byjhi..sgzl0fqfp0pcr..............
+  c0.k...hzzgjjk1t20rf.zzzzg.rcaa...
+  cp..svshzzzzzgk32u0ukzzzzg.rra....
+  bp..lswmlligghm413wvjgghgh.q......
+  bp.kko2y3wwosow13mlsmnmmns...j....
+  bd.ll2yy4yyt431y4slns525v1wosk.ba.
+  cc..s2uy4uy1411yyvnin5v25voss..rb.
+  eb....t1w241ty243vwmw1125woonn.qdp
+  aa...ytsmoo1yy1vmvty0uy1155vli....
+  ...aqqtsnsnw2vwomwuqq0455125onlhh.
+  ...adpu.kllsv.sws.t4yt3ww5554vmhh.
+  ......d.jkkm.........w3wvvv242vono
+  ......d............t.w32215142v5ws
+  .......dp0p0..00qqq....yyt2554244w
+  .......ecbcbdddbbfp.....tt3wv22243
+  .....................00..42v12wvtt
+  .....................pd...uuut11uu
+  .....................abp.qxfyyuqq0
+  .......................dpqrukwqxu.
+  .......................crrpszjuq..
+  .......................rrqyjzi...k
+  .......................cr3hhi.....
+  ......................af.kggk.....
+  .....................arf.hhi......
+  .....................err.hi.......
+  .....................arf.hj.jk....
+  ......................ep....jj....
+  ........................pp..k..m..
+  ........................br0.k..il.
+  ........................brp....kk.
+  .........................a.pp.....
+  ...........................df....j

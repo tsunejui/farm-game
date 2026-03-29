@@ -1,0 +1,79 @@
+metadata:
+  name: magic_176
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#8f8d86'
+  b: '#859ba6'
+  c: '#85847c'
+  d: '#81837b'
+  e: '#807f78'
+  f: '#7b7d77'
+  g: '#141d21'
+  h: '#73736c'
+  i: '#787870'
+  j: '#6a6a61'
+  k: '#6d6d66'
+  l: '#717067'
+  m: '#6d6f69'
+  n: '#646561'
+  o: '#061219'
+  p: '#60615b'
+  q: '#737771'
+  r: '#545d60'
+  s: '#686f6e'
+  t: '#0a161c'
+  u: '#55656d'
+  v: '#637f90'
+  w: '#7a8b92'
+  x: '#96bad0'
+  y: '#6d7471'
+  z: '#646967'
+  '0': '#405460'
+  '1': '#557285'
+  '2': '#293c49'
+  '3': '#476478'
+  '4': '#425b6d'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ....abbaccccaacccdecdeedeeddfefeefabb......
+  g..bachihhjjklmkiilljnkkjnnkjmkjnjhcaaa..g.
+  og.banppnknnknnkfikjppnknpppppppppklcab..o.
+  og.afppjjiqprrrrssmmjnnnnpjjprpppphkica..og
+  ot.dfpphhhsruuvsuuqfiimkjkhmppnmkpnjhic..t.
+  og.adnjkknrrwxxburyyffsszzsqqyyhhnpplee.go.
+  og.ackkijr001bbvvvvussszr0rfdfffqnpnice..t.
+  tg.achjlkzr0001bxx1000uu020uffqfimkkicd..t.
+  tg.aclnnqqzu023bxx122244020uvfssmqmkice.gt.
+  tg.dcljlifqfur4vbw1133041313uuzrzqhklef.gt.
+  tg.eckkhqhqfyyu403xxb320vbx1300rzshllee..t.
+  og.ddljkljmqqqu023xxxv31xxxb30rrrzjkhce..t.
+  og.cdhkklihidqys04vwbxb1bxxw404usynhqcd..t.
+  tg.ackjjhiqhfeqsu401xxb144v13311uszmica..g.
+  tg.ccjnnliiqifqfy141bbb32200vbxwuuzkmec..g.
+  tg.ddkjjjmhqhmqfys4333144204vxxw3rnnkdd..t.
+  tg.cchljjkmqyjmyzu3311223vbbbbbvuusmmed..t.
+  tg.dchkjllmmmkmyru3vxv44vxxxv143uuyqhdd..g.
+  og.ccljlihjnkhmyu03vbbvvxxxb1300uzmhmdd..g.
+  og.cckjlihjnmfqsuu44vxxxxb344uuuyszjhfe..g.
+  og.cdljjlknnkffyyu003xxx1v300rsyqymhfed..g.
+  tg.cejjjjjnjmqyyfu443bxb33uuusfffdiifcc..g.
+  tg.dfjjnkkqhqfszu33vbxv324syyyqddcfhhce..g.
+  tg.delnnkhfqsyuru3bxxb1344syymqfffilhee..g.
+  tg.dcijjjmqqsuu033bxxv4440uusyfihhnjifa..g.
+  tg.cchknnnsyuu33bbvbv43vvvu0uzsyjnpnhia..g.
+  tg.ddkjjmssr0241xxb3023xxb400rrsnznjmdc..g.
+  tg.deljlhzr4221xbxv0001xxb340urrnkhkhca..g.
+  tg.ecilkmsr444bxxv34004bxxv1134rpmqmhcd..g.
+  tg.ddikiyr03bx1w1v4uu03wbwwbbvu0rkkkicd..t.
+  tg.ccikisr01xxv40uzszruu33vbwvu0nmkkead.gt.
+  og.ddkkimsr4bbvuuuyqsyuu0433v1uznmkjicc.gg.
+  tg.eekjkhquuuuuzysqqyqsr0004uuuymknjlca.gg.
+  tg.aeljjhyzr0rzzysmmqyszr0rrrrzymlpjlaa.gg.
+  tg.aejklfmpr0rppnnznzznnrrnznzmkjjkjhaa.gt.
+  tg.acilhiijprrrpppppnppnnnjzjnjhlhjkcaa.gg.
+  og.aaeifeeeeiihqiqqhhhhhifffihicciiiaaa..g.
+  tg.acffaaaaaaaaaaaaaaaaaaaaaaaaaaaceaaa..g.
+  og.....caaacaaaaaaaaaaaaaaccccaacceeiic.gt.
+  tg.............................l........gt.
