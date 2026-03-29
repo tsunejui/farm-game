@@ -12,5 +12,11 @@
   "hint_menu": "W/S or Arrow Keys to select, Enter to confirm",
   "entered_map": "Entered: {0}",
   "lang_english": "English",
-  "lang_chinese": "Chinese"
+  "lang_chinese": "Chinese",
+  "delete_character": "Delete Character",
+  "delete_confirm_title": "Are you sure?",
+  "delete_confirm_message": "This will permanently delete your character.\nA backup will be created.",
+  "confirm": "Confirm",
+  "cancel": "Cancel",
+  "loading": "Loading..."
 }

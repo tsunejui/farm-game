@@ -12,5 +12,11 @@
   "hint_menu": "W/S 或方向鍵選擇，Enter 確認",
   "entered_map": "進入 {0}",
   "lang_english": "英文",
-  "lang_chinese": "中文"
+  "lang_chinese": "中文",
+  "delete_character": "刪除角色",
+  "delete_confirm_title": "確定嗎？",
+  "delete_confirm_message": "這將永久刪除你的角色。\n系統會建立備份。",
+  "confirm": "確認",
+  "cancel": "取消",
+  "loading": "載入中..."
 }

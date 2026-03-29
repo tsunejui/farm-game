@@ -15,16 +15,27 @@ public class SettingsScreen : IScreen
     private Button[] _buttons;
     private string[] _buttonLangs;
     private int _selectedIndex;
+    private bool _showDeleteConfirmation;
+    private ScreenTransition _pendingTransition;
 
     public Action<string> OnLanguageChanged { get; set; }
+    public Action OnDeleteCharacter { get; set; }
     public GameState ReturnState { get; set; } = GameState.TitleScreen;
 
     public void Initialize() { _selectedIndex = 0; BuildUI(); }
-    public void Rebuild() { _selectedIndex = 0; BuildUI(); }
+    public void Rebuild() { _selectedIndex = 0; _showDeleteConfirmation = false; BuildUI(); }
     public void OnEnter(GameState fromState) { ReturnState = fromState; Rebuild(); }
 
     private void BuildUI()
     {
+        _pendingTransition = null;
+
+        if (_showDeleteConfirmation)
+        {
+            BuildConfirmUI();
+            return;
+        }
+
         var root = new VerticalStackPanel
         {
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -63,12 +74,80 @@ public class SettingsScreen : IScreen
         langRow.Widgets.Add(zhBtn);
         root.Widgets.Add(langRow);
 
+        var deleteBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "delete_character"));
+        deleteBtn.Click += (_, _) =>
+        {
+            _showDeleteConfirmation = true;
+            _selectedIndex = 0;
+            BuildUI();
+        };
+        deleteBtn.Margin = new Myra.Graphics2D.Thickness(0, 12, 0, 0);
+        root.Widgets.Add(deleteBtn);
+
         var backBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "back"));
-        backBtn.Margin = new Myra.Graphics2D.Thickness(0, 20, 0, 0);
+        backBtn.Click += (_, _) => _pendingTransition = ScreenTransition.To(ReturnState);
+        backBtn.Margin = new Myra.Graphics2D.Thickness(0, 8, 0, 0);
         root.Widgets.Add(backBtn);
 
-        _buttons = new[] { enBtn, zhBtn, backBtn };
-        _buttonLangs = new[] { "en", "zh-TW", null };
+        _buttons = new[] { enBtn, zhBtn, deleteBtn, backBtn };
+        _buttonLangs = new[] { "en", "zh-TW", null, null };
+
+        _desktop = new Desktop { Root = root };
+        UpdateButtonFocus();
+    }
+
+    private void BuildConfirmUI()
+    {
+        var root = new VerticalStackPanel
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            Spacing = 16,
+            Padding = new Myra.Graphics2D.Thickness(40, 30),
+            Background = new SolidBrush(new Color(40, 20, 20)),
+            Border = new SolidBrush(new Color(160, 60, 60)),
+            BorderThickness = new Myra.Graphics2D.Thickness(2),
+            Width = 400,
+        };
+
+        var title = UIHelper.CreateLabel(LocaleManager.Get("ui", "delete_confirm_title"), 28);
+        title.HorizontalAlignment = HorizontalAlignment.Center;
+        title.TextColor = new Color(220, 80, 80);
+        title.Margin = new Myra.Graphics2D.Thickness(0, 0, 0, 12);
+        root.Widgets.Add(title);
+
+        var message = UIHelper.CreateLabel(LocaleManager.Get("ui", "delete_confirm_message"), 16);
+        message.HorizontalAlignment = HorizontalAlignment.Center;
+        message.TextColor = new Color(180, 180, 180);
+        message.Margin = new Myra.Graphics2D.Thickness(0, 0, 0, 20);
+        root.Widgets.Add(message);
+
+        var cancelBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "cancel"));
+        cancelBtn.Click += (_, _) =>
+        {
+            _showDeleteConfirmation = false;
+            _selectedIndex = 0;
+            BuildUI();
+        };
+
+        var confirmBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "confirm"));
+        confirmBtn.Click += (_, _) =>
+        {
+            OnDeleteCharacter?.Invoke();
+            _pendingTransition = ScreenTransition.To(GameState.Loading);
+        };
+
+        var btnRow = new HorizontalStackPanel
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Spacing = 16,
+        };
+        btnRow.Widgets.Add(cancelBtn);
+        btnRow.Widgets.Add(confirmBtn);
+        root.Widgets.Add(btnRow);
+
+        _buttons = new[] { cancelBtn, confirmBtn };
+        _buttonLangs = new[] { (string)null, null };
 
         _desktop = new Desktop { Root = root };
         UpdateButtonFocus();
@@ -86,17 +165,57 @@ public class SettingsScreen : IScreen
 
         if (kb.WasKeyPressed(Keys.Enter) || kb.WasKeyPressed(Keys.Space))
         {
+            if (_showDeleteConfirmation)
+            {
+                if (_selectedIndex == 0)
+                {
+                    _showDeleteConfirmation = false;
+                    _selectedIndex = 0;
+                    BuildUI();
+                    return ScreenTransition.None;
+                }
+                else
+                {
+                    OnDeleteCharacter?.Invoke();
+                    return ScreenTransition.To(GameState.Loading);
+                }
+            }
+
             var lang = _buttonLangs[_selectedIndex];
             if (lang != null)
             {
                 OnLanguageChanged?.Invoke(lang);
                 return ScreenTransition.None;
             }
+            // deleteBtn is index 2, backBtn is index 3
+            if (_selectedIndex == 2)
+            {
+                _showDeleteConfirmation = true;
+                _selectedIndex = 0;
+                BuildUI();
+                return ScreenTransition.None;
+            }
             return ScreenTransition.To(ReturnState);
         }
 
         if (kb.WasKeyPressed(Keys.Escape))
+        {
+            if (_showDeleteConfirmation)
+            {
+                _showDeleteConfirmation = false;
+                _selectedIndex = 0;
+                BuildUI();
+                return ScreenTransition.None;
+            }
             return ScreenTransition.To(ReturnState);
+        }
+
+        if (_pendingTransition != null)
+        {
+            var t = _pendingTransition;
+            _pendingTransition = null;
+            return t;
+        }
 
         return ScreenTransition.None;
     }
@@ -110,7 +229,7 @@ public class SettingsScreen : IScreen
             var label = (Label)_buttons[i].Content;
             if (i == _selectedIndex)
                 label.TextColor = Color.White;
-            else if (_buttonLangs[i] != null && _buttonLangs[i] == LocaleManager.CurrentLanguage)
+            else if (!_showDeleteConfirmation && _buttonLangs[i] != null && _buttonLangs[i] == LocaleManager.CurrentLanguage)
                 label.TextColor = new Color(34, 200, 34);
             else
                 label.TextColor = new Color(120, 120, 120);

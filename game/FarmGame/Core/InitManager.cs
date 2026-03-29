@@ -20,6 +20,7 @@ public class InitManager
     public SpriteBatch SpriteBatch { get; private set; }
     public ScreenManager ScreenManager { get; private set; }
     public PlayingScreen PlayingScreen { get; private set; }
+    public LoadingScreen LoadingScreen { get; private set; }
     public PlayerStateSaver StateSaver { get; private set; }
 
     private string _databaseError;
@@ -81,14 +82,32 @@ public class InitManager
 
         var settingsScreen = new SettingsScreen();
         settingsScreen.OnLanguageChanged = ScreenManager.ChangeLanguage;
+        settingsScreen.OnDeleteCharacter = () =>
+        {
+            var dbPath = DatabasePathResolver.GetDatabasePath(GameConstants.GameTitle);
+            LoadingScreen.Configure(() =>
+            {
+                DatabaseBackup.Backup(dbPath);
+                if (File.Exists(dbPath))
+                    File.Delete(dbPath);
+                StateSaver = null;
+                _initialSavedState = null;
+                titleScreen.HasSavedState = false;
+                Log.Information("Character deleted, database removed");
+            }, GameState.TitleScreen);
+        };
         settingsScreen.Initialize();
 
         PlayingScreen = new PlayingScreen(game.GraphicsDevice, registry, loadTexture);
+
+        LoadingScreen = new LoadingScreen();
+        LoadingScreen.Initialize();
 
         ScreenManager.Register(GameState.TitleScreen, titleScreen);
         ScreenManager.Register(GameState.Settings, settingsScreen);
         ScreenManager.Register(GameState.Paused, pauseScreen);
         ScreenManager.Register(GameState.Playing, PlayingScreen);
+        ScreenManager.Register(GameState.Loading, LoadingScreen);
 
         Log.Information("[Init] All initialization complete");
     }
