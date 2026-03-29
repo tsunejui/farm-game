@@ -39,3 +39,8 @@ public interface IScreen
     ScreenTransition Update(GameTime gameTime);
     void Draw(SpriteBatch spriteBatch);
 }
+
+public interface IWorldRenderer
+{
+    void DrawWorld(SpriteBatch spriteBatch);
+}

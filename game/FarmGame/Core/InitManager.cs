@@ -3,14 +3,11 @@
 // =============================================================================
 
 using System;
-using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Serilog;
 using FarmGame.Bootstrap;
 using FarmGame.Data;
-using FarmGame.Persistence;
-using FarmGame.Persistence.Models;
 using FarmGame.Screens;
 
 namespace FarmGame.Core;
@@ -19,15 +16,15 @@ public class InitManager
 {
     public SpriteBatch SpriteBatch { get; private set; }
     public ScreenManager ScreenManager { get; private set; }
-    public PlayingScreen PlayingScreen { get; private set; }
-    public LoadingScreen LoadingScreen { get; private set; }
-    public PlayerStateSaver StateSaver { get; private set; }
+    public GameSession Session { get; private set; }
 
+    private string _contentDir;
     private string _databaseError;
-    private PlayerState _initialSavedState;
 
     public void InitializeCore(string contentDir)
     {
+        _contentDir = contentDir;
+
         // 1. Config
         ConfigInitializer.Run(contentDir);
 
@@ -35,25 +32,17 @@ public class InitManager
         var dbResult = DatabaseInitializer.Run();
         if (dbResult.Success)
         {
-            StateSaver = new PlayerStateSaver(dbResult.PlayerStateRepo, dbResult.PlayerUuid);
-            _initialSavedState = dbResult.SavedState;
-
-            // 3. Locale
+            Session = new GameSession(dbResult);
             LocaleInitializer.Run(contentDir, dbResult.Settings);
-
-            // 4. ScreenManager (needs contentDir and settings for ChangeLanguage)
-            ScreenManager = new ScreenManager(contentDir, dbResult.Settings);
         }
         else
         {
             _databaseError = dbResult.Error;
-
-            // 3. Locale (without settings)
             LocaleInitializer.Run(contentDir, null);
-
-            // 4. ScreenManager (without settings)
-            ScreenManager = new ScreenManager(contentDir, null);
         }
+
+        // 3. ScreenManager
+        ScreenManager = new ScreenManager();
     }
 
     public void LoadContent(
@@ -63,16 +52,16 @@ public class InitManager
         Action startGameCallback,
         Func<string, Texture2D> loadTexture)
     {
-        // 5. Graphics + Font + Myra
+        // 4. Graphics + Font + Myra
         SpriteBatch = GraphicsInitializer.Run(game, graphics, contentDir);
 
-        // 6. Data Registry
+        // 5. Data Registry
         var registry = DataInitializer.Run(contentDir);
 
-        // 7. Screens
+        // 6. Screens
         var titleScreen = new TitleScreen();
         titleScreen.OnStartGame = startGameCallback;
-        titleScreen.HasSavedState = _initialSavedState != null;
+        titleScreen.HasSavedState = Session?.HasSavedState ?? false;
         titleScreen.Initialize();
         if (!string.IsNullOrEmpty(_databaseError))
             titleScreen.SetError(_databaseError);
@@ -81,53 +70,36 @@ public class InitManager
         pauseScreen.Initialize();
 
         var settingsScreen = new SettingsScreen();
-        settingsScreen.OnLanguageChanged = ScreenManager.ChangeLanguage;
+        settingsScreen.OnLanguageChanged = (lang) =>
+        {
+            Session?.ChangeLanguage(lang, _contentDir);
+            ScreenManager.RebuildAll();
+        };
         settingsScreen.OnDeleteCharacter = () =>
         {
-            var dbPath = DatabasePathResolver.GetDatabasePath(GameConstants.GameTitle);
-            LoadingScreen.Configure(() =>
+            var loadingScreen = (LoadingScreen)null;
+            if (ScreenManager.TryGet(GameState.Loading, out var screen))
+                loadingScreen = (LoadingScreen)screen;
+
+            loadingScreen?.Configure(() =>
             {
-                DatabaseBackup.Backup(dbPath);
-                if (File.Exists(dbPath))
-                    File.Delete(dbPath);
-
-                // Re-initialize database with fresh state
-                var freshDb = DatabaseInitializer.Run();
-                if (freshDb.Success)
-                {
-                    StateSaver = new PlayerStateSaver(freshDb.PlayerStateRepo, freshDb.PlayerUuid);
-                    freshDb.Settings.Set("language", LocaleManager.CurrentLanguage);
-                    ScreenManager.UpdateSettings(freshDb.Settings);
-                }
-                else
-                {
-                    StateSaver = null;
-                    ScreenManager.UpdateSettings(null);
-                }
-
-                _initialSavedState = null;
+                Session?.DeleteAndReset();
                 titleScreen.HasSavedState = false;
-                Log.Information("Character deleted, database re-initialized");
             }, GameState.TitleScreen);
         };
         settingsScreen.Initialize();
 
-        PlayingScreen = new PlayingScreen(game.GraphicsDevice, registry, loadTexture);
+        var playingScreen = new PlayingScreen(game.GraphicsDevice, registry, loadTexture, Session);
 
-        LoadingScreen = new LoadingScreen();
-        LoadingScreen.Initialize();
+        var loading = new LoadingScreen();
+        loading.Initialize();
 
         ScreenManager.Register(GameState.TitleScreen, titleScreen);
         ScreenManager.Register(GameState.Settings, settingsScreen);
         ScreenManager.Register(GameState.Paused, pauseScreen);
-        ScreenManager.Register(GameState.Playing, PlayingScreen);
-        ScreenManager.Register(GameState.Loading, LoadingScreen);
+        ScreenManager.Register(GameState.Playing, playingScreen);
+        ScreenManager.Register(GameState.Loading, loading);
 
         Log.Information("[Init] All initialization complete");
-    }
-
-    public PlayerState LoadSavedState()
-    {
-        return StateSaver?.Load() ?? _initialSavedState;
     }
 }

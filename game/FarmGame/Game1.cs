@@ -42,8 +42,11 @@ public class Game1 : Game
 
     private void StartGame()
     {
-        _init.PlayingScreen.StartGame(_init.LoadSavedState());
-        _gameState = GameState.Playing;
+        if (_init.ScreenManager.TryGet(GameState.Playing, out var screen))
+        {
+            ((PlayingScreen)screen).StartGame(_init.Session?.LoadPlayer());
+            _gameState = GameState.Playing;
+        }
     }
 
     private Texture2D LoadTexture(string path)
@@ -65,8 +68,8 @@ public class Game1 : Game
 
     private void SavePlayerState()
     {
-        var playing = _init.PlayingScreen;
-        _init.StateSaver?.Save(playing?.Player, playing?.CurrentMap?.MapId ?? GameConstants.StartMap);
+        if (_init.ScreenManager.TryGet(GameState.Playing, out var screen))
+            ((PlayingScreen)screen).SaveState();
     }
 
     private void HandleTransition(ScreenTransition transition)
@@ -112,8 +115,9 @@ public class Game1 : Game
     {
         GraphicsDevice.Clear(Color.Black);
 
-        if (_gameState == GameState.Paused)
-            _init.PlayingScreen.DrawWorld(_init.SpriteBatch);
+        if (_gameState == GameState.Paused &&
+            _init.ScreenManager.TryGet(GameState.Playing, out var playingScreen))
+            (playingScreen as IWorldRenderer)?.DrawWorld(_init.SpriteBatch);
 
         if (_init.ScreenManager.TryGet(_gameState, out var activeScreen))
             activeScreen.Draw(_init.SpriteBatch);

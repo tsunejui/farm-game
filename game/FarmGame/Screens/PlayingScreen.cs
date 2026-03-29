@@ -11,36 +11,35 @@ using FarmGame.Bootstrap;
 using FarmGame.Camera;
 using FarmGame.Core;
 using FarmGame.Data;
-using FarmGame.Entities;
 using FarmGame.Persistence.Models;
 using FarmGame.Screens.HUD;
 using FarmGame.World;
 
 namespace FarmGame.Screens;
 
-public class PlayingScreen : IScreen
+public class PlayingScreen : IScreen, IWorldRenderer
 {
     private readonly Func<string, Texture2D> _loadTexture;
     private readonly GraphicsDevice _graphicsDevice;
     private readonly DataRegistry _registry;
+    private readonly GameSession _session;
     private readonly MapTransitionOverlay _mapTransition;
     private readonly ToastAlert _toast;
 
     private GameMap _currentMap;
-    private Player _player;
+    private Entities.Player _player;
     private Camera2D _camera;
-
-    public Player Player => _player;
-    public GameMap CurrentMap => _currentMap;
 
     public PlayingScreen(
         GraphicsDevice graphicsDevice,
         DataRegistry registry,
-        Func<string, Texture2D> loadTexture)
+        Func<string, Texture2D> loadTexture,
+        GameSession session)
     {
         _graphicsDevice = graphicsDevice;
         _registry = registry;
         _loadTexture = loadTexture;
+        _session = session;
         _mapTransition = new MapTransitionOverlay();
         _toast = new ToastAlert();
     }
@@ -58,6 +57,11 @@ public class PlayingScreen : IScreen
 
         _mapTransition.Start(result.MapName);
         _toast.Show(LocaleManager.Format("ui", "entered_map", result.MapName));
+    }
+
+    public void SaveState()
+    {
+        _session.SavePlayer(_player, _currentMap?.MapId ?? GameConstants.StartMap);
     }
 
     public ScreenTransition Update(GameTime gameTime)
