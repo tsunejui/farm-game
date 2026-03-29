@@ -22,7 +22,7 @@ visuals:
 physics:
   occupy_width: 1
   occupy_height: 1
-  is_collidable: true
+  is_collidable: false
   is_knockbackable: true
 
 logic:
