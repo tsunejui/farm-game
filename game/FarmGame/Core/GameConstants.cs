@@ -21,6 +21,26 @@ public static class GameConstants
     public static int PlayerAttackWidth { get; private set; } = 20;
     public static Color PlayerAttackColor { get; private set; } = Color.Gold;
     public static string DefaultLanguage { get; private set; } = "en";
+    public static float AutoSaveInterval { get; private set; } = 60f;
+
+    // HUD — Toast
+    public static int ToastFadeInMs { get; private set; } = 200;
+    public static int ToastFadeOutMs { get; private set; } = 300;
+    public static int ToastDurationMs { get; private set; } = 2500;
+    public static int ToastMaxCount { get; private set; } = 5;
+    public static int ToastFontSize { get; private set; } = 16;
+
+    // Combat
+    public static int DamageTickDurationMs { get; private set; } = 500;
+    public static int DefaultMinDamage { get; private set; } = 1;
+    public static int DefaultMaxDamage { get; private set; } = 3;
+    public static float DamageFlashOpacity { get; private set; } = 0.01f;
+
+    // HUD — Map Transition
+    public static int MapTransitionFadeInMs { get; private set; } = 300;
+    public static int MapTransitionHoldMs { get; private set; } = 800;
+    public static int MapTransitionFadeOutMs { get; private set; } = 500;
+    public static int MapTransitionFontSize { get; private set; } = 32;
 
     public static void LoadFrom(GameConfig config)
     {
@@ -40,5 +60,22 @@ public static class GameConstants
         PlayerAttackWidth = config.Player.AttackWidth;
         PlayerAttackColor = ColorHelper.FromHex(config.Player.AttackColor);
         DefaultLanguage = config.Game.DefaultLanguage;
+        AutoSaveInterval = config.Save.AutoSaveInterval;
+
+        ToastFadeInMs = config.Hud.Toast.FadeInMs;
+        ToastFadeOutMs = config.Hud.Toast.FadeOutMs;
+        ToastDurationMs = config.Hud.Toast.DurationMs;
+        ToastMaxCount = config.Hud.Toast.MaxToasts;
+        ToastFontSize = config.Hud.Toast.FontSize;
+
+        MapTransitionFadeInMs = config.Hud.MapTransition.FadeInMs;
+        MapTransitionHoldMs = config.Hud.MapTransition.HoldMs;
+        MapTransitionFadeOutMs = config.Hud.MapTransition.FadeOutMs;
+        MapTransitionFontSize = config.Hud.MapTransition.FontSize;
+
+        DamageTickDurationMs = config.Combat.DamageTickDurationMs;
+        DefaultMinDamage = config.Combat.DefaultMinDamage;
+        DefaultMaxDamage = config.Combat.DefaultMaxDamage;
+        DamageFlashOpacity = config.Combat.FlashOpacity;
     }
 }

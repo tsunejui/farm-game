@@ -10,6 +10,9 @@ public class GameConfig
     public TileConfig Tile { get; set; } = new();
     public PlayerConfig Player { get; set; } = new();
     public GameStartConfig Game { get; set; } = new();
+    public SaveConfig Save { get; set; } = new();
+    public HudConfig Hud { get; set; } = new();
+    public CombatConfig Combat { get; set; } = new();
 
     public static GameConfig Load(string yamlPath)
     {
@@ -73,4 +76,66 @@ public class GameStartConfig
 
     [YamlMember(Alias = "default_language")]
     public string DefaultLanguage { get; set; } = "en";
+}
+
+public class SaveConfig
+{
+    [YamlMember(Alias = "auto_save_interval")]
+    public float AutoSaveInterval { get; set; } = 60f;
+}
+
+public class HudConfig
+{
+    public ToastConfig Toast { get; set; } = new();
+
+    [YamlMember(Alias = "map_transition")]
+    public MapTransitionConfig MapTransition { get; set; } = new();
+}
+
+public class ToastConfig
+{
+    [YamlMember(Alias = "fade_in_ms")]
+    public int FadeInMs { get; set; } = 200;
+
+    [YamlMember(Alias = "fade_out_ms")]
+    public int FadeOutMs { get; set; } = 300;
+
+    [YamlMember(Alias = "duration_ms")]
+    public int DurationMs { get; set; } = 2500;
+
+    [YamlMember(Alias = "max_toasts")]
+    public int MaxToasts { get; set; } = 5;
+
+    [YamlMember(Alias = "font_size")]
+    public int FontSize { get; set; } = 16;
+}
+
+public class MapTransitionConfig
+{
+    [YamlMember(Alias = "fade_in_ms")]
+    public int FadeInMs { get; set; } = 300;
+
+    [YamlMember(Alias = "hold_ms")]
+    public int HoldMs { get; set; } = 800;
+
+    [YamlMember(Alias = "fade_out_ms")]
+    public int FadeOutMs { get; set; } = 500;
+
+    [YamlMember(Alias = "font_size")]
+    public int FontSize { get; set; } = 32;
+}
+
+public class CombatConfig
+{
+    [YamlMember(Alias = "damage_tick_duration_ms")]
+    public int DamageTickDurationMs { get; set; } = 500;
+
+    [YamlMember(Alias = "default_min_damage")]
+    public int DefaultMinDamage { get; set; } = 1;
+
+    [YamlMember(Alias = "default_max_damage")]
+    public int DefaultMaxDamage { get; set; } = 3;
+
+    [YamlMember(Alias = "flash_opacity")]
+    public float FlashOpacity { get; set; } = 0.01f;
 }

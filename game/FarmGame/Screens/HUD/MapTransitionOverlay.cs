@@ -14,14 +14,12 @@ namespace FarmGame.Screens.HUD;
 // =============================================================================
 public class MapTransitionOverlay
 {
-    private const int FadeInMs = 300;
-    private const int HoldMs = 800;
-    private const int FadeOutMs = 500;
-    private const int TotalMs = FadeInMs + HoldMs + FadeOutMs;
-    private const int FontSize = 32;
-
     private string _mapName;
     private int _elapsedMs;
+
+    private int TotalMs => GameConstants.MapTransitionFadeInMs
+        + GameConstants.MapTransitionHoldMs
+        + GameConstants.MapTransitionFadeOutMs;
 
     public bool IsActive { get; private set; }
 
@@ -47,7 +45,7 @@ public class MapTransitionOverlay
     {
         if (!IsActive) return;
 
-        var font = FontManager.GetFont(FontSize);
+        var font = FontManager.GetFont(GameConstants.MapTransitionFontSize);
         if (font == null) return;
 
         float alpha = CalculateAlpha();
@@ -80,13 +78,17 @@ public class MapTransitionOverlay
 
     private float CalculateAlpha()
     {
-        if (_elapsedMs < FadeInMs)
-            return (float)_elapsedMs / FadeInMs;
-        else if (_elapsedMs < FadeInMs + HoldMs)
+        int fadeIn = GameConstants.MapTransitionFadeInMs;
+        int hold = GameConstants.MapTransitionHoldMs;
+        int fadeOut = GameConstants.MapTransitionFadeOutMs;
+
+        if (_elapsedMs < fadeIn)
+            return (float)_elapsedMs / fadeIn;
+        else if (_elapsedMs < fadeIn + hold)
             return 1f;
         else
         {
-            float fadeOutProgress = (float)(_elapsedMs - FadeInMs - HoldMs) / FadeOutMs;
+            float fadeOutProgress = (float)(_elapsedMs - fadeIn - hold) / fadeOut;
             return 1f - MathHelper.Clamp(fadeOutProgress, 0f, 1f);
         }
     }

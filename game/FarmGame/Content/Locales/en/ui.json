@@ -18,5 +18,6 @@
   "delete_confirm_message": "This will permanently delete your character.\nA backup will be created.",
   "confirm": "Confirm",
   "cancel": "Cancel",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "auto_saved": "Auto-saved"
 }

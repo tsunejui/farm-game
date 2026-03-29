@@ -18,5 +18,6 @@
   "delete_confirm_message": "這將永久刪除你的角色。\n系統會建立備份。",
   "confirm": "確認",
   "cancel": "取消",
-  "loading": "載入中..."
+  "loading": "載入中...",
+  "auto_saved": "已自動存檔"
 }

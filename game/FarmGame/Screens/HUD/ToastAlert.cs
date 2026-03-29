@@ -14,29 +14,26 @@ namespace FarmGame.Screens.HUD;
 // =============================================================================
 public class ToastAlert
 {
-    private const int FadeInMs = 200;
-    private const int FadeOutMs = 300;
-    private const int DefaultDurationMs = 2500;
-    private const int MaxToasts = 5;
     private const int MarginLeft = 12;
     private const int MarginBottom = 12;
     private const int Padding = 6;
     private const int Spacing = 4;
-    private const int FontSize = 16;
 
     private readonly List<Toast> _toasts = new();
 
-    public void Show(string message, int durationMs = DefaultDurationMs)
+    public void Show(string message, int durationMs = -1)
     {
+        if (durationMs < 0) durationMs = GameConstants.ToastDurationMs;
+
         _toasts.Add(new Toast
         {
             Message = message,
-            TotalMs = FadeInMs + durationMs + FadeOutMs,
+            TotalMs = GameConstants.ToastFadeInMs + durationMs + GameConstants.ToastFadeOutMs,
             DurationMs = durationMs,
             ElapsedMs = 0,
         });
 
-        while (_toasts.Count > MaxToasts)
+        while (_toasts.Count > GameConstants.ToastMaxCount)
             _toasts.RemoveAt(0);
     }
 
@@ -56,7 +53,7 @@ public class ToastAlert
     {
         if (_toasts.Count == 0) return;
 
-        var font = FontManager.GetFont(FontSize);
+        var font = FontManager.GetFont(GameConstants.ToastFontSize);
         if (font == null) return;
 
         int screenH = GameConstants.ScreenHeight;
@@ -85,14 +82,17 @@ public class ToastAlert
 
     private static float CalculateAlpha(Toast toast)
     {
-        if (toast.ElapsedMs < FadeInMs)
-            return (float)toast.ElapsedMs / FadeInMs;
+        int fadeIn = GameConstants.ToastFadeInMs;
+        int fadeOut = GameConstants.ToastFadeOutMs;
 
-        int fadeOutStart = FadeInMs + toast.DurationMs;
+        if (toast.ElapsedMs < fadeIn)
+            return (float)toast.ElapsedMs / fadeIn;
+
+        int fadeOutStart = fadeIn + toast.DurationMs;
         if (toast.ElapsedMs < fadeOutStart)
             return 1f;
 
-        float progress = (float)(toast.ElapsedMs - fadeOutStart) / FadeOutMs;
+        float progress = (float)(toast.ElapsedMs - fadeOutStart) / fadeOut;
         return 1f - MathHelper.Clamp(progress, 0f, 1f);
     }
 

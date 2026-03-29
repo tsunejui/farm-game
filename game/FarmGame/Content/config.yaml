@@ -29,3 +29,28 @@ game:
   start_map: "farm_home"
   title: "Farm Game"
   default_language: "en"
+
+# Save settings
+save:
+  auto_save_interval: 60   # seconds between auto-saves (0 to disable)
+
+# Combat settings
+combat:
+  damage_tick_duration_ms: 500   # damage is distributed over this duration
+  default_min_damage: 1          # minimum random damage per attack
+  default_max_damage: 3          # maximum random damage per attack
+  flash_opacity: 0.01            # dark gray overlay opacity during damage (1% per spec)
+
+# HUD overlay settings
+hud:
+  toast:
+    fade_in_ms: 200
+    fade_out_ms: 300
+    duration_ms: 2500
+    max_toasts: 5
+    font_size: 16
+  map_transition:
+    fade_in_ms: 300
+    hold_ms: 800
+    fade_out_ms: 500
+    font_size: 32
