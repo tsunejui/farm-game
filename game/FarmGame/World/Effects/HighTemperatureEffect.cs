@@ -1,8 +1,10 @@
 // =============================================================================
-// HighTemperatureEffect.cs — Deals 1-3 damage to objects at distance 0
+// HighTemperatureEffect.cs — Deals 1-3 damage to adjacent objects
 //
-// On each tick (~1 second), objects standing on the same tiles as the
-// owner have a 50% chance to take 1-3 fire damage.
+// On each tick (~1 second), objects within 1 tile of the owner
+// have a 50% chance to take 1-3 fire damage.
+// Range includes adjacent tiles (distance <= 1), not just same tile,
+// since the owner may be collidable (player can't stand on it).
 // =============================================================================
 
 using System;
@@ -19,26 +21,32 @@ public class HighTemperatureEffect : IEffect
 
     public void OnTick(WorldObject owner, GameMap map)
     {
-        for (int x = owner.TileX; x < owner.TileX + owner.EffectiveWidth; x++)
-        {
-            for (int y = owner.TileY; y < owner.TileY + owner.EffectiveHeight; y++)
-            {
-                // Check map objects
-                foreach (var obj in map.Objects)
-                    TryDamage(obj, owner, x, y);
+        // Adjacent area: owner tiles + 1 tile border around it
+        int minX = owner.TileX - 1;
+        int maxX = owner.TileX + owner.EffectiveWidth;  // inclusive
+        int minY = owner.TileY - 1;
+        int maxY = owner.TileY + owner.EffectiveHeight;  // inclusive
 
-                // Player is also an object — check player proxy
-                if (map.PlayerProxy != null)
-                    TryDamage(map.PlayerProxy, owner, x, y);
-            }
-        }
+        foreach (var obj in map.Objects)
+            TryDamage(obj, owner, minX, maxX, minY, maxY);
+
+        if (map.PlayerProxy != null)
+            TryDamage(map.PlayerProxy, owner, minX, maxX, minY, maxY);
     }
 
-    private void TryDamage(WorldObject target, WorldObject owner, int x, int y)
+    private void TryDamage(WorldObject target, WorldObject owner,
+        int minX, int maxX, int minY, int maxY)
     {
         if (target == owner) return;
         if (!target.State.IsAlive) return;
-        if (target.TileX != x || target.TileY != y) return;
+
+        // Check if target occupies any tile in the adjacent area
+        bool overlaps = target.TileX <= maxX
+            && target.TileX + target.EffectiveWidth - 1 >= minX
+            && target.TileY <= maxY
+            && target.TileY + target.EffectiveHeight - 1 >= minY;
+        if (!overlaps) return;
+
         if (Rng.NextDouble() >= 0.5) return;
 
         int damage = Rng.Next(1, 4);

@@ -45,7 +45,12 @@ public static class EffectRegistry
     public static void LoadDefinitions(string contentDir, Func<string, Texture2D> loadTexture)
     {
         var effectsDir = Path.Combine(contentDir, "Effects");
-        if (!Directory.Exists(effectsDir)) return;
+        Log.Information("[EffectRegistry] Loading definitions from: {Dir}", effectsDir);
+        if (!Directory.Exists(effectsDir))
+        {
+            Log.Warning("[EffectRegistry] Effects directory not found!");
+            return;
+        }
 
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
@@ -75,8 +80,8 @@ public static class EffectRegistry
                 }
 
                 _definitions[def.EffectId] = def;
-                Log.Debug("Effect definition loaded: {Id}, hasTexture={HasTex}",
-                    def.EffectId, def.Texture != null);
+                Log.Information("[EffectRegistry] Loaded: {Id}, texture={HasTex}, path={Path}",
+                    def.EffectId, def.Texture != null, def.ImagePath);
             }
             catch (Exception ex)
             {
