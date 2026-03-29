@@ -1,8 +1,6 @@
 using System.IO;
 using Microsoft.Xna.Framework.Graphics;
-using AssetManagementBase;
 using FontStashSharp;
-using Myra;
 using Serilog;
 
 namespace FarmGame.Core;
@@ -17,16 +15,8 @@ public static class FontManager
         if (File.Exists(fontPath))
         {
             var fontData = File.ReadAllBytes(fontPath);
-
             _fontSystem = new FontSystem();
             _fontSystem.AddFont(fontData);
-
-            // Set Myra's default asset manager to load from Fonts directory
-            // so the stylesheet can find our Chinese-capable font
-            var fontsDir = Path.Combine(contentDir, "Fonts");
-            MyraEnvironment.DefaultAssetManager =
-                AssetManager.CreateFileAssetManager(fontsDir);
-
             Log.Information("Font loaded: {Path}", fontPath);
         }
         else
@@ -39,5 +29,10 @@ public static class FontManager
     public static SpriteFontBase GetFont(int size)
     {
         return _fontSystem.GetFont(size);
+    }
+
+    public static FontSystem GetFontSystem()
+    {
+        return _fontSystem;
     }
 }
