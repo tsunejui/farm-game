@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Myra;
 using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 using MonoGame.Extended.Input;
@@ -9,37 +9,19 @@ using FarmGame.Core;
 
 namespace FarmGame.Screens;
 
-public enum PauseMenuOption
-{
-    Resume,
-    ExitGame
-}
-
-public class PauseScreen
+public class PauseScreen : IScreen
 {
     private Desktop _desktop;
     private Button[] _buttons;
     private int _selectedIndex;
 
-    public PauseMenuOption? SelectedAction { get; private set; }
+    public void Initialize() { _selectedIndex = 0; BuildUI(); }
+    public void Rebuild() { _selectedIndex = 0; BuildUI(); }
 
-    public void Initialize()
-    {
-        SelectedAction = null;
-        _selectedIndex = 0;
-        BuildUI();
-    }
-
-    public void Rebuild()
-    {
-        _selectedIndex = 0;
-        BuildUI();
-    }
+    public void Reset() { _selectedIndex = 0; UpdateButtonFocus(); }
 
     private void BuildUI()
     {
-        var overlay = new Panel();
-
         var panel = new VerticalStackPanel
         {
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -52,78 +34,46 @@ public class PauseScreen
             Width = 300,
         };
 
-        // Title
-        panel.Widgets.Add(new Label
-        {
-            Text = LocaleManager.Get("ui", "paused"),
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Scale = new Vector2(2f),
-            TextColor = new Color(200, 220, 200),
-            Margin = new Myra.Graphics2D.Thickness(0, 0, 0, 20),
-        });
+        var title = UIHelper.CreateLabel(LocaleManager.Get("ui", "paused"), 28);
+        title.HorizontalAlignment = HorizontalAlignment.Center;
+        title.TextColor = new Color(200, 220, 200);
+        title.Margin = new Myra.Graphics2D.Thickness(0, 0, 0, 20);
+        panel.Widgets.Add(title);
 
-        // Buttons
-        var resumeBtn = CreateButton(LocaleManager.Get("ui", "resume"));
-        resumeBtn.Click += (_, _) => SelectedAction = PauseMenuOption.Resume;
+        var resumeBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "resume"));
         panel.Widgets.Add(resumeBtn);
 
-        var exitBtn = CreateButton(LocaleManager.Get("ui", "exit_game"));
-        exitBtn.Click += (_, _) => SelectedAction = PauseMenuOption.ExitGame;
+        var exitBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "exit_game"));
         panel.Widgets.Add(exitBtn);
 
         _buttons = new[] { resumeBtn, exitBtn };
 
-        overlay.Widgets.Add(panel);
-
-        _desktop = new Desktop();
-        _desktop.Root = overlay;
-
+        _desktop = new Desktop { Root = new Panel { Widgets = { panel } } };
         UpdateButtonFocus();
     }
 
-    public void Reset()
+    public ScreenTransition Update(GameTime gameTime)
     {
-        SelectedAction = null;
-        _selectedIndex = 0;
-        UpdateButtonFocus();
-    }
+        var kb = KeyboardExtended.GetState();
+        if (kb.WasKeyPressed(Keys.Up) || kb.WasKeyPressed(Keys.W))
+        { _selectedIndex = (_selectedIndex - 1 + _buttons.Length) % _buttons.Length; UpdateButtonFocus(); }
+        if (kb.WasKeyPressed(Keys.Down) || kb.WasKeyPressed(Keys.S))
+        { _selectedIndex = (_selectedIndex + 1) % _buttons.Length; UpdateButtonFocus(); }
 
-    public void Update(GameTime gameTime)
-    {
-        var keyboard = KeyboardExtended.GetState();
-
-        if (keyboard.WasKeyPressed(Keys.Up) || keyboard.WasKeyPressed(Keys.W))
+        if (kb.WasKeyPressed(Keys.Enter) || kb.WasKeyPressed(Keys.Space))
         {
-            _selectedIndex = (_selectedIndex - 1 + _buttons.Length) % _buttons.Length;
-            UpdateButtonFocus();
+            return _selectedIndex == 0
+                ? ScreenTransition.To(GameState.Playing)
+                : ScreenTransition.ExitGame();
         }
 
-        if (keyboard.WasKeyPressed(Keys.Down) || keyboard.WasKeyPressed(Keys.S))
-        {
-            _selectedIndex = (_selectedIndex + 1) % _buttons.Length;
-            UpdateButtonFocus();
-        }
+        if (kb.WasKeyPressed(Keys.Escape))
+            return ScreenTransition.To(GameState.Playing);
 
-        if (keyboard.WasKeyPressed(Keys.Enter) || keyboard.WasKeyPressed(Keys.Space))
-        {
-            SelectedAction = (PauseMenuOption)_selectedIndex;
-        }
-
-        if (keyboard.WasKeyPressed(Keys.Escape))
-        {
-            SelectedAction = PauseMenuOption.Resume;
-        }
+        return ScreenTransition.None;
     }
 
-    public void ConsumeAction()
-    {
-        SelectedAction = null;
-    }
-
-    public void Draw()
-    {
-        _desktop?.Render();
-    }
+    public void Draw(SpriteBatch spriteBatch) { _desktop?.Render(); }
 
     private void UpdateButtonFocus()
     {
@@ -132,21 +82,5 @@ public class PauseScreen
             var label = (Label)_buttons[i].Content;
             label.TextColor = i == _selectedIndex ? Color.White : new Color(120, 120, 120);
         }
-    }
-
-    private static Button CreateButton(string text)
-    {
-        return new Button
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Width = 200,
-            Height = 40,
-            Content = new Label
-            {
-                Text = text,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-            },
-        };
     }
 }

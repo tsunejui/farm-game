@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Myra;
 using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 using MonoGame.Extended.Input;
@@ -9,36 +9,17 @@ using FarmGame.Core;
 
 namespace FarmGame.Screens;
 
-public enum SettingsAction
-{
-    Back,
-    LanguageChanged
-}
-
-public class SettingsScreen
+public class SettingsScreen : IScreen
 {
     private Desktop _desktop;
     private Button[] _buttons;
+    private string[] _buttonLangs;
     private int _selectedIndex;
 
-    // Map button index to language code (null = not a language button)
-    private string[] _buttonLangs;
+    public Action<string> OnLanguageChanged { get; set; }
 
-    public SettingsAction? SelectedAction { get; private set; }
-    public string SelectedLanguage { get; private set; }
-
-    public void Initialize()
-    {
-        SelectedAction = null;
-        _selectedIndex = 0;
-        BuildUI();
-    }
-
-    public void Rebuild()
-    {
-        _selectedIndex = 0;
-        BuildUI();
-    }
+    public void Initialize() { _selectedIndex = 0; BuildUI(); }
+    public void Rebuild() { _selectedIndex = 0; BuildUI(); }
 
     private void BuildUI()
     {
@@ -54,28 +35,22 @@ public class SettingsScreen
             Width = 400,
         };
 
-        // Title
-        root.Widgets.Add(new Label
-        {
-            Text = LocaleManager.Get("ui", "settings"),
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Scale = new Vector2(2.5f),
-            TextColor = new Color(200, 220, 200),
-            Margin = new Myra.Graphics2D.Thickness(0, 0, 0, 20),
-        });
+        var title = UIHelper.CreateLabel(LocaleManager.Get("ui", "settings"), 28);
+        title.HorizontalAlignment = HorizontalAlignment.Center;
+        title.TextColor = new Color(200, 220, 200);
+        title.Margin = new Myra.Graphics2D.Thickness(0, 0, 0, 20);
+        root.Widgets.Add(title);
 
-        // Language label
-        root.Widgets.Add(new Label
-        {
-            Text = LocaleManager.Get("ui", "language"),
-            HorizontalAlignment = HorizontalAlignment.Center,
-            TextColor = Color.White,
-            Margin = new Myra.Graphics2D.Thickness(0, 0, 0, 8),
-        });
+        var langLabel = UIHelper.CreateLabel(LocaleManager.Get("ui", "language"));
+        langLabel.HorizontalAlignment = HorizontalAlignment.Center;
+        langLabel.Margin = new Myra.Graphics2D.Thickness(0, 0, 0, 8);
+        root.Widgets.Add(langLabel);
 
-        // Language buttons
-        var enBtn = CreateLangButton(LocaleManager.Get("ui", "lang_english"), "en");
-        var zhBtn = CreateLangButton(LocaleManager.Get("ui", "lang_chinese"), "zh-TW");
+        var enBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "lang_english"), 150);
+        enBtn.Click += (_, _) => OnLanguageChanged?.Invoke("en");
+
+        var zhBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "lang_chinese"), 150);
+        zhBtn.Click += (_, _) => OnLanguageChanged?.Invoke("zh-TW");
 
         var langRow = new HorizontalStackPanel
         {
@@ -86,70 +61,45 @@ public class SettingsScreen
         langRow.Widgets.Add(zhBtn);
         root.Widgets.Add(langRow);
 
-        // Back button
-        var backBtn = CreateButton(LocaleManager.Get("ui", "back"));
-        backBtn.Click += (_, _) => SelectedAction = SettingsAction.Back;
+        var backBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "back"));
         backBtn.Margin = new Myra.Graphics2D.Thickness(0, 20, 0, 0);
         root.Widgets.Add(backBtn);
 
-        // Navigable buttons: English, Chinese, Back
         _buttons = new[] { enBtn, zhBtn, backBtn };
         _buttonLangs = new[] { "en", "zh-TW", null };
 
-        _desktop = new Desktop();
-        _desktop.Root = root;
-
+        _desktop = new Desktop { Root = root };
         UpdateButtonFocus();
-        UpdateLangHighlight();
     }
 
-    public void Update(GameTime gameTime)
+    public ScreenTransition Update(GameTime gameTime)
     {
-        var keyboard = KeyboardExtended.GetState();
+        var kb = KeyboardExtended.GetState();
+        if (kb.WasKeyPressed(Keys.Up) || kb.WasKeyPressed(Keys.W) ||
+            kb.WasKeyPressed(Keys.Left) || kb.WasKeyPressed(Keys.A))
+        { _selectedIndex = (_selectedIndex - 1 + _buttons.Length) % _buttons.Length; UpdateButtonFocus(); }
+        if (kb.WasKeyPressed(Keys.Down) || kb.WasKeyPressed(Keys.S) ||
+            kb.WasKeyPressed(Keys.Right) || kb.WasKeyPressed(Keys.D))
+        { _selectedIndex = (_selectedIndex + 1) % _buttons.Length; UpdateButtonFocus(); }
 
-        if (keyboard.WasKeyPressed(Keys.Up) || keyboard.WasKeyPressed(Keys.W) ||
-            keyboard.WasKeyPressed(Keys.Left) || keyboard.WasKeyPressed(Keys.A))
-        {
-            _selectedIndex = (_selectedIndex - 1 + _buttons.Length) % _buttons.Length;
-            UpdateButtonFocus();
-        }
-
-        if (keyboard.WasKeyPressed(Keys.Down) || keyboard.WasKeyPressed(Keys.S) ||
-            keyboard.WasKeyPressed(Keys.Right) || keyboard.WasKeyPressed(Keys.D))
-        {
-            _selectedIndex = (_selectedIndex + 1) % _buttons.Length;
-            UpdateButtonFocus();
-        }
-
-        if (keyboard.WasKeyPressed(Keys.Enter) || keyboard.WasKeyPressed(Keys.Space))
+        if (kb.WasKeyPressed(Keys.Enter) || kb.WasKeyPressed(Keys.Space))
         {
             var lang = _buttonLangs[_selectedIndex];
             if (lang != null)
             {
-                SelectedLanguage = lang;
-                SelectedAction = SettingsAction.LanguageChanged;
+                OnLanguageChanged?.Invoke(lang);
+                return ScreenTransition.None;
             }
-            else
-            {
-                SelectedAction = SettingsAction.Back;
-            }
+            return ScreenTransition.To(GameState.TitleScreen);
         }
 
-        if (keyboard.WasKeyPressed(Keys.Escape))
-        {
-            SelectedAction = SettingsAction.Back;
-        }
+        if (kb.WasKeyPressed(Keys.Escape))
+            return ScreenTransition.To(GameState.TitleScreen);
+
+        return ScreenTransition.None;
     }
 
-    public void ConsumeAction()
-    {
-        SelectedAction = null;
-    }
-
-    public void Draw()
-    {
-        _desktop?.Render();
-    }
+    public void Draw(SpriteBatch spriteBatch) { _desktop?.Render(); }
 
     private void UpdateButtonFocus()
     {
@@ -163,44 +113,5 @@ public class SettingsScreen
             else
                 label.TextColor = new Color(120, 120, 120);
         }
-    }
-
-    private void UpdateLangHighlight()
-    {
-        for (int i = 0; i < _buttons.Length; i++)
-        {
-            if (_buttonLangs[i] == null) continue;
-            var label = (Label)_buttons[i].Content;
-            if (_buttonLangs[i] == LocaleManager.CurrentLanguage && i != _selectedIndex)
-                label.TextColor = new Color(34, 200, 34);
-        }
-    }
-
-    private Button CreateLangButton(string text, string lang)
-    {
-        var btn = CreateButton(text);
-        btn.Width = 150;
-        btn.Click += (_, _) =>
-        {
-            SelectedLanguage = lang;
-            SelectedAction = SettingsAction.LanguageChanged;
-        };
-        return btn;
-    }
-
-    private static Button CreateButton(string text)
-    {
-        return new Button
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Width = 200,
-            Height = 40,
-            Content = new Label
-            {
-                Text = text,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-            },
-        };
     }
 }

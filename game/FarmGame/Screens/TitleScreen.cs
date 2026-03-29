@@ -1,44 +1,30 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Myra;
 using Myra.Graphics2D.UI;
 using MonoGame.Extended.Input;
 using FarmGame.Core;
 
 namespace FarmGame.Screens;
 
-public enum TitleMenuOption
-{
-    StartGame,
-    Settings,
-    ExitGame
-}
-
-public class TitleScreen
+public class TitleScreen : IScreen
 {
     private Desktop _desktop;
     private Label _errorLabel;
     private Button[] _buttons;
     private int _selectedIndex;
+    private ScreenTransition _pendingTransition;
 
-    public TitleMenuOption? SelectedAction { get; private set; }
+    public Action OnStartGame { get; set; }
 
-    public void Initialize()
-    {
-        SelectedAction = null;
-        _selectedIndex = 0;
-        BuildUI();
-    }
-
-    public void Rebuild()
-    {
-        _selectedIndex = 0;
-        BuildUI();
-    }
+    public void Initialize() { _selectedIndex = 0; BuildUI(); }
+    public void Rebuild() { _selectedIndex = 0; BuildUI(); }
 
     private void BuildUI()
     {
+        _pendingTransition = null;
+
         var root = new VerticalStackPanel
         {
             HorizontalAlignment = HorizontalAlignment.Center,
@@ -46,92 +32,70 @@ public class TitleScreen
             Spacing = 16,
         };
 
-        // Title
-        root.Widgets.Add(new Label
-        {
-            Text = LocaleManager.Get("ui", "game_title"),
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Scale = new Vector2(3f),
-            TextColor = new Color(34, 200, 34),
-            Margin = new Myra.Graphics2D.Thickness(0, 0, 0, 40),
-        });
+        var title = UIHelper.CreateTitle(LocaleManager.Get("ui", "game_title"));
+        title.Margin = new Myra.Graphics2D.Thickness(0, 0, 0, 40);
+        root.Widgets.Add(title);
 
-        // Buttons
-        var startBtn = CreateButton(LocaleManager.Get("ui", "start_game"));
-        startBtn.Click += (_, _) => SelectedAction = TitleMenuOption.StartGame;
+        var startBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "start_game"));
+        startBtn.Click += (_, _) => { OnStartGame?.Invoke(); };
         root.Widgets.Add(startBtn);
 
-        var settingsBtn = CreateButton(LocaleManager.Get("ui", "settings"));
-        settingsBtn.Click += (_, _) => SelectedAction = TitleMenuOption.Settings;
+        var settingsBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "settings"));
+        settingsBtn.Click += (_, _) => _pendingTransition = ScreenTransition.To(GameState.Settings);
         root.Widgets.Add(settingsBtn);
 
-        var exitBtn = CreateButton(LocaleManager.Get("ui", "exit_game"));
-        exitBtn.Click += (_, _) => SelectedAction = TitleMenuOption.ExitGame;
+        var exitBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "exit_game"));
+        exitBtn.Click += (_, _) => _pendingTransition = ScreenTransition.ExitGame();
         root.Widgets.Add(exitBtn);
 
         _buttons = new[] { startBtn, settingsBtn, exitBtn };
 
-        // Hint
-        root.Widgets.Add(new Label
-        {
-            Text = LocaleManager.Get("ui", "hint_menu"),
-            HorizontalAlignment = HorizontalAlignment.Center,
-            TextColor = new Color(80, 80, 80),
-            Margin = new Myra.Graphics2D.Thickness(0, 30, 0, 0),
-        });
+        var hint = UIHelper.CreateLabel(LocaleManager.Get("ui", "hint_menu"), 14);
+        hint.HorizontalAlignment = HorizontalAlignment.Center;
+        hint.TextColor = new Color(80, 80, 80);
+        hint.Margin = new Myra.Graphics2D.Thickness(0, 30, 0, 0);
+        root.Widgets.Add(hint);
 
-        // Error label
-        _errorLabel = new Label
-        {
-            Text = "",
-            HorizontalAlignment = HorizontalAlignment.Center,
-            TextColor = Color.Red,
-        };
+        _errorLabel = UIHelper.CreateLabel("", 14);
+        _errorLabel.HorizontalAlignment = HorizontalAlignment.Center;
+        _errorLabel.TextColor = Color.Red;
         root.Widgets.Add(_errorLabel);
 
-        _desktop = new Desktop();
-        _desktop.Root = root;
-
+        _desktop = new Desktop { Root = root };
         UpdateButtonFocus();
     }
 
-    public void Update(GameTime gameTime)
+    public ScreenTransition Update(GameTime gameTime)
     {
-        var keyboard = KeyboardExtended.GetState();
+        var kb = KeyboardExtended.GetState();
+        if (kb.WasKeyPressed(Keys.Up) || kb.WasKeyPressed(Keys.W))
+        { _selectedIndex = (_selectedIndex - 1 + _buttons.Length) % _buttons.Length; UpdateButtonFocus(); }
+        if (kb.WasKeyPressed(Keys.Down) || kb.WasKeyPressed(Keys.S))
+        { _selectedIndex = (_selectedIndex + 1) % _buttons.Length; UpdateButtonFocus(); }
 
-        if (keyboard.WasKeyPressed(Keys.Up) || keyboard.WasKeyPressed(Keys.W))
+        if (kb.WasKeyPressed(Keys.Enter) || kb.WasKeyPressed(Keys.Space))
         {
-            _selectedIndex = (_selectedIndex - 1 + _buttons.Length) % _buttons.Length;
-            UpdateButtonFocus();
+            switch (_selectedIndex)
+            {
+                case 0: OnStartGame?.Invoke(); break;
+                case 1: return ScreenTransition.To(GameState.Settings);
+                case 2: return ScreenTransition.ExitGame();
+            }
         }
 
-        if (keyboard.WasKeyPressed(Keys.Down) || keyboard.WasKeyPressed(Keys.S))
+        if (_pendingTransition != null)
         {
-            _selectedIndex = (_selectedIndex + 1) % _buttons.Length;
-            UpdateButtonFocus();
+            var t = _pendingTransition;
+            _pendingTransition = null;
+            return t;
         }
 
-        if (keyboard.WasKeyPressed(Keys.Enter) || keyboard.WasKeyPressed(Keys.Space))
-        {
-            SelectedAction = (TitleMenuOption)_selectedIndex;
-        }
+        return ScreenTransition.None;
     }
 
-    public void ConsumeAction()
-    {
-        SelectedAction = null;
-    }
+    public void SetError(string msg) { if (_errorLabel != null) _errorLabel.Text = msg ?? ""; }
 
-    public void SetError(string errorMessage)
-    {
-        if (_errorLabel != null)
-            _errorLabel.Text = errorMessage ?? "";
-    }
-
-    public void Draw()
-    {
-        _desktop?.Render();
-    }
+    public void Draw(SpriteBatch spriteBatch) { _desktop?.Render(); }
 
     private void UpdateButtonFocus()
     {
@@ -140,21 +104,5 @@ public class TitleScreen
             var label = (Label)_buttons[i].Content;
             label.TextColor = i == _selectedIndex ? Color.White : new Color(120, 120, 120);
         }
-    }
-
-    private static Button CreateButton(string text)
-    {
-        return new Button
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Width = 200,
-            Height = 40,
-            Content = new Label
-            {
-                Text = text,
-                HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center,
-            },
-        };
     }
 }
