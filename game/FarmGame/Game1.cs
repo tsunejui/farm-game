@@ -24,6 +24,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Serilog;
+using Myra;
 using MonoGame.Extended.Input;
 using FarmGame.Camera;
 using FarmGame.Core;
@@ -41,7 +42,6 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private SpriteFont _font;
     private GameState _gameState;
 
     // Screens
@@ -139,10 +139,15 @@ public class Game1 : Game
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        _font = Content.Load<SpriteFont>("DefaultFont");
+        MyraEnvironment.Game = this;
 
         _titleScreen = new TitleScreen();
+        _titleScreen.Initialize();
+        if (!string.IsNullOrEmpty(_databaseError))
+            _titleScreen.SetError(_databaseError);
+
         _pauseScreen = new PauseScreen();
+        _pauseScreen.Initialize();
 
         // Load all data at startup
         var contentDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
@@ -272,9 +277,7 @@ public class Game1 : Game
         switch (_gameState)
         {
             case GameState.TitleScreen:
-                _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-                _titleScreen.Draw(_spriteBatch, _font, _databaseError);
-                _spriteBatch.End();
+                _titleScreen.Draw();
                 break;
 
             case GameState.Playing:
@@ -293,9 +296,7 @@ public class Game1 : Game
                 _currentMap.Draw(_spriteBatch, _camera);
                 _player.Draw(_spriteBatch);
                 _spriteBatch.End();
-                _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-                _pauseScreen.Draw(_spriteBatch, _font);
-                _spriteBatch.End();
+                _pauseScreen.Draw();
                 break;
         }
 
