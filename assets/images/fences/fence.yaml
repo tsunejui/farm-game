@@ -1,0 +1,29 @@
+# Fence — 1x1 tile (32x32 pixels → 16x16 pixel art)
+metadata:
+  name: "Fence"
+  type: "Item"
+
+palette:
+  ".": "#00000000"
+  "B": "#8B4513"
+  "D": "#654321"
+  "L": "#A0724A"
+  "K": "#3E2210"
+
+data: |
+  ..BBBB....BBBB..
+  ..BLDB....BLDB..
+  ..BLDB....BLDB..
+  ..BLDB....BLDB..
+  ..BLDB....BLDB..
+  KKKKKKKKKKKKKKKK
+  DLLLLLLLLLLLLLLD
+  KKKKKKKKKKKKKKKK
+  ..BLDB....BLDB..
+  ..BLDB....BLDB..
+  KKKKKKKKKKKKKKKK
+  DLLLLLLLLLLLLLLD
+  KKKKKKKKKKKKKKKK
+  ..BLDB....BLDB..
+  ..BKDB....BKDB..
+  ..BKDB....BKDB..

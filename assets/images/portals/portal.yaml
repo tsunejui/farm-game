@@ -1,0 +1,31 @@
+# Portal — 1x1 tile (32x32 pixels → 16x16 pixel art)
+metadata:
+  name: "Portal"
+  type: "Item"
+
+palette:
+  ".": "#00000000"
+  "D": "#6A1B9A"
+  "M": "#8E24AA"
+  "L": "#AB47BC"
+  "W": "#CE93D8"
+  "H": "#E1BEE7"
+  "K": "#4A148C"
+
+data: |
+  .....KDDDK......
+  ...KDMLLLMDK....
+  ..KDLLLWLLLDDK..
+  .KDLLWHHWLLLDK..
+  .DLLWHHHWLLLLK..
+  KDLLWHHHHWLLLDK.
+  DMLWHHHHHWLLMDK.
+  DMLWHHHHHWLLMDK.
+  DMLWHHHHHWLLMDK.
+  KDLLWHHHHWLLLDK.
+  .DLLWHHHWLLLLK..
+  .KDLLWHHWLLLDK..
+  ..KDLLLWLLLDDK..
+  ...KDMLLLMDK....
+  .....KDDDK......
+  ................

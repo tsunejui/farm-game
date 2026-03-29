@@ -1,0 +1,32 @@
+# =============================================================================
+# Global Palette Library
+#
+# Defines reusable color sets that image definitions can reference
+# via the `base_palette` field. Colors use hex format (#RRGGBB or #RRGGBBAA).
+# =============================================================================
+
+global_palettes:
+  metal_set:
+    "K": "#141419"      # Dark outline
+    "S": "#B4B4BE"      # Steel
+    "W": "#FFFFFF"      # White highlight
+    "G": "#FFD700"      # Gold trim
+
+  flesh_set:
+    "H": "#FFC896"      # Skin tone
+    "R": "#C81E1E"      # Red
+    "B": "#3C78C8"      # Blue
+
+  nature_set:
+    "G": "#228B22"      # Forest green
+    "L": "#90EE90"      # Light green
+    "B": "#8B4513"      # Brown bark
+    "D": "#654321"      # Dark brown
+    "Y": "#FFD700"      # Yellow
+
+  stone_set:
+    "K": "#141419"      # Dark outline
+    "G": "#808080"      # Gray
+    "L": "#A9A9A9"      # Light gray
+    "D": "#4A4A4A"      # Dark gray
+    "W": "#C0C0C0"      # Silver highlight
