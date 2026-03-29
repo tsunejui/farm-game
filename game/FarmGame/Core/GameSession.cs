@@ -88,17 +88,35 @@ public class GameSession
                 loadResult.Success, loadResult.Success ? loadResult.Value.Count : 0);
             if (loadResult.Success && loadResult.Value.Count > 0)
             {
-                var entityLookup = loadResult.Value
-                    .ToDictionary(r => (r.TileX, r.TileY, r.ItemId));
+                // Match saved entities to map entities by item_id + creation order
+                // (handles knockback position changes since DB stores moved positions)
+                var savedByItem = new Dictionary<string, List<MapEntityRecord>>();
+                foreach (var r in loadResult.Value)
+                {
+                    if (!savedByItem.ContainsKey(r.ItemId))
+                        savedByItem[r.ItemId] = new List<MapEntityRecord>();
+                    savedByItem[r.ItemId].Add(r);
+                }
 
+                var usedByItem = new Dictionary<string, int>();
                 foreach (var entity in map.Entities)
                 {
-                    var key = (entity.TileX, entity.TileY, entity.ItemId);
-                    if (entityLookup.TryGetValue(key, out var record))
-                    {
-                        entity.InstanceId = record.Id;
-                        entity.RestoreState(record.Hp);
-                    }
+                    if (!savedByItem.TryGetValue(entity.ItemId, out var records))
+                        continue;
+                    if (!usedByItem.ContainsKey(entity.ItemId))
+                        usedByItem[entity.ItemId] = 0;
+                    int idx = usedByItem[entity.ItemId];
+                    if (idx >= records.Count) continue;
+
+                    var record = records[idx];
+                    usedByItem[entity.ItemId] = idx + 1;
+
+                    entity.InstanceId = record.Id;
+                    entity.RestoreState(record.Hp);
+
+                    // Restore saved position (may differ from YAML due to knockback)
+                    if (entity.TileX != record.TileX || entity.TileY != record.TileY)
+                        map.MoveEntity(entity, record.TileX, record.TileY);
                 }
 
                 CurrentMapStateId = mapStateId;
