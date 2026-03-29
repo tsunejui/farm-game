@@ -1,0 +1,49 @@
+metadata:
+  name: "deco_butterfly"
+type: "gif"
+frame_delay: 200
+output_dir: "Images/decorations"
+palette:
+  "B": "#6090FF"
+  "L": "#90C0FF"
+  "W": "#FFFFFF"
+  "K": "#303030"
+  "P": "#FF80C0"
+  "M": "#FFA0D0"
+data:
+  - |
+    ........
+    .LB.PL..
+    LBBL.PLM
+    .LBK.PM.
+    ..KKK...
+    .LBK.PM.
+    LBBL.PLM
+    .LB.PL..
+  - |
+    ........
+    ..B..P..
+    .BBL.PM.
+    ..BK.P..
+    ..KKK...
+    ..BK.P..
+    .BBL.PM.
+    ..B..P..
+  - |
+    ........
+    .LB.PL..
+    LBBL.PLM
+    .LBK.PM.
+    ..KKK...
+    .LBK.PM.
+    LBBL.PLM
+    .LB.PL..
+  - |
+    ........
+    LBB.PPL.
+    LBBL.PLM
+    .LBK.PM.
+    ..KKK...
+    .LBK.PM.
+    LBBL.PLM
+    LBB.PPL.

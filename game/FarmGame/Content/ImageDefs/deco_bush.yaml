@@ -1,0 +1,22 @@
+metadata:
+  name: "deco_bush"
+type: "png"
+output_dir: "Images/decorations"
+palette:
+  "G": "#228B22"
+  "L": "#3CB43C"
+  "D": "#186418"
+  "K": "#104010"
+  "B": "#6B4513"
+data:
+  - |
+    ..........
+    ...LGGL...
+    ..LGGDGL..
+    .LGDDGDGL.
+    .GDGDDGDG.
+    .DKGDDGKD.
+    ..DKGGKD..
+    ...DKBD...
+    ....BB....
+    ..........

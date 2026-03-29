@@ -25,6 +25,13 @@ public class GameMap
     private readonly Dictionary<(string, string), AnimatedTexture> _animatedTextures = new();
     private readonly Dictionary<(int, int), WorldObject> _objectGrid = new();
 
+    // Terrain decorations: each tile may have one decoration index (-1 = none)
+    // _decoAssignments[x,y] = index into _terrainDecoTextures for that terrain
+    private int[,] _decoAssignments;
+    // Key: terrain_id → list of (static texture OR animated texture)
+    private readonly Dictionary<string, List<Texture2D>> _decoStaticTextures = new();
+    private readonly Dictionary<string, List<AnimatedTexture>> _decoAnimTextures = new();
+
     public List<WorldObject> Objects { get; } = new();
 
     public GameMap(string mapId, int width, int height, Dictionary<string, Color> terrainColors)
@@ -40,6 +47,47 @@ public class GameMap
     public void SetBackgroundTexture(string itemId, string state, Texture2D texture)
     {
         _backgroundTextures[(itemId, state)] = texture;
+    }
+
+    public void AddTerrainDecoration(string terrainId, Texture2D texture)
+    {
+        if (!_decoStaticTextures.ContainsKey(terrainId))
+            _decoStaticTextures[terrainId] = new List<Texture2D>();
+        _decoStaticTextures[terrainId].Add(texture);
+    }
+
+    public void AddTerrainAnimDecoration(string terrainId, AnimatedTexture anim)
+    {
+        if (!_decoAnimTextures.ContainsKey(terrainId))
+            _decoAnimTextures[terrainId] = new List<AnimatedTexture>();
+        _decoAnimTextures[terrainId].Add(anim);
+    }
+
+    // Assign decorations randomly to tiles based on coverage ratios
+    public void AssignDecorations(Dictionary<string, List<float>> coverages)
+    {
+        _decoAssignments = new int[Width, Height];
+        var rng = new Random(MapId.GetHashCode()); // deterministic per map
+
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                _decoAssignments[x, y] = -1;
+                var tid = _terrain[x, y];
+                if (tid == null || !coverages.ContainsKey(tid)) continue;
+
+                var rates = coverages[tid];
+                for (int i = 0; i < rates.Count; i++)
+                {
+                    if (rng.NextDouble() < rates[i])
+                    {
+                        _decoAssignments[x, y] = i;
+                        break; // only one decoration per tile
+                    }
+                }
+            }
+        }
     }
 
     public void SetAnimatedTexture(string itemId, string state, AnimatedTexture anim)
@@ -153,6 +201,11 @@ public class GameMap
 
         foreach (var anim in _animatedTextures.Values)
             anim.Update(deltaTime);
+
+        // Tick decoration animations
+        foreach (var animList in _decoAnimTextures.Values)
+            foreach (var anim in animList)
+                anim.Update(deltaTime);
     }
 
     public void Draw(SpriteBatch spriteBatch, Camera2D camera)
@@ -177,6 +230,29 @@ public class GameMap
                 var tid = _terrain[x, y];
                 if (tid != null && _terrainColors.TryGetValue(tid, out var color))
                     spriteBatch.FillRectangle(rect, color);
+
+                // Draw decoration overlay if assigned
+                if (_decoAssignments != null && _decoAssignments[x, y] >= 0 && tid != null)
+                {
+                    int decoIdx = _decoAssignments[x, y];
+                    Texture2D decoTex = null;
+
+                    // Try animated first
+                    if (_decoAnimTextures.TryGetValue(tid, out var animList) && decoIdx < animList.Count)
+                        decoTex = animList[decoIdx].CurrentFrame;
+
+                    // Try static (offset by anim count)
+                    if (decoTex == null && _decoStaticTextures.TryGetValue(tid, out var staticList))
+                    {
+                        int animCount = animList?.Count ?? 0;
+                        int staticIdx = decoIdx - animCount;
+                        if (staticIdx >= 0 && staticIdx < staticList.Count)
+                            decoTex = staticList[staticIdx];
+                    }
+
+                    if (decoTex != null)
+                        spriteBatch.Draw(decoTex, rect, Color.White);
+                }
             }
         }
 

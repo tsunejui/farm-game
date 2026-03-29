@@ -1,0 +1,20 @@
+metadata:
+  name: "deco_yellow_flower"
+type: "png"
+output_dir: "Images/decorations"
+palette:
+  "Y": "#FFD700"
+  "W": "#FFFFAA"
+  "O": "#FF8C00"
+  "G": "#228B22"
+  "L": "#2EA82E"
+data:
+  - |
+    ........
+    ...YW...
+    ..YWWY..
+    ..WOWY..
+    ...YW...
+    ...GL...
+    ...G....
+    ........

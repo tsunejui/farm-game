@@ -1,0 +1,20 @@
+metadata:
+  name: "deco_red_flower"
+type: "png"
+output_dir: "Images/decorations"
+palette:
+  "R": "#E03030"
+  "P": "#FF5050"
+  "Y": "#FFD700"
+  "G": "#228B22"
+  "L": "#2EA82E"
+data:
+  - |
+    ........
+    ...RP...
+    ..RPPR..
+    ..PYPR..
+    ...RP...
+    ...GL...
+    ...G....
+    ........

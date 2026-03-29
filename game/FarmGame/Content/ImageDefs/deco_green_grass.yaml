@@ -1,0 +1,18 @@
+metadata:
+  name: "deco_green_grass"
+type: "png"
+output_dir: "Images/decorations"
+palette:
+  "G": "#2EA82E"
+  "L": "#50C850"
+  "D": "#1A7A1A"
+data:
+  - |
+    ........
+    .L..G...
+    .GL.LG..
+    .DG.GD..
+    ..GLGL..
+    ..DGD...
+    ...D....
+    ........

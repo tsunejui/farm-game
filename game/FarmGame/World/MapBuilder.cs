@@ -138,6 +138,48 @@ public static class MapBuilder
             }
         }
 
+        // Load terrain decorations and assign randomly
+        var coverages = new Dictionary<string, List<float>>();
+        foreach (var (terrainId, terrainDef) in registry.Terrains)
+        {
+            if (terrainDef.Visuals.Decorations.Count == 0) continue;
+
+            var rates = new List<float>();
+            foreach (var deco in terrainDef.Visuals.Decorations)
+            {
+                if (string.IsNullOrEmpty(deco.ImagePath)) continue;
+                string fileType = (deco.FileType ?? "png").ToLowerInvariant();
+
+                try
+                {
+                    if (fileType == "gif" && graphicsDevice != null && contentDir != null)
+                    {
+                        var anim = AnimatedTexture.LoadFrames(graphicsDevice, contentDir, deco.ImagePath);
+                        if (anim.FrameCount > 0)
+                            map.AddTerrainAnimDecoration(terrainId, anim);
+                    }
+                    else if (loadTexture != null)
+                    {
+                        var tex = loadTexture(deco.ImagePath);
+                        if (tex != null)
+                            map.AddTerrainDecoration(terrainId, tex);
+                    }
+                    rates.Add(deco.Coverage);
+                }
+                catch (Exception ex)
+                {
+                    Log.Warning("Failed to load decoration '{Path}': {Error}", deco.ImagePath, ex.Message);
+                    rates.Add(0f);
+                }
+            }
+
+            if (rates.Count > 0)
+                coverages[terrainId] = rates;
+        }
+
+        if (coverages.Count > 0)
+            map.AssignDecorations(coverages);
+
         return map;
     }
 }

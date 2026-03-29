@@ -5,3 +5,15 @@ metadata:
 
 visuals:
   color: "#228B22"
+  decorations:
+    - image_path: "Images/decorations/deco_butterfly"
+      file_type: "gif"
+      coverage: 0.01
+    - image_path: "Images/decorations/deco_red_flower"
+      coverage: 0.03
+    - image_path: "Images/decorations/deco_yellow_flower"
+      coverage: 0.03
+    - image_path: "Images/decorations/deco_green_grass"
+      coverage: 0.08
+    - image_path: "Images/decorations/deco_bush"
+      coverage: 0.02
