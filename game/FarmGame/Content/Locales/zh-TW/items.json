@@ -8,5 +8,12 @@
   "dummy": "木樁",
   "player": "玩家",
   "campfire": "篝火",
-  "firewood": "柴火"
+  "firewood": "柴火",
+  "oak_tree": "橡樹",
+  "pine_tree": "松樹",
+  "birch_tree": "樺樹",
+  "apple_tree": "蘋果樹",
+  "morning_glory": "牽牛花",
+  "red_flower": "紅花",
+  "chrysanthemum": "菊花"
 }

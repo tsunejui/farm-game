@@ -92,3 +92,31 @@ entities:
   - item: "dummy"
     tile_x: 22
     tile_y: 18
+
+  - item: "oak_tree"
+    tile_x: 2
+    tile_y: 2
+
+  - item: "pine_tree"
+    tile_x: 25
+    tile_y: 2
+
+  - item: "birch_tree"
+    tile_x: 32
+    tile_y: 10
+
+  - item: "apple_tree"
+    tile_x: 7
+    tile_y: 18
+
+  - item: "morning_glory"
+    tile_x: 25
+    tile_y: 12
+
+  - item: "red_flower"
+    tile_x: 27
+    tile_y: 12
+
+  - item: "chrysanthemum"
+    tile_x: 29
+    tile_y: 12

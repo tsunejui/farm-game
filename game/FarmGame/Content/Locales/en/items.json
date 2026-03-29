@@ -8,5 +8,12 @@
   "dummy": "Training Dummy",
   "player": "Player",
   "campfire": "Campfire",
-  "firewood": "Firewood"
+  "firewood": "Firewood",
+  "oak_tree": "Oak Tree",
+  "pine_tree": "Pine Tree",
+  "birch_tree": "Birch Tree",
+  "apple_tree": "Apple Tree",
+  "morning_glory": "Morning Glory",
+  "red_flower": "Red Flower",
+  "chrysanthemum": "Chrysanthemum"
 }
