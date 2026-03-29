@@ -70,4 +70,7 @@ public class GameStartConfig
     public string StartMap { get; set; } = "farm_home";
 
     public string Title { get; set; } = "Farm Game";
+
+    [YamlMember(Alias = "default_language")]
+    public string DefaultLanguage { get; set; } = "en";
 }

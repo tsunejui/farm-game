@@ -20,6 +20,7 @@ public static class GameConstants
     public static int PlayerAttackRange { get; private set; } = 16;
     public static int PlayerAttackWidth { get; private set; } = 20;
     public static Color PlayerAttackColor { get; private set; } = Color.Gold;
+    public static string DefaultLanguage { get; private set; } = "en";
 
     public static void LoadFrom(GameConfig config)
     {
@@ -38,5 +39,6 @@ public static class GameConstants
         PlayerAttackRange = config.Player.AttackRange;
         PlayerAttackWidth = config.Player.AttackWidth;
         PlayerAttackColor = ColorHelper.FromHex(config.Player.AttackColor);
+        DefaultLanguage = config.Game.DefaultLanguage;
     }
 }

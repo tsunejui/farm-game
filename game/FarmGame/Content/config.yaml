@@ -28,3 +28,4 @@ player:
 game:
   start_map: "farm_home"
   title: "Farm Game"
+  default_language: "en"

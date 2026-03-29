@@ -1,0 +1,14 @@
+{
+  "game_title": "農場遊戲",
+  "start_game": "開始遊戲",
+  "settings": "設定",
+  "exit_game": "離開遊戲",
+  "resume": "繼續",
+  "paused": "暫停",
+  "language": "語言",
+  "back": "返回",
+  "hint_menu": "W/S 或方向鍵選擇，Enter 確認",
+  "entered_map": "進入 {0}",
+  "lang_english": "英文",
+  "lang_chinese": "中文"
+}

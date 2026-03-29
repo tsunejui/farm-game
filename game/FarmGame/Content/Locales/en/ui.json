@@ -1,0 +1,14 @@
+{
+  "game_title": "Farm Game",
+  "start_game": "Start Game",
+  "settings": "Settings",
+  "exit_game": "Exit Game",
+  "resume": "Resume",
+  "paused": "Paused",
+  "language": "Language",
+  "back": "Back",
+  "hint_menu": "W/S or Arrow Keys to select, Enter to confirm",
+  "entered_map": "Entered: {0}",
+  "lang_english": "English",
+  "lang_chinese": "Chinese"
+}
