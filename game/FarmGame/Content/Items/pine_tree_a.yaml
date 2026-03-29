@@ -15,7 +15,7 @@ visuals:
       normal:
         image_path: "Images/pine_trees/pine_tree_a_normal"
         file_type: "gif"
-        frame_delay: 800
+        frame_delay: 2500
       damaged:
         image_path: "Images/pine_trees/pine_tree_damaged"
       dead:

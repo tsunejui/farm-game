@@ -253,60 +253,146 @@ def generate_flower(W, H, flower_type, variant=0, state='normal'):
     fcx, fcy = W / 2.0, fr + 3  # ensure top petals don't clip
 
     if flower_type == 'chrysanthemum':
-        petal_base = (200, 180, 40)  # Yellow
-        petal_tip = (255, 240, 80)
-        center_col = (140, 100, 20)
-        num_petals = 24
-        fr = W * 0.26
+        # Dense layered petals with yellow-orange center
+        fr = W * 0.28
+        # Multiple layers of petals, outer to inner
+        layers = [
+            (24, fr * 1.1, (180, 140, 20), (240, 200, 50), 3.0),   # outer: darker gold
+            (18, fr * 0.85, (210, 170, 30), (255, 230, 60), 2.8),  # mid: yellow
+            (12, fr * 0.6, (230, 200, 50), (255, 245, 100), 2.2),  # inner: bright yellow
+        ]
+        for num_petals, layer_r, petal_base, petal_tip, pw_max in layers:
+            for pi in range(num_petals):
+                angle = (pi / num_petals) * 2 * math.pi + seed * 0.1 + (layer_r * 0.3)
+                for step in range(int(layer_r * 1.1)):
+                    t = step / (layer_r * 1.1)
+                    px = fcx + math.cos(angle) * step
+                    py = fcy + math.sin(angle) * step
+                    pw = max(1, int((1.0 - t * 0.8) * pw_max))
+                    for dw in range(-pw, pw + 1):
+                        ppx = int(px + math.cos(angle + math.pi / 2) * dw)
+                        ppy = int(py + math.sin(angle + math.pi / 2) * dw)
+                        if 0 <= ppx < W and 0 <= ppy < H:
+                            r = int(lerp(petal_base[0], petal_tip[0], t))
+                            g = int(lerp(petal_base[1], petal_tip[1], t))
+                            b = int(lerp(petal_base[2], petal_tip[2], t))
+                            edge = abs(dw) / max(1, pw)
+                            # Shading gradient on petal
+                            shade = 1.0 - edge * 0.35 - t * 0.15
+                            r = max(0, int(r * shade))
+                            g = max(0, int(g * shade))
+                            b = max(0, int(b * shade))
+                            if state == 'damaged' and rng.random() < 0.15:
+                                continue
+                            pixels[ppy][ppx] = rgb_to_hex(r, g, b)
+        # Orange-yellow center
+        cr = max(3, int(fr * 0.22))
+        for dy in range(-cr, cr + 1):
+            for dx in range(-cr, cr + 1):
+                if dx * dx + dy * dy <= cr * cr:
+                    cx_p, cy_p = int(fcx + dx), int(fcy + dy)
+                    if 0 <= cx_p < W and 0 <= cy_p < H:
+                        d = math.sqrt(dx * dx + dy * dy) / cr
+                        r = int(lerp(200, 140, d))
+                        g = int(lerp(130, 80, d))
+                        b = int(lerp(20, 10, d))
+                        pixels[cy_p][cx_p] = rgb_to_hex(r, g, b)
+
     elif flower_type == 'morning_glory':
-        petal_base = (80, 50, 160)  # Purple/blue
-        petal_tip = (140, 100, 220)
-        center_col = (240, 230, 180)
+        # Trumpet-shaped, purple-blue with white center
+        fr = W * 0.30
         num_petals = 5
-        fr = W * 0.25
-    else:  # red_flower
-        petal_base = (180, 30, 25)
-        petal_tip = (240, 60, 50)
-        center_col = (240, 210, 60)
-        num_petals = 8
+        for pi in range(num_petals):
+            angle = (pi / num_petals) * 2 * math.pi + seed * 0.1
+            angle_next = ((pi + 1) / num_petals) * 2 * math.pi + seed * 0.1
+            # Each petal is a wide fan shape
+            for step in range(int(fr * 1.2)):
+                t = step / (fr * 1.2)
+                # Fan out: petal widens with distance
+                spread = t * 0.6
+                for sub in range(-3, 4):
+                    sub_t = sub / 3.0
+                    a = angle + sub_t * spread
+                    px = fcx + math.cos(a) * step
+                    py = fcy + math.sin(a) * step
+                    ppx, ppy = int(px), int(py)
+                    if 0 <= ppx < W and 0 <= ppy < H:
+                        # Color: white center fading to purple-blue at edges
+                        if t < 0.25:
+                            r = int(lerp(240, 160, t / 0.25))
+                            g = int(lerp(235, 100, t / 0.25))
+                            b = int(lerp(255, 220, t / 0.25))
+                        else:
+                            tt = (t - 0.25) / 0.75
+                            r = int(lerp(160, 80, tt))
+                            g = int(lerp(100, 40, tt))
+                            b = int(lerp(220, 180, tt))
+                        # Edge shading between petals
+                        edge = abs(sub_t)
+                        r = max(0, int(r * (1.0 - edge * 0.3)))
+                        g = max(0, int(g * (1.0 - edge * 0.3)))
+                        b = max(0, int(b * (1.0 - edge * 0.15)))
+                        if state == 'damaged' and rng.random() < 0.15:
+                            continue
+                        pixels[ppy][ppx] = rgb_to_hex(r, g, b)
+        # White/cream center
+        cr = max(2, int(fr * 0.18))
+        for dy in range(-cr, cr + 1):
+            for dx in range(-cr, cr + 1):
+                if dx * dx + dy * dy <= cr * cr:
+                    cx_p, cy_p = int(fcx + dx), int(fcy + dy)
+                    if 0 <= cx_p < W and 0 <= cy_p < H:
+                        d = math.sqrt(dx * dx + dy * dy) / cr
+                        r = int(lerp(255, 220, d))
+                        g = int(lerp(255, 210, d))
+                        b = int(lerp(240, 180, d))
+                        pixels[cy_p][cx_p] = rgb_to_hex(r, g, b)
 
-    # Draw petals
-    for pi in range(num_petals):
-        angle = (pi / num_petals) * 2 * math.pi + seed * 0.1
-        for step in range(int(fr * 1.2)):
-            t = step / (fr * 1.2)
-            px = fcx + math.cos(angle) * step
-            py = fcy + math.sin(angle) * step
-            # Petal width narrows towards tip
-            pw = max(1, int((1.0 - t) * 3.5))
-            for dw in range(-pw, pw + 1):
-                ppx = int(px + math.cos(angle + math.pi/2) * dw)
-                ppy = int(py + math.sin(angle + math.pi/2) * dw)
-                if 0 <= ppx < W and 0 <= ppy < H:
-                    r = int(lerp(petal_base[0], petal_tip[0], t))
-                    g = int(lerp(petal_base[1], petal_tip[1], t))
-                    b = int(lerp(petal_base[2], petal_tip[2], t))
-                    # Edge darkening
-                    edge = abs(dw) / max(1, pw)
-                    r = max(0, r - int(edge * 30))
-                    g = max(0, g - int(edge * 25))
-                    b = max(0, b - int(edge * 20))
-                    if state == 'damaged' and rng.random() < 0.15:
-                        continue
-                    pixels[ppy][ppx] = rgb_to_hex(r, g, b)
-
-    # Flower center
-    cr = max(2, int(fr * 0.25))
-    for dy in range(-cr, cr + 1):
-        for dx in range(-cr, cr + 1):
-            if dx*dx + dy*dy <= cr*cr:
-                cx_p, cy_p = int(fcx + dx), int(fcy + dy)
-                if 0 <= cx_p < W and 0 <= cy_p < H:
-                    d = math.sqrt(dx*dx + dy*dy) / cr
-                    r = int(center_col[0] * (1.0 - d * 0.3))
-                    g = int(center_col[1] * (1.0 - d * 0.3))
-                    b = int(center_col[2] * (1.0 - d * 0.3))
-                    pixels[cy_p][cx_p] = rgb_to_hex(r, g, b)
+    else:  # red_flower - rose-like with overlapping petals
+        fr = W * 0.28
+        # Draw overlapping rose petals in spiral layers
+        layers = [
+            (8, fr * 1.0, (150, 20, 20), (210, 45, 40), 4.0),    # outer: deep red
+            (6, fr * 0.72, (180, 30, 25), (235, 55, 45), 3.5),    # mid: brighter red
+            (5, fr * 0.45, (200, 40, 35), (250, 70, 55), 2.5),    # inner: lighter
+        ]
+        for num_petals, layer_r, petal_base, petal_tip, pw_max in layers:
+            for pi in range(num_petals):
+                angle = (pi / num_petals) * 2 * math.pi + seed * 0.1 + (layer_r * 0.5)
+                # Slight curl: petals curve inward at tips
+                for step in range(int(layer_r * 1.1)):
+                    t = step / (layer_r * 1.1)
+                    curl = t * t * 0.3
+                    px = fcx + math.cos(angle + curl) * step
+                    py = fcy + math.sin(angle + curl) * step
+                    pw = max(1, int((1.0 - t * 0.6) * pw_max))
+                    for dw in range(-pw, pw + 1):
+                        ppx = int(px + math.cos(angle + math.pi / 2) * dw)
+                        ppy = int(py + math.sin(angle + math.pi / 2) * dw)
+                        if 0 <= ppx < W and 0 <= ppy < H:
+                            r = int(lerp(petal_base[0], petal_tip[0], t))
+                            g = int(lerp(petal_base[1], petal_tip[1], t))
+                            b = int(lerp(petal_base[2], petal_tip[2], t))
+                            edge = abs(dw) / max(1, pw)
+                            shade = 1.0 - edge * 0.4 - t * 0.1
+                            r = max(0, int(r * shade))
+                            g = max(0, int(g * shade))
+                            b = max(0, int(b * shade))
+                            if state == 'damaged' and rng.random() < 0.15:
+                                continue
+                            pixels[ppy][ppx] = rgb_to_hex(r, g, b)
+        # Yellow center
+        cr = max(2, int(fr * 0.2))
+        for dy in range(-cr, cr + 1):
+            for dx in range(-cr, cr + 1):
+                if dx * dx + dy * dy <= cr * cr:
+                    cx_p, cy_p = int(fcx + dx), int(fcy + dy)
+                    if 0 <= cx_p < W and 0 <= cy_p < H:
+                        d = math.sqrt(dx * dx + dy * dy) / cr
+                        r = int(lerp(250, 200, d))
+                        g = int(lerp(220, 160, d))
+                        b = int(lerp(60, 30, d))
+                        pixels[cy_p][cx_p] = rgb_to_hex(r, g, b)
 
     return pixels
 
@@ -448,77 +534,114 @@ def generate_campfire(W, H, variant=0, state='normal', frame=0):
 
 
 # ────────────────────────────────────────────────────────────
-# FENCE
+# FENCE (ranch/animal fence with posts and horizontal rails)
 # ────────────────────────────────────────────────────────────
 def generate_fence(W, H, variant=0, state='normal'):
     pixels = [[None]*W for _ in range(H)]
     seed = 600 + variant * 19
 
-    post_w = max(2, W // 6)
-    rail_h = max(1, H // 8)
+    post_w = max(3, W // 8)
+    rail_h = max(3, H // 8)
 
-    # Two vertical posts
-    for post_x in [W // 4, 3 * W // 4]:
-        for y in range(int(H * 0.08), int(H * 0.92)):
-            for dx in range(-post_w//2, post_w//2 + 1):
-                x = post_x + dx
+    # Two vertical posts at left and right edges
+    for post_cx in [post_w // 2 + 1, W - post_w // 2 - 2]:
+        for y in range(int(H * 0.05), int(H * 0.95)):
+            for dx in range(-post_w // 2, post_w // 2 + 1):
+                x = post_cx + dx
                 if 0 <= x < W:
-                    rel = (dx + post_w//2) / post_w
-                    light = 0.3 + 0.4 * rel
+                    rel = (dx + post_w // 2) / max(1, post_w)
+                    # Cylindrical shading for round post look
+                    light = 0.25 + 0.45 * math.sin(rel * math.pi)
                     grain = fbm(x, y * 3, seed, 2, 3.0) * 0.08
                     light = max(0.0, min(1.0, light + grain))
-                    r = int(lerp(50, 150, light))
-                    g = int(lerp(32, 100, light))
-                    b = int(lerp(15, 55, light))
-                    if state == 'damaged' and random.Random(x*H+y).random() < 0.08:
+                    r = int(lerp(55, 165, light))
+                    g = int(lerp(35, 110, light))
+                    b = int(lerp(18, 60, light))
+                    if state == 'damaged' and random.Random(x * H + y).random() < 0.08:
+                        continue
+                    if state == 'dead' and random.Random(x * H + y).random() < 0.2:
                         continue
                     pixels[y][x] = rgb_to_hex(r, g, b)
+        # Post top cap (slightly wider)
+        cap_y = int(H * 0.05)
+        for dy in range(-1, 2):
+            for dx in range(-post_w // 2 - 1, post_w // 2 + 2):
+                x = post_cx + dx
+                y = cap_y + dy
+                if 0 <= x < W and 0 <= y < H:
+                    light = 0.5 + 0.15 * (dx / max(1, post_w))
+                    r = int(lerp(70, 175, light))
+                    g = int(lerp(45, 120, light))
+                    b = int(lerp(22, 65, light))
+                    pixels[y][x] = rgb_to_hex(r, g, b)
 
-    # Two horizontal rails
-    for rail_y in [int(H * 0.3), int(H * 0.6)]:
-        for y in range(rail_y, min(H, rail_y + rail_h)):
-            for x in range(W // 4 - post_w//2, 3 * W // 4 + post_w//2 + 1):
-                if 0 <= x < W:
-                    rel = (y - rail_y) / max(1, rail_h)
-                    light = 0.35 + 0.25 * (1.0 - rel)
-                    grain = fbm(x * 3, y, seed + 30, 2, 3.0) * 0.06
+    # Three horizontal rails between posts
+    left_edge = post_w // 2 + 2
+    right_edge = W - post_w // 2 - 2
+    for rail_y_center in [int(H * 0.25), int(H * 0.50), int(H * 0.75)]:
+        for y in range(rail_y_center - rail_h // 2, rail_y_center + rail_h // 2 + 1):
+            for x in range(left_edge, right_edge):
+                if 0 <= x < W and 0 <= y < H:
+                    rel_y = (y - (rail_y_center - rail_h // 2)) / max(1, rail_h)
+                    # Cylindrical shading for plank
+                    light = 0.3 + 0.35 * math.sin(rel_y * math.pi)
+                    grain = fbm(x * 3, y * 0.5, seed + 30, 2, 4.0) * 0.08
                     light = max(0.0, min(1.0, light + grain))
-                    r = int(lerp(55, 155, light))
-                    g = int(lerp(35, 105, light))
-                    b = int(lerp(18, 58, light))
+                    r = int(lerp(60, 170, light))
+                    g = int(lerp(38, 115, light))
+                    b = int(lerp(20, 62, light))
+                    if state == 'damaged' and random.Random(x * H + y).random() < 0.06:
+                        continue
+                    if state == 'dead' and random.Random(x * H + y).random() < 0.15:
+                        continue
                     pixels[y][x] = rgb_to_hex(r, g, b)
 
     return pixels
 
 
 # ────────────────────────────────────────────────────────────
-# FENCE RAIL (horizontal piece)
+# FENCE RAIL (horizontal fence section with two planks)
 # ────────────────────────────────────────────────────────────
 def generate_fence_rail(W, H, variant=0, state='normal'):
     pixels = [[None]*W for _ in range(H)]
     seed = 650 + variant * 17
 
-    rail_top = int(H * 0.25)
-    rail_bot = int(H * 0.75)
+    plank_h = max(3, H // 5)
+    gap = max(2, H // 6)
 
-    for y in range(rail_top, rail_bot):
-        for x in range(2, W - 2):
-            rel_y = (y - rail_top) / max(1, rail_bot - rail_top - 1)
-            light = 0.3 + 0.35 * (1.0 - rel_y)
-            grain = fbm(x * 2, y * 0.5, seed, 3, 5.0) * 0.1
-            light = max(0.0, min(1.0, light + grain))
-            r = int(lerp(50, 155, light))
-            g = int(lerp(32, 102, light))
-            b = int(lerp(15, 56, light))
-            if y == rail_top or y == rail_bot - 1:
-                r, g, b = max(0,r-20), max(0,g-15), max(0,b-8)
-            pixels[y][x] = rgb_to_hex(r, g, b)
+    # Two horizontal planks
+    for pi, plank_cy in enumerate([int(H * 0.30), int(H * 0.70)]):
+        plank_top = plank_cy - plank_h // 2
+        plank_bot = plank_cy + plank_h // 2
+
+        for y in range(plank_top, plank_bot + 1):
+            for x in range(1, W - 1):
+                if 0 <= y < H:
+                    rel_y = (y - plank_top) / max(1, plank_bot - plank_top)
+                    # Cylindrical shading for plank depth
+                    light = 0.28 + 0.4 * math.sin(rel_y * math.pi)
+                    # Wood grain running horizontally
+                    grain = fbm(x * 3, y * 0.3 + pi * 50, seed, 3, 5.0) * 0.1
+                    # Knots
+                    knot_n = fbm(x * 0.5, y * 0.5, seed + pi * 100, 2, 2.0)
+                    if abs(knot_n) < 0.05:
+                        light -= 0.12
+                    light = max(0.0, min(1.0, light + grain))
+                    r = int(lerp(55, 168, light))
+                    g = int(lerp(35, 112, light))
+                    b = int(lerp(18, 60, light))
+                    # Top/bottom edge darkening
+                    if y == plank_top or y == plank_bot:
+                        r = max(0, r - 25)
+                        g = max(0, g - 18)
+                        b = max(0, b - 10)
+                    pixels[y][x] = rgb_to_hex(r, g, b)
 
     return pixels
 
 
 # ────────────────────────────────────────────────────────────
-# PORTAL
+# PORTAL (glowing blue-white energy orb)
 # ────────────────────────────────────────────────────────────
 def generate_portal(W, H, variant=0, state='normal', frame=0):
     pixels = [[None]*W for _ in range(H)]
@@ -526,65 +649,95 @@ def generate_portal(W, H, variant=0, state='normal', frame=0):
     seed = 700 + variant * 31 + frame * 5
 
     cx, cy = W / 2.0, H * 0.48
-    rx, ry = W * 0.40, H * 0.42
 
-    # Stone frame (arch)
-    frame_w = max(3, int(W * 0.08))
+    # Pulse effect: frame 0-5 controls size and brightness
+    # Smooth sinusoidal pulse over 6 frames
+    pulse = math.sin(frame * math.pi / 3.0)  # -1 to 1 over 6 frames
+    size_mult = 1.0 + pulse * 0.08  # 0.92 to 1.08
+    bright_mult = 1.0 + pulse * 0.15  # 0.85 to 1.15
+
+    orb_r = min(W, H) * 0.38 * size_mult
+
+    # Color palette: blues and whites
+    # #4488FF, #66AAFF, #88CCFF, #AADDFF, #FFFFFF
+
     for y in range(H):
         for x in range(W):
-            dx = (x - cx) / rx
-            dy = (y - cy) / ry
-            d = math.sqrt(dx*dx + dy*dy)
-            if 0.85 < d < 1.15:
-                light = 0.3 + 0.3 * ((x - cx) / W + 0.5)
-                tex = fbm(x * 2, y * 2, seed + 100, 3, 3.0) * 0.1
-                light = max(0.0, min(1.0, light + tex))
-                r = int(lerp(50, 140, light))
-                g = int(lerp(48, 135, light))
-                b = int(lerp(55, 150, light))
-                pixels[y][x] = rgb_to_hex(r, g, b)
+            d = dist(x, y, cx, cy) / orb_r
+            if d > 1.5:
+                continue
 
-    # Portal energy inside
-    for y in range(H):
-        for x in range(W):
-            dx = (x - cx) / (rx * 0.82)
-            dy = (y - cy) / (ry * 0.82)
-            d = math.sqrt(dx*dx + dy*dy)
-            if d < 1.0:
-                swirl = math.sin(d * 6 + math.atan2(dy, dx) * 3 + frame * 1.5)
-                intensity = (1.0 - d) * 0.8 + swirl * 0.15
-                en = fbm(x * 2 + frame * 3, y * 2, seed, 3, 5.0) * 0.2
-                intensity += en
-                intensity = max(0.0, min(1.0, intensity))
+            # Outer glow halo (beyond orb edge)
+            if d > 1.0:
+                glow = (1.5 - d) / 0.5
+                glow = glow * glow * 0.4 * bright_mult
+                # Noise for sparkle particles
+                pn = fbm(x * 4 + frame * 2, y * 4, seed, 2, 3.0)
+                if pn > 0.3:
+                    glow += (pn - 0.3) * 0.6
+                if glow > 0.05:
+                    r = int(lerp(0, 100, min(1.0, glow)))
+                    g = int(lerp(0, 140, min(1.0, glow)))
+                    b = int(lerp(40, 255, min(1.0, glow)))
+                    pixels[y][x] = rgb_to_hex(r, g, b)
+                continue
 
-                # Purple/blue energy gradient
-                r = int(lerp(30, 180, intensity * 0.6))
-                g = int(lerp(10, 120, intensity * 0.4))
-                b = int(lerp(80, 255, intensity))
-                # Bright center
-                if d < 0.3:
-                    r = min(255, r + int((0.3 - d) * 200))
-                    g = min(255, g + int((0.3 - d) * 180))
-                    b = min(255, b + int((0.3 - d) * 100))
+            # Core orb: radial gradient from white center to blue edge
+            intensity = (1.0 - d) * bright_mult
+            # Add subtle noise for organic feel
+            en = fbm(x * 2 + frame * 1.5, y * 2 + frame * 0.8, seed, 3, 5.0) * 0.12
+            intensity = max(0.0, min(1.0, intensity + en))
 
-                pixels[y][x] = rgb_to_hex(r, g, b)
+            if intensity > 0.85:
+                # Bright white core
+                t = (intensity - 0.85) / 0.15
+                r = int(lerp(170, 255, t))
+                g = int(lerp(221, 255, t))
+                b = int(lerp(255, 255, t))
+            elif intensity > 0.65:
+                # Light blue-white
+                t = (intensity - 0.65) / 0.2
+                r = int(lerp(136, 170, t))  # #88CCFF -> #AADDFF
+                g = int(lerp(204, 221, t))
+                b = 255
+            elif intensity > 0.4:
+                # Medium blue
+                t = (intensity - 0.4) / 0.25
+                r = int(lerp(102, 136, t))  # #66AAFF -> #88CCFF
+                g = int(lerp(170, 204, t))
+                b = 255
+            elif intensity > 0.15:
+                # Deeper blue
+                t = (intensity - 0.15) / 0.25
+                r = int(lerp(68, 102, t))  # #4488FF -> #66AAFF
+                g = int(lerp(136, 170, t))
+                b = 255
+            else:
+                # Edge fade
+                t = intensity / 0.15
+                r = int(lerp(20, 68, t))
+                g = int(lerp(60, 136, t))
+                b = int(lerp(180, 255, t))
 
-    # Base columns
-    col_w = max(3, int(W * 0.09))
-    col_top = int(cy)
-    col_bot = int(H * 0.95)
-    for col_x in [int(cx - rx * 0.95), int(cx + rx * 0.95)]:
-        for y in range(col_top, col_bot):
-            for dx in range(-col_w, col_w + 1):
-                px = col_x + dx
-                if 0 <= px < W and 0 <= y < H:
-                    rel = (dx + col_w) / (2 * col_w)
-                    light = 0.3 + 0.35 * rel
-                    light = max(0.0, min(1.0, light))
-                    r = int(lerp(45, 130, light))
-                    g = int(lerp(43, 125, light))
-                    b = int(lerp(50, 140, light))
-                    pixels[y][px] = rgb_to_hex(r, g, b)
+            pixels[y][x] = rgb_to_hex(r, g, b)
+
+    # Glow particles scattered around the orb
+    num_particles = 12 + int(pulse * 3)
+    for pi in range(num_particles):
+        angle = rng.uniform(0, 2 * math.pi)
+        pdist = orb_r * rng.uniform(0.6, 1.4)
+        px = int(cx + math.cos(angle) * pdist)
+        py = int(cy + math.sin(angle) * pdist)
+        psize = rng.randint(0, 1)
+        for ddy in range(-psize, psize + 1):
+            for ddx in range(-psize, psize + 1):
+                ppx, ppy = px + ddx, py + ddy
+                if 0 <= ppx < W and 0 <= ppy < H and pixels[ppy][ppx] is None:
+                    brightness = rng.uniform(0.4, 1.0) * bright_mult
+                    r = int(lerp(100, 200, brightness))
+                    g = int(lerp(170, 240, brightness))
+                    b = 255
+                    pixels[ppy][ppx] = rgb_to_hex(r, g, b)
 
     return pixels
 
@@ -627,34 +780,53 @@ def generate_firewood(W, H, variant=0, state='normal', frame=0):
 
                     pixels[y][x] = rgb_to_hex(r, g, b)
 
-    # Larger flames if normal
+    # Large vibrant flames if normal
     if state == 'normal':
-        for fi in range(5):
-            fx = int(W * (0.15 + fi * 0.175))
-            fy_base = int(H * 0.32)
-            flame_h = int(H * 0.45) + int(fbm(fi, frame, seed, 1, 2.0) * H * 0.15)
+        for fi in range(7):
+            fx = int(W * (0.08 + fi * 0.13))
+            fy_base = int(H * 0.35)
+            flame_h = int(H * 0.85) + int(fbm(fi, frame, seed, 1, 2.0) * H * 0.25)
             for y in range(max(0, fy_base - flame_h), fy_base):
                 rel = (fy_base - y) / flame_h
-                fw = max(1, int((1.0 - rel) * 5))
+                fw = max(1, int((1.0 - rel) * 10))
                 for dx in range(-fw, fw + 1):
                     px = fx + dx
                     if 0 <= px < W and 0 <= y < H:
                         fn = fbm(px * 2, y * 2 + frame * 6, seed + fi * 20, 3, 4.0)
-                        if fn > -0.2:
+                        if fn > -0.3:
                             edge_d = abs(dx) / max(1, fw)
-                            if rel < 0.2:
-                                r, g, b = 255, 240, 180
-                            elif rel < 0.4:
-                                r, g, b = 255, 200, 60
-                            elif rel < 0.65:
-                                r, g, b = 255, 140, 25
+                            if rel < 0.15:
+                                r, g, b = 255, 255, 220  # bright white-yellow core
+                            elif rel < 0.3:
+                                r, g, b = 255, 240, 100  # bright yellow
+                            elif rel < 0.5:
+                                r, g, b = 255, 180, 30   # vibrant orange
+                            elif rel < 0.7:
+                                r, g, b = 255, 110, 15   # deep orange
                             else:
-                                r, g, b = 210, 70, 12
+                                r, g, b = 230, 50, 10    # bright red
                             # Darken edges
                             r = max(0, int(r * (1.0 - edge_d * 0.3)))
                             g = max(0, int(g * (1.0 - edge_d * 0.4)))
                             b = max(0, int(b * (1.0 - edge_d * 0.3)))
                             pixels[y][px] = rgb_to_hex(r, g, b)
+
+        # Embers and sparks flying upward
+        num_embers = 15 + frame * 2
+        ember_rng = random.Random(seed + frame * 37)
+        for ei in range(num_embers):
+            ex = int(W * 0.1 + ember_rng.random() * W * 0.8)
+            ey = int(ember_rng.random() * H * 0.35)
+            esize = ember_rng.randint(0, 1)
+            for edy in range(-esize, esize + 1):
+                for edx in range(-esize, esize + 1):
+                    epx, epy = ex + edx, ey + edy
+                    if 0 <= epx < W and 0 <= epy < H and pixels[epy][epx] is None:
+                        brightness = ember_rng.uniform(0.5, 1.0)
+                        r = 255
+                        g = int(lerp(120, 240, brightness))
+                        b = int(lerp(0, 60, brightness))
+                        pixels[epy][epx] = rgb_to_hex(r, g, b)
 
     return pixels
 
@@ -841,25 +1013,32 @@ def generate_decoration(W, H, deco_type, variant=0):
     cx, cy = W / 2.0, H / 2.0
 
     if deco_type == 'deco_bush':
-        # Small round bush
-        rx, ry = W * 0.42, H * 0.38
+        # Clean round bush with vibrant green, smooth transparent edges
+        rx, ry = W * 0.42, H * 0.40
         for y in range(H):
             for x in range(W):
                 dx = (x - cx) / rx
-                dy = (y - (cy + 1)) / ry
-                d = math.sqrt(dx*dx + dy*dy)
-                if d < 1.0:
-                    light = 0.35 + 0.25 * (dx) - 0.1 * dy + (1.0 - d) * 0.2
-                    n = fbm(x*3, y*3, seed, 3, 3.0) * 0.12
+                dy = (y - (cy + 0.5)) / ry
+                d = math.sqrt(dx * dx + dy * dy)
+                if d < 0.92:
+                    # Fully opaque interior
+                    light = 0.40 + 0.22 * dx - 0.08 * dy + (1.0 - d) * 0.22
+                    n = fbm(x * 3, y * 3, seed, 3, 3.0) * 0.10
                     light = max(0.0, min(1.0, light + n))
-                    r = int(lerp(15, 70, light))
-                    g = int(lerp(40, 140, light))
-                    b = int(lerp(10, 45, light))
-                    if d > 0.85:
-                        fade = (d - 0.85) / 0.15
-                        r = max(0, int(r * (1.0 - fade * 0.5)))
-                        g = max(0, int(g * (1.0 - fade * 0.5)))
+                    r = int(lerp(25, 85, light))
+                    g = int(lerp(70, 185, light))
+                    b = int(lerp(18, 60, light))
                     pixels[y][x] = rgb_to_hex(r, g, b)
+                elif d < 1.0:
+                    # Smooth fade at edges: blend to slightly transparent green
+                    fade = (d - 0.92) / 0.08
+                    light = 0.35 + 0.15 * (1.0 - fade)
+                    r = int(lerp(30, 65, light))
+                    g = int(lerp(80, 150, light))
+                    b = int(lerp(20, 50, light))
+                    # Only draw if not too faded (avoids dark artifacts)
+                    if fade < 0.7:
+                        pixels[y][x] = rgb_to_hex(r, g, b)
 
     elif deco_type == 'deco_mushroom':
         # Small mushroom: stem + cap
@@ -927,19 +1106,42 @@ def generate_decoration(W, H, deco_type, variant=0):
                     pixels[y][x] = rgb_to_hex(240, 210, 40) if is_red else rgb_to_hex(180, 100, 20)
 
     elif deco_type == 'deco_cobblestone':
-        # Stone pattern tile
+        # Properly laid stone bricks/pavers with mortar lines
+        brick_w = 6  # brick width in pixels
+        brick_h = 4  # brick height in pixels
+        mortar = 1   # mortar line width
+
         for y in range(H):
             for x in range(W):
-                light = 0.4 + fbm(x*2, y*2, seed, 3, 3.0) * 0.2
-                # Grid cracks
-                gx = (x * 3) % W
-                gy = (y * 3) % H
-                if gx < 1 or gy < 1:
-                    light -= 0.2
-                light = max(0.0, min(1.0, light))
-                v = int(lerp(90, 180, light))
-                r, g, b = v + 5, v, v - 5
-                pixels[y][x] = rgb_to_hex(r, g, b)
+                # Determine brick row and offset for staggering
+                row = y // (brick_h + mortar)
+                row_y = y % (brick_h + mortar)
+                offset = (row % 2) * (brick_w // 2)  # stagger every other row
+                col = (x + offset) // (brick_w + mortar)
+                col_x = (x + offset) % (brick_w + mortar)
+
+                # Mortar lines
+                if row_y >= brick_h or col_x >= brick_w:
+                    # Mortar: dark grey
+                    pixels[y][x] = rgb_to_hex(85, 82, 78)
+                else:
+                    # Brick face with per-brick color variation
+                    brick_seed = row * 37 + col * 53 + seed
+                    base_v = 130 + int(noise2d(col, row, brick_seed) * 25)
+                    # Subtle texture within brick
+                    tex = fbm(x * 3, y * 3, brick_seed, 2, 3.0) * 0.08
+                    light = 0.45 + tex
+                    # Edge beveling
+                    edge_x = min(col_x, brick_w - 1 - col_x) / max(1, brick_w // 2)
+                    edge_y = min(row_y, brick_h - 1 - row_y) / max(1, brick_h // 2)
+                    edge = min(edge_x, edge_y)
+                    light += edge * 0.15
+                    light = max(0.0, min(1.0, light))
+                    v = int(base_v * light)
+                    r = max(0, min(255, v + 8))
+                    g = max(0, min(255, v + 3))
+                    b = max(0, min(255, v - 5))
+                    pixels[y][x] = rgb_to_hex(r, g, b)
 
     elif deco_type == 'deco_pebbles':
         # Scattered small stones
@@ -959,23 +1161,28 @@ def generate_decoration(W, H, deco_type, variant=0):
                             pixels[y][x] = rgb_to_hex(v+3, v, v-3)
 
     elif deco_type == 'deco_green_grass':
-        # Grass blades
-        for gi in range(rng.randint(5, 8)):
-            gx = rng.randint(1, W - 2)
-            g_height = rng.randint(int(H * 0.3), int(H * 0.7))
-            lean = rng.uniform(-0.3, 0.3)
+        # Dense patch of wild grass blades with varied heights and directions
+        num_blades = rng.randint(15, 20)
+        for gi in range(num_blades):
+            gx = rng.randint(0, W - 1)
+            g_height = rng.randint(int(H * 0.25), int(H * 0.85))
+            lean = rng.uniform(-0.5, 0.5)
+            # Vary green shades per blade
+            green_shift = rng.randint(-20, 30)
+            blade_width = rng.choice([1, 1, 2])
             for step in range(g_height):
                 t = step / g_height
                 x = int(gx + lean * step)
                 y = H - 1 - step
                 if 0 <= x < W and 0 <= y < H:
-                    light = 0.4 + t * 0.4
-                    r = int(lerp(20, 50, light))
-                    g_c = int(lerp(60, 150, light))
-                    b = int(lerp(15, 40, light))
+                    light = 0.3 + t * 0.5
+                    r = int(lerp(15, 55, light))
+                    g_c = int(lerp(50 + green_shift, 160 + green_shift, light))
+                    g_c = max(0, min(255, g_c))
+                    b = int(lerp(10, 35, light))
                     pixels[y][x] = rgb_to_hex(r, g_c, b)
-                    if x + 1 < W:
-                        pixels[y][x+1] = rgb_to_hex(max(0,r-10), max(0,g_c-15), max(0,b-5))
+                    if blade_width > 1 and x + 1 < W:
+                        pixels[y][x + 1] = rgb_to_hex(max(0, r - 8), max(0, g_c - 12), max(0, b - 4))
 
     elif deco_type == 'deco_dead_leaves':
         # Scattered brown leaves
@@ -1024,6 +1231,288 @@ def generate_decoration(W, H, deco_type, variant=0):
                 light = max(0.1, min(0.9, light))
                 v = int(lerp(80, 200, light))
                 pixels[y][x] = rgb_to_hex(v, v, v)
+
+    return pixels
+
+
+# ────────────────────────────────────────────────────────────
+# WATER (animated water tile with ripples)
+# ────────────────────────────────────────────────────────────
+def generate_water(W, H, variant=0, state='normal', frame=0):
+    pixels = [[None] * W for _ in range(H)]
+    seed = 1200 + variant * 23 + frame * 7
+
+    for y in range(H):
+        for x in range(W):
+            # Base water color with depth variation
+            base_n = fbm(x * 1.5, y * 1.5, seed, 3, 6.0) * 0.3
+            # Ripple pattern that shifts with frames
+            ripple = math.sin((x * 0.4 + y * 0.2 + frame * 2.5) + fbm(x, y, seed + 50, 2, 4.0) * 2.0) * 0.2
+            intensity = 0.5 + base_n + ripple
+            intensity = max(0.0, min(1.0, intensity))
+
+            # Deep blue (#2266AA) to light blue (#77BBEE)
+            r = int(lerp(34, 119, intensity))
+            g = int(lerp(102, 187, intensity))
+            b = int(lerp(170, 238, intensity))
+
+            # Occasional bright highlights (sun reflection)
+            highlight = fbm(x * 3 + frame * 4, y * 3, seed + 100, 2, 3.0)
+            if highlight > 0.4:
+                boost = (highlight - 0.4) * 0.8
+                r = min(255, int(r + boost * 120))
+                g = min(255, int(g + boost * 100))
+                b = min(255, int(b + boost * 60))
+
+            pixels[y][x] = rgb_to_hex(r, g, b)
+
+    return pixels
+
+
+# ────────────────────────────────────────────────────────────
+# STREET LAMP (1x2 tile, 32x64 pixels)
+# ────────────────────────────────────────────────────────────
+def generate_street_lamp(W, H, variant=0, state='normal'):
+    pixels = [[None] * W for _ in range(H)]
+    rng = random.Random(42 + variant * 71)
+    seed = 1300 + variant * 29
+
+    cx = W // 2
+
+    # Iron post from bottom to lantern area
+    post_w = max(1, W // 10)
+    post_top = int(H * 0.22)
+    post_bot = int(H * 0.95)
+
+    for y in range(post_top, post_bot):
+        for dx in range(-post_w, post_w + 1):
+            x = cx + dx
+            if 0 <= x < W:
+                rel = (dx + post_w) / max(1, 2 * post_w)
+                # Dark iron cylindrical shading
+                light = 0.2 + 0.4 * math.sin(rel * math.pi)
+                light = max(0.0, min(1.0, light))
+                r = int(lerp(20, 60, light))
+                g = int(lerp(20, 58, light))
+                b = int(lerp(22, 65, light))
+                pixels[y][x] = rgb_to_hex(r, g, b)
+
+    # Base plate (wider at bottom)
+    base_y = int(H * 0.92)
+    base_w = post_w + 3
+    for y in range(base_y, min(H, base_y + 4)):
+        for dx in range(-base_w, base_w + 1):
+            x = cx + dx
+            if 0 <= x < W and 0 <= y < H:
+                light = 0.25 + 0.3 * ((dx + base_w) / max(1, 2 * base_w))
+                r = int(lerp(25, 65, light))
+                g = int(lerp(25, 62, light))
+                b = int(lerp(28, 70, light))
+                pixels[y][x] = rgb_to_hex(r, g, b)
+
+    # Lantern housing at top
+    lantern_top = int(H * 0.08)
+    lantern_bot = int(H * 0.24)
+    lantern_w = max(4, W // 4)
+
+    # Lantern cap (iron top)
+    for dy in range(0, 3):
+        cap_w = lantern_w - dy
+        y = lantern_top + dy
+        for dx in range(-cap_w, cap_w + 1):
+            x = cx + dx
+            if 0 <= x < W and 0 <= y < H:
+                light = 0.25 + 0.35 * ((dx + cap_w) / max(1, 2 * cap_w))
+                r = int(lerp(25, 60, light))
+                g = int(lerp(25, 58, light))
+                b = int(lerp(28, 65, light))
+                pixels[y][x] = rgb_to_hex(r, g, b)
+
+    # Glass panels with warm glow
+    glass_top = lantern_top + 3
+    glass_bot = lantern_bot - 2
+    for y in range(glass_top, glass_bot):
+        for dx in range(-lantern_w + 1, lantern_w):
+            x = cx + dx
+            if 0 <= x < W and 0 <= y < H:
+                # Iron frame on edges
+                is_frame = abs(dx) >= lantern_w - 2
+                if is_frame:
+                    light = 0.25 + 0.3 * ((dx + lantern_w) / max(1, 2 * lantern_w))
+                    r = int(lerp(25, 60, light))
+                    g = int(lerp(25, 58, light))
+                    b = int(lerp(28, 65, light))
+                else:
+                    # Warm yellow-orange glow through glass
+                    d = abs(dx) / max(1, lantern_w - 2)
+                    rel_y = (y - glass_top) / max(1, glass_bot - glass_top)
+                    intensity = (1.0 - d * 0.5) * (1.0 - abs(rel_y - 0.4) * 0.5)
+                    r = int(lerp(180, 255, min(1.0, intensity)))
+                    g = int(lerp(120, 220, min(1.0, intensity)))
+                    b = int(lerp(30, 80, min(1.0, intensity * 0.5)))
+                pixels[y][x] = rgb_to_hex(r, g, b)
+
+    # Lantern bottom
+    for dx in range(-lantern_w, lantern_w + 1):
+        x = cx + dx
+        y = lantern_bot - 1
+        if 0 <= x < W and 0 <= y < H:
+            pixels[y][x] = rgb_to_hex(35, 33, 38)
+
+    # Warm light halo around lantern
+    halo_cx, halo_cy = cx, (glass_top + glass_bot) // 2
+    halo_r = lantern_w + 5
+    for y in range(max(0, halo_cy - halo_r), min(H, halo_cy + halo_r)):
+        for x in range(max(0, cx - halo_r), min(W, cx + halo_r)):
+            d = dist(x, y, halo_cx, halo_cy) / halo_r
+            if d < 1.0 and pixels[y][x] is None:
+                glow = (1.0 - d) * 0.35
+                if glow > 0.05:
+                    r = int(lerp(0, 200, glow))
+                    g = int(lerp(0, 150, glow))
+                    b = int(lerp(0, 40, glow))
+                    pixels[y][x] = rgb_to_hex(r, g, b)
+
+    return pixels
+
+
+# ────────────────────────────────────────────────────────────
+# GRASS BASE (tiling 32x32 grass terrain texture)
+# ────────────────────────────────────────────────────────────
+def generate_grass_base(W, H, variant=0, state='normal'):
+    pixels = [[None] * W for _ in range(H)]
+    seed = 1400 + variant * 31
+
+    for y in range(H):
+        for x in range(W):
+            # Use tileable noise by wrapping coordinates
+            wx = math.sin(2 * math.pi * x / W) * W / (2 * math.pi)
+            wy = math.sin(2 * math.pi * y / H) * H / (2 * math.pi)
+            cx_t = math.cos(2 * math.pi * x / W) * W / (2 * math.pi)
+            cy_t = math.cos(2 * math.pi * y / H) * H / (2 * math.pi)
+
+            # Multiple noise layers for variety
+            n1 = fbm(wx * 2, wy * 2, seed, 3, 5.0) * 0.3
+            n2 = fbm(cx_t * 3, cy_t * 3, seed + 100, 2, 3.0) * 0.15
+            n3 = fbm(wx * 5 + cx_t * 2, wy * 5 + cy_t * 2, seed + 200, 2, 2.0) * 0.1
+
+            base = 0.5 + n1 + n2 + n3
+            base = max(0.0, min(1.0, base))
+
+            # Green palette: dark green to medium to light
+            r = int(lerp(22, 65, base))
+            g = int(lerp(55, 155, base))
+            b = int(lerp(12, 42, base))
+
+            # Tiny darker spots (dirt/shadow)
+            spot = noise2d(x * 7, y * 7, seed + 300)
+            if spot > 0.7:
+                r = max(0, r - 12)
+                g = max(0, g - 18)
+                b = max(0, b - 6)
+
+            # Grass blade hints
+            blade = noise2d(x * 11, y * 13, seed + 400)
+            if blade > 0.6:
+                g = min(255, g + 15)
+
+            pixels[y][x] = rgb_to_hex(r, g, b)
+
+    return pixels
+
+
+# ────────────────────────────────────────────────────────────
+# STONE ROAD BASE (tiling 32x32 stone brick road texture)
+# ────────────────────────────────────────────────────────────
+def generate_stone_road_base(W, H, variant=0, state='normal'):
+    pixels = [[None] * W for _ in range(H)]
+    seed = 1500 + variant * 37
+
+    brick_w = 10
+    brick_h = 6
+    mortar = 1
+
+    for y in range(H):
+        for x in range(W):
+            row = y // (brick_h + mortar)
+            row_y = y % (brick_h + mortar)
+            offset = (row % 2) * (brick_w // 2)
+            col = (x + offset) // (brick_w + mortar)
+            col_x = (x + offset) % (brick_w + mortar)
+
+            if row_y >= brick_h or col_x >= brick_w:
+                # Mortar/grout: dark grey-brown
+                pixels[y][x] = rgb_to_hex(75, 72, 68)
+            else:
+                # Brick with per-brick color variation
+                brick_id = row * 31 + col * 47 + seed
+                base_v = 140 + int(noise2d(col, row, brick_id) * 30)
+                warm = noise2d(col * 3, row * 3, brick_id + 50) * 10
+
+                # Subtle surface texture
+                tex = fbm(x * 2, y * 2, brick_id, 2, 3.0) * 0.06
+                light = 0.48 + tex
+
+                # Edge beveling
+                edge_x = min(col_x, brick_w - 1 - col_x)
+                edge_y = min(row_y, brick_h - 1 - row_y)
+                if edge_x == 0 or edge_y == 0:
+                    light -= 0.08
+                elif edge_x == 1 or edge_y == 1:
+                    light -= 0.03
+
+                light = max(0.0, min(1.0, light))
+                v = int(base_v * light)
+                # Grey-tan tones
+                r = max(0, min(255, v + int(warm) + 5))
+                g = max(0, min(255, v + int(warm * 0.5) + 2))
+                b = max(0, min(255, v - 3))
+                pixels[y][x] = rgb_to_hex(r, g, b)
+
+    return pixels
+
+
+# ────────────────────────────────────────────────────────────
+# PATH BASE (tiling 32x32 dirt path texture)
+# ────────────────────────────────────────────────────────────
+def generate_path_base(W, H, variant=0, state='normal'):
+    pixels = [[None] * W for _ in range(H)]
+    seed = 1600 + variant * 41
+
+    for y in range(H):
+        for x in range(W):
+            # Tileable noise via wrapped coordinates
+            wx = math.sin(2 * math.pi * x / W) * W / (2 * math.pi)
+            wy = math.sin(2 * math.pi * y / H) * H / (2 * math.pi)
+            cx_t = math.cos(2 * math.pi * x / W) * W / (2 * math.pi)
+            cy_t = math.cos(2 * math.pi * y / H) * H / (2 * math.pi)
+
+            # Packed earth base
+            n1 = fbm(wx * 2, wy * 2, seed, 3, 5.0) * 0.25
+            n2 = fbm(cx_t * 3, cy_t * 3, seed + 100, 2, 3.0) * 0.12
+
+            base = 0.5 + n1 + n2
+            base = max(0.0, min(1.0, base))
+
+            # Earth/dirt tones: brown-tan
+            r = int(lerp(110, 175, base))
+            g = int(lerp(82, 140, base))
+            b = int(lerp(50, 95, base))
+
+            # Small pebbles
+            pebble = noise2d(x * 9, y * 9, seed + 200)
+            if pebble > 0.65:
+                pv = int(lerp(120, 170, (pebble - 0.65) / 0.35))
+                r = pv + 5
+                g = pv
+                b = pv - 8
+
+            # Subtle color variation (warm/cool shift)
+            shift = noise2d(x * 5, y * 5, seed + 300) * 6
+            r = max(0, min(255, r + int(shift)))
+            b = max(0, min(255, b - int(shift)))
+
+            pixels[y][x] = rgb_to_hex(r, g, b)
 
     return pixels
 
@@ -1190,6 +1679,8 @@ def generate_all():
         ('fence_rail',      'fences',         (48,32),  generate_fence_rail,False,['normal']),
         ('portal',          'portals',        (64,96),  None,              True,  ['normal']),
         ('firewood',        'firewoods',      (64,32),  None,              True,  ['normal','damaged','dead']),
+        ('street_lamp',     'street_lamps',   (32,64),  generate_street_lamp, False, ['normal']),
+        ('water_body',      'water',          (32,16),  None,              True,  ['normal']),
     ]
 
     for obj_name, img_dir, (W, H), gen_fn, has_frames, states in OBJECTS:
@@ -1206,6 +1697,8 @@ def generate_all():
                 pixels = generate_portal(W, H, variant=0, state=state, frame=0)
             elif obj_name == 'firewood':
                 pixels = generate_firewood(W, H, variant=0, state=state, frame=0)
+            elif obj_name == 'water_body':
+                pixels = generate_water(W, H, variant=0, state=state, frame=0)
             else:
                 continue
 
@@ -1214,8 +1707,9 @@ def generate_all():
 
         # Animated frames — write combined GIF YAML + individual frame PNGs
         if has_frames and 'normal' in states:
-            FRAME_DELAYS = {'campfire': 200, 'firewood': 200, 'portal': 300}
-            num_frames = 4 if obj_name == 'firewood' else 3
+            FRAME_DELAYS = {'campfire': 200, 'firewood': 200, 'portal': 400, 'water_body': 500}
+            NUM_FRAMES = {'firewood': 4, 'portal': 6, 'water_body': 3}
+            num_frames = NUM_FRAMES.get(obj_name, 3)
             frame_delay = FRAME_DELAYS.get(obj_name, 200)
             base_name = f'{obj_name}_normal'
 
@@ -1227,6 +1721,8 @@ def generate_all():
                     pixels = generate_portal(W, H, variant=0, state='normal', frame=frame)
                 elif obj_name == 'firewood':
                     pixels = generate_firewood(W, H, variant=0, state='normal', frame=frame)
+                elif obj_name == 'water_body':
+                    pixels = generate_water(W, H, variant=0, state='normal', frame=frame)
                 else:
                     continue
                 pixels = remove_orphans(pixels)
@@ -1294,6 +1790,17 @@ def generate_all():
         print(f'\n── {deco_name} ──')
         pixels = generate_decoration(W, H, deco_name)
         emit(pixels, deco_name, img_dir, yaml_base, png_base)
+
+    # ── Terrain Base Textures ──
+    TERRAIN_BASES = [
+        ('grass_base',      'terrain_bases', (32, 32), generate_grass_base),
+        ('stone_road_base', 'terrain_bases', (32, 32), generate_stone_road_base),
+        ('path_base',       'terrain_bases', (32, 32), generate_path_base),
+    ]
+    for base_name, img_dir, (W, H), gen_fn in TERRAIN_BASES:
+        print(f'\n── {base_name} ──')
+        pixels = gen_fn(W, H)
+        emit(pixels, base_name, img_dir, yaml_base, png_base)
 
 
 if __name__ == '__main__':

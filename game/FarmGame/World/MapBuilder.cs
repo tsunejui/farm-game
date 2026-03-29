@@ -73,6 +73,25 @@ public static class MapBuilder
             }
         }
 
+        // Load terrain base textures
+        if (loadTexture != null)
+        {
+            foreach (var (terrainId, terrainDef) in registry.Terrains)
+            {
+                string basePath = $"Images/terrain_bases/{terrainId}_base";
+                try
+                {
+                    var tex = loadTexture(basePath);
+                    if (tex != null)
+                        map.SetTerrainBaseTexture(terrainId, tex);
+                }
+                catch
+                {
+                    // No base texture for this terrain — color fill will be used
+                }
+            }
+        }
+
         // Place entities
         foreach (var placement in mapDef.Entities)
         {

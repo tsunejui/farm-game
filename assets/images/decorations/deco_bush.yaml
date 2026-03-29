@@ -4,59 +4,59 @@ type: "png"
 output_dir: "Images/decorations"
 palette:
   ".": "#00000000"
-  "A": "#193a10"
-  "B": "#224b16"
-  "C": "#275419"
-  "D": "#28561a"
-  "E": "#255018"
-  "F": "#1f4614"
-  "G": "#1a3c11"
-  "H": "#193b10"
-  "I": "#265319"
-  "J": "#29571a"
-  "K": "#234d17"
-  "L": "#2c5d1c"
-  "M": "#2e611e"
-  "N": "#30641f"
-  "O": "#275519"
-  "P": "#29581b"
-  "Q": "#2b5c1c"
-  "R": "#2e601d"
-  "S": "#31661f"
-  "T": "#346b21"
-  "U": "#2f631e"
-  "V": "#265218"
-  "W": "#2a5a1b"
-  "X": "#2d5f1d"
-  "Y": "#244f17"
-  "Z": "#30651f"
-  "a": "#2b5b1b"
-  "b": "#244e17"
-  "c": "#255118"
-  "d": "#2f621e"
+  "A": "#2c6c20"
+  "B": "#2e7122"
+  "C": "#337924"
+  "D": "#378027"
+  "E": "#2e6f21"
+  "F": "#307322"
+  "G": "#3a8629"
+  "H": "#2f7222"
+  "I": "#367d26"
+  "J": "#3b882a"
+  "K": "#357c25"
+  "L": "#3c892a"
+  "M": "#398428"
+  "N": "#3c8a2b"
+  "O": "#2c6d20"
+  "P": "#388127"
+  "Q": "#337824"
+  "R": "#3d8c2b"
+  "S": "#3e8d2c"
+  "T": "#29651d"
+  "U": "#40912d"
+  "V": "#3f8f2c"
+  "W": "#3b8729"
+  "X": "#3f902d"
+  "Y": "#2f7121"
+  "Z": "#398328"
+  "a": "#2f7021"
+  "b": "#3c8a2a"
+  "c": "#367e26"
+  "d": "#327623"
 data:
   - |
     ........................
     ........................
     ........................
     ........................
-    ...........AAA..........
-    ........AABCBDEFG.......
-    ......AFHIJKLKMNIBA.....
-    .....AAFJOPKQDRSTUPB....
-    ....AFVFLPKWXYWLZaQQG...
-    ...AAGHFEDFJBQLTMMTZBG..
-    ...AAFBYQbFQCUZTJXSTXF..
-    ...AAGYcFaLZUaTZSSUXWI..
-    ..AAGGFFVVESXPXTYLXXSEA.
-    ..AAAAFBBBLUXdJSTDTTJQA.
-    ..AAHFYKVCERNDNJCLZULEG.
-    ...AAFKYBFXVcEXXSTQURF..
-    ...AAAAFBFOOMXCNddUIJG..
-    ...AAAAGFKJIECWXXDSREA..
-    ....AAFFFFbFPFBbXMJGA...
-    .....AAFGFYFBFFWOFFG....
-    ......AAGAAAHYcYFGA.....
-    ........AAABGGKAA.......
-    ...........AAA..........
+    ........ABCDEFGBA.......
+    .......HIFDJKJLMNH......
+    .....AODAIPCJQRSPJMA....
+    .....TAEPDMCGPRUUSVU....
+    ....HFKOWMCGNKGLUGGXH...
+    ...OTTTYKPFZQLNURRUVZO..
+    ...BTEFCWCFLPXUUMNUURB..
+    ...TTACKaGbUULUUUUSNMU..
+    ...TTTEYccIUSGRUKLNJXW..
+    ...TTTOdQdLXRVMUUPUUPU..
+    ...OTaCQIDKRXZXZDJXSGG..
+    ...BTYdCdFbcIKRNUUWSbB..
+    ...OTTTEdFDDRNDVSRSIZO..
+    ....HTTTaQPcKDGLLDUNH...
+    .....TAaBEQFZFFCbNPF....
+    .....ATAAACYdFBMcFCA....
+    .......HTTTTTCKCFH......
+    ........ABOKYaPBA.......
+    ........................
     ........................

@@ -5,3 +5,6 @@ metadata:
 
 visuals:
   color: "#D2B48C"
+  decorations:
+    - image_path: "Images/decorations/deco_pebbles"
+      coverage: 0.30

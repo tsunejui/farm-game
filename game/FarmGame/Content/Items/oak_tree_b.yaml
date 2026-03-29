@@ -15,7 +15,7 @@ visuals:
       normal:
         image_path: "Images/oak_trees/oak_tree_b_normal"
         file_type: "gif"
-        frame_delay: 800
+        frame_delay: 2500
       damaged:
         image_path: "Images/oak_trees/oak_tree_damaged"
       dead:

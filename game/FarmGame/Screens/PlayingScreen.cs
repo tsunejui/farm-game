@@ -35,6 +35,10 @@ public class PlayingScreen : IScreen, IWorldRenderer
     private Camera2D _camera;
     private float _autoSaveTimer;
 
+    private bool _isLoading;
+    private int _loadingFrameCount;
+    private Action _deferredLoadAction;
+
     private readonly string _contentDir;
 
     public PlayingScreen(
@@ -66,42 +70,47 @@ public class PlayingScreen : IScreen, IWorldRenderer
 
     public void StartGame(PlayerState savedState)
     {
-        var result = GameplayInitializer.Run(savedState, _registry, _loadTexture, _graphicsDevice, _contentDir);
-        _currentMap = result.Map;
-        _player = result.Player;
-        _camera = result.Camera;
-        _autoSaveTimer = 0f;
-
-        // Restore player attributes from saved state
-        _player.RestoreAttributes(savedState);
-
-        // Load or create persisted map entity state (HP, alive/dead)
-        _session.LoadOrCreateMapState(result.Map.MapId, result.Map, savedState);
-
-        // Set world bounds once at map load (not per-frame)
-        _camera.SetWorldBounds(_currentMap);
-
-        // Register player as inspectable object and effect target
-        _inspector.SetPlayerObject(_player.WorldProxy);
-        _currentMap.PlayerProxy = _player.WorldProxy;
-
-        // Wire interaction callback for interactable objects
-        _player.OnInteract = obj =>
+        _isLoading = true;
+        _loadingFrameCount = 0;
+        _deferredLoadAction = () =>
         {
-            if (obj.InteractionBehavior is DialogueBehavior db)
-            {
-                string name = LocaleManager.Get("items", obj.ItemId, obj.Definition.Metadata.DisplayName);
-                _dialogue.Open(name, db.GetLines());
-            }
-            else
-            {
-                string name = LocaleManager.Get("items", obj.ItemId, obj.Definition.Metadata.DisplayName);
-                MessageQueue.Enqueue(LocaleManager.Format("ui", "interact", name));
-            }
-        };
+            var result = GameplayInitializer.Run(savedState, _registry, _loadTexture, _graphicsDevice, _contentDir);
+            _currentMap = result.Map;
+            _player = result.Player;
+            _camera = result.Camera;
+            _autoSaveTimer = 0f;
 
-        _mapTransition.Start(result.MapName);
-        MessageQueue.Enqueue(LocaleManager.Format("ui", "entered_map", result.MapName));
+            // Restore player attributes from saved state
+            _player.RestoreAttributes(savedState);
+
+            // Load or create persisted map entity state (HP, alive/dead)
+            _session.LoadOrCreateMapState(result.Map.MapId, result.Map, savedState);
+
+            // Set world bounds once at map load (not per-frame)
+            _camera.SetWorldBounds(_currentMap);
+
+            // Register player as inspectable object and effect target
+            _inspector.SetPlayerObject(_player.WorldProxy);
+            _currentMap.PlayerProxy = _player.WorldProxy;
+
+            // Wire interaction callback for interactable objects
+            _player.OnInteract = obj =>
+            {
+                if (obj.InteractionBehavior is DialogueBehavior db)
+                {
+                    string name = LocaleManager.Get("items", obj.ItemId, obj.Definition.Metadata.DisplayName);
+                    _dialogue.Open(name, db.GetLines());
+                }
+                else
+                {
+                    string name = LocaleManager.Get("items", obj.ItemId, obj.Definition.Metadata.DisplayName);
+                    MessageQueue.Enqueue(LocaleManager.Format("ui", "interact", name));
+                }
+            };
+
+            _mapTransition.Start(result.MapName);
+            MessageQueue.Enqueue(LocaleManager.Format("ui", "entered_map", result.MapName));
+        };
     }
 
     public void SaveState()
@@ -113,6 +122,21 @@ public class PlayingScreen : IScreen, IWorldRenderer
 
     public ScreenTransition Update(GameTime gameTime)
     {
+        if (_isLoading)
+        {
+            _loadingFrameCount++;
+            if (_loadingFrameCount == 2)
+            {
+                _deferredLoadAction?.Invoke();
+                _deferredLoadAction = null;
+            }
+            else if (_loadingFrameCount >= 3)
+            {
+                _isLoading = false;
+            }
+            return ScreenTransition.None;
+        }
+
         float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         _mapTransition.Update(dt);
         _toast.Update(dt);
@@ -156,6 +180,22 @@ public class PlayingScreen : IScreen, IWorldRenderer
 
     public void Draw(SpriteBatch spriteBatch)
     {
+        if (_isLoading)
+        {
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            var font = FontManager.GetFont(28);
+            if (font != null)
+            {
+                string text = LocaleManager.Get("ui", "loading", "Loading...");
+                var size = font.MeasureString(text);
+                float x = (GameConstants.ScreenWidth - size.X) / 2f;
+                float y = (GameConstants.ScreenHeight - size.Y) / 2f;
+                font.DrawText(spriteBatch, text, new Vector2(x, y), new Color(200, 220, 200));
+            }
+            spriteBatch.End();
+            return;
+        }
+
         DrawWorld(spriteBatch);
 
         spriteBatch.Begin(samplerState: SamplerState.PointClamp);
@@ -184,48 +224,53 @@ public class PlayingScreen : IScreen, IWorldRenderer
         // Save current map state before leaving
         SaveState();
 
-        // Build a temporary PlayerState for the target map
-        var teleportState = new PlayerState
+        _isLoading = true;
+        _loadingFrameCount = 0;
+        _deferredLoadAction = () =>
         {
-            Uuid = "",
-            PositionX = req.TargetX,
-            PositionY = req.TargetY,
-            FacingDirection = _player.FacingDirection.ToString(),
-            CurrentMap = req.TargetMap,
-            CurrentMapStateId = null, // will be resolved by LoadOrCreateMapState
-            MaxHp = _player.MaxHp,
-            CurrentHp = _player.CurrentHp,
-            Strength = _player.Strength,
-            Dexterity = _player.Dexterity,
-            WeaponAtk = _player.WeaponAtk,
-            BuffPercent = _player.BuffPercent,
-            CritRate = _player.CritRate,
-            CritDamage = _player.CritDamage,
+            // Build a temporary PlayerState for the target map
+            var teleportState = new PlayerState
+            {
+                Uuid = "",
+                PositionX = req.TargetX,
+                PositionY = req.TargetY,
+                FacingDirection = _player.FacingDirection.ToString(),
+                CurrentMap = req.TargetMap,
+                CurrentMapStateId = null, // will be resolved by LoadOrCreateMapState
+                MaxHp = _player.MaxHp,
+                CurrentHp = _player.CurrentHp,
+                Strength = _player.Strength,
+                Dexterity = _player.Dexterity,
+                WeaponAtk = _player.WeaponAtk,
+                BuffPercent = _player.BuffPercent,
+                CritRate = _player.CritRate,
+                CritDamage = _player.CritDamage,
+            };
+
+            // Load the target map
+            var result = GameplayInitializer.Run(teleportState, _registry, _loadTexture, _graphicsDevice, _contentDir);
+            _currentMap = result.Map;
+            _player = result.Player;
+            _camera = result.Camera;
+            _autoSaveTimer = 0f;
+
+            _player.RestoreAttributes(teleportState);
+
+            // Load or create map state for the target map
+            _session.CurrentMapStateId = null;
+            _session.LoadOrCreateMapState(result.Map.MapId, result.Map, null);
+
+            _camera.SetWorldBounds(_currentMap);
+            _inspector.SetPlayerObject(_player.WorldProxy);
+            _currentMap.PlayerProxy = _player.WorldProxy;
+
+            _player.OnInteract = obj =>
+            {
+                string name = LocaleManager.Get("items", obj.ItemId, obj.Definition.Metadata.DisplayName);
+                MessageQueue.Enqueue(LocaleManager.Format("ui", "interact", name));
+            };
+
+            _mapTransition.Start(result.MapName);
         };
-
-        // Load the target map
-        var result = GameplayInitializer.Run(teleportState, _registry, _loadTexture, _graphicsDevice, _contentDir);
-        _currentMap = result.Map;
-        _player = result.Player;
-        _camera = result.Camera;
-        _autoSaveTimer = 0f;
-
-        _player.RestoreAttributes(teleportState);
-
-        // Load or create map state for the target map
-        _session.CurrentMapStateId = null;
-        _session.LoadOrCreateMapState(result.Map.MapId, result.Map, null);
-
-        _camera.SetWorldBounds(_currentMap);
-        _inspector.SetPlayerObject(_player.WorldProxy);
-        _currentMap.PlayerProxy = _player.WorldProxy;
-
-        _player.OnInteract = obj =>
-        {
-            string name = LocaleManager.Get("items", obj.ItemId, obj.Definition.Metadata.DisplayName);
-            MessageQueue.Enqueue(LocaleManager.Format("ui", "interact", name));
-        };
-
-        _mapTransition.Start(result.MapName);
     }
 }

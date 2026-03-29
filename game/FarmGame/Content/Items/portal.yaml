@@ -15,10 +15,10 @@ visuals:
       normal:
         image_path: "Images/portals/portal_normal"
         file_type: "gif"
-        frame_delay: 1000
+        frame_delay: 400
 
 physics:
-  occupy_width: 2
+  occupy_width: 3
   occupy_height: 3
   is_collidable: false
 

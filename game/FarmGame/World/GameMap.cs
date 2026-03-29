@@ -23,6 +23,7 @@ public class GameMap
     private readonly Dictionary<(string, string), Texture2D> _backgroundTextures = new();
     // Key: (itemId, state) — animated textures (GIF frames)
     private readonly Dictionary<(string, string), AnimatedTexture> _animatedTextures = new();
+    private readonly Dictionary<string, Texture2D> _terrainBaseTextures = new();
     private readonly Dictionary<(int, int), WorldObject> _objectGrid = new();
 
     // Terrain decorations: each tile may have one decoration index (-1 = none)
@@ -48,6 +49,11 @@ public class GameMap
         _terrain = new string[width, height];
         _collisionGrid = new bool[width, height];
         _terrainColors = terrainColors;
+    }
+
+    public void SetTerrainBaseTexture(string terrainId, Texture2D texture)
+    {
+        _terrainBaseTextures[terrainId] = texture;
     }
 
     public void SetBackgroundTexture(string itemId, string state, Texture2D texture)
@@ -256,8 +262,13 @@ public class GameMap
                     GameConstants.TileSize);
 
                 var tid = _terrain[x, y];
-                if (tid != null && _terrainColors.TryGetValue(tid, out var color))
-                    spriteBatch.FillRectangle(rect, color);
+                if (tid != null)
+                {
+                    if (_terrainBaseTextures.TryGetValue(tid, out var baseTex))
+                        spriteBatch.Draw(baseTex, rect, Color.White);
+                    else if (_terrainColors.TryGetValue(tid, out var color))
+                        spriteBatch.FillRectangle(rect, color);
+                }
 
                 // Draw decoration overlay if assigned
                 if (_decoAssignments != null && _decoAssignments[x, y] >= 0 && tid != null)
