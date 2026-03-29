@@ -174,7 +174,7 @@ public class Game1 : Game
 
         var mapId = savedState?.CurrentMap ?? GameConstants.StartMap;
         var mapDef = _registry.Maps[mapId];
-        _currentMap = MapBuilder.Build(mapDef, _registry, Content.Load<Texture2D>);
+        _currentMap = MapBuilder.Build(mapDef, _registry, LoadTexture);
 
         var config = mapDef.Config;
         Point playerStart;
@@ -197,6 +197,18 @@ public class Game1 : Game
         _player = new Player(playerStart, _currentMap, facingDirection);
         _camera = new Camera2D(GraphicsDevice);
         _gameState = GameState.Playing;
+    }
+
+    private Texture2D LoadTexture(string path)
+    {
+        var contentDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
+        var pngPath = Path.Combine(contentDir, path + ".png");
+        if (File.Exists(pngPath))
+        {
+            using var stream = File.OpenRead(pngPath);
+            return Texture2D.FromStream(GraphicsDevice, stream);
+        }
+        return Content.Load<Texture2D>(path);
     }
 
     protected override void OnExiting(object sender, ExitingEventArgs args)

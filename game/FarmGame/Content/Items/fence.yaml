@@ -4,10 +4,14 @@ metadata:
   category: "structure"
 
 visuals:
-  color: "#8B5A2B"
+  color: ""
   origin_point: "top_left"
   background:
-    enabled: false
+    enabled: true
+    image_path: "Images/fences/fence"
+    display_mode: "stretch"
+    offset_x: 0
+    offset_y: 0
 
 physics:
   occupy_width: 1

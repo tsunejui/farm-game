@@ -4,10 +4,14 @@ metadata:
   category: "terrain_feature"
 
 visuals:
-  color: "#1E90FF"
+  color: ""
   origin_point: "top_left"
   background:
-    enabled: false
+    enabled: true
+    image_path: "Images/water/water_body"
+    display_mode: "tile"
+    offset_x: 0
+    offset_y: 0
 
 physics:
   occupy_width: 1
