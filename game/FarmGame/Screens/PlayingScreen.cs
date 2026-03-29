@@ -14,6 +14,7 @@ using FarmGame.Data;
 using FarmGame.Persistence.Models;
 using FarmGame.Screens.HUD;
 using FarmGame.World;
+using FarmGame.World.Interactions;
 
 namespace FarmGame.Screens;
 
@@ -127,6 +128,14 @@ public class PlayingScreen : IScreen, IWorldRenderer
         _camera.Update(_player);
         _inspector.Update(_currentMap, _camera);
 
+        // Handle pending interaction (e.g. teleport)
+        if (_currentMap.PendingInteraction != null)
+        {
+            var req = _currentMap.PendingInteraction;
+            _currentMap.PendingInteraction = null;
+            HandleTeleport(req);
+        }
+
         return ScreenTransition.None;
     }
 
@@ -152,5 +161,55 @@ public class PlayingScreen : IScreen, IWorldRenderer
         _player.Draw(spriteBatch);
         _currentMap.DrawObjectInfo(spriteBatch, _player.GridPosition);
         spriteBatch.End();
+    }
+
+    private void HandleTeleport(InteractionRequest req)
+    {
+        // Save current map state before leaving
+        SaveState();
+
+        // Build a temporary PlayerState for the target map
+        var teleportState = new PlayerState
+        {
+            Uuid = "",
+            PositionX = req.TargetX,
+            PositionY = req.TargetY,
+            FacingDirection = _player.FacingDirection.ToString(),
+            CurrentMap = req.TargetMap,
+            CurrentMapStateId = null, // will be resolved by LoadOrCreateMapState
+            MaxHp = _player.MaxHp,
+            CurrentHp = _player.CurrentHp,
+            Strength = _player.Strength,
+            Dexterity = _player.Dexterity,
+            WeaponAtk = _player.WeaponAtk,
+            BuffPercent = _player.BuffPercent,
+            CritRate = _player.CritRate,
+            CritDamage = _player.CritDamage,
+        };
+
+        // Load the target map
+        var result = GameplayInitializer.Run(teleportState, _registry, _loadTexture, _graphicsDevice, _contentDir);
+        _currentMap = result.Map;
+        _player = result.Player;
+        _camera = result.Camera;
+        _autoSaveTimer = 0f;
+
+        _player.RestoreAttributes(teleportState);
+
+        // Load or create map state for the target map
+        _session.CurrentMapStateId = null;
+        _session.LoadOrCreateMapState(result.Map.MapId, result.Map, null);
+
+        _camera.SetWorldBounds(_currentMap);
+        _inspector.SetPlayerObject(_player.WorldProxy);
+        _currentMap.PlayerProxy = _player.WorldProxy;
+
+        _player.OnInteract = obj =>
+        {
+            string name = LocaleManager.Get("items", obj.ItemId, obj.Definition.Metadata.DisplayName);
+            MessageQueue.Enqueue(LocaleManager.Format("ui", "interact", name));
+        };
+
+        _mapTransition.Start(result.MapName);
     }
 }

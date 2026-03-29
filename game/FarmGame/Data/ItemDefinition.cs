@@ -120,6 +120,17 @@ public class ItemLogic
     [YamlMember(Alias = "is_invincible")]
     public bool IsInvincible { get; set; }
 
+    // Interaction behavior type: "none", "teleport"
+    [YamlMember(Alias = "interaction_behavior")]
+    public string InteractionBehavior { get; set; } = "none";
+
+    // Teleport config (used when interaction_behavior = "teleport")
+    public TeleportConfig Teleport { get; set; }
+
+    // Time in seconds player must stand on the object to trigger interaction
+    [YamlMember(Alias = "charge_time")]
+    public float ChargeTime { get; set; } = 1f;
+
     public List<DropEntry> Drops { get; set; } = new();
 
     [YamlMember(Alias = "default_effects")]
@@ -134,6 +145,18 @@ public class DefaultEffectEntry
     public string EffectId { get; set; } = "";
 
     public float Ttl { get; set; }  // 0 = permanent
+}
+
+public class TeleportConfig
+{
+    [YamlMember(Alias = "target_map")]
+    public string TargetMap { get; set; } = "";
+
+    [YamlMember(Alias = "target_x")]
+    public int TargetX { get; set; }
+
+    [YamlMember(Alias = "target_y")]
+    public int TargetY { get; set; }
 }
 
 public class DropEntry

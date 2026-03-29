@@ -4,6 +4,7 @@ using System.Linq;
 using FarmGame.Data;
 using FarmGame.World.Effects;
 using FarmGame.World.Events;
+using FarmGame.World.Interactions;
 
 namespace FarmGame.World;
 
@@ -39,6 +40,15 @@ public class WorldObject
     private float _effectRefreshTimer;
     private const float EffectRefreshIntervalSeconds = 1f;
 
+    // Interaction behavior (teleport, dialogue, etc.) — null if not interactable
+    public IInteractionBehavior InteractionBehavior { get; set; }
+
+    // Overlap detection for interaction trigger
+    private float _overlapTimer;
+    public bool IsTriggered { get; private set; }
+    public float OverlapProgress => InteractionBehavior != null
+        ? Math.Clamp(_overlapTimer / InteractionBehavior.ChargeTime, 0f, 1f) : 0f;
+
     // Event queue — events are processed one at a time per frame
     private readonly Queue<IObjectEvent> _eventQueue = new();
     private IObjectEvent _currentEvent;
@@ -65,6 +75,37 @@ public class WorldObject
         var faction = ObjectState.ParseFaction(definition.Logic.Faction);
         int maxHp = definition.Logic.MaxHealth;
         State = new ObjectState(maxHp > 0 ? maxHp : 1, faction);
+
+        // Set up interaction behavior from YAML config
+        InitInteractionBehavior();
+    }
+
+    private void InitInteractionBehavior()
+    {
+        var logic = Definition.Logic;
+        if (string.IsNullOrEmpty(logic.InteractionBehavior) || logic.InteractionBehavior == "none")
+            return;
+
+        switch (logic.InteractionBehavior)
+        {
+            case "teleport":
+                // Teleport config: from item definition or instance properties
+                string targetMap = logic.Teleport?.TargetMap ?? "";
+                int targetX = logic.Teleport?.TargetX ?? 0;
+                int targetY = logic.Teleport?.TargetY ?? 0;
+
+                // Instance properties override item defaults
+                if (Properties.TryGetValue("target_map", out var tm))
+                    targetMap = tm.ToString();
+                if (Properties.TryGetValue("target_x", out var tx))
+                    targetX = Convert.ToInt32(tx);
+                if (Properties.TryGetValue("target_y", out var ty))
+                    targetY = Convert.ToInt32(ty);
+
+                if (!string.IsNullOrEmpty(targetMap))
+                    InteractionBehavior = new TeleportBehavior(targetMap, targetX, targetY, logic.ChargeTime);
+                break;
+        }
     }
 
     // Add an effect to this object
@@ -140,6 +181,50 @@ public class WorldObject
     }
 
     public bool HasPendingEvents => _currentEvent != null || _eventQueue.Count > 0;
+
+    /// <summary>
+    /// Check if the player overlaps this object and manage the interaction timer.
+    /// Returns an InteractionRequest when the charge completes, or null.
+    /// </summary>
+    public InteractionRequest UpdateOverlap(WorldObject player, float deltaTime)
+    {
+        if (InteractionBehavior == null || IsTriggered) return null;
+
+        // Check AABB overlap: player tile vs object area
+        bool overlaps = player.TileX < TileX + EffectiveWidth
+            && player.TileX + player.EffectiveWidth > TileX
+            && player.TileY < TileY + EffectiveHeight
+            && player.TileY + player.EffectiveHeight > TileY;
+
+        if (overlaps)
+        {
+            // Accumulate overlap time
+            _overlapTimer += deltaTime;
+
+            // Trigger when fully charged
+            if (_overlapTimer >= InteractionBehavior.ChargeTime)
+            {
+                IsTriggered = true;
+                var request = InteractionBehavior.Execute(this, player);
+                _overlapTimer = 0f;
+                return request;
+            }
+        }
+        else
+        {
+            // Player left — reset timer
+            _overlapTimer = 0f;
+        }
+
+        return null;
+    }
+
+    // Reset triggered state (call after map transition completes)
+    public void ResetInteraction()
+    {
+        IsTriggered = false;
+        _overlapTimer = 0f;
+    }
 
     // Restore state from persisted data (used when loading map state from DB)
     public void RestoreState(int currentHp)

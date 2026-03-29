@@ -25,5 +25,6 @@
   "category_creature": "生物",
   "dead_suffix": "(死亡)",
   "corpse": "屍體",
-  "effect_label": "效果"
+  "effect_label": "效果",
+  "teleporting": "正在傳送至 {0}..."
 }

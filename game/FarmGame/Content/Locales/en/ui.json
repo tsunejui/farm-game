@@ -25,5 +25,6 @@
   "category_creature": "Creature",
   "dead_suffix": "(Dead)",
   "corpse": "Corpse",
-  "effect_label": "Effect"
+  "effect_label": "Effect",
+  "teleporting": "Teleporting to {0}..."
 }

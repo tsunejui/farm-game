@@ -24,6 +24,10 @@ physics:
 
 logic:
   default_effects: []
+  interaction_behavior: "teleport"
+  charge_time: 1.0
   action_handler: "portal_logic"
   max_health: 0
   faction: "friendly"
+  is_interactable: true
+  is_invincible: true

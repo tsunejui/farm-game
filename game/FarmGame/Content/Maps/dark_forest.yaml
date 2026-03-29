@@ -194,3 +194,12 @@ entities:
   - item: "chrysanthemum"
     tile_x: 39
     tile_y: 23
+
+  # Return portal to farm
+  - item: "portal"
+    tile_x: 24
+    tile_y: 22
+    properties:
+      target_map: "farm_home"
+      target_x: 36
+      target_y: 15

@@ -37,6 +37,9 @@ public class GameMap
     // Player proxy for effects that interact with the player (not in Objects list)
     public WorldObject PlayerProxy { get; set; }
 
+    // Pending interaction request from overlap detection (consumed by PlayingScreen)
+    public Interactions.InteractionRequest PendingInteraction { get; set; }
+
     public GameMap(string mapId, int width, int height, Dictionary<string, Color> terrainColors)
     {
         MapId = mapId;
@@ -208,6 +211,20 @@ public class GameMap
             PlayerProxy.State.Update(deltaTime);
             PlayerProxy.UpdateEffects(deltaTime);
             PlayerProxy.UpdateEvents(this, deltaTime);
+        }
+
+        // Check interaction overlaps with player
+        if (PlayerProxy != null && PendingInteraction == null)
+        {
+            foreach (var obj in Objects)
+            {
+                var request = obj.UpdateOverlap(PlayerProxy, deltaTime);
+                if (request != null)
+                {
+                    PendingInteraction = request;
+                    break;
+                }
+            }
         }
 
         foreach (var anim in _animatedTextures.Values)
