@@ -73,6 +73,9 @@ public class PlayingScreen : IScreen, IWorldRenderer
         // Set world bounds once at map load (not per-frame)
         _camera.SetWorldBounds(_currentMap);
 
+        // Register player as inspectable object
+        _inspector.SetPlayerObject(_player.WorldProxy);
+
         // Wire interaction callback for interactable objects
         _player.OnInteract = obj =>
         {

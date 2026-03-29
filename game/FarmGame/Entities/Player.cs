@@ -51,6 +51,9 @@ public class Player
     // Callback when interacting with an interactable object
     public Action<WorldObject> OnInteract { get; set; }
 
+    // WorldObject proxy for inspector (synced each frame)
+    public WorldObject WorldProxy { get; private set; }
+
     public Player(Point startPosition, GameMap tileMap, Direction facingDirection = Direction.Down)
     {
         _movement = new MovementAction(startPosition, tileMap, facingDirection);
@@ -62,6 +65,14 @@ public class Player
         // Initialize from config defaults
         MaxHp = GameConstants.PlayerMaxHp;
         CurrentHp = MaxHp;
+
+        // Create WorldObject proxy for inspector
+        var playerDef = new Data.ItemDefinition
+        {
+            Metadata = new Data.ItemMetadata { ItemId = "player", DisplayName = "Player", Category = "creature" },
+            Logic = new Data.ItemLogic { MaxHealth = MaxHp, Faction = "friendly" },
+        };
+        WorldProxy = new WorldObject("player", playerDef, startPosition.X, startPosition.Y, null);
         Strength = GameConstants.PlayerStrength;
         Dexterity = GameConstants.PlayerDexterity;
         WeaponAtk = GameConstants.PlayerWeaponAtk;
@@ -91,6 +102,11 @@ public class Player
 
         foreach (var action in _actions)
             action.Update(deltaTime, keyboard);
+
+        // Sync proxy for inspector
+        WorldProxy.TileX = GridPosition.X;
+        WorldProxy.TileY = GridPosition.Y;
+        WorldProxy.State.SyncHp(CurrentHp, MaxHp);
     }
 
     public void Draw(SpriteBatch spriteBatch)

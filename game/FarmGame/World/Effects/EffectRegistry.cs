@@ -1,16 +1,22 @@
 // =============================================================================
-// EffectRegistry.cs — Maps effect IDs to IEffect instances
-//
-// All known effects are registered here. Use Get(id) to look up an effect.
+// EffectRegistry.cs — Maps effect IDs to IEffect instances and YAML definitions
 // =============================================================================
 
+using System;
 using System.Collections.Generic;
+using System.IO;
+using Microsoft.Xna.Framework.Graphics;
+using Serilog;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
+using FarmGame.Data;
 
 namespace FarmGame.World.Effects;
 
 public static class EffectRegistry
 {
     private static readonly Dictionary<string, IEffect> _effects = new();
+    private static readonly Dictionary<string, EffectDefinition> _definitions = new();
 
     static EffectRegistry()
     {
@@ -27,5 +33,45 @@ public static class EffectRegistry
         return _effects.GetValueOrDefault(id);
     }
 
+    public static EffectDefinition GetDefinition(string id)
+    {
+        return _definitions.GetValueOrDefault(id);
+    }
+
     public static bool Exists(string id) => _effects.ContainsKey(id);
+
+    // Load YAML definitions + textures from Content/Effects/
+    public static void LoadDefinitions(string contentDir, Func<string, Texture2D> loadTexture)
+    {
+        var effectsDir = Path.Combine(contentDir, "Effects");
+        if (!Directory.Exists(effectsDir)) return;
+
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(UnderscoredNamingConvention.Instance)
+            .Build();
+
+        foreach (var file in Directory.GetFiles(effectsDir, "*.yaml"))
+        {
+            try
+            {
+                var yaml = File.ReadAllText(file);
+                var def = deserializer.Deserialize<EffectDefinition>(yaml);
+                if (string.IsNullOrEmpty(def.EffectId)) continue;
+
+                // Load icon texture
+                if (!string.IsNullOrEmpty(def.ImagePath) && loadTexture != null)
+                {
+                    try { def.Texture = loadTexture(def.ImagePath); }
+                    catch { Log.Warning("Failed to load effect icon: {Path}", def.ImagePath); }
+                }
+
+                _definitions[def.EffectId] = def;
+                Log.Debug("Effect definition loaded: {Id}", def.EffectId);
+            }
+            catch (Exception ex)
+            {
+                Log.Warning("Failed to load effect YAML {File}: {Error}", file, ex.Message);
+            }
+        }
+    }
 }

@@ -56,8 +56,9 @@ public class InitManager
         // 4. Graphics + Font + Myra
         SpriteBatch = GraphicsInitializer.Run(game, graphics, contentDir);
 
-        // 5. Data Registry
+        // 5. Data Registry + Effect definitions
         var registry = DataInitializer.Run(contentDir);
+        FarmGame.World.Effects.EffectRegistry.LoadDefinitions(contentDir, loadTexture);
 
         // 6. Screens
         var titleScreen = new TitleScreen();

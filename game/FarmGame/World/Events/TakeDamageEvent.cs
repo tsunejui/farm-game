@@ -1,9 +1,8 @@
 // =============================================================================
 // TakeDamageEvent.cs — Applies pre-calculated damage to an object
 //
-// The damage amount has already been computed by the hit handler chain
-// (CalculateDamage → ApplyEffects). This event simply distributes it
-// over DamageTickDurationMs via ObjectState.TakeDamage.
+// Damage = 0: shows "0" damage number but does not deduct HP.
+// Damage > 0: distributes over DamageTickDurationMs via ObjectState.TakeDamage.
 // =============================================================================
 
 namespace FarmGame.World.Events;
@@ -25,6 +24,15 @@ public class TakeDamageEvent : IObjectEvent
     public void Start(WorldObject obj, GameMap map)
     {
         _started = true;
+
+        if (_amount <= 0)
+        {
+            // Show "0" damage number but don't deduct HP
+            obj.State.ShowDamageNumberOnly(0, _isCritical);
+            IsComplete = true;
+            return;
+        }
+
         obj.State.TakeDamage(_amount, _isCritical);
     }
 

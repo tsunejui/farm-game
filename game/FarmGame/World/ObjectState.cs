@@ -79,9 +79,23 @@ public class ObjectState
         Faction = faction;
     }
 
+    // Sync HP from external source (used by Player proxy)
+    public void SyncHp(int currentHp, int maxHp)
+    {
+        CurrentHp = currentHp;
+    }
+
     public void TriggerBounce()
     {
         _bounceTimer = BounceDurationMs;
+    }
+
+    // Show damage number without actually deducting HP (for 0-damage hits)
+    public void ShowDamageNumberOnly(int displayAmount, bool isCritical)
+    {
+        LastDamageAmount = displayAmount;
+        LastDamageWasCrit = isCritical;
+        _damageNumberTimer = DamageNumberDurationMs;
     }
 
     public void TakeDamage(int amount, bool isCritical = false)

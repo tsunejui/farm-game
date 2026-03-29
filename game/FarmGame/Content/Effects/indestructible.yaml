@@ -1,0 +1,3 @@
+effect_id: "indestructible"
+description: "Immune to all damage. Incoming damage is reduced to 0."
+image_path: "Images/effects/indestructible"
