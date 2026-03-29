@@ -1,0 +1,88 @@
+metadata:
+  name: road_071
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#95948d'
+  b: '#827b69'
+  c: '#2c2920'
+  d: '#8d8673'
+  e: '#131b1f'
+  f: '#24221d'
+  g: '#111210'
+  h: '#10161a'
+  i: '#090b0d'
+  j: '#77705e'
+  k: '#343229'
+  l: '#201b11'
+  m: '#010b14'
+  n: '#68614f'
+  o: '#05111b'
+  p: '#484438'
+  q: '#b3a07e'
+  r: '#58503d'
+  s: '#615845'
+  t: '#46371c'
+  u: '#5e4624'
+  v: '#7c5f32'
+  w: '#b08c4d'
+  x: '#8c7141'
+  y: '#d4b671'
+  z: '#d1a451'
+  '0': '#f1d37f'
+  '1': '#f6dc88'
+  '2': '#f9e49b'
+  '3': '#000000'
+  '4': '#eec76b'
+  '5': '#e8bb5c'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ..aaaaaab...............cc..................
+  ...b.bbddaadbb..........c...............c...
+  ef.....baaaaaad........cc..............fghhh
+  iigigf.baaaaaadbbj..bb................klgghm
+  ek.clk..bjnjjbddadaaaab..............kkkckfo
+  ......ckkppppnbaaaaaqad.........kfllggcprnkh
+  f.b..kliilggcrjdaaaaaa..........kligigfpsrkh
+  e....pcllcllfppnjbbdaa.......kkcccttccksnkgi
+  h...nrruvvuutckck..bdd......cggltvwwxrrsnkii
+  e...nnvxxwwvuttllc...j...cfllgltvwyywvsnnkgm
+  e.bjnsvxxwwwqqbstcck.....liilrxqyyyzxurjj.gm
+  e.bbjuuuvwz0122qnclfc...cg3gpq0214zwuttnj.ho
+  e..bjttuwz502222qbspk..kflcnq02215zwutuj..hm
+  h..bnttvz040122222qjpp.clcby222105zwvtpn..hm
+  h.bdnttxz0000002222dsp.pfkq22214444zvttn..hm
+  e.bbnuuwy444400122ybss..ftq22045544zvup....o
+  ....jbxwz5z5444122yjrn..ktq1055zz55wxspk....
+  ..ecjqqxwzz5555412yjrs..ftw105zzzzwwxbslie..
+  ..ogsqqvvz55555012yxrr.pftw00555zwvvxdsiie..
+  ..misqduvz44555012yxrp.pctw00445zvuuxbrgm...
+  ..oipdjuvz44444022yxrrrpctw00445zvuuxbpgo...
+  ..oipdntuw44000122qxrrrpctw10555wvuunjpgm...
+  ..oipbntuw40110122yxrrrpctw0055zwvuunjrgm...
+  ..omkjjuvw40000022yxrrrpctw005zzwvuusjpgm...
+  ..ooknjvuwy4010122yxrrrpltw0055zwxvusjpho...
+  ..omerbvuxy4011112yxsrrpltw0055zwxvunnkme...
+  ..omgrjuuxz4111011yxsrrpftw4055zwvvusnkm....
+  ...mhpnuuxz4101000yxrrrpctwy444zwvvurpfh....
+  ...mgksruxz5444400yxrrrpctwy555zwvvsskgm....
+  ...mg.nnvwwwzz5400yxrrrpctw05zzwxvvnnkim....
+  ...ef.nsjqqwwwz540yxsrrpltwyzwwwxvsrrkgo....
+  ......ppnddxxxwz54zxnrrpftwywvvxxjrkcf......
+  oo....clkrruvwzzyywxssspctqyxtuvjnplgk..emo.
+  oo...kgiillcrdqqwqqjns.rkpqyxtttppkggc...mo.
+  oo....cggglftnjxvbbjj...kpdaslllllfll....mo.
+  ooe........kfffctsnjj...kksnpflgllc......ho.
+  ome..dbbb...fi3lfprs....kffckkcfkkk.....fmo.
+  omo..ddadbb..flllffkk....gigc............oo.
+  ooo.............kligf...cggh.............oo.
+  ..............b..kkkk..cfge.................
+  .....ooie...bddbbbbdb..ckfc........choo.....
+  .....ommh.......aaqqa..............ehoo.....
+  ......ooe.......baaad..........fhgioo.......
+  .........eehgef...............fhmmmme.......
+  .........ommmih...........eghhehoooo........
+  .............eeefccc......fgmmo.............
+  ...............heefkk....ffioo..............
+  ..............emighfffehheffee..............

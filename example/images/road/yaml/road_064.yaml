@@ -1,0 +1,88 @@
+metadata:
+  name: road_064
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#03141f'
+  b: '#040d15'
+  c: '#161e24'
+  d: '#93958c'
+  e: '#b4b5aa'
+  f: '#8c8d85'
+  g: '#82857d'
+  h: '#7a7d77'
+  i: '#a1a59b'
+  j: '#a1a299'
+  k: '#8f9189'
+  l: '#11171b'
+  m: '#121c24'
+  n: '#95988e'
+  o: '#a9ab9f'
+  p: '#80827c'
+  q: '#85867e'
+  r: '#868881'
+  s: '#999a90'
+  t: '#7e8079'
+  u: '#767a73'
+  v: '#9c9e94'
+  w: '#9e9f95'
+  x: '#86877c'
+  y: '#888a81'
+  z: '#757770'
+  '0': '#898c85'
+  '1': '#9fa198'
+  '2': '#a5a69c'
+  '3': '#2c2f2f'
+  '4': '#797a73'
+  '5': '#000000'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ...........abbcc..def....gh...........................................................gijk....hg..cllmam...........
+  ...........mmc....nod....ph...........................................................qijf....gr...................
+  .........am....dskknt...ugu...........................................................qivf....gr...................
+  .........am.ieooowxp....ughh..........................................................qwsf....pphhrr....c..........
+  .........bcheeesndx......puh..........................................................pssk....utpfivp...ll.........
+  .........bcheejyxfp......huz..........................................................pwnf....u0yk1nh...caa........
+  .........bcheekpf1f......thh..........................................................r2s0..3.4kf0kr.....ma........
+  .........bcteofpfsdh.....puu..........................................................r1vq..3..gp........la........
+  ........cbcuevzzrrhu.....rhz..........................................................r1nq..3............lbm.......
+  ...abbllbbctey..........uqtu........................................................3.zds0..3............lbm...a...
+  ..abllccbbctet..........upzu...........................................................0dp..........u....lblc.maa..
+  .mc3zzpz3bche0..........utuu..........................................................hy0u.........tgp..clbc.......
+  aa.deeei3lctewz..........puu...rnsssssnsnnssndnssndnnsnnnndnnddnnnnnnndnddkdddddddnsnk00p.........zr0p..cbl.......a
+  aa.ieee2zlcteop...uz.....pz...t2jiiij1jij1jjjj1ji11iijjjiiiijji222jj22ijvv1jw11j22i2o1ktu..........hpph..ll.......a
+  ab.noeed35cgeek.......3..p....022jw1ww1jvvvvjjv1vsvwi1wv1ww1jjv12jvvjivvnnww1vsw2oijoiku....3........ph..bb.......a
+  ab.qoswh3bcue2y..........g....no2jijwj2ij1vv2i11wviw1wj1j1vwjjjw1w1wjwjwnnsswvsv1j11j1du....3............bb......ca
+  ab.pwvjt3bl.g4.......33..h....pkf000rrff0rr0f0rxxyyyrqqrrqqqr00rrrrryqqgptttgggpqqqggqu....3c............ll......ca
+  ab.0wost35l........3333....................................................................33............ll......cb
+  ab.roeox.bl.f...................................3........................................................lb......ma
+  ab.keoef.5cgowqgyrgrffh.....tpz44z...4pptphhttt4zhpth4httttttttthhhhhthhuuz4tthuz4hhuzzt4z.hrpprt..uhr0p.lb......cb
+  ab.noooy.bct2jddwvv1221r..ufvwvw1sk0djo2oo21jii1vw2oijioiioi2o2iii22i2ij1vv1ji1vvv1wvvv1111ji22ivdn1viir.lb......cb
+  ab.kojwp.bc.yth4ptgr000t..upqpgr0rhhgff0fk0rqr00rr000fr0k000r000kk0f0000rgr00rrry0yrgr0000000k0rptqk00k..lb......cb
+  ab.kowwy.b3..............................................................................................cl......cb
+  ab.ko2jf.l3..............................................................................................cl......mb
+  ab.0oooq.lc..............................................................................................ll......mb
+  ab.kowjp.l3..............................................................................................ll......mb
+  ab.k1sd4.3...............................................................................................cl......mb
+  ab.k2kyt..................................................................................................3......cb
+  ab.rjsk0h4zt4z4uuhz4hu44z4zz444h4huzu44huu4h444hhhuu444hzz44hh44444hhh44hz4hh4z44..uhu..uzzzzzh4zzzhtphh.........cb
+  aa.0ijddsdxt44qyxxxfyryxyyxxxxyyrqqqrqqqxrrrxxqyyryyqpxxxxgxyyqqyyrq0ryqqgqrf0qpghp00ggggtttggqqqrqxkfryft..3....cb
+  ab.nowdssnfxh4gfpxkkffffffyxxxyfxyxyyyxxyfyxxxxxxxyyyxxxffxyyyyxfffykfk00yfykdkxxpqf0rfyyxxfffyfkdfykkyfnf..3....cb
+  ab.noo2j2o2vxpxyfkwjvsswwwssdnssssssssnnsssnnnssssssssssvsssssssvvwdkgydjssww2jsdktzzz0swnnssdkdwwvsndnswvr......mb
+  ab.deeeeeeewkdkfdooeeooeeeeooooeooooooooooooooooeooeeeeeeeoeeooooees4..neeoooooj2n4...gv2ij22wvw2oo2wswjj2st.....mb
+  ab.keeee22sxpdrpkoeojjooo222oo2222222j222222222222222222ooo22wvwwo2f...keeisdkykskz...zfnkfknkfdswsskfddddsnpz...cb
+  ab.0oowvxh......4ynktgfkyxxxxyrpppqqgggxxggggxxgttxxxgttgxxgphz4hyqz...tsvx.....u4....zz....z4uzuhzzzzzzzzrkrh...cb
+  ab.diyzz..........zzz44................................................z4...........g0h.....................z....cb
+  aa.nv...............................................................zkfq............0vf..........................cb
+  ab.dn...............................................................roon............tkr..........................mb
+  ab.dv...............................................................tvi0.............u...........................cb
+  ab.ks.................................................................u..........................................cb
+  ab.0k............................................................................................................cb
+  ab.dk............................................................................................................cb
+  ab.dk............................................................................................................cb
+  ab.0k............................................................................................................cb
+  ab.hg............................................................................................................mb
+  aa...............................................................................................................mb
+  aa...............................................................................................................aa
+  ...........cc.cccccccmmmmccccmmmcccmmcmcccmmcmc..cmmmccmmmmmlmm...cc.cmmmmmcmmmmmccmmmmccccmmcccmccmcmcccccmmm..aaa

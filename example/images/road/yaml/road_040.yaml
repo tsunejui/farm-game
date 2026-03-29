@@ -1,0 +1,96 @@
+metadata:
+  name: road_040
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#211f1d'
+  b: '#171d20'
+  c: '#141719'
+  d: '#2b2420'
+  e: '#201816'
+  f: '#101212'
+  g: '#524942'
+  h: '#493d36'
+  i: '#625c55'
+  j: '#7a7970'
+  k: '#2e2925'
+  l: '#3b2f28'
+  m: '#59514a'
+  n: '#9a9b90'
+  o: '#090b0d'
+  p: '#3d3631'
+  q: '#3c322c'
+  r: '#382b24'
+  s: '#000000'
+  t: '#291f1a'
+  u: '#483930'
+  v: '#534238'
+  w: '#4f3e34'
+  x: '#574339'
+  y: '#5a463c'
+  z: '#5d4b40'
+  '0': '#533f35'
+  '1': '#49352c'
+  '2': '#4e3a30'
+  '3': '#45342b'
+  '4': '#453028'
+  '5': '#4b392e'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  abccbbaadeffegghijjj..........kffelm
+  cbbcbddaakgmgjnnj............keofepm
+  eaabaaaff.jjnnnnj.pq.......kcceaceqg
+  adkkdaooo.jnnnnj...........dcalqdekm
+  cakdaefoe.nnnj...........aaeekhhderm
+  aafcakhq..nnn..qk.......aofadpggkerg
+  acookijnj.jj...........deferphmgrerm
+  cfsfkjnnn..p.........aaedtruhhvhdelm
+  kpdqmjnnj..........acfeakphwvvxwdeqm
+  gjjjnjj..q.........effequgvyz0w1term
+  ijnnn..p.q.......kdeedkuwvvyy021derm
+  nnnnn.pp.......aefeadhuvw0w2220udelg
+  njjj........qaeeaadkluvyx0w331u3deqm
+  n...........dffepuhu3wyx011443w3derm
+  j.p........qtfedhzv0ww02214442zwderg
+  .........aaeadrqvyyyx2244445wyzwderg
+  ........dffekuuu00zzx024l45xzzzhderg
+  ......kaaakrpvv0xxxx25144wzyzxx3dt3m
+  ......aedqhhvv0xy0y2432w0zmzy21ltrgi
+  ....kktdluxvyxx02114r4yzzzyxw22ltqmi
+  .kaeetkuh2000xy23rrr42zzzzv135w4trmi
+  .afftr3yyvx000054r450yyxxvw112z2trii
+  .dfdq3wyzyx0ww53341yzyy055225xzwdq.j
+  .kerhw2x000541440yzzx0w512w5wvvhrh..
+  .qtruw0000024343xzzz0153351wyywrkpmm
+  .pkux22112w1443wyyxv2134135vzvudpmgp
+  .qrhyw014344431vzx05254552wwhphmm.gl
+  ktd30w144443u0vx0225w5512xxuktgjj..r
+  dedq254rrl45wyzx015522532yzutthjj..p
+  eetuu44rr1wvxyx02115515vvvvlkpmj....
+  detqw14440zxvvx555211w0xvuldp.j..pq.
+  ketlu110vyy05151420550wghrtfl.j.m...
+  ketqu32yyyyw33311wwwwu3pqkked....m..
+  ktk3wvxx0213335132wxg3deek...ph.....
+  ktrhwyzx044rl5v25uuvgptefk.j..qhm...
+  dekuwx02134rl20vwlrrqrlqdq.j..mm...k
+  dtru2ww444443wxyhreteeh....mm......a
+  ktduw13lr41uuwwvhktteeh..m.........b
+  deruv144r4uwwhhurrhmhh.m........kccc
+  deduh11443wuurrrtdm.............boof
+  dedqu4331wvuqtetdd..j........kkbfofb
+  dedrr43w2hh3ltekph.m.....qaccffoof..
+  qkdrl3uww3rdpppgim.h.m....fooffoob..
+  ..hrdqh33reehmijj..h.m....coc.......
+  ...kdlpllrtkhmiij.m......accb.......
+  ...kettttpggmmmgmg....dffcb.........
+  ...dffeea.......m.....boofb.........
+  ...dffekp.........qaabbcb...........
+  ...aoodgmm........doof..............
+  ...doodm......kaaabooo..............
+  ...qtergimm...affbbcfb..............
+  ..mmgggmm.....bff...................
+  .mimij.mm...kcfcb...................
+  ggggm......acso.....................
+  .ggg.......bcoo.....................
+  .....kdbbcbfbb......................

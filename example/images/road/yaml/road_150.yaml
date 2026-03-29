@@ -1,0 +1,94 @@
+metadata:
+  name: road_150
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#041c20'
+  b: '#041718'
+  c: '#03110e'
+  d: '#040b06'
+  e: '#10241b'
+  f: '#16150c'
+  g: '#1c241b'
+  h: '#21311f'
+  i: '#181d16'
+  j: '#081f1b'
+  k: '#2c3f27'
+  l: '#516345'
+  m: '#55442c'
+  n: '#3a311e'
+  o: '#60523a'
+  p: '#6f7a5f'
+  q: '#776449'
+  r: '#344e2f'
+  s: '#8e795d'
+  t: '#d0bc9f'
+  u: '#a6a281'
+  v: '#a19277'
+  w: '#13291c'
+  x: '#04160c'
+  y: '#17311a'
+  z: '#092219'
+  '0': '#071b10'
+  '1': '#4e7045'
+  '2': '#3e6037'
+  '3': '#5a7c4f'
+  '4': '#719065'
+  '5': '#000000'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .......................................................aaaa.
+  .....ab..........................aa...................acddca
+  ....effghg.......................aaa..................iiiiig
+  ..ajklmnop.ga..................b.....a.............ae..poqpr
+  ..bistuvutsgcb...............ab......ba............bhqututtp
+  .achutttttqide................cj....wba...........jigqvtttuq
+  .acgstvsvsnfdfja.............acx....eca..........bdfimoqsuvm
+  ..bfnqsqomnmmrhj..............cdy...eca..........ginomnmoomh
+  ..adfovqmoquuuphb.............cx....wza........jgkmqsqoqonfi
+  ..adgsussuttttumcb...........ab0.....eb.......bcgpvutuuusnfc
+  ...chpvstttuttvmdj............w...1...j.......ccksttttutuodc
+  ...agknovtvoosvqgi..............112...xa......bdfovvvvvspkib
+  .....idfqsmnmsttphj........ab...122...xa.....jdffnoommommke.
+  .....bdfnqqqqutturja.......bx...1221..xb.....egmooommmnffg..
+  ......bfnvtuutttvndw.......cx...2223.hxa.....ilutuvssvoffj..
+  ......bfquttuvtvqgdjw.....ac0..122211kxb....bgptttttttvoic..
+  ......aiosvsqqqsqniig......c0..311133kxb....biouuvvuuvpmfc..
+  .......cgmonnmmsvsqnd.4u..jdx.4321133rxb....cdnqsqqqmnnicb..
+  .......ajffffnqvtttofkvu..ed0.41r2333r0c....xfnosqqoifibba..
+  .........b5dnovttttqfkp4..edw.42k2333lwb...ximosuuvoifb.....
+  .........aciosvuuuvodgp4.wecz.4.yk214l0x...insvutuuphc......
+  ...........hossqsqonfh4v.0ecw...yk23420dw..kmsvsqsvlhc......
+  ............momoqmmnfhpphdcdh..khrrrlk0ce.gkoqqonmmnia......
+  ............gnmommomnoplgddch..h21kwwibbh.khmqqomngfg.......
+  ...........aifnoqqssqqqlkkkgg..yl3kxddci..khmoqvsmhf........
+  ............exhoqqsssonkp4vrig0ylpkddx0i..lrmmquvqge........
+  .............whmqqqqqmfilpvlf00w33kxciii..lrmmospr0a........
+  ..............ihoomoqmfdihlrdxey33h0bbce..lknoqlrica........
+  ..............bikooqlkd5ddmrfxeh33k0ebc0..2r2l32hea.........
+  ...............egklp.kdxdfppgd0kp3k0ejcz..rr2l2hb...........
+  ...............ajgk...0xdip4gx0kppk0zweh..hkk.hcc...........
+  ................acx...jcxh4urixhp3k0w.....h...eca...........
+  .................bbe...jw.4ulhdhppk0........ye..............
+  ......a...........ab.......v4kxk4ph0h..hk...0j..............
+  ....abba...........aa...e0h34hdkp3ke...hr...0b..............
+  .aa..wjbebb.............bd0lphxklrh....h....xb........bbcccb
+  bab....hkheea...........w0il3hxk2y0....w....we........yw0000
+  a.......p4lh0bbcdcj......zwl3hy22yxe..ww....wwwjj.w.........
+  e....4444u4lhz0xxzw...a..eer3rr31ydc..0....zxexdxx0...444444
+  ..44444uuv44l2lrr2kwba...bzr311plyxe..0...h000w0y0e.444u4444
+  e......p44p44444332exj..ec0r1133ly0w..w..yywy........p34p31p
+  ajbjz0ih2p334444432yxj...bw2lrlp1h0e..w..00...4444...rr.....
+  aabcccdxhkk21344443ree...wh2lr231k0xewz..wy..33444..00e00wee
+  ....aejcb0xxy2343112yzzj.wek2r21lh0wy...hk..12143..wxccdcccd
+  .........jcc02p43222ry0c0z0krkr1..y....ky.r211331..zba.aaaaa
+  ..........abek1331211rexzk2rkyr.....44....r2233..zj.........
+  .............wk2212132heyrl2kkr..........rkkr2..wz..........
+  .............j0y.222112khk2ry.....0ee.yh..k....zj...........
+  .............aj....2111rkyhky.....00wyh........za...........
+  ...................2122ryeykyh....yyyy......................
+  .................y..12rkhyyyyk......yy.......ww.............
+  ..........aba....0e..1.hkky............kk...yxe.........a...
+  ..........bcbj.wzxxy...kyk.....kyy....kk....w0e..wej....a...
+  ..........ee0xx0z00y............y0w..kkr...hww0cxw.jw.......

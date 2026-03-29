@@ -1,0 +1,79 @@
+metadata:
+  name: road_158
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#041e1f'
+  b: '#011819'
+  c: '#8ca973'
+  d: '#7d9b67'
+  e: '#031809'
+  f: '#001009'
+  g: '#001410'
+  h: '#375132'
+  i: '#193111'
+  j: '#1b321c'
+  k: '#152c16'
+  l: '#1f381a'
+  m: '#6a855c'
+  n: '#476737'
+  o: '#5f7d4b'
+  p: '#102717'
+  q: '#466138'
+  r: '#749260'
+  s: '#6c8b54'
+  t: '#2e4925'
+  u: '#081e0d'
+  v: '#08231e'
+  w: '#5b7848'
+  x: '#62834d'
+  y: '#274127'
+  z: '#54763e'
+  '0': '#4f6e39'
+  '1': '#3a582b'
+  '2': '#234018'
+  '3': '#325123'
+  '4': '#3e5f2d'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .............aaaa.......................
+  ........................................
+  ............b..c.ab.....................
+  ...........bb..d.efgg...................
+  ...........bg...hijkffa.................
+  ...........bfl.mnodolega................
+  ...........bfpqrsdccotpb................
+  ...........afuqrsrdccdhv................
+  ...........vfjwrsxxsccqu...........v....
+  ............gyrrsdsxsrqeb........aggfggb
+  ...........vuhddrcswzoqjuv.......kkjkk..
+  ......abbvavptmdsr01nrdqkj....ae..mowmd.
+  .....avpugeeeymdsz223sdmwhv..vuk.cccccc.
+  ....vjhqhyjfflrcs0223zomdqpgfeuhdccrdr..
+  ..bgjwccmoqje2mds031zwnzohufek2qrrzzxoqp
+  .bguqrccddr1itwxoxs0n4311lpuiqw0zo00rsqu
+  ajhwdcroxrsqilttwrdxn3t44iiltzon4140sshu
+  ahrcccxzzz01iiii1omz43qnqt3nnnn33334zx.j
+  bjhqmsro44n4ttti2333334q3t40n44440nzsr..
+  .aeuhxx0334wowhill244133t2t14zoz0zsw....
+  ..ffk4004nzsrm12l2thqqhht22t10wzzxxnlpv.
+  ...fejqmsoooo02iiytthhhh2ill2440scd0ufg.
+  ...bgjqmrxwnn32iilyylllljikll210wmmhegv.
+  ....vulqh11n42ylljljjjkkjjkii2333tlpeb..
+  .....bupuultttttylljjjkjllki21q1ieefu...
+  .....vvueeuyhtthyjkjjkkkllil2qw3ieefu...
+  .......uepihq32tyiilliiiiii2tqoztljkpv..
+  .......pultqn13tt2222ttt331440oz0w...va.
+  .....vvkyhwo0nq122t11314zzwz0nn40xrm.pa.
+  .....bphqzxo0n042tnxsowwzoxz441310zm..aa
+  .....vywmwz040on33zrdrrsxzzn10044nz...ba
+  ....aymdcsw04zs02lhwwoxw00z000oxxn1...a.
+  ....bymmmxso00xn2ll2hqq121nzxxrdx1lpp.a.
+  ....bpyt3ocr0nzo.pupjjkki21zsssds1ueg...
+  ....bbeelwds0zrr.peujpuuki1srxwxm0jgg...
+  .....vgfi0ddsxm...vv.vvpk.nssw00rmygb...
+  ......afymdrm........v.vv..rdswwmoygb...
+  ......vahmmq..ev............qq0wqqybb...
+  .......ayhhkuega...........jkjlyyyvaa...
+  ........abgffgb..........vggfggggba.....

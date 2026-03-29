@@ -1,0 +1,75 @@
+metadata:
+  name: road_016
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#5e4d41'
+  b: '#6b6158'
+  c: '#909291'
+  d: '#b2b5b5'
+  e: '#c2c6c5'
+  f: '#362f29'
+  g: '#252421'
+  h: '#282726'
+  i: '#2f251e'
+  j: '#191613'
+  k: '#261e19'
+  l: '#1d1d1c'
+  m: '#3f342c'
+  n: '#a4a7a6'
+  o: '#423831'
+  p: '#352a22'
+  q: '#3f3026'
+  r: '#49372b'
+  s: '#4c3c31'
+  t: '#513f32'
+  u: '#4c392d'
+  v: '#503d30'
+  w: '#534235'
+  x: '#564437'
+  y: '#4f4136'
+  z: '#59493c'
+  '0': '#5a4435'
+  '1': '#100f0e'
+  '2': '#554030'
+  '3': '#594131'
+  '4': '#533d2c'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  abbcccdeeed........fghijkjkjjjlm....
+  cdncccdeedn..h....ojjkipiiiikiiigh..
+  cednnneeecc.......mkkpqrrqprosmkjjf.
+  cddndeeen.......ffmqrturvwxwtyoikkf.
+  cncnddedc......gjimyxaxwzaazsrrmmpp.
+  dncddnnc.......kkpmwxzxzzaaypipsyfkk
+  enndncb.......miprrvtw0azazrpiproijj
+  dnded.......giqsrsutzxwwvqsysrrpijj1
+  nneen.h....gjkqstrszazwqqqmxazyqijjk
+  cdeec.g....lkqsssstzazsqqruxaawqqpfk
+  needc.....ohpsywsxwssrrrquxvxwwstayp
+  dedc.....ggfoyszaxtqpqrwttwvrqrvxazp
+  edn.....f1lmosszaxsqqquwwxtuurruxbai
+  dn......h1kmossysrqquwsttx2uvvuuwbap
+  en......g1jpmsyqpiprxxwtu23332u4zazk
+  dc......hlhmmmrqppquwxt42440z300xxok
+  nc.....glfmsoppqqsvtwx002uu23zawrffg
+  c.....l1lfmooqqquw00220024443aazmif.
+  c.....l1jifqsorstx0323003300wzzzof..
+  ......g1kfqqssvxw24443323aazrqpo....
+  .h....hlpoomruw0032442030aazpkjf....
+  .....ggifysqr230033443azxwoofff.....
+  .....jlimsurr23432244tzzymkf........
+  .....jkfoutt44444302wxyqkikf........
+  .....jgosvt444442zazazmkjg..........
+  ....h1isyv4ur4432zzzzzohh..........l
+  ....hjirtu44r40azsqpo..............l
+  ....hifrrrr420aazpjjf...........hjlh
+  ...ghmorvu40zzazypkf.........h.hl1l.
+  ..l1hosruvwaaxmiif..........l11lh...
+  ..ljhmsuvsyaaypkk...........gjj.....
+  ...jgmsyzyomfff...........h.........
+  ...jlfoyyyfkjg..........hj1h........
+  ...jlmoooofgg...........hgl.........
+  ...1lmofh............j1l.........l1g
+  ...1jhfhh...........h11l.........j1g

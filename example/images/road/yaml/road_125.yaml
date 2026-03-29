@@ -1,0 +1,72 @@
+metadata:
+  name: road_125
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#081a21'
+  b: '#020b0d'
+  c: '#081012'
+  d: '#000000'
+  e: '#161b1a'
+  f: '#2a2a22'
+  g: '#413e31'
+  h: '#383a2d'
+  i: '#59533f'
+  j: '#7e6e57'
+  k: '#9c8c74'
+  l: '#9b8260'
+  m: '#ad997e'
+  n: '#675c43'
+  o: '#7e8074'
+  p: '#a7a696'
+  q: '#aab1a3'
+  r: '#63563e'
+  s: '#ab8d68'
+  t: '#bbc5bf'
+  u: '#927553'
+  v: '#8c6d49'
+  w: '#7a6549'
+  x: '#756044'
+  y: '#544b37'
+  z: '#674f34'
+  '0': '#71573c'
+  '1': '#53432e'
+  '2': '#7f8d89'
+  '3': '#8d9c94'
+  '4': '#7a8780'
+  '5': '#d6dfdb'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .............abbbcbcccbddbb........
+  ............ecbfggggggghhgfeba.....
+  ..........abefijkkkklkkmkknfdba....
+  ..........eehioppppmppppqmlrhheca..
+  ........aefjkklsllllsssllllkkogcb..
+  ........beimtmluvwvvvuvvvwvsmmjiec.
+  ........ceikqmluuvvvuluuvvvlsmpkgca
+  ........efijuulssslsssssluwxwlmoye.
+  ........efyrzwsmsssmmmmmmlx00wwiff.
+  ........egjr1zwuuulssssmsu011zzfef.
+  ........egjx11zzz0vuluuuuv0zz0ygee.
+  ........ehjn1111110xwxxx00zzx01fce.
+  ........efyrrz1z000w0000z0zz0wrfee.
+  ......abcfgnjujvuj00zz00wvwvulwgecc
+  .....aabbfijlllkllw0zzzwlsskkkoiecc
+  ....ac..fhynjxwuuuuw0xwjullljjjih.f
+  ....ca....i1yyz0xjjw0xjjwwxwriyg...
+  .......23oi1h1yzxxnnzrxxnzyrrigh..3
+  .aa..4332oig1yyzxnnrzzrnrzrrnngf..4
+  .cc.2pq3..ggini1rrnrrnxxxnnnyy....4
+  .bc.2pq3..gginiyy1yrnxxxwxnrygg...4
+  aba.43p2..hhgiiiy1yyrrrnnrnrgff...4
+  .be..333....gyygggiiirnniinigf....4
+  .ca..3q34o...ghhhhgyyiiyyyggh......
+  aba..3qqp34.....hhhhhgghhghf...422.
+  aba..2qqqq24...........h.....43p3..
+  .cc..23qqq32o.............43qttq2..
+  .aa...2233pqqtqqqqqq33333pqqqp33...
+  ...aa..2323t555555555555555t32444..
+  ...aba.4243q555555ttt55ttttq32444..
+  ....cc..2433qqqq344422442224.......
+  .....a......4.o4...................

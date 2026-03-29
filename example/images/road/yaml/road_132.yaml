@@ -1,0 +1,140 @@
+metadata:
+  name: road_132
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#87887c'
+  b: '#2d2d2a'
+  c: '#121617'
+  d: '#818177'
+  e: '#949183'
+  f: '#8b8b7d'
+  g: '#7b7c71'
+  h: '#6d6b5f'
+  i: '#272824'
+  j: '#78786d'
+  k: '#7f7e73'
+  l: '#858478'
+  m: '#081014'
+  n: '#001019'
+  o: '#979789'
+  p: '#8c8d7f'
+  q: '#8a897b'
+  r: '#040d12'
+  s: '#959486'
+  t: '#74746a'
+  u: '#45453d'
+  v: '#232421'
+  w: '#9b998a'
+  x: '#919285'
+  y: '#20201c'
+  z: '#909082'
+  '0': '#8f8c7e'
+  '1': '#908e80'
+  '2': '#9f9e8f'
+  '3': '#01131d'
+  '4': '#000000'
+  '5': '#a8a897'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  a.bc.....defgghbci.....jkkjlkk...mn
+  d..c.....lopqqhbmc..........hhg..rr
+  ..bc.....aseaptuccb........uhhj..mn
+  ..bv.....fwoxofumc........hhhhk..cn
+  ..by.....aszewpucc........hhhhj..rn
+  ..ic.....kpqqsfuyy.....tkjgjakd..rn
+  g.im.....kf0qeluyi.....1ws2wosp.imn
+  z.vr.....kefl0luyi....tewo22zol..m3
+  x.bmb....aweq0quvi....ts1lseqql..mn
+  a.b4i....los1sqhib....he0qee0qa..rn
+  a.brb....ke00oluyb....h000w2eqa..mn
+  p..c.....le01zquyv....h1lq252la..rn
+  l........awoow1.yi....teqq252fp..r3
+  d........kfx1sd.ib....t1q0252so..r3
+  k..i............vb.....p0qw2saa..m3
+  l.byb..........byb.....q0qwwk....n3
+  k.bc............yb.....q0p2wt....n3
+  k..c............yv.....ppp2wh....33
+  a..c............yb.....fpfwwt....c3
+  d..mb...........yb.....1plo2g....m3
+  ..bcb.....jkgd..yi.....a1f22fg...r3
+  ..ic.....lxz1pk.cy.....aoo25xxx..r3
+  ..bc.....ds1zpg.ycb....lsxo2ooo.vm3
+  ..by.....jdkk1k.bi......jdkkgpx..r3
+  ..vc.....tgtglg.b............goj.rn
+  ..bmb.....jkklh.b............txg.r3
+  ...mb....tdqkkt.vi........uuu.t..m3
+  k..cb....aws0qk.yi.........t....vm3
+  x..y.....z22oxg.yb.......tfzg..bym3
+  l.bmb....pwwpxl.ci.....jgpwod...vrn
+  t.bmi....loflpk.cv.....lps22sad..rn
+  j.bmb....jqflak.yi.....lzpzo1px..mn
+  k.bc.....jqzlad.yb.....kqfosfdz..m3
+  f.bcb....kzfafk.yi.....lz01elja..mn
+  f.bcb....kxxpzd.yv.....aoz1elkl..m3
+  xtbcb....kfspxd.yy.....aosooqga..m3
+  stbc.....k1zqpd.vi.....lz1o20kl..mn
+  1tbc.....gfzaad.vb.....dq1w2xda..r3
+  xtuy.....g1oaad.vi.....kf0o2zka..r3
+  sjby.....j1e1za.yv.....kffzwqjd..m3
+  xtbc.....gpezza.yv.....azpxoqtg..33
+  ztbc.....kx1q0a.vv.....axzpxljd..n3
+  xtbc.....kx1l1p.yb.....dx1zsqjd..rn
+  shuc.....kfz1qa.ii.....kpqzw1jg..m3
+  etuy....tlooo1a.yi.....dpq1o1jk..m3
+  ztuy....tdzwxod.yi.....ases2slz..r3
+  0tby......tggg..cy.....awwoosap..m3
+  xtby...........byv.....glflfd....m3
+  l..y............vv........tt.....mn
+  ...y.........t...b...............m3
+  ...y.....gddaaa..................mn
+  ...y.....lqfspd.vb...............r3
+  ...y.....jqf1aj.yy...........td..m3
+  ..iv.....jfqddt.yy.....gkgkglda..m3
+  ..vi.....kzzllj.yv.....pszzeolg..m3
+  ..vv.....l2sqzd.iv.....poxeowaj..rn
+  ..yv.....p5wqpl.ib....jzpq1o2qk..rn
+  ..yv.....p52ozl.vb....tzpq0eoaa..rn
+  ..b......gos2xkuvb....tpx1zooqa..mn
+  ..........tpssluvi.....qz0ewola..rn
+  .........uhzwsd.vv....tf11sowaa..rn
+  ..........tqsal.vi.....f1f1swap..rn
+  .jjjjjggjjkaxza.vi.....a1q0eoap..rn
+  xzex11xxxfqqzol.vi.....fzq0ewaa..rn
+  ose111xzzakl1xd.yv...u.q0q0ewklj.mn
+  sz0qqfpqqlqllfg.vv....j0ezsowqlt.rn
+  0f0qq1qqqqllqzg.yv...jfow222offj.rn
+  esee1100e0e01fg.yi..ddlpqezsqkl..mn
+  255222255w22w1t.ib.......thht....rn
+  5555555555552ag.yi.....uu.h......mn
+  sssxez1eeosspk..yy.........h.....rn
+  tt.tthhhtttt....vi....gaqklklad..r3
+  ......uu........vb....a2oe10xzx..m3
+  ....uu..........vb....p2ofq00xo..rn
+  ................yv....f2w0qqqxz..rn
+  ................yv....gwws11xos..m3
+  ................yi.....lfze2w2o..m3
+  ................b.......hk0wxsz.im3
+  ..............bi.........tklg....mn
+  yvvvvvvvvvvvyyyv..........t......r3
+  b..bbb..bb.bbbb..............b...r3
+  .........................tjt.....n3
+  .........................kpsoxp..r3
+  .........................l55552.vr3
+  ........u................l25552..r3
+  ...gpsa.....tjjjttj......f22w5s..r3
+  ...z555xlkdlaf1f00plg...hlwwe2o..n3
+  .uhs5555e00eszeesososlj..jqwo2o..m3
+  ..to5255s001s111zeo2w0jhhhkww2x..r3
+  ..jw5555s10essezswwww1ltttl1e2w..r3
+  ..tw5555222222w22222w221lqeeo52..r3
+  ..j2555522255555555525522ssps52..r3
+  ...pw0llgjkapppfalllaaaafkjtgad..r3
+  .....u..........................vm3
+  .....u..........................vr3
+  ................................vr3
+  ................................vr3
+  .................................33
+  .................................n3
+  cv...............................n3

@@ -1,0 +1,71 @@
+metadata:
+  name: road_159
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#142c1b'
+  b: '#486c3d'
+  c: '#3b612e'
+  d: '#30532a'
+  e: '#203f1f'
+  f: '#1d391e'
+  g: '#163018'
+  h: '#18341a'
+  i: '#19391a'
+  j: '#21441f'
+  k: '#0e2b18'
+  l: '#0e271b'
+  m: '#041c1a'
+  n: '#072119'
+  o: '#061c0e'
+  p: '#264624'
+  q: '#021812'
+  r: '#01140e'
+  s: '#0d2215'
+  t: '#284c24'
+  u: '#2f4f2a'
+  v: '#365a2d'
+  w: '#789d63'
+  x: '#608550'
+  y: '#688d55'
+  z: '#5b804a'
+  '0': '#537945'
+  '1': '#4c713e'
+  '2': '#436937'
+  '3': '#30562a'
+  '4': '#416338'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .........a..bcdefghiij......ki.......la.........
+  ..mmn....ok..b.eepi............pp...aol.........
+  ..qrqn.asrog...jip.....pgi....pt....lol..lll....
+  ..lssrrosoog............gok..jpu...faaorrl.nl...
+  ...eehevuhooh......fi...gog...uu...aossrn...lm..
+  .wxxyz0x0vkooh....ikh...fg....duu..sross....lm..
+  ..ywwwyyy1vioi....gke....g.........hska.........
+  a..ywyzzyyxcppjfigkf....gkf................ln...
+  n...02c20xx1cduigkk.....hkh..............hamqn..
+  rlf..vcc2b21z0bphhge...jhki..t...h.......ksomn..
+  qmrsf...cv32zz1deiie...eie......eff...hhfksaalmm
+  .mqna..etutc0z0b4ege...ee.......ighhghgheff...al
+  .......gfepd4bb0bdep........t...hgffgfeppep.....
+  .......skggjudc0z4pj......tu....fhffijdvvb1b....
+  ......ssgkkgju3bx4ei...t....d...egghfu4440yxzx..
+  .....losfhkgepjv14ji...tu..v3dupeifjtv1010yyxyww
+  .....fhfeiiepjjt44tj....u3.33vtjjjpuvc200000yxxw
+  ..nl..bcc44vdpejd3tt.jj.tjtv24tjtv424cc24241y...
+  .ll..xx1b0023ttuv3ddjiitpjjvb23td4111b0b.......s
+  no..yyyyxzzz2t3dvuuvtpt33tjd2ccc3ccc20x.eksonqqq
+  qke.yywwyz012vuddptuuvb1vjjjtv2bct3dvb..krqqqmmm
+  a...wxzxz02243pejudpuczzz2vt30yx03d4....amnm....
+  .....b442bb4vjehepueiv0ywzcc2ywwzct...fal.......
+  ...hkgkgfppeekkahafhgjvxwwy0zywy1bb.pkorn.......
+  ..nqrrrrosssksoslsosgfj1wwwyyzzb1....oqrm.......
+  ...n.mmqrqqmnlalloroohevzwwwy2cvd....sorrm......
+  .......mmmm.....lqqqoafu00xyx2vdeff...aqqmm.....
+  .........mm......mnl..hhd4byy1dekso....ll.......
+  ......................aske..xb.foorl.......m....
+  ......................lrokh....fosqql......m....
+  .....................mnmnlnk....lnqml...........
+  .....................mn...ll....lm..............
