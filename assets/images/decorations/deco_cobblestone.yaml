@@ -4,51 +4,51 @@ type: "png"
 output_dir: "Images/decorations"
 palette:
   ".": "#00000000"
-  "A": "#5f5a55"
-  "B": "#716c67"
-  "C": "#746f6a"
-  "D": "#7d7873"
-  "E": "#77726d"
-  "F": "#76716c"
-  "G": "#7b7671"
-  "H": "#817c77"
-  "I": "#7f7a75"
-  "J": "#79746f"
-  "K": "#86817c"
-  "L": "#8e8984"
-  "M": "#7e7974"
-  "N": "#8a8580"
-  "O": "#837e79"
-  "P": "#8d8883"
-  "Q": "#89847f"
-  "R": "#78736e"
-  "S": "#928d88"
-  "T": "#807b76"
-  "U": "#87827d"
-  "V": "#908b86"
-  "W": "#7c7772"
-  "X": "#847f7a"
-  "Y": "#85807b"
-  "Z": "#8c8782"
-  "a": "#88837e"
-  "b": "#827d78"
-  "c": "#8f8a85"
-  "d": "#75706b"
+  "A": "#312c24"
+  "B": "#3a352d"
+  "C": "#363129"
+  "D": "#3d3830"
+  "E": "#37322a"
+  "F": "#55524e"
+  "G": "#464139"
+  "H": "#433e36"
+  "I": "#413c34"
+  "J": "#514c44"
+  "K": "#47423a"
+  "L": "#39342c"
+  "M": "#3b362e"
+  "N": "#4e4941"
+  "O": "#49443c"
+  "P": "#544f47"
+  "Q": "#3e3931"
+  "R": "#3c372f"
+  "S": "#423d35"
+  "T": "#524d45"
+  "U": "#504b43"
+  "V": "#443f37"
+  "W": "#48433b"
+  "X": "#4c473f"
+  "Y": "#3f3a32"
+  "Z": "#4b463e"
+  "a": "#454038"
+  "b": "#555048"
+  "c": "#5a554d"
+  "d": "#4d4840"
 data:
   - |
-    AABCAADEBAFEGCHB
-    BIJGKLIIMNJMOPOF
-    CIJBQQMRMSTDSUEI
-    CCEIVUJDWSITPMFQ
-    AGMXGUXQYUZaHFRH
-    BHYIbILVcZNIXRIX
-    JYNVFRVPQbTdGTaO
-    QPVGWBMUPSGEVWDY
-    USNKIdCDaaIIcITV
-    EVSNTbYdWOaUBNPN
-    BbZSaXKHDFTXLXSS
-    BMbSTbaaOTOILNUN
-    AYHNODIaZSJGSVcJ
-    dOGGbIWHHCWFHKUB
-    BKKBDHBXTEGHNUIF
-    AZPDGWdYOaKPSMGB
+    AABCDEFCGHIIGFJK
+    LBMGBLFDINOPQFIP
+    LLRSECFTUUVHJFWH
+    ACCABBFXWYSEOFGK
+    FFFFFFFFFFFFFFFF
+    ZKaFNWZZQaFZXGMS
+    bNKFXbZcJIFYZJOO
+    PHVFacJbcNFYWbTJ
+    KLSFSVIYKMFNQXQW
+    FFFFFFFFFFFFFFFF
+    bVRdbdFaCAAHHFGa
+    IbbcPdFLUJSWAFYa
+    aOdWZNFAaHNSCFGT
+    ISZDDUFMWCSLLFdM
+    FFFFFFFFFFFFFFFF
+    ZaKFRCDNIHFXCKYH

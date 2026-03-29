@@ -7,6 +7,6 @@ visuals:
   color: "#8E8A82"
   decorations:
     - image_path: "Images/decorations/deco_cobblestone"
-      coverage: 0.15
+      coverage: 0.70
     - image_path: "Images/decorations/deco_stone_crack"
-      coverage: 0.03
+      coverage: 0.05

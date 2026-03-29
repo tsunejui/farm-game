@@ -132,6 +132,7 @@ public class Player
         DrawBody(spriteBatch);
         DrawDirectionIndicator(spriteBatch);
         DrawHpBar(spriteBatch);
+        DrawDamageNumber(spriteBatch);
     }
 
     private void DrawBody(SpriteBatch spriteBatch)
@@ -165,6 +166,42 @@ public class Player
         };
 
         spriteBatch.FillRectangle(rect, Color.White);
+    }
+
+    private void DrawDamageNumber(SpriteBatch spriteBatch)
+    {
+        if (!WorldProxy.State.ShowDamageNumber) return;
+
+        float progress = WorldProxy.State.DamageNumberProgress;
+        float alpha = 1f - progress;
+        float floatUp = progress * 16f;
+
+        bool isCrit = WorldProxy.State.LastDamageWasCrit;
+        string dmgText = isCrit
+            ? $"{WorldProxy.State.LastDamageAmount}!"
+            : WorldProxy.State.LastDamageAmount.ToString();
+
+        var font = isCrit
+            ? FontManager.GetFont(GameConstants.ObjectInfoFontSize + 8)
+            : FontManager.GetFont(GameConstants.ObjectInfoFontSize);
+        Color dmgColor = isCrit ? new Color(255, 120, 120) : Color.Red;
+
+        if (font == null) return;
+
+        int ts = GameConstants.TileSize;
+        float centerX = _movement.PixelPosition.X + ts / 2f;
+        float topY = _movement.PixelPosition.Y + (int)_jump.Offset;
+
+        var dmgSize = font.MeasureString(dmgText);
+        float dmgX = centerX - dmgSize.X / 2f;
+        float dmgY = topY - dmgSize.Y - 8 - floatUp;
+
+        font.DrawText(spriteBatch, dmgText,
+            new Vector2(dmgX + 1, dmgY + 1),
+            Color.Black * (alpha * 0.6f));
+        font.DrawText(spriteBatch, dmgText,
+            new Vector2(dmgX, dmgY),
+            dmgColor * alpha);
     }
 
     private void DrawHpBar(SpriteBatch spriteBatch)

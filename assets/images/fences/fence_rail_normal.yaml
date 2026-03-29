@@ -4,36 +4,36 @@ type: "png"
 output_dir: "Images/fences"
 palette:
   ".": "#00000000"
-  "A": "#5e3d20"
-  "B": "#5f3e20"
-  "C": "#644122"
-  "D": "#674323"
-  "E": "#664223"
-  "F": "#5a3a1e"
-  "G": "#56381d"
-  "H": "#634022"
-  "I": "#6c4625"
-  "J": "#684424"
-  "K": "#5b3b1f"
-  "L": "#603e21"
-  "M": "#6a4525"
-  "N": "#52351b"
-  "O": "#5c3c1f"
-  "P": "#613f21"
-  "Q": "#714a27"
-  "R": "#764d29"
-  "S": "#6d4726"
-  "T": "#734b28"
-  "U": "#704927"
-  "V": "#6b4625"
-  "W": "#664323"
-  "X": "#6e4826"
-  "Y": "#654223"
-  "Z": "#603f21"
-  "a": "#634122"
-  "b": "#624021"
-  "c": "#58391e"
-  "d": "#593a1e"
+  "A": "#3a2412"
+  "B": "#402814"
+  "C": "#412915"
+  "D": "#3f2714"
+  "E": "#392312"
+  "F": "#432a15"
+  "G": "#3d2613"
+  "H": "#6a4625"
+  "I": "#6e4826"
+  "J": "#704a27"
+  "K": "#6f4926"
+  "L": "#694524"
+  "M": "#79502a"
+  "N": "#754d29"
+  "O": "#724b28"
+  "P": "#6c4725"
+  "Q": "#734c28"
+  "R": "#7b512b"
+  "S": "#7d522c"
+  "T": "#81552d"
+  "U": "#80552d"
+  "V": "#85582f"
+  "W": "#7f542c"
+  "X": "#83572e"
+  "Y": "#784f2a"
+  "Z": "#7c522b"
+  "a": "#7d532c"
+  "b": "#84572e"
+  "c": "#7e532c"
+  "d": "#6b4625"
 data:
   - |
     ................................................
@@ -42,26 +42,26 @@ data:
     ................................................
     ................................................
     ................................................
+    .ABCDCEEFFCECCFFDEAGEEEBCBEACECAAAEADCEBGFFDDEE.
+    .HIJKJLLMNJJJJOLLLLPLLHJOJLPJQJLHLHHKKKJIOOIILQ.
+    .RSTUUQNVVQTWTXVTJNRNYZXXQRaWXURRSZRWWWUWTXSWRb.
+    .TXVVVMZVVVVXVZVVYIURaXVVVTXVVYUTbXXVbXVVVVXVTV.
+    .RZXUTQNVbacITbVUJQMQYcXXUZScUSRSWWWWcRcWTUWWZV.
+    .HPLKJLLMOHILJQYILLLLLKOOLPLILdHIKLJKILPKJILIPN.
+    .AGFBFEEFCAAEBFFGEEEEABEFEGGDEEABECFBDEABBECGGF.
     ................................................
     ................................................
-    ..ABCDCECFGHIJBAKAFLEEMJBGNNGFKOEEDHEPPHCPHLAO..
-    ..QQRRRRRSJTRRUUMSVQRRRRUCCDWVXURRRRRQQRRTTTQX..
-    ..UURTRTTIYQRRSXEJJXQTRRSZPYHJIXRRTTTXXRTQUQXV..
-    ..XSTQTUUJaXRTVIYDESUQTTMBLHPDJVTTTQTISTQSSXIM..
-    ..SVUUUXIDbIUUJJEWCISUTUJBLPPYHDQTQUUMVQSJJMMJ..
-    ..MJSUXMJWZJSIWYEYHVJSUSYAZbPCBbSXXSXMMXMYDJJW..
-    ..DYJXSWYYBYVDaaEHCMCJXVaAZbPHOADMMJIMJVDHEJDH..
-    ..aHYSMbPHAHJaZPYPYJLWIJbAPHbbFFHYWEMMDJCPCJYP..
-    ..BAaMWAOPAZCBALabYEAHJJPAPCHPcFBPHHWDEEbBPCCZ..
-    ..OdbJHKdLBOBOKBbCYCOZWJBAHYCBcKKKBZHbYCLAALCZ..
-    ..cGBELcGAPFKFdOZCaZKBWJABHWCAGKcGOABAbbAOFObZ..
-    ..GNKCOGNOBdcdcFAHPOFBJEAZbDCFGFGNcKAOBZKFGcBP..
-    ..NNcbFNNdOGNcGcOPAFcAJaOZBEHcNcGNGdKFOBcdNGOL..
-    ..NNGAdNNcdGNGNNdAKGGKaPFOAbLGNGNNNGdcdOGGNNFO..
-    ..NNNccNNGGNNNNNGFGNNGABcdFOKGNGNNNGcGGdNNNNcc..
-    ..NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN..
     ................................................
     ................................................
+    ................................................
+    ................................................
+    .EEEGGFFFFFCBBFFDDDEFGEGGDEFGAEGAFEFAEEEEEEEEEA.
+    .LLLPPONNNOJKIOYJILINHHPPINQHdLPdYOQLLLLdLLLLLL.
+    .YYMSZbVVVTUUaTVTZacYMRZZcVbRZRaZMTXMNQYSYYNYMP.
+    .WWUXXVaVVVYVXbVVXXbVWUQXVVVUXTbXVVVJIPJNJWSUUT.
+    .MZRZWbbVVcaURZVXZccTMYZcUVVMZKWWbXTMNQYaYMMRRZ.
+    .LIddJQQNQPdKLLMLdIIKLLdIJNNLdIKKOOKLLLLILLHPdI.
+    .ABAACFFFFAAEEEFFADGDEEGBCFFEAGBCCCDEEEEGEAAGGD.
     ................................................
     ................................................
     ................................................
