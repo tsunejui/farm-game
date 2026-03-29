@@ -18,7 +18,7 @@ visuals:
 
 physics:
   occupy_width: 1
-  occupy_height: 1
+  occupy_height: 2
   is_collidable: false
 
 logic:
