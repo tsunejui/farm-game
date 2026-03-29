@@ -60,3 +60,23 @@ entities:
   - item: "box"
     tile_x: 18
     tile_y: 8
+
+  - item: "dummy"
+    tile_x: 14
+    tile_y: 18
+
+  - item: "dummy"
+    tile_x: 16
+    tile_y: 18
+
+  - item: "dummy"
+    tile_x: 18
+    tile_y: 18
+
+  - item: "dummy"
+    tile_x: 20
+    tile_y: 18
+
+  - item: "dummy"
+    tile_x: 22
+    tile_y: 18

@@ -4,5 +4,6 @@
   "fence": "Fence",
   "water_body": "Water",
   "portal": "Portal",
-  "box": "Cardboard Box"
+  "box": "Cardboard Box",
+  "dummy": "Training Dummy"
 }

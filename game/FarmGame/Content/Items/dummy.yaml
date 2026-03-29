@@ -1,0 +1,32 @@
+metadata:
+  item_id: "dummy"
+  display_name: "Training Dummy"
+  category: "structure"
+
+visuals:
+  color: ""
+  origin_point: "top_left"
+  background:
+    enabled: true
+    display_mode: "stretch"
+    offset_x: 0
+    offset_y: 0
+    states:
+      normal:
+        image_path: "Images/dummies/dummy_normal"
+      damaged:
+        image_path: "Images/dummies/dummy_damaged"
+      dead:
+        image_path: "Images/dummies/dummy_dead"
+
+physics:
+  occupy_width: 1
+  occupy_height: 1
+  is_collidable: true
+  is_knockbackable: false
+
+logic:
+  action_handler: "none"
+  max_health: 1000
+  defense: 0
+  faction: "neutral"
