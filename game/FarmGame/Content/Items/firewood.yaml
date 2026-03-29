@@ -22,7 +22,7 @@ visuals:
         image_path: "Images/firewoods/firewood_dead"
 
 physics:
-  occupy_width: 1
+  occupy_width: 2
   occupy_height: 1
   is_collidable: true
   is_knockbackable: false

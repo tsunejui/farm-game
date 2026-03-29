@@ -195,11 +195,11 @@ entities:
     tile_x: 39
     tile_y: 23
 
-  # Portal to Starter Farm — lands left of farm_home portal (38,14)
+  # Portal to Starter Farm — lands left of farm_home portal (56,17)
   - item: "portal"
     tile_x: 24
     tile_y: 22
     properties:
       target_map: "farm_home"
-      target_x: 37
-      target_y: 15
+      target_x: 55
+      target_y: 19

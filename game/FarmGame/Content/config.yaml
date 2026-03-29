@@ -20,7 +20,7 @@ player:
   color: "#FF4500"         # OrangeRed (body color)
   body_padding: 2         # pixels inset from tile edge
   indicator_size: 8       # direction indicator size in pixels
-  jump_height: 12         # max vertical offset in pixels
+  jump_height: 20         # max vertical offset in pixels
   jump_duration: 0.4      # jump duration in seconds
   attack_duration: 0.3    # attack animation duration in seconds
   attack_range: 16        # attack effect length in pixels

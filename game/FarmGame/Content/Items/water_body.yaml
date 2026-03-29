@@ -14,6 +14,8 @@ visuals:
     states:
       normal:
         image_path: "Images/water/water_body_normal"
+        file_type: "gif"
+        frame_delay: 600
 
 physics:
   occupy_width: 1

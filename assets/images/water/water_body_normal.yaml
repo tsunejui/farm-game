@@ -1,0 +1,40 @@
+metadata:
+  name: "water_body_normal"
+type: "gif"
+frame_delay: 600
+output_dir: "Images/water"
+palette:
+  "A": "#2878C8"
+  "B": "#3088D8"
+  "C": "#2070B8"
+  "D": "#3898E8"
+  "W": "#50A8F0"
+  "L": "#4098E0"
+data:
+  - |
+    AABCABBA
+    BCADBCAD
+    ABWCABWC
+    CDABWDAB
+    BACDBACD
+    ABCWABCW
+    CDABCDAB
+    ABCADBCA
+  - |
+    BCADBCAD
+    ABCAABCA
+    CDWABDWA
+    ABCDABCD
+    BAWCBAWC
+    CDABWDAB
+    ABCADBC A
+    BCDAABCD
+  - |
+    ABCAABCA
+    CDABCDAB
+    BAWCBWAC
+    ABCDABCD
+    CDWABDWA
+    ABCABCAB
+    CDABWDAB
+    ABCADBCA

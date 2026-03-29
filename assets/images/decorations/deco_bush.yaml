@@ -3,20 +3,21 @@ metadata:
 type: "png"
 output_dir: "Images/decorations"
 palette:
-  "G": "#228B22"
-  "L": "#3CB43C"
-  "D": "#186418"
-  "K": "#104010"
-  "B": "#6B4513"
+  "G": "#1E7A1E"
+  "L": "#2EA82E"
+  "D": "#145A14"
+  "K": "#0C3C0C"
+  "H": "#3CB43C"
+  "l": "#50C850"
 data:
   - |
     ..........
-    ...LGGL...
-    ..LGGDGL..
-    .LGDDGDGL.
-    .GDGDDGDG.
-    .DKGDDGKD.
-    ..DKGGKD..
-    ...DKBD...
-    ....BB....
+    ...lHLl...
+    ..HLGDLH..
+    .HLGKDGLH.
+    .LGDKGKDGL
+    .LGKDGKDGL
+    .HDGKDGKDH
+    ..DLGKGLD.
+    ...DKKD...
     ..........

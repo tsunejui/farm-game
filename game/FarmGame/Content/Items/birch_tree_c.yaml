@@ -22,8 +22,8 @@ visuals:
         image_path: "Images/birch_trees/birch_tree_dead"
 
 physics:
-  occupy_width: 2
-  occupy_height: 2
+  occupy_width: 3
+  occupy_height: 3
   is_collidable: true
 
 logic:

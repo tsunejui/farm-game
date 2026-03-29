@@ -4,9 +4,9 @@ metadata:
   category: "constructed"
 
 visuals:
-  color: "#8A8A80"
+  color: "#8E8A82"
   decorations:
     - image_path: "Images/decorations/deco_cobblestone"
-      coverage: 0.30
+      coverage: 0.15
     - image_path: "Images/decorations/deco_stone_crack"
-      coverage: 0.05
+      coverage: 0.03

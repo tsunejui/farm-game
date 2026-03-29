@@ -3,18 +3,17 @@ metadata:
 type: "png"
 output_dir: "Images/decorations"
 palette:
-  "G": "#909090"
-  "L": "#A8A8A8"
-  "D": "#686868"
-  "K": "#585858"
-  "W": "#B8B8B8"
+  "A": "#928E86"
+  "B": "#8A8680"
+  "C": "#9A968E"
+  "D": "#827E78"
 data:
   - |
-    GLLDGLLD
-    LDKGLDKG
-    DGLLDGLL
-    KGLDKGLD
-    GLLDGLLD
-    LDKGLDKG
-    DGLLDGLL
-    KGLDKGLD
+    AABCAABB
+    BCDDBADC
+    DABCABBC
+    CDADBCDA
+    BCDAABCD
+    DABCBDAB
+    ABCDDABC
+    CDABBCDA
