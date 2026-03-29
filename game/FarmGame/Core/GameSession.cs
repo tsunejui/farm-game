@@ -58,6 +58,14 @@ public class GameSession
             FacingDirection = player.FacingDirection.ToString(),
             CurrentMap = currentMap,
             CurrentMapStateId = CurrentMapStateId,
+            MaxHp = player.MaxHp,
+            CurrentHp = player.CurrentHp,
+            Strength = player.Strength,
+            Dexterity = player.Dexterity,
+            WeaponAtk = player.WeaponAtk,
+            BuffPercent = player.BuffPercent,
+            CritRate = player.CritRate,
+            CritDamage = player.CritDamage,
         };
 
         var result = _playerStateRepo.Save(_playerUuid, state, GameConstants.GameTitle);

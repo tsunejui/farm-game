@@ -64,6 +64,9 @@ public class PlayingScreen : IScreen, IWorldRenderer
         _camera = result.Camera;
         _autoSaveTimer = 0f;
 
+        // Restore player attributes from saved state
+        _player.RestoreAttributes(savedState);
+
         // Load or create persisted map entity state (HP, alive/dead)
         _session.LoadOrCreateMapState(result.Map.MapId, result.Map, savedState);
 

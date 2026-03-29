@@ -7,6 +7,7 @@ using MonoGame.Extended.Input;
 using FarmGame.Core;
 using FarmGame.Entities.Actions;
 using FarmGame.Entities.Actions.Player;
+using FarmGame.Persistence.Models;
 using FarmGame.World;
 
 namespace FarmGame.Entities;
@@ -36,10 +37,16 @@ public class Player
     public Point GridPosition => _movement.GridPosition;
     public Direction FacingDirection => _movement.FacingDirection;
 
-    // Player combat state
-    public int MaxHp { get; }
+    // Primary attributes
+    public int MaxHp { get; set; }
     public int CurrentHp { get; set; }
     public bool IsAlive => CurrentHp > 0;
+    public float Strength { get; set; }
+    public float Dexterity { get; set; }
+    public float WeaponAtk { get; set; }
+    public float BuffPercent { get; set; }
+    public float CritRate { get; set; }
+    public float CritDamage { get; set; }
 
     // Callback when interacting with an interactable object
     public Action<WorldObject> OnInteract { get; set; }
@@ -49,11 +56,32 @@ public class Player
         _movement = new MovementAction(startPosition, tileMap, facingDirection);
         _jump = new JumpAction();
         _attack = new AttackAction(tileMap, () => _movement.GridPosition, () => _movement.FacingDirection,
-            obj => OnInteract?.Invoke(obj));
+            () => this, obj => OnInteract?.Invoke(obj));
         _actions = new IPlayerAction[] { _movement, _jump, _attack };
 
+        // Initialize from config defaults
         MaxHp = GameConstants.PlayerMaxHp;
         CurrentHp = MaxHp;
+        Strength = GameConstants.PlayerStrength;
+        Dexterity = GameConstants.PlayerDexterity;
+        WeaponAtk = GameConstants.PlayerWeaponAtk;
+        BuffPercent = GameConstants.PlayerBuffPercent;
+        CritRate = GameConstants.PlayerCritRate;
+        CritDamage = GameConstants.PlayerCritDamage;
+    }
+
+    // Restore attributes from saved state
+    public void RestoreAttributes(PlayerState savedState)
+    {
+        if (savedState == null) return;
+        MaxHp = savedState.MaxHp > 0 ? savedState.MaxHp : GameConstants.PlayerMaxHp;
+        CurrentHp = savedState.CurrentHp > 0 ? savedState.CurrentHp : MaxHp;
+        Strength = savedState.Strength;
+        Dexterity = savedState.Dexterity;
+        WeaponAtk = savedState.WeaponAtk;
+        BuffPercent = savedState.BuffPercent;
+        CritRate = savedState.CritRate;
+        CritDamage = savedState.CritDamage;
     }
 
     public void Update(GameTime gameTime)

@@ -17,7 +17,7 @@ namespace FarmGame.Persistence.Models;
 // =============================================================================
 public class PlayerState
 {
-    public const int CurrentVersion = 2;
+    public const int CurrentVersion = 3;
 
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -50,6 +50,31 @@ public class PlayerState
     [JsonPropertyName("current_map_state_id")]
     public string CurrentMapStateId { get; set; }
 
+    // Primary attributes
+    [JsonPropertyName("max_hp")]
+    public int MaxHp { get; set; }
+
+    [JsonPropertyName("current_hp")]
+    public int CurrentHp { get; set; }
+
+    [JsonPropertyName("strength")]
+    public float Strength { get; set; }
+
+    [JsonPropertyName("dexterity")]
+    public float Dexterity { get; set; }
+
+    [JsonPropertyName("weapon_atk")]
+    public float WeaponAtk { get; set; }
+
+    [JsonPropertyName("buff_percent")]
+    public float BuffPercent { get; set; }
+
+    [JsonPropertyName("crit_rate")]
+    public float CritRate { get; set; }
+
+    [JsonPropertyName("crit_damage")]
+    public float CritDamage { get; set; }
+
     public string ToJson()
     {
         return JsonSerializer.Serialize(this, JsonOptions);
@@ -68,9 +93,22 @@ public class PlayerState
     {
         if (state.Version < 2)
         {
-            // v1 → v2: added current_map_state_id (null = first visit)
             state.CurrentMapStateId = null;
             state.Version = 2;
+        }
+
+        if (state.Version < 3)
+        {
+            // v2 → v3: added primary attributes (initialize from defaults)
+            state.MaxHp = Core.GameConstants.PlayerMaxHp;
+            state.CurrentHp = state.MaxHp;
+            state.Strength = Core.GameConstants.PlayerStrength;
+            state.Dexterity = Core.GameConstants.PlayerDexterity;
+            state.WeaponAtk = Core.GameConstants.PlayerWeaponAtk;
+            state.BuffPercent = Core.GameConstants.PlayerBuffPercent;
+            state.CritRate = Core.GameConstants.PlayerCritRate;
+            state.CritDamage = Core.GameConstants.PlayerCritDamage;
+            state.Version = 3;
         }
 
         state.Version = CurrentVersion;

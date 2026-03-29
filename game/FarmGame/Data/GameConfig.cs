@@ -72,14 +72,19 @@ public class PlayerConfig
     [YamlMember(Alias = "attack_color")]
     public string AttackColor { get; set; } = "#FFD700";
 
+    public PlayerAttrConfig Attr { get; set; } = new();
+}
+
+public class PlayerAttrConfig
+{
     [YamlMember(Alias = "max_hp")]
     public int MaxHp { get; set; } = 20;
 
-    public float Strength { get; set; } = 5f;
-    public float Dexterity { get; set; } = 3f;
+    public float Strength { get; set; } = 2f;
+    public float Dexterity { get; set; } = 1f;
 
     [YamlMember(Alias = "weapon_atk")]
-    public float WeaponAtk { get; set; } = 2f;
+    public float WeaponAtk { get; set; } = 1f;
 
     [YamlMember(Alias = "buff_percent")]
     public float BuffPercent { get; set; } = 0f;

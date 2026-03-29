@@ -36,6 +36,14 @@ public class PlayerStateRepository
             {
                 existing.StateJson = state.ToJson();
                 existing.GameVersion = gameVersion;
+                existing.MaxHp = state.MaxHp;
+                existing.CurrentHp = state.CurrentHp;
+                existing.Strength = state.Strength;
+                existing.Dexterity = state.Dexterity;
+                existing.WeaponAtk = state.WeaponAtk;
+                existing.BuffPercent = state.BuffPercent;
+                existing.CritRate = state.CritRate;
+                existing.CritDamage = state.CritDamage;
                 existing.UpdatedAt = now;
                 db.Update(existing);
             }
@@ -46,6 +54,14 @@ public class PlayerStateRepository
                     PlayerUuid = playerUuid,
                     StateJson = state.ToJson(),
                     GameVersion = gameVersion,
+                    MaxHp = state.MaxHp,
+                    CurrentHp = state.CurrentHp,
+                    Strength = state.Strength,
+                    Dexterity = state.Dexterity,
+                    WeaponAtk = state.WeaponAtk,
+                    BuffPercent = state.BuffPercent,
+                    CritRate = state.CritRate,
+                    CritDamage = state.CritDamage,
                     CreatedAt = now,
                     UpdatedAt = now,
                 });

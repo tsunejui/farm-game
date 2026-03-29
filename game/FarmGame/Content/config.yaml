@@ -26,13 +26,16 @@ player:
   attack_range: 16        # attack effect length in pixels
   attack_width: 20        # attack effect width in pixels
   attack_color: "#FFD700" # Gold (attack effect color)
-  max_hp: 20              # player starting/max HP
-  strength: 2             # base STR (contributes to ATK)
-  dexterity: 1            # base DEX (contributes to ATK)
-  weapon_atk: 1           # base weapon ATK (added to STR+DEX)
-  buff_percent: 0.0       # equipment/buff ATK% bonus (0.1 = +10%)
-  crit_rate: 0.1          # critical hit chance (0.0 ~ 1.0)
-  crit_damage: 1.5        # critical hit damage multiplier
+
+  # Primary attributes (initial values for new characters)
+  attr:
+    max_hp: 20            # maximum HP
+    strength: 2           # base STR (contributes to ATK)
+    dexterity: 1          # base DEX (contributes to ATK)
+    weapon_atk: 1         # base weapon ATK (added to STR+DEX)
+    buff_percent: 0.0     # equipment/buff ATK% bonus (0.1 = +10%)
+    crit_rate: 0.1        # critical hit chance (0.0 ~ 1.0)
+    crit_damage: 1.5      # critical hit damage multiplier
 
 # Game startup
 game:

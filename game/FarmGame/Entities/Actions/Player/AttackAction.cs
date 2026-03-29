@@ -24,6 +24,7 @@ public class AttackAction : IPlayerAction
     private readonly GameMap _map;
     private readonly Func<Point> _getGridPosition;
     private readonly Func<Direction> _getFacingDirection;
+    private readonly Func<Entities.Player> _getPlayer;
     private readonly Action<WorldObject> _onInteract;
     private float _attackProgress;
     private bool _hasDealtDamage;
@@ -32,11 +33,12 @@ public class AttackAction : IPlayerAction
     public float Progress => _attackProgress;
 
     public AttackAction(GameMap map, Func<Point> getGridPosition, Func<Direction> getFacingDirection,
-        Action<WorldObject> onInteract = null)
+        Func<Entities.Player> getPlayer, Action<WorldObject> onInteract = null)
     {
         _map = map;
         _getGridPosition = getGridPosition;
         _getFacingDirection = getFacingDirection;
+        _getPlayer = getPlayer;
         _onInteract = onInteract;
     }
 
@@ -133,15 +135,16 @@ public class AttackAction : IPlayerAction
         // Deal damage to alive objects with HP
         if (obj.State.IsAlive && obj.Definition.Logic.MaxHealth > 0)
         {
+            var player = _getPlayer();
             var ctx = new DamageContext
             {
-                Strength = GameConstants.PlayerStrength,
-                Dexterity = GameConstants.PlayerDexterity,
-                WeaponAtk = GameConstants.PlayerWeaponAtk,
-                BuffPercent = GameConstants.PlayerBuffPercent,
+                Strength = player.Strength,
+                Dexterity = player.Dexterity,
+                WeaponAtk = player.WeaponAtk,
+                BuffPercent = player.BuffPercent,
                 SkillPowerPercent = 1f,
-                CritRate = GameConstants.PlayerCritRate,
-                CritDamageMultiplier = GameConstants.PlayerCritDamage,
+                CritRate = player.CritRate,
+                CritDamageMultiplier = player.CritDamage,
                 TargetDefense = obj.Definition.Logic.Defense,
             };
 

@@ -77,13 +77,13 @@ public static class GameConstants
         PlayerAttackRange = config.Player.AttackRange;
         PlayerAttackWidth = config.Player.AttackWidth;
         PlayerAttackColor = ColorHelper.FromHex(config.Player.AttackColor);
-        PlayerMaxHp = config.Player.MaxHp;
-        PlayerStrength = config.Player.Strength;
-        PlayerDexterity = config.Player.Dexterity;
-        PlayerWeaponAtk = config.Player.WeaponAtk;
-        PlayerBuffPercent = config.Player.BuffPercent;
-        PlayerCritRate = config.Player.CritRate;
-        PlayerCritDamage = config.Player.CritDamage;
+        PlayerMaxHp = config.Player.Attr.MaxHp;
+        PlayerStrength = config.Player.Attr.Strength;
+        PlayerDexterity = config.Player.Attr.Dexterity;
+        PlayerWeaponAtk = config.Player.Attr.WeaponAtk;
+        PlayerBuffPercent = config.Player.Attr.BuffPercent;
+        PlayerCritRate = config.Player.Attr.CritRate;
+        PlayerCritDamage = config.Player.Attr.CritDamage;
         DefaultLanguage = config.Game.DefaultLanguage;
         AutoSaveInterval = config.Save.AutoSaveInterval;
 
