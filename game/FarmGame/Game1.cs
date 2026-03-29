@@ -3,7 +3,6 @@
 // =============================================================================
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -32,7 +31,7 @@ public class Game1 : Game
     private string _contentDir;
 
     // Screens
-    private Dictionary<GameState, IScreen> _screens;
+    private ScreenManager _screenManager;
     private MapTransitionOverlay _mapTransition;
     private ToastAlert _toast;
 
@@ -101,15 +100,12 @@ public class Game1 : Game
         pauseScreen.Initialize();
 
         var settingsScreen = new SettingsScreen();
-        settingsScreen.OnLanguageChanged = ChangeLanguage;
+        _screenManager = new ScreenManager(_contentDir, _settings);
+        settingsScreen.OnLanguageChanged = _screenManager.ChangeLanguage;
         settingsScreen.Initialize();
-
-        _screens = new Dictionary<GameState, IScreen>
-        {
-            { GameState.TitleScreen, titleScreen },
-            { GameState.Settings, settingsScreen },
-            { GameState.Paused, pauseScreen },
-        };
+        _screenManager.Register(GameState.TitleScreen, titleScreen);
+        _screenManager.Register(GameState.Settings, settingsScreen);
+        _screenManager.Register(GameState.Paused, pauseScreen);
 
         _mapTransition = new MapTransitionOverlay();
         _toast = new ToastAlert();
@@ -190,16 +186,6 @@ public class Game1 : Game
             Log.Error("Failed to save player state: {Error}", result.ErrorMessage);
     }
 
-    private void ChangeLanguage(string language)
-    {
-        LocaleManager.Load(_contentDir, language);
-        _settings?.Set("language", language);
-        Log.Information("Language changed to: {Language}", language);
-
-        foreach (var screen in _screens.Values)
-            screen.Rebuild();
-    }
-
     private void HandleTransition(ScreenTransition transition)
     {
         if (transition.Exit)
@@ -213,10 +199,10 @@ public class Game1 : Game
             var target = transition.Target.Value;
 
             // Pre-transition hooks
-            if (target == GameState.Paused && _screens.TryGetValue(GameState.Paused, out var pauseScreen))
+            if (target == GameState.Paused && _screenManager.TryGet(GameState.Paused, out var pauseScreen))
                 ((PauseScreen)pauseScreen).Reset();
 
-            if (target == GameState.Settings && _screens.TryGetValue(GameState.Settings, out var settingsScreen))
+            if (target == GameState.Settings && _screenManager.TryGet(GameState.Settings, out var settingsScreen))
                 settingsScreen.Rebuild();
 
             _gameState = target;
@@ -246,7 +232,7 @@ public class Game1 : Game
                 _camera.Update(_player, _currentMap);
             }
         }
-        else if (_screens.TryGetValue(_gameState, out var screen))
+        else if (_screenManager.TryGet(_gameState, out var screen))
         {
             var transition = screen.Update(gameTime);
             if (transition != ScreenTransition.None)
@@ -279,9 +265,9 @@ public class Game1 : Game
             _spriteBatch.End();
         }
 
-        if (_screens.TryGetValue(_gameState, out var screen))
+        if (_screenManager.TryGet(_gameState, out var activeScreen))
         {
-            screen.Draw(_spriteBatch);
+            activeScreen.Draw(_spriteBatch);
         }
 
         base.Draw(gameTime);
