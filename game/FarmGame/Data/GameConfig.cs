@@ -14,6 +14,9 @@ public class GameConfig
     public HudConfig Hud { get; set; } = new();
     public CombatConfig Combat { get; set; } = new();
 
+    [YamlMember(Alias = "entity_info")]
+    public EntityInfoConfig EntityInfo { get; set; } = new();
+
     public static GameConfig Load(string yamlPath)
     {
         var yaml = File.ReadAllText(yamlPath);
@@ -123,6 +126,27 @@ public class MapTransitionConfig
 
     [YamlMember(Alias = "font_size")]
     public int FontSize { get; set; } = 32;
+}
+
+public class EntityInfoConfig
+{
+    [YamlMember(Alias = "proximity_tiles")]
+    public int ProximityTiles { get; set; } = 2;
+
+    [YamlMember(Alias = "font_size")]
+    public int FontSize { get; set; } = 10;
+
+    [YamlMember(Alias = "hp_bar_width")]
+    public int HpBarWidth { get; set; } = 24;
+
+    [YamlMember(Alias = "hp_bar_height")]
+    public int HpBarHeight { get; set; } = 3;
+
+    [YamlMember(Alias = "hp_bar_offset_y")]
+    public int HpBarOffsetY { get; set; } = 2;
+
+    [YamlMember(Alias = "name_offset_y")]
+    public int NameOffsetY { get; set; } = 4;
 }
 
 public class CombatConfig

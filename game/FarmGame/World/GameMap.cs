@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -196,6 +197,101 @@ public class GameMap
                 spriteBatch.FillRectangle(entityArea,
                     Color.DarkGray * GameConstants.DamageFlashOpacity);
             }
+        }
+    }
+
+    /// <summary>
+    /// Draw entity name and HP bar for entities near the player.
+    /// Called in world-space (inside camera transform).
+    ///
+    /// Positioning rules:
+    ///   - Name: above entity top, centered horizontally.
+    ///   - HP bar: below entity bottom, centered horizontally.
+    ///   - Height cap: if entity half-height > player height * 3,
+    ///     both name and HP bar are clamped to player_height * 3
+    ///     above/below the entity center.
+    /// </summary>
+    public void DrawEntityInfo(SpriteBatch spriteBatch, Point playerGridPos)
+    {
+        int proximity = GameConstants.EntityInfoProximityTiles;
+        int ts = GameConstants.TileSize;
+        int playerHeight = ts; // player occupies 1 tile
+        int maxHalfDisplay = playerHeight * 3;
+
+        var font = FontManager.GetFont(GameConstants.EntityInfoFontSize);
+        if (font == null) return;
+
+        foreach (var entity in Entities)
+        {
+            // Skip entities with no HP (indestructible / terrain features)
+            if (entity.Definition.Logic.MaxHealth <= 0) continue;
+
+            // Proximity check (Chebyshev distance from player to nearest entity tile)
+            int nearestX = Math.Clamp(playerGridPos.X, entity.TileX, entity.TileX + entity.EffectiveWidth - 1);
+            int nearestY = Math.Clamp(playerGridPos.Y, entity.TileY, entity.TileY + entity.EffectiveHeight - 1);
+            int dist = Math.Max(Math.Abs(playerGridPos.X - nearestX), Math.Abs(playerGridPos.Y - nearestY));
+            if (dist > proximity) continue;
+
+            // Entity pixel bounds
+            int px = entity.TileX * ts;
+            int py = entity.TileY * ts;
+            int pw = entity.EffectiveWidth * ts;
+            int ph = entity.EffectiveHeight * ts;
+            int entityCenterX = px + pw / 2;
+            int entityCenterY = py + ph / 2;
+            int entityHalfH = ph / 2;
+
+            // Determine whether to cap display positions
+            bool capped = entityHalfH > maxHalfDisplay;
+            int nameY;   // bottom edge of name text
+            int hpBarY;  // top edge of HP bar
+
+            if (capped)
+            {
+                nameY = entityCenterY - maxHalfDisplay;
+                hpBarY = entityCenterY + maxHalfDisplay;
+            }
+            else
+            {
+                nameY = py; // entity top
+                hpBarY = py + ph; // entity bottom
+            }
+
+            // --- Draw name above entity ---
+            string name = LocaleManager.Get("items", entity.ItemId, entity.Definition.Metadata.DisplayName);
+            var textSize = font.MeasureString(name);
+            int nameOffsetY = GameConstants.EntityInfoNameOffsetY;
+            float textX = entityCenterX - textSize.X / 2f;
+            float textY = nameY - textSize.Y - nameOffsetY;
+
+            // Text shadow
+            font.DrawText(spriteBatch, name,
+                new Vector2(textX + 1, textY + 1),
+                Color.Black * 0.6f);
+            font.DrawText(spriteBatch, name,
+                new Vector2(textX, textY),
+                Color.White);
+
+            // --- Draw HP bar below entity ---
+            int barW = GameConstants.EntityInfoHpBarWidth;
+            int barH = GameConstants.EntityInfoHpBarHeight;
+            int barOffsetY = GameConstants.EntityInfoHpBarOffsetY;
+            int barX = entityCenterX - barW / 2;
+            int barY2 = hpBarY + barOffsetY;
+
+            // Background (dark)
+            spriteBatch.FillRectangle(new Rectangle(barX, barY2, barW, barH), Color.Black * 0.6f);
+
+            // Foreground (green → red based on HP ratio)
+            float hpRatio = (float)entity.State.CurrentHp / entity.State.MaxHp;
+            hpRatio = Math.Clamp(hpRatio, 0f, 1f);
+            int fillW = (int)(barW * hpRatio);
+            Color barColor = hpRatio > 0.5f
+                ? Color.Lerp(Color.Yellow, Color.LimeGreen, (hpRatio - 0.5f) * 2f)
+                : Color.Lerp(Color.Red, Color.Yellow, hpRatio * 2f);
+
+            if (fillW > 0)
+                spriteBatch.FillRectangle(new Rectangle(barX, barY2, fillW, barH), barColor);
         }
     }
 }

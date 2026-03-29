@@ -30,6 +30,14 @@ public static class GameConstants
     public static int ToastMaxCount { get; private set; } = 5;
     public static int ToastFontSize { get; private set; } = 16;
 
+    // Entity info display
+    public static int EntityInfoProximityTiles { get; private set; } = 2;
+    public static int EntityInfoFontSize { get; private set; } = 10;
+    public static int EntityInfoHpBarWidth { get; private set; } = 24;
+    public static int EntityInfoHpBarHeight { get; private set; } = 3;
+    public static int EntityInfoHpBarOffsetY { get; private set; } = 2;
+    public static int EntityInfoNameOffsetY { get; private set; } = 4;
+
     // Combat
     public static int DamageTickDurationMs { get; private set; } = 500;
     public static int DefaultMinDamage { get; private set; } = 1;
@@ -72,6 +80,13 @@ public static class GameConstants
         MapTransitionHoldMs = config.Hud.MapTransition.HoldMs;
         MapTransitionFadeOutMs = config.Hud.MapTransition.FadeOutMs;
         MapTransitionFontSize = config.Hud.MapTransition.FontSize;
+
+        EntityInfoProximityTiles = config.EntityInfo.ProximityTiles;
+        EntityInfoFontSize = config.EntityInfo.FontSize;
+        EntityInfoHpBarWidth = config.EntityInfo.HpBarWidth;
+        EntityInfoHpBarHeight = config.EntityInfo.HpBarHeight;
+        EntityInfoHpBarOffsetY = config.EntityInfo.HpBarOffsetY;
+        EntityInfoNameOffsetY = config.EntityInfo.NameOffsetY;
 
         DamageTickDurationMs = config.Combat.DamageTickDurationMs;
         DefaultMinDamage = config.Combat.DefaultMinDamage;

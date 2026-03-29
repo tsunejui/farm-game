@@ -127,6 +127,7 @@ public class PlayingScreen : IScreen, IWorldRenderer
             samplerState: SamplerState.PointClamp);
         _currentMap.Draw(spriteBatch, _camera);
         _player.Draw(spriteBatch);
+        _currentMap.DrawEntityInfo(spriteBatch, _player.GridPosition);
         spriteBatch.End();
     }
 }
