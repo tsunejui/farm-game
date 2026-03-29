@@ -16,11 +16,15 @@ just release          # Build for all platforms
 
 - **Data-driven design**: Terrain, items, and maps defined in YAML configs, loaded by `DataRegistry`
 - **Map system**: `GameMap` built from `MapDefinition` via `MapBuilder`, using string-based terrain/item IDs
+- **Spatial indexing**: `GameMap._entityGrid` provides O(1) entity lookup by tile coordinate; `EntityInstance` pre-computes `EffectiveWidth`/`EffectiveHeight` at construction
 - **Action system**: Player behaviors (movement, jump, attack) are separate `IPlayerAction` implementations
 - **Persistence**: SQLite database via sqlite-net-pcl ORM for player state and settings
 - **Game loop**: MonoGame standard `Initialize → LoadContent → [Update → Draw]`
+- **Screen lifecycle**: `IScreen` interface with `Initialize`, `Rebuild`, `OnEnter`, `OnExit`, `Update`, `Draw`
+- **Texture cache**: `Game1._textureCache` prevents duplicate disk reads; `UnloadTextures()` disposes on exit
+- **Auto-save**: `PlayingScreen` saves every N seconds (configurable via `save.auto_save_interval` in config.yaml)
 - **Localization**: JSON language packs in `Content/Locales/<lang>/`, supports English and Chinese
-- **HUD**: In-game overlays (map transition, toast alerts) with FontStashSharp Unicode rendering
+- **HUD**: In-game overlays (map transition, toast alerts) with FontStashSharp Unicode rendering; timing configurable via `hud.*` in config.yaml
 - **State machine**: TitleScreen → Settings → Playing → Paused
 
 ## Key Directories
@@ -53,7 +57,7 @@ just release          # Build for all platforms
 
 | Key | Action |
 |-----|--------|
-| WASD / Arrow Keys | Move player |
+| Arrow Keys | Move player |
 | Space | Jump |
 | Z | Attack |
 | ESC | Pause / Resume |
