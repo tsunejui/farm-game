@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FarmGame.Data;
+using FarmGame.World.Events;
 
 namespace FarmGame.World;
 
@@ -29,6 +30,10 @@ public class WorldObject
     // Unique instance ID for persistence (set when saving to / loading from DB)
     public string InstanceId { get; set; }
 
+    // Event queue — events are processed one at a time per frame
+    private readonly Queue<IObjectEvent> _eventQueue = new();
+    private IObjectEvent _currentEvent;
+
     public WorldObject(string itemId, ItemDefinition definition, int tileX, int tileY,
         Dictionary<string, object> properties)
     {
@@ -52,6 +57,33 @@ public class WorldObject
         int maxHp = definition.Logic.MaxHealth;
         State = new ObjectState(maxHp > 0 ? maxHp : 1, faction);
     }
+
+    // Add an event to the queue (processed sequentially, one per frame tick)
+    public void EnqueueEvent(IObjectEvent evt)
+    {
+        _eventQueue.Enqueue(evt);
+    }
+
+    // Process the current event; advance to next when complete
+    public void UpdateEvents(GameMap map, float deltaTime)
+    {
+        // If no current event, dequeue the next one
+        if (_currentEvent == null)
+        {
+            if (_eventQueue.Count == 0) return;
+            _currentEvent = _eventQueue.Dequeue();
+            _currentEvent.Start(this, map);
+        }
+
+        // Tick the current event
+        _currentEvent.Update(this, map, deltaTime);
+
+        // If complete, clear it so the next event can start next frame
+        if (_currentEvent.IsComplete)
+            _currentEvent = null;
+    }
+
+    public bool HasPendingEvents => _currentEvent != null || _eventQueue.Count > 0;
 
     // Restore state from persisted data (used when loading map state from DB)
     public void RestoreState(int currentHp)

@@ -16,6 +16,7 @@ using Serilog;
 using FarmGame.Combat;
 using FarmGame.Core;
 using FarmGame.World;
+using FarmGame.World.Events;
 
 namespace FarmGame.Entities.Actions.Player;
 
@@ -134,7 +135,7 @@ public class AttackAction : IPlayerAction
 
         bool isCritical = false;
 
-        // Deal damage to alive objects with HP
+        // Enqueue damage event for alive objects with HP
         if (obj.State.IsAlive && obj.Definition.Logic.MaxHealth > 0)
         {
             var player = _getPlayer();
@@ -152,14 +153,14 @@ public class AttackAction : IPlayerAction
 
             int damage = DamagePipeline.CalculateDamage(ctx);
             isCritical = ctx.IsCritical;
-            obj.State.TakeDamage(damage, isCritical);
 
-            Log.Debug("Attack: {ItemId} took {Damage} damage{Crit}, hp={Hp}/{MaxHp}",
-                obj.ItemId, damage, isCritical ? " (CRIT!)" : "",
-                obj.State.CurrentHp, obj.State.MaxHp);
+            obj.EnqueueEvent(new TakeDamageEvent(damage, isCritical));
+
+            Log.Debug("Attack: {ItemId} queued {Damage} damage{Crit}",
+                obj.ItemId, damage, isCritical ? " (CRIT!)" : "");
         }
 
-        // Knockback — critical hits push further
+        // Enqueue knockback event — critical hits push further
         if (obj.Definition.Physics.IsKnockbackable)
         {
             var dir = _getFacingDirection();
@@ -167,37 +168,10 @@ public class AttackAction : IPlayerAction
             if (isCritical)
                 kb += GameConstants.CritKnockbackBonus;
 
-            Point knockDir = dir switch
-            {
-                Direction.Up => new Point(0, -kb),
-                Direction.Down => new Point(0, kb),
-                Direction.Left => new Point(-kb, 0),
-                Direction.Right => new Point(kb, 0),
-                _ => Point.Zero,
-            };
+            int dirX = dir switch { Direction.Left => -1, Direction.Right => 1, _ => 0 };
+            int dirY = dir switch { Direction.Up => -1, Direction.Down => 1, _ => 0 };
 
-            // Try full knockback distance, then reduce if blocked
-            for (int dist = kb; dist > 0; dist--)
-            {
-                Point tryDir = dir switch
-                {
-                    Direction.Up => new Point(0, -dist),
-                    Direction.Down => new Point(0, dist),
-                    Direction.Left => new Point(-dist, 0),
-                    Direction.Right => new Point(dist, 0),
-                    _ => Point.Zero,
-                };
-                int newX = obj.TileX + tryDir.X;
-                int newY = obj.TileY + tryDir.Y;
-                if (_map.MoveObject(obj, newX, newY))
-                {
-                    if (obj.State.IsAlive)
-                        obj.State.TriggerBounce();
-                    Log.Debug("Knockback: {ItemId} pushed {Dist} tiles to ({X},{Y}){Crit}",
-                        obj.ItemId, dist, newX, newY, isCritical ? " (CRIT)" : "");
-                    break;
-                }
-            }
+            obj.EnqueueEvent(new KnockbackEvent(dirX, dirY, kb));
         }
     }
 }

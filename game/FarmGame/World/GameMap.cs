@@ -134,11 +134,14 @@ public class GameMap
         return true;
     }
 
-    // Update all entity states (damage-over-time ticks)
+    // Update all object states and process event queues
     public void Update(float deltaTime)
     {
         foreach (var obj in Objects)
+        {
             obj.State.Update(deltaTime);
+            obj.UpdateEvents(this, deltaTime);
+        }
     }
 
     public void Draw(SpriteBatch spriteBatch, Camera2D camera)
