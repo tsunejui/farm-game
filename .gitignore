@@ -34,7 +34,6 @@ game/FarmGame/Content/Maps/*.json
 
 # Vendir
 vendir.lock.yml
-fonts/
 
 # mise local config
 .mise.local.toml
