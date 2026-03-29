@@ -35,6 +35,10 @@ public class WorldObject
     // Active effects (stackable buffs/debuffs with TTL tracking)
     public List<ActiveEffect> Effects { get; } = new();
 
+    // Internal timer: every 1 second, enqueue a RefreshEffectsEvent
+    private float _effectRefreshTimer;
+    private const float EffectRefreshIntervalSeconds = 1f;
+
     // Event queue — events are processed one at a time per frame
     private readonly Queue<IObjectEvent> _eventQueue = new();
     private IObjectEvent _currentEvent;
@@ -86,14 +90,20 @@ public class WorldObject
         return damage;
     }
 
-    // Tick effect TTLs and remove expired ones
+    // Tick effect TTLs and periodically enqueue a RefreshEffectsEvent
     public void UpdateEffects(float deltaTime)
     {
-        for (int i = Effects.Count - 1; i >= 0; i--)
+        // Tick all effect TTLs
+        foreach (var ae in Effects)
+            ae.Update(deltaTime);
+
+        // Every 1 second, enqueue a RefreshEffectsEvent to process expirations via the queue
+        _effectRefreshTimer += deltaTime;
+        if (_effectRefreshTimer >= EffectRefreshIntervalSeconds)
         {
-            Effects[i].Update(deltaTime);
-            if (Effects[i].IsExpired)
-                Effects.RemoveAt(i);
+            _effectRefreshTimer -= EffectRefreshIntervalSeconds;
+            if (Effects.Count > 0)
+                EnqueueEvent(new RefreshEffectsEvent());
         }
     }
 
