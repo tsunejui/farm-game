@@ -121,10 +121,10 @@ entities:
     tile_x: 29
     tile_y: 12
 
-  # Signpost next to portal
+  # Signpost — left-bottom of portal
   - item: "signpost"
     tile_x: 37
-    tile_y: 15
+    tile_y: 17
     properties:
       dialogue_lines:
         - "signpost_farm_portal_right"

@@ -109,11 +109,17 @@ public class WorldObject
             case "dialogue":
                 // Read dialogue lines from instance properties
                 var lines = new List<string>();
-                if (Properties.TryGetValue("dialogue_lines", out var dlObj) && dlObj is List<object> dlList)
+                if (Properties.TryGetValue("dialogue_lines", out var dlObj))
                 {
-                    foreach (var item in dlList)
-                        lines.Add(item.ToString());
+                    if (dlObj is List<object> dlList)
+                        foreach (var item in dlList)
+                            lines.Add(item.ToString());
+                    else if (dlObj is System.Collections.IEnumerable enumerable)
+                        foreach (var item in enumerable)
+                            lines.Add(item.ToString());
                 }
+                Serilog.Log.Debug("DialogueBehavior created for {Id}: {Count} lines, propType={Type}",
+                    ItemId, lines.Count, dlObj?.GetType().Name ?? "null");
                 InteractionBehavior = new DialogueBehavior(lines);
                 break;
         }

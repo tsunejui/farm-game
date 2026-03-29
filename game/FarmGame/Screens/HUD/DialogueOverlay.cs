@@ -23,6 +23,7 @@ public class DialogueOverlay
     private string _title;
     private bool _closeHovered;
     private MouseState _prevMouse;
+    private int _openCooldown; // skip N frames after opening to prevent instant Z-close
 
     public bool IsOpen { get; private set; }
 
@@ -31,6 +32,7 @@ public class DialogueOverlay
         _title = title;
         _lines = lines;
         IsOpen = true;
+        _openCooldown = 2; // skip 2 frames before accepting close input
     }
 
     public void Close()
@@ -49,6 +51,14 @@ public class DialogueOverlay
         var keyboard = KeyboardExtended.GetState();
         bool clicked = mouse.LeftButton == ButtonState.Pressed &&
                        _prevMouse.LeftButton == ButtonState.Released;
+
+        // Cooldown after opening — prevents the same Z press from closing immediately
+        if (_openCooldown > 0)
+        {
+            _openCooldown--;
+            _prevMouse = mouse;
+            return true;
+        }
 
         // Close on Escape or Z
         if (keyboard.WasKeyPressed(Keys.Escape) || keyboard.WasKeyPressed(Keys.Z))
