@@ -70,6 +70,7 @@ just release          # Build for all platforms
 - `.claude/skills/create-map.md` — Create a new map YAML config
 - `.claude/skills/create-item.md` — Create a new item/object YAML definition
 - `.claude/skills/create-terrain.md` — Create a new terrain YAML definition
+- `.claude/skills/create-effect.md` — Create a new effect (buff/debuff/aura)
 
 ## Documentation
 
