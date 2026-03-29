@@ -1,0 +1,84 @@
+metadata:
+  name: magic_191
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#0e1b24'
+  b: '#0a171f'
+  c: '#1e242b'
+  d: '#897f80'
+  e: '#7f7c75'
+  f: '#90848b'
+  g: '#7c746d'
+  h: '#767167'
+  i: '#756d65'
+  j: '#766f65'
+  k: '#6e685e'
+  l: '#746d62'
+  m: '#79726a'
+  n: '#676059'
+  o: '#64595c'
+  p: '#5d4b5d'
+  q: '#746a63'
+  r: '#b19db3'
+  s: '#6a645a'
+  t: '#716960'
+  u: '#6d645e'
+  v: '#493a46'
+  w: '#716a60'
+  x: '#6e655f'
+  y: '#716c61'
+  z: '#563c5d'
+  '0': '#7d6c75'
+  '1': '#806485'
+  '2': '#805895'
+  '3': '#794d91'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .....aaaaaaaaaaaa.a.a.a.aaa....aa.a.a.
+  .....abaaaaaaaaaaaac..cabbba.acaaaabbb
+  ......................................
+  .....dddedd..eedfdddff...dddeegedeede.
+  .....ffffffdeddfffffdeeedffffdfffffff.
+  .....ehhighjkligegmnopogeggmiiqhjgmed.
+  ac.rfgnnssssssnktuupvvoeequnnnnnnnnsqd
+  ba.rrgnnnqwssukihxovvcvqeminssnnsnushf
+  bc.ffhnnnykskjiqxpzzvvzo0igxnkktknuuwe
+  bc.dfessksyiimqopvv11110po0qxxtklyusyd
+  ba..eiskytyyig0ozvz1rrrfppuxmllwlwknse
+  ba..eknsyksiiixpp1frrrrfpvpoiqitywkssm
+  bc..eynklwwmgxop1rrrrrrr21oo0iqtklystg
+  ac..dhsssljjiovorrrff2322f1poqiqqlkkte
+  bc.geyssswjlnvv0rrrf2zz3fr1vvuilqqkswg
+  bc..elskykyiovvprrr23zzz2f1vvotijqkssg
+  aa..elkyjyjiovvz1r23323z2rovvoqqiqwkkg
+  bc.gdhkyhyimmpvof23z3232rrovvoiqtiykkg
+  bc.gehyklwwggpz1r2233222rrfpzxijjjjwyg
+  ba.gehywkylmipz1r222222rrrrxpoimmhlyle
+  bc.gejkwyyhmqpv32222232rrrrpvoihmjwtle
+  a..mejwyjylmqpvz22222232rr1zpxmijhitle
+  a..memllllimiovz22332232rrzvpigimmjkye
+  bc.gehljhylggxvz32332332r2zvvqgmhhlyhe
+  bc.eehljjllgeqvz32222232rfzvzuhmgjjwhe
+  ac.ggjyjljmegozz22222232rfzvpoijjtkwle
+  a..eehwlllmempvz22222332r2pvvniihwwwje
+  b..gemlywjgexvv1f2222222fr1vpuqqwllkye
+  b..eeiqqlhggovvfrr22332322opouuukqwkye
+  b..mgqtjhimguvv1ff23222323pooxqkqqjwje
+  bc..glwjhlheqpzp13222r233zzpoqiqtjhkie
+  aa..musljjgggixpzz32rrr3pvvpomhljlwlme
+  ba..mwktljjgemipvzz1rrr3pzzouihjmilyme
+  aa..etsstjlmmiqopppz1f1zvpoiiiwjijtxid
+  aa.gelkkwjjjmlqxxxpvzpzvvoxmhwlljqkuie
+  ac.gelkwjlhwllqimqozvvvppxmgmilykttule
+  bc.metsliiiqtyytiiqovvvouqhhhilwultuye
+  bc.mgkskqjjqwiqmjhiopvoxmiqwqqywwlltie
+  bc..eikkwjikstwljtquunutiqhljwqttqksjd
+  ba.edjwwtwwkwksksunstsxwxkkktkkqjqwwid
+  aa.ddqswtktttsnsnnsnsnnskussukklitlxid
+  ac.ffmtlmhmihltkuktuxxswywjwyyhhhgmhef
+  bc.ffeggeeeeeddeeeeeeegeeeeeededdeeddf
+  a..eg.hgmeeeeeeeeeddedeeedddeddddeeege
+  aa......oonnno..nnnsnnnn.nsnn...sno...
+  .aa....v.vv.v...vvvvvvvv.vvvv.vv.v....

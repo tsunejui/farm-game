@@ -1,0 +1,111 @@
+metadata:
+  name: magic_143
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#5e4550'
+  b: '#081b28'
+  c: '#05131f'
+  d: '#7f5b62'
+  e: '#6c4553'
+  f: '#7c7e83'
+  g: '#8b949e'
+  h: '#52353f'
+  i: '#00111e'
+  j: '#9da8b1'
+  k: '#461d25'
+  l: '#c3b5b7'
+  m: '#512832'
+  n: '#927d7f'
+  o: '#dcd3ce'
+  p: '#a89aa0'
+  q: '#9c5f65'
+  r: '#945054'
+  s: '#7b4955'
+  t: '#bfa9b0'
+  u: '#b77f83'
+  v: '#924749'
+  w: '#8a3c38'
+  x: '#6e2f3c'
+  y: '#5f3b47'
+  z: '#783946'
+  '0': '#642f3c'
+  '1': '#683441'
+  '2': '#5f2e3a'
+  '3': '#612a36'
+  '4': '#5e2534'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ..........................aaaa.......b.......
+  ...........bc...............dea.....cc.......
+  ............c.......dddd.....ee.f..bcb.......
+  .........b....g...h........hhhh....b....b....
+  ........ii.fjjg..bcbccccbbbcccckk....jf.ib...
+  ...........jlg....hmmkkkmmmmkkmm....fjf......
+  .....bi.gjjg....fnddffdddddddddd.......jg....
+  .....ib.ool.....fnfnnnnnnnffnnnff......ooj.cb
+  ......gjljg.fg.........................jlf...
+  ..i..golg..joog..............................
+  ..c.gjj....oog..fjlj........................g
+  ..i.jlf....jg..goooog......................gg
+  ..c.jlf..gg....gloljf......................fg
+  ..c.jlg.flj...ggfndfdd.dddddddd............gj
+  ..c.jlf.fjg..fppndedddddqdddddddddd........gg
+  ..c.jlg......pllnndqqrrrrrrrrrrqqdsde......gj
+  .bb.jlf....fplllltuqrvvvvvvvvrrrrrqqdee....gg
+  ..i.jlg....looooooouvwwwwwvvvvvvrrrqrssa...fg
+  ..b.jlg..fnoooooooouvwwwwwwvwwvvrrrrrssea..fg
+  ..b.jlf.dnpoooooootqwwwwwwwwwwwwwvrrrrrde..fg
+  .bc.jjfednuoootuuuuvwwwwwwwwwwwwwwwvvrqqe..gg
+  .bc.gpnsequlootqrvvwwwwwwwwwwwwwwwxwvvqqda.fg
+  .bb.gjndsqulootqwwwwwwwwwwwwwwwwwxxwvrqqs..fg
+  .bb.gpnddqqtootuvwwwwwwwwwwwwwwwwwwwvsssey.fg
+  .bb.ggeasssulotqvwwwwwwwwwwwwwwwwwwvrzsyah.fg
+  ..b.gfayez0qllurvrrvvvvvvvvvvvvvvrrvs102hh.fg
+  .bb.ggdyy02qttqsrqqqqqqqqqqqqqqqqqqrz0mhhh.fg
+  .cb.jjfyy21qllqxzrrrrrrrrrrrrrrrrrvz102hh..fg
+  .bb.jjfaey0qltq34343333xx3x03343334332yhh..fg
+  .bb.jjdaey0qttq1mkkkmkkm4mkkmkkkkmkmmyyhmh.fg
+  .b..jjdayy0qttq1mkksnsmmmkm1dskkkmmm2yyyhh.fg
+  .bb.jjfae10qllq2mkmulpekkkkdun2kkmm22yyyhh.fg
+  .bc.jlfae10qllq12mmdtpd22mkennddd1mm222hhh.fg
+  .bb.jjfese1qllq114m4esddemmm1utptsmkmyyhmh.fg
+  .bb.jjfede1qllq112mmkmsdzkmk1uttuemk2yyhmh.gg
+  .bb.jlfae12qltq1312mkm22444srqqnsmmm1yyhhh.gg
+  .bb.jjdyy11nltq0320mmmm1srxrqz44mkm221yyhh.gg
+  .bb.jjdhee1qltq1401mmmmeqqxxz3kkkm4121yyhh.gg
+  .bb.jjdhes1qltq0322mk441sz343x4kkmm22yyyhh.gg
+  .bb.jjfade1qttqx13km1es1443xzz22104m1yyyhh.gg
+  .bb.jjfeds1qttqx3441uuus443xx1snud031eeyhh.gg
+  .bb.jjfess1qttqzzx0sttuz444043qttus40eeyhh.gg
+  .bb.jj.aes1quuqsrzx1sdqzxxx101qupuz40eeyh..gg
+  .cb.jj.aeszquuqsrz34m4xqqrx00z1ssz011eeyh..gg
+  .ib.jj.asszquuqsz34mkk3rqq3km00m4mm11eeyh..gg
+  .cb.jj.asszquurzx4322m43uuz3210mmm422eeyh..gg
+  .cb.jj.aeszruurzx3411241uuuqz22322221eeahh.gg
+  .cb.jj.asszruurxx301104zqtlud4m210020eeyh..gg
+  .ic.jj.esszquurxxzx1030dullur33200001eeyy..gg
+  .ib.jp.esdzquurzxzzxx30qttltqx0010011eeyha.gg
+  .cb.jp.asszquurzxxxxx43suuuns301x0011eeyh..gj
+  .bb.jj.aeszquurzxxxx10301zz1133000301eyhha.gg
+  .cb.jg.yyszruurzxxxx003m4444430001021yayhy.pg
+  .ic.jg.yeszruurzxxx3300234m3022440020eeyy..pg
+  .ic.jg.ysszquurszzx330112442002332221eeyh..gg
+  .b..jj.asszruqqszzzx10100000012224m2edeyh..gg
+  .b..jg..aezsqqqzxzzx110442202322m2m2edsyhh.gg
+  ....jg..yyzrqqrz4xxxx344444344m22m20edeya..gj
+  bb..jg..yeedqqsx3xxxxxx033430343222yeede...gg
+  bb..ggf..eesddszxzxxzzzzzzzzzz1001yyyeda.....
+  ..........eedddszzzzzzzssssszzz11yeyyee...f..
+  ......ff...aysnqsxxzzz11111z1z112yaaa....ff..
+  ..bb..fg....yenns002202222201yyyyyya.........
+  ..............dsayyhhyyhhhhhyhyaa.......g..b.
+  ....bb..ff......hhyhyy..................g..ci
+  ....ii..fgfggf.....................ffggg.....
+  ....bb.......fff................f....gg......
+  ........b.....jjjjjjjjjjjjjjjjjjjj......cb...
+  ........ccib..gggggggggggggggggggg.bibcccc...
+  ...................................bbb.b.....
+  ..............cccccccccccccccccccc...........
+  ..............ciiiiiicciiiiiiiicii...........

@@ -1,0 +1,94 @@
+metadata:
+  name: magic_036
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#121f26'
+  b: '#0e1a22'
+  c: '#010c15'
+  d: '#7a7a6f'
+  e: '#abaca2'
+  f: '#9a988e'
+  g: '#7d796d'
+  h: '#767467'
+  i: '#7a776b'
+  j: '#797569'
+  k: '#6a675b'
+  l: '#4c4a40'
+  m: '#8a8a81'
+  n: '#7a817f'
+  o: '#051522'
+  p: '#979388'
+  q: '#908d82'
+  r: '#7e7c70'
+  s: '#a3a296'
+  t: '#95a09c'
+  u: '#91948c'
+  v: '#88857a'
+  w: '#858276'
+  x: '#818177'
+  y: '#7b8789'
+  z: '#747064'
+  '0': '#1d2125'
+  '1': '#7d949b'
+  '2': '#9da097'
+  '3': '#778d94'
+  '4': '#00070f'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ....aabababcb......deefghhiijjjiiikl.mn...............
+  .o..................pfqrjjighigrggkl.ss.co............
+  .c..tuvwxduy..........jgjizjhiiggjklzff.ba............
+  .c0.eeepvfet..........zmwgiiggzklkkrwpfr..............
+  .c..eeswhqe1..........rpfpvrgjkl0lzwwgrxfn.cb.........
+  .c0.seqi.xu...........mssffxzzkllkirgzzr22.co.........
+  .c0.psmz.n1...........vffqv..kzvwrrggkkzvv............
+  .c0.fsvk.y1............d.d..l.gpqwgzzhhziidm..b.......
+  ac0.psmh.y1...................rpviizkzhkkkr2f.co......
+  ac0.msqj.y3...................hvvrgzkkzjkzrpu.b.......
+  ac0.msmh.n1...................zvvriizjjhzzjid.....a...
+  bc0.pfv..n3...................r2pihgggizkkhkhduu.bca..
+  ac0.fsw...3...................mesxgrgrizzzhzjrqu......
+  ac0.fsx...y......n............meepghirrighidihirdruy.o
+  ac0.psx...3...................veeqhjrigrriirghzgxuef.0
+  oc0.psm...3....................mmqghzhhigjhhjjjiivpufl
+  o40.usm...3......................rhihhjrrgizzzghzgvssd
+  o40.usv..ny.......................mpwzhzhgjzzhgiirrxxd
+  o40.pfx..n........................feswhkkzihzjgghiklll
+  o40.qfv...........................pesqrkzzjjhjiidhkl0l
+  o4a.u2w...y........nn..............mvmqmxizhhzjrvjl0lr
+  o40.ufm...y.......nnmn...............r2emzzzhijrvrklkm
+  o40.usq..n3........nnn................pepwgrwwgzzkkwxw
+  o40.m2v..n3........n.yyn..............pefpfspfvkllkmvw
+  o4b.vx................yy..............xwvpfsfsqkllkrwh
+  o40.x...................................vqxrhxgklkhwwg
+  o40.wjk...3...................................zmwjgrwg
+  o40.qqw..n1..................................lgsqppmvr
+  o40.psp..n1.......numun.......................rseesqwg
+  o40.qevh..3.......numuun......n...............v2ffppvw
+  o40.msv...3............xn.....yn...................psf
+  o40.qfw...3............xx........................l.fee
+  o40.qfw...3............du..........................dvv
+  o40.wfr..n3.............m.............................
+  o40.xfr...3...........................................
+  o40.mpw...1...........................y...............
+  o40.qfx...1................nyy........11..............
+  o40.m2x...1................y333113....33..............
+  o40.mfv...1...........................................
+  o40.mfr...1...........................................
+  o40.qpd...3.311.......................................
+  o40.ppx.....3t1.......................33..............
+  o4a.ppv......31t131.......3.....31111ttt3.....y....0b.
+  o4a.mfw.......1111133331333..3..33313333......yn....a.
+  o4b.mfmr...........................................0a.
+  .c0.ffpf2n.................................nnn..n..ab.
+  .c0.qpqseffuuuuuuttteett22etttt222tttttt222222222u.0b.
+  .cb.fr.rqffuuffuu222esssssse2sssses22ses222uuufu22.ao.
+  acb.q..............................................ab.
+  .cb.................................................b.
+  bcb................................................ab.
+  .cb................................................ab.
+  aco................................................bo.
+  .oo................................................bo.
+  .bo................................................bo.

@@ -1,0 +1,75 @@
+metadata:
+  name: magic_073
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#9dd4ec'
+  b: '#8b6b89'
+  c: '#a286a9'
+  d: '#101225'
+  e: '#2a1931'
+  f: '#c3b1c6'
+  g: '#eaadcf'
+  h: '#f2cbdd'
+  i: '#bba1c0'
+  j: '#dd95bd'
+  k: '#fae3ef'
+  l: '#c885af'
+  m: '#bf719e'
+  n: '#a86b95'
+  o: '#5c3656'
+  p: '#faeff4'
+  q: '#d98db6'
+  r: '#ac5f8e'
+  s: '#af578a'
+  t: '#d680ad'
+  u: '#cf75a2'
+  v: '#cc6e9d'
+  w: '#ba5e90'
+  x: '#bb6597'
+  y: '#c5669a'
+  z: '#a54b80'
+  '0': '#954077'
+  '1': '#a25486'
+  '2': '#853369'
+  '3': '#8f3971'
+  '4': '#9a467e'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  aaab................................
+  aaac..........ddddddddddd...........
+  aaac.ccb........eeeeeede............
+  accaaaac...dd..bbbbbbbbb............
+  ...aaaa.....e.bffgffffghi.dd........
+  ...caac....bbcfggggjjjjgibede.......
+  ........d.ihkhkhgjlllmmmmnbo........
+  .........chpppkhhgqlqmrsrmqlc..d....
+  .......ifkppppkkkhjtuvwssxmlqb......
+  .....d.fhkppppppkhjtvyvwsszrlqib....
+  ......bghkppppppkhjtuuuvys0zrqhi.d..
+  ....biijfhppppkkhgjuuttuvszz1lgc.dd.
+  ..d.cggljhppppkkhjqmvutuvszzzxqnedd.
+  ..docjlnmgkkkkhhgjlmvvvvywszzzxno...
+  .eeoljmsmghhggjjjlmyvyyvvywzzzrmlib.
+  ..e2qgmsujjgjqlltuuyyyyvuywsz34mggc.
+  .ee2qjvwvqjjjtutttuuyyyvvyyxs04rqgbe
+  .donjjuwwtjqtuyutuuuywyyxyywz000ljbe
+  .eomquwsxtqtvwwyyyvywzzzsszz4023mqbe
+  .eoll33sujjtuuvxwsswszzz44034023ljbe
+  .donm22stgjqtqtyszssssz4z0330333ljbe
+  .dolx22xtjjttquwzz4zuqttmz433334mqbe
+  .eon1o2xqjtywxwzzz0ztgggqyz44323njbe
+  ..onm22svtuwszzswz0zmqttmwz44222mgn.
+  ...cl11zsyyxszzswwwxyrzz40z43220ncb.
+  ...2nqm034sysz4sxuutuws4001444r12o..
+  ....21m133sxwsss1rxmmmxz00444rjlode.
+  ....e2qq020rsrrz0300zssz40330mgfodd.
+  ....eolj13341xr1322234004334rljced..
+  ......nlnr02244032233322400xlgi.dd..
+  .......2nlr22222222233241rxmlic.....
+  ......eebjl0223233333334rqjl0.......
+  ......de.nbrnnrssssrsrrxmqqc.e......
+  ..........e3lqqlmllmmlllllic........
+  .........de.ncnnnnnrrnnnnbbbbc......
+  ..............oooooooooo.....ccc....

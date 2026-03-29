@@ -1,0 +1,71 @@
+metadata:
+  name: magic_077
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#05131a'
+  b: '#a7aba3'
+  c: '#817f70'
+  d: '#858374'
+  e: '#a7a697'
+  f: '#989688'
+  g: '#181d1c'
+  h: '#7e7c71'
+  i: '#77776c'
+  j: '#737266'
+  k: '#7a786c'
+  l: '#949489'
+  m: '#7b7b70'
+  n: '#656356'
+  o: '#615e52'
+  p: '#767469'
+  q: '#878678'
+  r: '#8a897c'
+  s: '#33322c'
+  t: '#0b151b'
+  u: '#9ea29d'
+  v: '#9d9c8d'
+  w: '#8f8d80'
+  x: '#242522'
+  y: '#6f6d60'
+  z: '#292925'
+  '0': '#7d8996'
+  '1': '#8596ac'
+  '2': '#aeaea0'
+  '3': '#7e8383'
+  '4': '#7e7f7a'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .a..bbcdef.gg.hijkdflmno....n.....jphqrq.sss..s.........
+  .tg.uekkvw.gg.kppqwrd.............pkphcc..ss...s........
+  .at.vvkhvw.xg.ijpdlri..............y....................
+  .tg.ubhdvw.xg.ikjmck..................o.jpmcmmhk.....g..
+  .t..ueccvw.xx.mm........................yjjpjppj.....t..
+  .t..bechfw.xx.mmj.......................................
+  .t..beccfw.zg..kp...n.............................m.....
+  .t..bedcvf.zg.kh.....n................................01
+  .a..beddvf.zg.hd......................................01
+  .a..beccvv.zg.pd......................................01
+  .a..bedcvf.zx..j.................y....................01
+  .a..22qcfl.sz.........................................01
+  .a..22rdvf.s..........................................01
+  gax.22qdvl.............................................1
+  .tx.2edqvly...........................................01
+  .a..2eqdfwy.....z.....................................11
+  .a..22rdffj....zxzzzzz.zzzzzzzzzzzzzzxxzzzzzxzzz....0011
+  .a..22rdvfcj....s...................................0011
+  .a..22rdffwqcp......................................0011
+  .ax.22frwvfwrmhhkijjip....pipihhmmhmmimiippjik.im...0111
+  .a..22vfvvvffwwllfwrwlwrdqqqqwwrqrwqcipjyjyy.......3ubb1
+  .a..eee2ee2ee222e2e2222eeevwrrrrqqrqhjynnyyj......301b11
+  .tx.qdwvvvvvee2evveeeeee2evrckkhcddcmhjyjqqrqdh43w330.00
+  .tg..ypdhcccdddcyjpkkcrlwwqhkjjkkchkmhjkdlluvllllul0....
+  .tg...nnnn.....o.....nykhkyyjynyyyy....kqr444.43300.....
+  .tg.m.oo..............ooonnn.onoon.....hvr..............
+  .tg.4.o.......y.......ooooo............4ur..............
+  .at...................nn................4...............
+  .tt.....oon....n........................................
+  .at......nn....nn.......................................
+  .at...........n.......p...p......................3300...
+  .tt...................p............................00...

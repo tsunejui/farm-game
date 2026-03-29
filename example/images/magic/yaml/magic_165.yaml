@@ -1,0 +1,72 @@
+metadata:
+  name: magic_165
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#060f12'
+  b: '#23211c'
+  c: '#353129'
+  d: '#0b1a22'
+  e: '#705c4d'
+  f: '#716457'
+  g: '#846e5a'
+  h: '#847869'
+  i: '#000000'
+  j: '#b2a593'
+  k: '#9a8773'
+  l: '#ac9075'
+  m: '#493d30'
+  n: '#977b61'
+  o: '#a68567'
+  p: '#65503f'
+  q: '#7a624f'
+  r: '#937459'
+  s: '#9d7d5f'
+  t: '#574b3f'
+  u: '#7b5c48'
+  v: '#81634d'
+  w: '#6d4f3b'
+  x: '#6d5441'
+  y: '#644834'
+  z: '#735542'
+  '0': '#715946'
+  '1': '#808b8d'
+  '2': '#b6bebc'
+  '3': '#959ea0'
+  '4': '#d6dfdb'
+  '5': '#c6cdc8'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ..........aabcbccbbbbccbcb.............
+  ......dd...efgfffffghffff....dd........
+  .....dai.hjkljkkkllllllkkkk.biia.......
+  .....baamhlknooooooooooknkkfmbb........
+  ......epqgnrrrrsosnnrrnrrrnggfh........
+  ...d.hllkrrrsssssosrrrnnrrnnnklh.dd....
+  .....kjlloooossssosrrrnnsrrnnklg.bd....
+  .....kllllloooooossnrrrrnnsoonnh.dd....
+  .....hlllllllosoossssrrrroollnngmd.....
+  .....eqnllllloooooooorrrsllllggf..d....
+  .....tmusoosoolllllllossnolgvwpe..d....
+  ....cmmxuuuvroljjjjjllorrrgwymme.......
+  ...dbmywywyzvsolllooonrrrvvymptpm......
+  ...abteuyywzurrvuuuzuzzuzywyyqqtbad....
+  ..dabtfqyywuuvvwwyyyyywyyyywxqftbad....
+  ..dabef0wwwuuuuzzzzz00uwwyywyxffcaa....
+  ..bbctxxpywzuvuvvvuuqvqu0yyyypeecda....
+  .....mcmxxwwzzuuvvquuuqq0xyp0tcc.......
+  .1221bameuwwzzuu00zuuu00xyp0qtbb.333.dd
+  .1441cbcx0wx0wwzxxxzxzxxxpyxqpbb.323.aa
+  .1543macfqzxwwwx0zzxwwzzzpyxqxcb.323.da
+  .154jmbtgggqqzzuuuzwwzuzxxx0epcb.323.da
+  .1543cachkkrg0uvuuuuuvvq0expptcc.323.dd
+  .1443cacfhggrngnrrgggggvqqptmte..323.da
+  .1543fttmcmenknrnrgggq0eeettmth13323.dd
+  .1222253cabtfgge0xpppptpmmmtff133331.da
+  .1322442mbbmmmmmmccccmccbbce33111.11.da
+  .3332452111htmmtmmmmmtmmmcmf333...11.da
+  ..113252444j1hhhhhh11hhhhhh1331...11.da
+  ....13325442222222jjj222j231.....133.dd
+  d..131.135445555555225555521...........
+  ...11...15445222552222222521...........

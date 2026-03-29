@@ -1,0 +1,87 @@
+metadata:
+  name: magic_081
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#81bdcf'
+  b: '#a3e5f5'
+  c: '#8ecddf'
+  d: '#5fa0b6'
+  e: '#77bed2'
+  f: '#99d9e9'
+  g: '#6ca4b8'
+  h: '#90d3e6'
+  i: '#9be0f0'
+  j: '#86c4d7'
+  k: '#76adc1'
+  l: '#77b5c9'
+  m: '#a7f0fc'
+  n: '#5795ab'
+  o: '#5f94aa'
+  p: '#82cee1'
+  q: '#96e7f8'
+  r: '#69acc1'
+  s: '#8adbec'
+  t: '#6ab1c6'
+  u: '#588092'
+  v: '#44687a'
+  w: '#557486'
+  x: '#576e7e'
+  y: '#667381'
+  z: '#646f7d'
+  '0': '#6c7482'
+  '1': '#586979'
+  '2': '#69707e'
+  '3': '#666c7a'
+  '4': '#646977'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ......abc.......................
+  ....ddefc.......................
+  ...ghijek.....gggg..............
+  ..ajhil.......cimiag............
+  ..fhaad......nhbmmmco...........
+  .nhc......ohpepqicjk............
+  .red......lbqsmsl...............
+  gee.......riqmmqr...............
+  grg........ehphpn.....klo.......
+  o.....................ciao...kko
+  d...dpjtttrnd..nn.....jbfhgnjmbh
+  o...rhqiqmisqssihl....jbimjrimmf
+  ....rsmiibibmmmmmjg...lhibr.dcfm
+  ..lejjelkrglaaacibbg..olfi....cm
+  .nhcenuvwwvuuuuuambag...ci....rb
+  .rcjdwwvxwwwuwvwgffaa...kjd....h
+  dpclovvxxyywyyuwugkjbj..nltk...c
+  rhenwwwyzzzzy00wxvucmfo..daik..g
+  rcrvvxyyzzyzy00yx1wkbfo...lir...
+  lcdvvxzz02233yy001vobil...gclg..
+  lcgwxyy30222200001vwkccrg..gafg.
+  thdwwyy32330000001vvulfhj...lbk.
+  rjovxy03343000002z11vgfij....ag.
+  ranv1yy444422223320xvufmco...ga.
+  ljuvxyy444332202320xvujiao...lbg
+  ljovxyz3343224322zy1vucbl....abg
+  dlovv11223333442231vvohien...jba
+  .kkuv11z233344432zzxxojfpd...abi
+  .kaowxyy2443344z0y0yvwrfcd...abb
+  ..kgowwxz3422334zy0yvvdcjd...ami
+  ...gkouxxz2zz33z2y0yvvrfjn...lbb
+  ...gkguvvxyzz43yyy0wvwlbcn...abj
+  ....odnwwxwxyyzyxxvvvuaijn...jbg
+  .....glowvvxxwxwxvvvwafsen...kj.
+  gg...dlgnuuwvvvvuonnrsqptd......
+  lag...rchjrnuuwnlhiihsqern......
+  gko...nhiipejttesqmqspper.......
+  .......djqqqqqqqqssqqppsr.......
+  ...ok...rhsssqqmqssispppd.......
+  ...gfhc...ntppetrddrd..n......ok
+  ....khhn......n...............aa
+  .....orrt...............nn....cc
+  .......gct..........dtnrpspdnept
+  .......gpetrrtttn...eqspssqssqsd
+  .........tsqssqql...pqsppepqqqsn
+  .........tqmspsst...deeqsepssqpn
+  .........lbqqqqqe.....tssesssqpn
+  .........oleisppr......ddrpsqqe.

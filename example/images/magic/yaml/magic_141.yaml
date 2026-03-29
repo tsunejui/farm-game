@@ -1,0 +1,95 @@
+metadata:
+  name: magic_141
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#0c1a25'
+  b: '#041724'
+  c: '#010e1a'
+  d: '#88969b'
+  e: '#a1b2b5'
+  f: '#aebcbd'
+  g: '#95a4a8'
+  h: '#a9b5b7'
+  i: '#9eacae'
+  j: '#8fa1a4'
+  k: '#78898f'
+  l: '#b7c5c6'
+  m: '#d1e0dd'
+  n: '#c9d7d5'
+  o: '#c0cecd'
+  p: '#98a9ac'
+  q: '#849095'
+  r: '#8e9da0'
+  s: '#899b9d'
+  t: '#e1eeeb'
+  u: '#78858a'
+  v: '#15232f'
+  w: '#798c92'
+  x: '#718489'
+  y: '#819499'
+  z: '#43535e'
+  '0': '#7b8e94'
+  '1': '#5d6c74'
+  '2': '#67797e'
+  '3': '#6d7f85'
+  '4': '#7e8f95'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .....................................................ab.....
+  .........................................bcccccccccccbbbb...
+  .........................................aa.bbbaabcb........
+  .....................................................def..b.
+  ...............................bbba........gfhfhhhhfffij.bc.
+  ..........................................klmnollllnood..bc.
+  ............................bc.dfeppgdqddqiomofhehflffq..ab.
+  ............................bc.emleehhhefonmmofipifi..qr.ac.
+  .............................ksnttmnmmmmmtmmohhhfolq..ud.ac.
+  ............................rnotttttttttttttopihnto.v.qr.ac.
+  .......................acajniielonnmmnnnnmmnlegintt.a.kj.ac.
+  .......................avvetlwxypgggggggjrrripqgomf...dg.ac.
+  .....................bbvksgjjyyssyssddddsqqsifllfu....qr.ac.
+  .....................cczfnek0jeggggjrggjgrrrimtnf.....qd.ac.
+  ...................aaav1pfr23sepipgjjgpjjgrqrmtlr.....qd.vc.
+  .................accv1eegk213geippgrsrjsdjrrsll.......ur.aca
+  .................bccvgmlj21z2gepgrjjjsrrssplogu.......qr.vca
+  ................babz3elek11z1dggjsdsssdrdwgmtd........kd.ac.
+  ................c..dpdy211zzz2krjrsjpgpprxqoh.........ud.ac.
+  ...............ac.imod211zzzzz2sjjjgefeiprpl..........qd.aca
+  ..................poe311zzzzzz2ku00sdjqqommn..........qd.ac.
+  .............ca.hepx2zzzzzzzzzz2123k3212otnf..........kd.ac.
+  ............acb.nfwzzzzzzzzzzzz1xxx22213otp............d.ac.
+  ...............qfr1zz12221112123yy0320wimtw............q.ac.
+  .........bcc.hnes21zz3dggggpeeppgjsx24elmm4...........uq.ac.
+  .........aav.mtp2z123jipeeppeipij4w3uhneysreq..........d.vc.
+  ........a...sll0111xkyjdyywkk33321qggomr..img..........j.ac.
+  .......cc.hnmfr2104dy44w0xxx321111rmopr...yp0.k........g.ac.
+  .......ac.htte4x3yssy00w0wkkk32122etm........ih........p.ac.
+  ..........ftmi22yjsdyyy40yykx32kehpir.........k...........b.
+  ....bc.iomnffpxx4ss44yy00yyk223gmtg.............es..dg...a..
+  ....cc.ettmsxkxxwy0kw44kk44kx4ehol4....................ab...
+  .......ittnq233k004wwy4440033rnfu......................a....
+  ..ba.4sfmtns2xk4yk0kkk444kwxxgnl.....................ab.....
+  .bcc.omontndx440yyyww44kk30pirsq............................
+  .....omomtnsu4qu0yd0u00kx2yll......................cc.......
+  ..quqhfhntnrxkkx0y4wu00y0xyfh.....................aba.......
+  .sonhgiimtnruxkk0k4ykxupffe......................acb........
+  .dnniiihntnq2u4w0w00323fmtl.......................b.........
+  .4onllhonmld3uyw4ykkx33fone....................ba...........
+  .uhmmnfffei43xwk4dwwrelp......................acb...........
+  ..inmmhssu0wkw40xwkxiomg......................ab............
+  ..dgnmeq43xywkywxxdhheek....................bb..............
+  iq1unneddww0kkwx22jmo.......................cb..............
+  ld2ulopdry0400wxkkgle.......................................
+  lq1ulop44yy0w433jlh......................vc.................
+  huzuoop00yyk3x3xemh..................4u.vcb.................
+  hu12log44dyx22sgr........................b..................
+  huz2lorkyyy03klm............................................
+  huz2fljk4330kyff..................qw..cb....................
+  i2z1ifpjru3jnlu.......................a.....................
+  eu12ghfnfeelmo.....................aa.......................
+  hiigkkiffttoru.................uy.acc.......................
+  efol....gntf......................aba.......................
+  iqqw.....u...................u...a..........................
+  p............................d..bc..........................

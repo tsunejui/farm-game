@@ -1,0 +1,75 @@
+metadata:
+  name: magic_113
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#000000'
+  b: '#8ca7b3'
+  c: '#7d97a3'
+  d: '#afc6cb'
+  e: '#abdfe5'
+  f: '#8abdcc'
+  g: '#6493aa'
+  h: '#5da4c4'
+  i: '#4493c2'
+  j: '#6cd7e6'
+  k: '#81e5ee'
+  l: '#55bcd7'
+  m: '#3290bc'
+  n: '#3a99c3'
+  o: '#34a9c8'
+  p: '#2f99be'
+  q: '#43a7cc'
+  r: '#43adcf'
+  s: '#42b5d4'
+  t: '#449fc9'
+  u: '#9ff0f4'
+  v: '#3db1cf'
+  w: '#42bcd9'
+  x: '#49bddb'
+  y: '#35aecd'
+  z: '#37b4d1'
+  '0': '#57c9e1'
+  '1': '#32b0cf'
+  '2': '#34b1d0'
+  '3': '#30aecd'
+  '4': '#3f88af'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ........a.aa..bbc.....c.........cccc............
+  ......a..........bdddc...............cbcc.......
+  .....aa.dddbb....deed................bdbbdb.aaa.
+  ........dddddbc..bddc................cbcbdc.aa..
+  .aa.bbcbeeeeeddc....................cccccbc.....
+  ....dddbddddddfcg...................g..c...cfbb.
+  .cbdddb...cc.cc.......................cc...ccccb
+  .deeedb.........ghhhhhhg......................be
+  .deeeddc........gihhhhh.....................c..b
+  bdedddb......ghh................................
+  dbcc.cc....ghjkl................................
+  dc........gfkkkl......mmmnm.....................
+  bc.....hfffjkkjlopnmpoqoorsrqpmmmmnnnntii.......
+  .......fkukjjjkjjlqvssvwxwxxsvyrsrrnpmnni.......
+  ...gh.tjkukkkkkukjsswwzsssszzzsswwsvpppmm.......
+  ...hlj0jjkkkkkkuk0vyzz1y2y23112221zwwsrpmmiii...
+  ..ghljjjjkkkukuukjvoyyy222211112z2zwwwspmmntt4..
+  ...hr00jkkkkuuuuukvyy22zy33331131zsxxxxsnmmmmii.
+  ...nrvo0kukuukkkk0voyyy22211122322yvrx0xrmmmmtm.
+  ..4qrop0kkuukk0llvyyz332zz3221313yopmpprommmmnn.
+  hlrvoppljuukj0rooooy2222211313332vom44mmqrmmmmmn
+  ljjwsooqjuuklvooooyz311133331132zzvpmmmmvvnnnmpq
+  ljj0j0xsjkk0ooyzz3yy2113333313322zxxxrvvssxrqttt
+  r000j0ss000voo21213o33331311331yyzwwxx0xxxxqnnit
+  .rlqnmmqxlxvvzz1z2zzz11221333zsyyzzyzwxxxsn.....
+  .tt....nqorxsxwwxxxxxwxwwwwwwxxxxxsssssont......
+  nqn....mrqqqqrx0000xx000000000000xl0xxrn........
+  iqi.....immm.mqlsrrrrrrrrrrqrrttnnttnmm....hef..
+  .ni........................................fue..
+  .mm........................................fee..
+  .ntm............................................
+  mqtm............................................
+  irqmm...........................................
+  .rrnnqqti..............................4hlh.....
+  .nqnnrllli............4hh..............ihlh.....
+  ..tqqnmii4.............hi..............iit......
