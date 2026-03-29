@@ -43,6 +43,24 @@ public class EntityState
     // Rapid on/off toggle for visual flicker during damage (toggles every ~60ms)
     public bool FlickerVisible { get; private set; }
 
+    // Knockback bounce animation
+    private float _bounceTimer;
+    private const float BounceDurationMs = 200f;
+    private const float BounceHeight = 6f;
+
+    public bool IsBouncing => _bounceTimer > 0f;
+
+    // Parabolic arc offset: 0 at start/end, -BounceHeight at peak
+    public float BounceOffsetY
+    {
+        get
+        {
+            if (_bounceTimer <= 0f) return 0f;
+            float p = 1f - _bounceTimer / BounceDurationMs;
+            return -BounceHeight * 4f * p * (1f - p);
+        }
+    }
+
     // Floating damage number display
     public int LastDamageAmount { get; private set; }
     public bool LastDamageWasCrit { get; private set; }
@@ -74,6 +92,11 @@ public class EntityState
     /// Apply damage. The actual HP deduction is spread over DamageTickDurationMs.
     /// If already taking damage, remaining + new damage are combined and the timer restarts.
     /// </summary>
+    public void TriggerBounce()
+    {
+        _bounceTimer = BounceDurationMs;
+    }
+
     public void TakeDamage(int amount, bool isCritical = false)
     {
         if (!IsAlive || amount <= 0) return;
@@ -98,6 +121,10 @@ public class EntityState
         // Tick floating damage number timer (independent of damage ticks)
         if (_damageNumberTimer > 0f)
             _damageNumberTimer -= deltaTimeSeconds * 1000f;
+
+        // Tick bounce animation
+        if (_bounceTimer > 0f)
+            _bounceTimer -= deltaTimeSeconds * 1000f;
 
         if (_damageTickRemainMs <= 0f)
         {

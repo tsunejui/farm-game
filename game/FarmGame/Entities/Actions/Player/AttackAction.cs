@@ -153,7 +153,11 @@ public class AttackAction : IPlayerAction
             int newX = entity.TileX + knockDir.X;
             int newY = entity.TileY + knockDir.Y;
             if (_map.MoveEntity(entity, newX, newY))
+            {
+                if (entity.State.IsAlive)
+                    entity.State.TriggerBounce();
                 Log.Debug("Knockback: {ItemId} pushed to ({X},{Y})", entity.ItemId, newX, newY);
+            }
         }
     }
 }

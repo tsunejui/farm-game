@@ -179,7 +179,9 @@ public class GameMap
                 py + ph < visible.Top || py > visible.Bottom)
                 continue;
 
-            var entityArea = new Rectangle(px, py, pw, ph);
+            // Apply bounce offset (parabolic arc while being knocked back alive)
+            int bounceY = (int)entity.State.BounceOffsetY;
+            var entityArea = new Rectangle(px, py + bounceY, pw, ph);
 
             // Select texture by entity state: damaged → dead → alive fallback chain
             string texState;
@@ -202,22 +204,23 @@ public class GameMap
                     int ox = bg.OffsetX;
                     int oy = bg.OffsetY;
 
+                    int drawY = py + bounceY;
                     switch (bg.DisplayMode)
                     {
                         case "stretch":
                             spriteBatch.Draw(bgTex,
-                                new Rectangle(px + ox, py + oy, pw, ph),
+                                new Rectangle(px + ox, drawY + oy, pw, ph),
                                 Color.White);
                             break;
 
                         case "tile":
-                            for (int ty = py + oy; ty < py + ph; ty += bgTex.Height)
+                            for (int ty2 = drawY + oy; ty2 < drawY + ph; ty2 += bgTex.Height)
                                 for (int tx = px + ox; tx < px + pw; tx += bgTex.Width)
                                 {
                                     int dw = Math.Min(bgTex.Width, px + pw - tx);
-                                    int dh = Math.Min(bgTex.Height, py + ph - ty);
+                                    int dh = Math.Min(bgTex.Height, drawY + ph - ty2);
                                     spriteBatch.Draw(bgTex,
-                                        new Rectangle(tx, ty, dw, dh),
+                                        new Rectangle(tx, ty2, dw, dh),
                                         new Rectangle(0, 0, dw, dh),
                                         Color.White);
                                 }
@@ -225,7 +228,7 @@ public class GameMap
 
                         case "center":
                             int cx = px + (pw - bgTex.Width) / 2 + ox;
-                            int cy = py + (ph - bgTex.Height) / 2 + oy;
+                            int cy = drawY + (ph - bgTex.Height) / 2 + oy;
                             spriteBatch.Draw(bgTex,
                                 new Vector2(cx, cy),
                                 Color.White);
