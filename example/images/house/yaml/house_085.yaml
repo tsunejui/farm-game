@@ -1,0 +1,77 @@
+metadata:
+  name: house_085
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#081822'
+  b: '#06131b'
+  c: '#101c24'
+  d: '#060809'
+  e: '#000000'
+  f: '#322f2b'
+  g: '#605950'
+  h: '#554b40'
+  i: '#5f5043'
+  j: '#544538'
+  k: '#222322'
+  l: '#121517'
+  m: '#6d6255'
+  n: '#b4a794'
+  o: '#b2a08c'
+  p: '#a29888'
+  q: '#8f8a7f'
+  r: '#403832'
+  s: '#9f8a73'
+  t: '#8e8170'
+  u: '#816f5d'
+  v: '#755a43'
+  w: '#6f5742'
+  x: '#6c523d'
+  y: '#7d644e'
+  z: '#775d47'
+  '0': '#7b614b'
+  '1': '#634c38'
+  '2': '#705b49'
+  '3': '#211d19'
+  '4': '#2b2924'
+  '5': '#736e64'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ..ababcababbaaabaaaabbaaaabbaaaaaaaaabbaabbba.
+  .bdddddddddddddddddeeeeeddeeddddedddddddddddba
+  abfgghiihhhjhiijjjihjjhjihhhhiijjjhhhhhiiighkb
+  blmnnnoooonooonoonooooonoonoonnooooooooopooqrb
+  blgoosssssssssssssstssssssssssssssssssssttsurb
+  bljtuvvvwvvwvxwvyyzvvvvvxxxxxvzzvvvwzvvzvvywrl
+  blju011111111111xvvvx1111x1j1111xx111xxxxwzwfl
+  bljuyx11x1111111xzyy0zz0yy02x11111111xwzww02fl
+  bdruux1111wwwwx11vyyyyyyyuuyvw11jjjj1w00vx2gfl
+  blruyxx1xw222wx11wz0vwvwzwwwwwx111112zz0vx0ifl
+  blruywwwz2www1xxvz0vvvxxx111xwvvx11xv0zzwvymfl
+  blhuyvwwzzw1111w000000vzxxxw00z0zvz0y0zvyyymrl
+  bljtyvxwz0w1111x0y0yyyyyvvyyyyy0vz0uyzxxzyyifl
+  blryyvxxw2wxxxww2zyyyyyy0yyyyyyzxxvyvwx11x2ifc
+  blrmyy222zz220xhj12yy020zz000zy0x1xzyyw11x2grb
+  blrm22iimmwi22ijrjim2222ij1imm2wii2myy22m2umfb
+  bl3frrfrjjrrrrffffrjrrrrrrrrjjjrrrhhrrhjjjhr4a
+  adld3333k433ll3333333l333kk3333333kk33kkllllba
+  ablkrfr444k44kfff43333444kk34k44kk3klllccaaa..
+  bbr55t5hrjm555tqtgjhm555hrrg555gjhg.kcc.......
+  blhpppqmjgqnpppoq5mupnnp5hgtpnnq55q..c........
+  blhqqttghgtnnptumggupnnp5ig5qpptm5...c........
+  alhtt55ghgtonptummutsppqmhhmttt5gm.g.c........
+  blhqt55mjgqpopttttpsqtt5mggm555m55q..c........
+  bcht555ghgtpqtttttqttu55mgg555m5m.............
+  abrgghghrjgmmgggmmggggmghhhgmg................
+  ablkk3f4f444f4f4fff4ffrffff4ff4k.k............
+  bbl34444f44k4fk3k44k33kk4f4kk43lba............
+  clfm55ghrhm555mmmmmghffrgggggm.cb.............
+  ab.noptigtpnonpppppq5hrh5qqqpp..b.............
+  al.pp5gjhupnnopppnnp5hrh5ttqnn..b.............
+  ab..tijhhtqpqqqqpppq5ghhgm..qq..a.............
+  ac..5ghg5tqqqqqqqqqq.g..g......cb.............
+  ab............................caa.............
+  .bk..........................ba...............
+  .aa.........................ca................
+  ...ccccccccccccc...c........a.................
