@@ -44,13 +44,13 @@ public class InfoPanel
 
     private static void DrawBox(SpriteBatch spriteBatch, string line1, string line2)
     {
-        var font = FontManager.GetFont(14);
+        var font = FontManager.GetFont(18);
         if (font == null) return;
 
-        int pad = 8;
-        int lineSpacing = 4;
+        int pad = 10;
+        int lineSpacing = 5;
         var s1 = font.MeasureString(line1);
-        var catFont = FontManager.GetFont(12);
+        var catFont = FontManager.GetFont(15);
         var s2 = catFont?.MeasureString(line2) ?? Vector2.Zero;
         int boxW = (int)Math.Max(s1.X, s2.X) + pad * 2;
         int boxH = (int)(s1.Y + s2.Y) + lineSpacing + pad * 2;

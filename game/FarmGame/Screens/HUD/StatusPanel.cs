@@ -19,12 +19,12 @@ namespace FarmGame.Screens.HUD;
 
 public class StatusPanel
 {
-    public const int PanelW = 220;
+    public const int PanelW = 280;
     public const int PanelY = 10;
-    public const int Padding = 10;
-    public const int CloseSize = 18;
-    public const int IconSize = 28;
-    public const int IconSpacing = 3;
+    public const int Padding = 12;
+    public const int CloseSize = 22;
+    public const int IconSize = 32;
+    public const int IconSpacing = 4;
 
     private bool _closeHovered;
 
@@ -53,8 +53,8 @@ public class StatusPanel
         {
             int iconsPerRow = (PanelW - Padding * 2) / (IconSize + IconSpacing);
             if (iconsPerRow < 1) iconsPerRow = 1;
-            int barH = 6;
-            int barY = PanelY + Padding + 24;
+            int barH = 8;
+            int barY = PanelY + Padding + 30;
             int iconStartY = barY + barH + 22;
 
             for (int i = 0; i < effectCount; i++)
@@ -87,8 +87,8 @@ public class StatusPanel
     {
         if (selected == null) return;
 
-        var titleFont = FontManager.GetFont(18);
-        var hpFont = FontManager.GetFont(14);
+        var titleFont = FontManager.GetFont(22);
+        var hpFont = FontManager.GetFont(16);
         if (titleFont == null || hpFont == null) return;
 
         bool isDead = !selected.State.IsAlive;
@@ -104,7 +104,7 @@ public class StatusPanel
         int iconRows = effectCount > 0 ? (effectCount + iconsPerRow - 1) / iconsPerRow : 0;
         int effectAreaH = iconRows > 0 ? iconRows * (IconSize + IconSpacing) + 6 : 0;
 
-        int panelH = 70 + effectAreaH;
+        int panelH = 85 + effectAreaH;
         int panelX = GameConstants.ScreenWidth / 2 - PanelW / 2;
 
         // Panel background
@@ -120,8 +120,8 @@ public class StatusPanel
 
         // HP bar
         int barW = PanelW - Padding * 2;
-        int barH = 6;
-        int barY = PanelY + Padding + 24;
+        int barH = 8;
+        int barY = PanelY + Padding + 30;
         spriteBatch.FillRectangle(new Rectangle(panelX + Padding, barY, barW, barH),
             Color.Black * 0.5f);
 
@@ -168,14 +168,14 @@ public class StatusPanel
             if (def?.Texture != null)
             {
                 spriteBatch.Draw(def.Texture,
-                    new Rectangle(ix + 2, iy + 2, IconSize - 4, IconSize - 4),
+                    new Rectangle(ix, iy, IconSize, IconSize),
                     Color.White);
             }
             else
             {
-                var iconFont = FontManager.GetFont(10);
+                var iconFont = FontManager.GetFont(14);
                 iconFont?.DrawText(spriteBatch, ae.EffectId[..1].ToUpper(),
-                    new Vector2(ix + 4, iy + 3), Color.White * 0.7f);
+                    new Vector2(ix + 8, iy + 6), Color.White * 0.8f);
             }
         }
     }

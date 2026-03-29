@@ -103,10 +103,15 @@ public class Player
         foreach (var action in _actions)
             action.Update(deltaTime, keyboard);
 
-        // Sync proxy for inspector
+        // Sync proxy position to player
         WorldProxy.TileX = GridPosition.X;
         WorldProxy.TileY = GridPosition.Y;
-        WorldProxy.State.SyncHp(CurrentHp, MaxHp);
+
+        // Sync HP: if proxy took damage (from effects), apply to player
+        if (WorldProxy.State.CurrentHp < CurrentHp)
+            CurrentHp = WorldProxy.State.CurrentHp;
+        else
+            WorldProxy.State.SyncHp(CurrentHp, MaxHp);
     }
 
     public void Draw(SpriteBatch spriteBatch)

@@ -202,6 +202,14 @@ public class GameMap
             obj.UpdateEvents(this, deltaTime);
         }
 
+        // Tick player proxy events (player is an object but not in Objects list)
+        if (PlayerProxy != null)
+        {
+            PlayerProxy.State.Update(deltaTime);
+            PlayerProxy.UpdateEffects(deltaTime);
+            PlayerProxy.UpdateEvents(this, deltaTime);
+        }
+
         foreach (var anim in _animatedTextures.Values)
             anim.Update(deltaTime);
 
