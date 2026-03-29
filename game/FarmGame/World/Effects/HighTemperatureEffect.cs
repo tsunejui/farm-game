@@ -19,26 +19,29 @@ public class HighTemperatureEffect : IEffect
 
     public void OnTick(WorldObject owner, GameMap map)
     {
-        // Check all tiles occupied by the owner
         for (int x = owner.TileX; x < owner.TileX + owner.EffectiveWidth; x++)
         {
             for (int y = owner.TileY; y < owner.TileY + owner.EffectiveHeight; y++)
             {
-                // Check if any other object is at distance 0 (same tile)
-                // For now, check all map objects (including player proxy)
+                // Check map objects
                 foreach (var obj in map.Objects)
-                {
-                    if (obj == owner) continue;
-                    if (!obj.State.IsAlive) continue;
-                    if (obj.TileX != x || obj.TileY != y) continue;
+                    TryDamage(obj, owner, x, y);
 
-                    // 50% chance
-                    if (Rng.NextDouble() >= 0.5) continue;
-
-                    int damage = Rng.Next(1, 4); // 1-3
-                    obj.EnqueueEvent(new TakeDamageEvent(damage));
-                }
+                // Player is also an object — check player proxy
+                if (map.PlayerProxy != null)
+                    TryDamage(map.PlayerProxy, owner, x, y);
             }
         }
+    }
+
+    private void TryDamage(WorldObject target, WorldObject owner, int x, int y)
+    {
+        if (target == owner) return;
+        if (!target.State.IsAlive) return;
+        if (target.TileX != x || target.TileY != y) return;
+        if (Rng.NextDouble() >= 0.5) return;
+
+        int damage = Rng.Next(1, 4);
+        target.EnqueueEvent(new TakeDamageEvent(damage));
     }
 }

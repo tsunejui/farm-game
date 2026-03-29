@@ -23,8 +23,8 @@ public class StatusPanel
     public const int PanelY = 10;
     public const int Padding = 10;
     public const int CloseSize = 18;
-    public const int IconSize = 20;
-    public const int IconSpacing = 2;
+    public const int IconSize = 28;
+    public const int IconSpacing = 3;
 
     private bool _closeHovered;
 
@@ -53,8 +53,9 @@ public class StatusPanel
         {
             int iconsPerRow = (PanelW - Padding * 2) / (IconSize + IconSpacing);
             if (iconsPerRow < 1) iconsPerRow = 1;
+            int barH = 6;
             int barY = PanelY + Padding + 24;
-            int iconStartY = barY + 6 + 22;
+            int iconStartY = barY + barH + 22;
 
             for (int i = 0; i < effectCount; i++)
             {
@@ -66,8 +67,14 @@ public class StatusPanel
                 if (mouse.X >= ix && mouse.X <= ix + IconSize &&
                     mouse.Y >= iy && mouse.Y <= iy + IconSize)
                 {
-                    var def = EffectRegistry.GetDefinition(selected.Effects[i].EffectId);
-                    hoveredEffectDesc = def?.Description ?? selected.Effects[i].EffectId;
+                    string effectId = selected.Effects[i].EffectId;
+                    // Try locale first, then YAML description, then ID
+                    hoveredEffectDesc = LocaleManager.Get("effects", effectId, null);
+                    if (hoveredEffectDesc == null)
+                    {
+                        var def = EffectRegistry.GetDefinition(effectId);
+                        hoveredEffectDesc = def?.Description ?? effectId;
+                    }
                     break;
                 }
             }

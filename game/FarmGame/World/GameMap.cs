@@ -34,6 +34,9 @@ public class GameMap
 
     public List<WorldObject> Objects { get; } = new();
 
+    // Player proxy for effects that interact with the player (not in Objects list)
+    public WorldObject PlayerProxy { get; set; }
+
     public GameMap(string mapId, int width, int height, Dictionary<string, Color> terrainColors)
     {
         MapId = mapId;

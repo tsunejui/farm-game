@@ -62,12 +62,21 @@ public static class EffectRegistry
                 // Load icon texture
                 if (!string.IsNullOrEmpty(def.ImagePath) && loadTexture != null)
                 {
-                    try { def.Texture = loadTexture(def.ImagePath); }
-                    catch { Log.Warning("Failed to load effect icon: {Path}", def.ImagePath); }
+                    try
+                    {
+                        def.Texture = loadTexture(def.ImagePath);
+                        Log.Debug("Effect icon loaded: {Id} → {Path}", def.EffectId, def.ImagePath);
+                    }
+                    catch (Exception texEx)
+                    {
+                        Log.Warning("Failed to load effect icon '{Path}': {Error}",
+                            def.ImagePath, texEx.Message);
+                    }
                 }
 
                 _definitions[def.EffectId] = def;
-                Log.Debug("Effect definition loaded: {Id}", def.EffectId);
+                Log.Debug("Effect definition loaded: {Id}, hasTexture={HasTex}",
+                    def.EffectId, def.Texture != null);
             }
             catch (Exception ex)
             {
