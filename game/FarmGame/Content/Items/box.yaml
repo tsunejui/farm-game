@@ -26,6 +26,7 @@ physics:
   is_knockbackable: true
 
 logic:
+  default_effects: []
   action_handler: "none"
   max_health: 4
   defense: 0

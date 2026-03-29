@@ -25,6 +25,7 @@ physics:
   is_collidable: true
 
 logic:
+  default_effects: []
   action_handler: "rock_logic"
   max_health: 8
   defense: 2

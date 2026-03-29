@@ -64,6 +64,16 @@ physics:
 # --- Logic -------------------------------------------------------------------
 # Game behavior. Code reads action_handler to decide what happens on interact.
 logic:
+  # Default effects applied when the object is first placed on a map.
+  # Each effect has an effect_id (registered in EffectRegistry) and ttl
+  # (time-to-live in seconds; 0 = permanent).
+  # Available effects:
+  #   "indestructible"    — sets all damage to 0
+  #   "high_temperature"  — 50% chance to deal 1-3 fire damage per second at distance 0
+  default_effects:
+    # - effect_id: "indestructible"
+    #   ttl: 0
+
   # Handler ID that maps to C# logic (e.g., "tree_logic", "rock_logic",
   # "portal_logic", or "none" for no interaction)
   action_handler: "none"
@@ -82,14 +92,6 @@ logic:
 
   # Invincible: takes no damage, no damage numbers shown
   is_invincible: false
-
-  # Default effects applied when the object is first placed on a map.
-  # Each effect has an effect_id (registered in EffectRegistry) and ttl
-  # (time-to-live in seconds; 0 = permanent).
-  # Available effects: "indestructible" (sets all damage to 0)
-  default_effects:
-    # - effect_id: "indestructible"
-    #   ttl: 0
 
   # Items dropped when destroyed
   drops:

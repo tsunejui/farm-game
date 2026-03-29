@@ -22,6 +22,7 @@ physics:
   is_collidable: false
 
 logic:
+  default_effects: []
   action_handler: "portal_logic"
   max_health: 0
   faction: "friendly"

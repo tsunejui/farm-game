@@ -27,10 +27,10 @@ physics:
   is_knockbackable: false
 
 logic:
+  default_effects:
+    - effect_id: "high_temperature"
+      ttl: 0
   action_handler: "none"
   max_health: 15
   defense: 0
   faction: "neutral"
-  default_effects:
-    - effect_id: "high_temperature"
-      ttl: 0

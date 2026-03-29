@@ -21,6 +21,7 @@ physics:
   is_collidable: true
 
 logic:
+  default_effects: []
   action_handler: "none"
   max_health: 0
   faction: "neutral"

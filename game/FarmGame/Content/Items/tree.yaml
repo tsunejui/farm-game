@@ -25,6 +25,7 @@ physics:
   is_collidable: true
 
 logic:
+  default_effects: []
   action_handler: "tree_logic"
   max_health: 12
   defense: 1
