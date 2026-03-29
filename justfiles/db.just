@@ -86,6 +86,19 @@ db-restore:
 	echo "Restored from: $selected"
 	echo "Previous DB saved as: $(basename "$DB_PATH").before_restore"
 
+# Delete the database file
+db-delete:
+	#!/bin/sh
+	. .env.local 2>/dev/null || just env
+	. .env.local
+	if [ ! -f "$DB_PATH" ]; then \
+		echo "Database not found."; \
+		exit 0; \
+	fi
+	gum confirm "Delete database at $DB_PATH?" || exit 0
+	rm -f "$DB_PATH"
+	echo "Deleted: $DB_PATH"
+
 # Show database file path and size
 db-info:
 	#!/bin/sh
