@@ -19,5 +19,6 @@
   "confirm": "確認",
   "cancel": "取消",
   "loading": "載入中...",
-  "auto_saved": "已自動存檔"
+  "auto_saved": "已自動存檔",
+  "interact": "正在與 {0} 互動..."
 }

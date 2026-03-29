@@ -106,6 +106,12 @@ public class ItemLogic
     // Faction: "neutral" (default), "friendly" (cannot be attacked), "enemy" (can be attacked)
     public string Faction { get; set; } = "neutral";
 
+    [YamlMember(Alias = "is_interactable")]
+    public bool IsInteractable { get; set; }
+
+    [YamlMember(Alias = "is_invincible")]
+    public bool IsInvincible { get; set; }
+
     public List<DropEntry> Drops { get; set; } = new();
     public Dictionary<string, object> Properties { get; set; } = new();
 }

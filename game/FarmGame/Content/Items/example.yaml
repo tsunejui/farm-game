@@ -77,6 +77,12 @@ logic:
   #   "enemy"    — can be attacked, may attack back in future
   faction: "neutral"
 
+  # Interactable: attack key opens dialogue instead of attacking
+  is_interactable: false
+
+  # Invincible: takes no damage, no damage numbers shown
+  is_invincible: false
+
   # Items dropped when destroyed
   drops:
     - item: "wood"                 # item_id of the drop

@@ -32,4 +32,10 @@ public class Camera2D
         var target = player.PixelPosition + new Vector2(GameConstants.TileSize / 2f);
         _camera.LookAt(target);
     }
+
+    // Convert screen pixel coordinates to world coordinates
+    public Vector2 ScreenToWorld(Vector2 screenPos)
+    {
+        return Vector2.Transform(screenPos, Matrix.Invert(TransformMatrix));
+    }
 }

@@ -25,6 +25,7 @@ public class PlayingScreen : IScreen, IWorldRenderer
     private readonly GameSession _session;
     private readonly MapTransitionOverlay _mapTransition;
     private readonly ToastAlert _toast;
+    private readonly ObjectInspector _inspector;
 
     private GameMap _currentMap;
     private Entities.Player _player;
@@ -43,6 +44,7 @@ public class PlayingScreen : IScreen, IWorldRenderer
         _session = session;
         _mapTransition = new MapTransitionOverlay();
         _toast = new ToastAlert();
+        _inspector = new ObjectInspector();
     }
 
     public void Initialize() { }
@@ -67,6 +69,13 @@ public class PlayingScreen : IScreen, IWorldRenderer
 
         // Set world bounds once at map load (not per-frame)
         _camera.SetWorldBounds(_currentMap);
+
+        // Wire interaction callback for interactable objects
+        _player.OnInteract = obj =>
+        {
+            string name = LocaleManager.Get("items", obj.ItemId, obj.Definition.Metadata.DisplayName);
+            _toast.Show(LocaleManager.Format("ui", "interact", name));
+        };
 
         _mapTransition.Start(result.MapName);
         _toast.Show(LocaleManager.Format("ui", "entered_map", result.MapName));
@@ -105,6 +114,7 @@ public class PlayingScreen : IScreen, IWorldRenderer
         _player.Update(gameTime);
         _currentMap.Update(dt);
         _camera.Update(_player);
+        _inspector.Update(_currentMap, _camera);
 
         return ScreenTransition.None;
     }
@@ -114,6 +124,7 @@ public class PlayingScreen : IScreen, IWorldRenderer
         DrawWorld(spriteBatch);
 
         spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        _inspector.DrawHUD(spriteBatch);
         _toast.Draw(spriteBatch);
         if (_mapTransition.IsActive)
             _mapTransition.Draw(spriteBatch);
@@ -126,6 +137,7 @@ public class PlayingScreen : IScreen, IWorldRenderer
             transformMatrix: _camera.TransformMatrix,
             samplerState: SamplerState.PointClamp);
         _currentMap.Draw(spriteBatch, _camera);
+        _inspector.DrawWorldMarker(spriteBatch);
         _player.Draw(spriteBatch);
         _currentMap.DrawObjectInfo(spriteBatch, _player.GridPosition);
         spriteBatch.End();

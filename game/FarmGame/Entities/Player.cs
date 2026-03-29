@@ -41,11 +41,15 @@ public class Player
     public int CurrentHp { get; set; }
     public bool IsAlive => CurrentHp > 0;
 
+    // Callback when interacting with an interactable object
+    public Action<WorldObject> OnInteract { get; set; }
+
     public Player(Point startPosition, GameMap tileMap, Direction facingDirection = Direction.Down)
     {
         _movement = new MovementAction(startPosition, tileMap, facingDirection);
         _jump = new JumpAction();
-        _attack = new AttackAction(tileMap, () => _movement.GridPosition, () => _movement.FacingDirection);
+        _attack = new AttackAction(tileMap, () => _movement.GridPosition, () => _movement.FacingDirection,
+            obj => OnInteract?.Invoke(obj));
         _actions = new IPlayerAction[] { _movement, _jump, _attack };
 
         MaxHp = GameConstants.PlayerMaxHp;

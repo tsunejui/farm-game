@@ -1,9 +1,10 @@
 // =============================================================================
 // AttackAction.cs — Player attack action with object damage
 //
-// Triggered by Z key. Plays a directional visual effect and checks for
-// entities in the attack area. Damages non-friendly entities with a random
-// amount distributed over DamageTickDurationMs.
+// Triggered by Z key. Checks the tile in front of the player:
+//   - Interactable objects: skip attack, trigger interaction callback
+//   - Invincible objects: skip damage entirely
+//   - Normal objects: run damage pipeline, apply knockback
 // =============================================================================
 
 using System;
@@ -23,23 +24,34 @@ public class AttackAction : IPlayerAction
     private readonly GameMap _map;
     private readonly Func<Point> _getGridPosition;
     private readonly Func<Direction> _getFacingDirection;
+    private readonly Action<WorldObject> _onInteract;
     private float _attackProgress;
     private bool _hasDealtDamage;
 
     public bool IsActive { get; private set; }
     public float Progress => _attackProgress;
 
-    public AttackAction(GameMap map, Func<Point> getGridPosition, Func<Direction> getFacingDirection)
+    public AttackAction(GameMap map, Func<Point> getGridPosition, Func<Direction> getFacingDirection,
+        Action<WorldObject> onInteract = null)
     {
         _map = map;
         _getGridPosition = getGridPosition;
         _getFacingDirection = getFacingDirection;
+        _onInteract = onInteract;
     }
 
     public void Update(float deltaTime, KeyboardStateExtended keyboard)
     {
         if (!IsActive && keyboard.WasKeyPressed(Keys.Z))
         {
+            // Check if the facing object is interactable — if so, interact instead of attack
+            var facingObj = GetFacingObject();
+            if (facingObj != null && facingObj.Definition.Logic.IsInteractable)
+            {
+                _onInteract?.Invoke(facingObj);
+                return;
+            }
+
             IsActive = true;
             _attackProgress = 0f;
             _hasDealtDamage = false;
@@ -49,7 +61,6 @@ public class AttackAction : IPlayerAction
         {
             _attackProgress += deltaTime / GameConstants.PlayerAttackDuration;
 
-            // Deal damage once at ~30% into the animation (impact frame)
             if (!_hasDealtDamage && _attackProgress >= 0.3f)
             {
                 _hasDealtDamage = true;
@@ -95,12 +106,10 @@ public class AttackAction : IPlayerAction
         context.SpriteBatch.FillRectangle(effectRect, GameConstants.PlayerAttackColor * alpha);
     }
 
-    private void DealDamageToObjectsInRange()
+    private WorldObject GetFacingObject()
     {
         var pos = _getGridPosition();
         var dir = _getFacingDirection();
-
-        // Check the tile in front of the player
         Point target = dir switch
         {
             Direction.Up => new Point(pos.X, pos.Y - 1),
@@ -109,12 +118,19 @@ public class AttackAction : IPlayerAction
             Direction.Right => new Point(pos.X + 1, pos.Y),
             _ => pos,
         };
+        return _map.GetObjectAt(target.X, target.Y);
+    }
 
-        var obj = _map.GetObjectAt(target.X, target.Y);
+    private void DealDamageToObjectsInRange()
+    {
+        var obj = GetFacingObject();
         if (obj == null) return;
         if (obj.State.Faction == Faction.Friendly) return;
 
-        // Deal damage to alive entities with HP
+        // Invincible objects take no damage
+        if (obj.Definition.Logic.IsInvincible) return;
+
+        // Deal damage to alive objects with HP
         if (obj.State.IsAlive && obj.Definition.Logic.MaxHealth > 0)
         {
             var ctx = new DamageContext
@@ -137,9 +153,10 @@ public class AttackAction : IPlayerAction
                 obj.State.CurrentHp, obj.State.MaxHp);
         }
 
-        // Knockback: push object regardless of alive/dead
+        // Knockback
         if (obj.Definition.Physics.IsKnockbackable)
         {
+            var dir = _getFacingDirection();
             int kb = GameConstants.KnockbackTiles;
             Point knockDir = dir switch
             {
