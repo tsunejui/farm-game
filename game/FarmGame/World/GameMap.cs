@@ -19,8 +19,10 @@ public class GameMap
     private readonly bool[,] _collisionGrid;
     private readonly Dictionary<string, Color> _terrainColors;
     private readonly Dictionary<(int, int), Dictionary<string, object>> _tileProperties = new();
-    // Key: (itemId, state) where state is "alive" or "dead"
+    // Key: (itemId, state) — static textures
     private readonly Dictionary<(string, string), Texture2D> _backgroundTextures = new();
+    // Key: (itemId, state) — animated textures (GIF frames)
+    private readonly Dictionary<(string, string), AnimatedTexture> _animatedTextures = new();
     private readonly Dictionary<(int, int), WorldObject> _objectGrid = new();
 
     public List<WorldObject> Objects { get; } = new();
@@ -38,6 +40,11 @@ public class GameMap
     public void SetBackgroundTexture(string itemId, string state, Texture2D texture)
     {
         _backgroundTextures[(itemId, state)] = texture;
+    }
+
+    public void SetAnimatedTexture(string itemId, string state, AnimatedTexture anim)
+    {
+        _animatedTextures[(itemId, state)] = anim;
     }
 
     public void SetTerrain(int x, int y, string terrainId)
@@ -134,7 +141,7 @@ public class GameMap
         return true;
     }
 
-    // Update all object states, effects, and event queues
+    // Update all object states, effects, event queues, and animated textures
     public void Update(float deltaTime)
     {
         foreach (var obj in Objects)
@@ -143,6 +150,9 @@ public class GameMap
             obj.UpdateEffects(deltaTime);
             obj.UpdateEvents(this, deltaTime);
         }
+
+        foreach (var anim in _animatedTextures.Values)
+            anim.Update(deltaTime);
     }
 
     public void Draw(SpriteBatch spriteBatch, Camera2D camera)
@@ -199,8 +209,14 @@ public class GameMap
 
             if (bg.Enabled)
             {
-                // Try state-specific texture first, fall back to alive texture
-                if (!_backgroundTextures.TryGetValue((obj.ItemId, texState), out var bgTex))
+                // Try animated texture first, then static, then alive fallback
+                Texture2D bgTex = null;
+                if (_animatedTextures.TryGetValue((obj.ItemId, texState), out var anim))
+                    bgTex = anim.CurrentFrame;
+                else if (_animatedTextures.TryGetValue((obj.ItemId, "alive"), out var animFallback) && texState == "alive")
+                    bgTex = animFallback.CurrentFrame;
+
+                if (bgTex == null && !_backgroundTextures.TryGetValue((obj.ItemId, texState), out bgTex))
                     _backgroundTextures.TryGetValue((obj.ItemId, "alive"), out bgTex);
 
                 if (bgTex != null)

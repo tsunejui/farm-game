@@ -28,11 +28,12 @@ public static class GameplayInitializer
         PlayerState savedState,
         DataRegistry registry,
         Func<string, Texture2D> loadTexture,
-        GraphicsDevice graphicsDevice)
+        GraphicsDevice graphicsDevice,
+        string contentDir = null)
     {
         var mapId = savedState?.CurrentMap ?? GameConstants.StartMap;
         var mapDef = registry.Maps[mapId];
-        var map = MapBuilder.Build(mapDef, registry, loadTexture);
+        var map = MapBuilder.Build(mapDef, registry, loadTexture, graphicsDevice, contentDir);
 
         var config = mapDef.Config;
         Point playerStart;

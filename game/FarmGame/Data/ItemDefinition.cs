@@ -67,6 +67,10 @@ public class ItemBackgroundState
     [YamlMember(Alias = "image_path")]
     public string ImagePath { get; set; } = "";
 
+    // File type: "png" (default) or "gif" (animated)
+    [YamlMember(Alias = "file_type")]
+    public string FileType { get; set; } = "png";
+
     // Optional per-state display_mode override (null = inherit from parent)
     [YamlMember(Alias = "display_mode")]
     public string DisplayMode { get; set; }

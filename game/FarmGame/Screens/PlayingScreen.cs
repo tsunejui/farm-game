@@ -32,16 +32,20 @@ public class PlayingScreen : IScreen, IWorldRenderer
     private Camera2D _camera;
     private float _autoSaveTimer;
 
+    private readonly string _contentDir;
+
     public PlayingScreen(
         GraphicsDevice graphicsDevice,
         DataRegistry registry,
         Func<string, Texture2D> loadTexture,
-        GameSession session)
+        GameSession session,
+        string contentDir)
     {
         _graphicsDevice = graphicsDevice;
         _registry = registry;
         _loadTexture = loadTexture;
         _session = session;
+        _contentDir = contentDir;
         _mapTransition = new MapTransitionOverlay();
         _toast = new ToastAlert();
         _inspector = new ObjectInspector();
@@ -58,7 +62,7 @@ public class PlayingScreen : IScreen, IWorldRenderer
 
     public void StartGame(PlayerState savedState)
     {
-        var result = GameplayInitializer.Run(savedState, _registry, _loadTexture, _graphicsDevice);
+        var result = GameplayInitializer.Run(savedState, _registry, _loadTexture, _graphicsDevice, _contentDir);
         _currentMap = result.Map;
         _player = result.Player;
         _camera = result.Camera;

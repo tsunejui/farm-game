@@ -92,7 +92,7 @@ public class InitManager
         };
         settingsScreen.Initialize();
 
-        var playingScreen = new PlayingScreen(game.GraphicsDevice, registry, loadTexture, Session);
+        var playingScreen = new PlayingScreen(game.GraphicsDevice, registry, loadTexture, Session, contentDir);
         PlayingScreen = playingScreen;
 
         var loading = new LoadingScreen();

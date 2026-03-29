@@ -11,7 +11,8 @@ namespace FarmGame.World;
 public static class MapBuilder
 {
     public static GameMap Build(MapDefinition mapDef, DataRegistry registry,
-        Func<string, Texture2D> loadTexture = null)
+        Func<string, Texture2D> loadTexture = null,
+        GraphicsDevice graphicsDevice = null, string contentDir = null)
     {
         var config = mapDef.Config;
 
@@ -100,7 +101,7 @@ public static class MapBuilder
                         map.SetCollision(x, y, true);
             }
 
-            // Load all state-based background textures
+            // Load all state-based background textures (PNG or GIF frames)
             if (itemDef.Visuals.Background.Enabled && loadTexture != null)
             {
                 var bg = itemDef.Visuals.Background;
@@ -108,13 +109,25 @@ public static class MapBuilder
                 {
                     if (string.IsNullOrEmpty(stateConfig.ImagePath)) continue;
 
-                    // Map "normal" state to internal "alive" key for renderer lookup
                     string texKey = state == "normal" ? "alive" : state;
+                    string fileType = (stateConfig.FileType ?? "png").ToLowerInvariant();
+
                     try
                     {
-                        var texture = loadTexture(stateConfig.ImagePath);
-                        if (texture != null)
-                            map.SetBackgroundTexture(placement.Item, texKey, texture);
+                        if (fileType == "gif" && graphicsDevice != null && contentDir != null)
+                        {
+                            // Load animated frames: imagePath_frame0.png, _frame1.png, ...
+                            var anim = AnimatedTexture.LoadFrames(
+                                graphicsDevice, contentDir, stateConfig.ImagePath);
+                            if (anim.FrameCount > 0)
+                                map.SetAnimatedTexture(placement.Item, texKey, anim);
+                        }
+                        else
+                        {
+                            var texture = loadTexture(stateConfig.ImagePath);
+                            if (texture != null)
+                                map.SetBackgroundTexture(placement.Item, texKey, texture);
+                        }
                     }
                     catch (Exception ex)
                     {

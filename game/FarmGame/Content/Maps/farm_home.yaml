@@ -61,6 +61,10 @@ entities:
     tile_x: 18
     tile_y: 8
 
+  - item: "campfire"
+    tile_x: 10
+    tile_y: 13
+
   - item: "dummy"
     tile_x: 14
     tile_y: 18
