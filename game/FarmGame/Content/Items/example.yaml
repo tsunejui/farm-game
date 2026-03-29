@@ -41,12 +41,15 @@ visuals:
     offset_x: 0
     offset_y: 0
 
-    # State-specific images. Each state has its own image_path.
+    # State-specific images. Each state has its own image settings.
     # The renderer selects the image matching the entity's current state.
-    # Supported states: "normal" (alive default), "dead"
+    # Supported states: "normal" (alive default), "damaged" (taking damage), "dead"
+    # Each state can override display_mode, offset_x, offset_y (inherits parent if omitted).
     states:
       normal:
         image_path: "textures/backgrounds/example"
+      damaged:
+        image_path: "textures/backgrounds/example_damaged"
       dead:
         image_path: "textures/backgrounds/example_dead"
 

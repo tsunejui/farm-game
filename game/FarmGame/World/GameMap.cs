@@ -140,8 +140,14 @@ public class GameMap
 
             var entityArea = new Rectangle(px, py, pw, ph);
 
-            // Select texture by entity state: dead entities use "dead" texture if available
-            string texState = entity.State.IsAlive ? "alive" : "dead";
+            // Select texture by entity state: damaged → dead → alive fallback chain
+            string texState;
+            if (!entity.State.IsAlive)
+                texState = "dead";
+            else if (entity.State.IsTakingDamage)
+                texState = "damaged";
+            else
+                texState = "alive";
             var bg = def.Visuals.Background;
 
             if (bg.Enabled)
@@ -202,12 +208,6 @@ public class GameMap
             }
 
             if (!entity.State.IsAlive) continue;
-
-            // Damage flicker: rapid white flash overlay while taking damage
-            if (entity.State.IsTakingDamage && entity.State.FlickerVisible)
-            {
-                spriteBatch.FillRectangle(entityArea, Color.White * 0.5f);
-            }
         }
     }
 

@@ -66,6 +66,16 @@ public class ItemBackgroundState
 {
     [YamlMember(Alias = "image_path")]
     public string ImagePath { get; set; } = "";
+
+    // Optional per-state display_mode override (null = inherit from parent)
+    [YamlMember(Alias = "display_mode")]
+    public string DisplayMode { get; set; }
+
+    [YamlMember(Alias = "offset_x")]
+    public int? OffsetX { get; set; }
+
+    [YamlMember(Alias = "offset_y")]
+    public int? OffsetY { get; set; }
 }
 
 public class ItemPhysics

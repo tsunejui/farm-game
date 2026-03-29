@@ -77,11 +77,15 @@ public class GameSession
         if (_mapStateRepo == null) return;
 
         var mapStateId = savedState?.CurrentMapStateId;
+        Log.Debug("LoadOrCreateMapState: mapId={MapId}, savedMapStateId={StateId}",
+            mapId, mapStateId ?? "null");
 
         if (mapStateId != null)
         {
             // Restore entity states from DB
             var loadResult = _mapStateRepo.LoadEntities(mapStateId);
+            Log.Debug("LoadEntities result: success={Success}, count={Count}",
+                loadResult.Success, loadResult.Success ? loadResult.Value.Count : 0);
             if (loadResult.Success && loadResult.Value.Count > 0)
             {
                 var entityLookup = loadResult.Value
@@ -138,7 +142,10 @@ public class GameSession
         }).ToList();
 
         var result = _mapStateRepo.SaveEntities(CurrentMapStateId, records);
-        if (!result.Success)
+        if (result.Success)
+            Log.Debug("Map entities saved: stateId={StateId}, count={Count}",
+                CurrentMapStateId, records.Count);
+        else
             Log.Error("Failed to save map entities: {Error}", result.ErrorMessage);
     }
 

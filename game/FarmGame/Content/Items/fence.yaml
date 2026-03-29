@@ -13,7 +13,9 @@ visuals:
     offset_y: 0
     states:
       normal:
-        image_path: "Images/fences/fence"
+        image_path: "Images/fences/fence_normal"
+      damaged:
+        image_path: "Images/fences/fence_damaged"
       dead:
         image_path: "Images/fences/fence_dead"
 
