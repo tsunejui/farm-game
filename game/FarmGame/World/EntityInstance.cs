@@ -8,8 +8,8 @@ public class EntityInstance
 {
     public string ItemId { get; }
     public ItemDefinition Definition { get; }
-    public int TileX { get; }
-    public int TileY { get; }
+    public int TileX { get; set; }
+    public int TileY { get; set; }
     public Dictionary<string, object> Properties { get; }
 
     // Pre-computed effective occupy dimensions (considers fill_width/fill_height overrides)

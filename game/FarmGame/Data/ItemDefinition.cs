@@ -88,6 +88,9 @@ public class ItemPhysics
 
     [YamlMember(Alias = "is_collidable")]
     public bool IsCollidable { get; set; }
+
+    [YamlMember(Alias = "is_knockbackable")]
+    public bool IsKnockbackable { get; set; }
 }
 
 public class ItemLogic

@@ -189,4 +189,7 @@ public class CombatConfig
 
     [YamlMember(Alias = "flash_opacity")]
     public float FlashOpacity { get; set; } = 0.01f;
+
+    [YamlMember(Alias = "knockback_tiles")]
+    public int KnockbackTiles { get; set; } = 1;
 }

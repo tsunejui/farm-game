@@ -137,5 +137,24 @@ public class AttackAction : IPlayerAction
         Log.Debug("Attack: {ItemId} took {Damage} damage{Crit}, hp={Hp}/{MaxHp}",
             entity.ItemId, damage, ctx.IsCritical ? " (CRIT!)" : "",
             entity.State.CurrentHp, entity.State.MaxHp);
+
+        // Knockback: push entity away from the player if knockbackable
+        if (entity.Definition.Physics.IsKnockbackable && entity.State.IsAlive)
+        {
+            int kb = GameConstants.KnockbackTiles;
+            Point knockDir = dir switch
+            {
+                Direction.Up => new Point(0, -kb),
+                Direction.Down => new Point(0, kb),
+                Direction.Left => new Point(-kb, 0),
+                Direction.Right => new Point(kb, 0),
+                _ => Point.Zero,
+            };
+
+            int newX = entity.TileX + knockDir.X;
+            int newY = entity.TileY + knockDir.Y;
+            if (_map.MoveEntity(entity, newX, newY))
+                Log.Debug("Knockback: {ItemId} pushed to ({X},{Y})", entity.ItemId, newX, newY);
+        }
     }
 }

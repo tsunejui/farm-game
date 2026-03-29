@@ -1,0 +1,32 @@
+metadata:
+  item_id: "box"
+  display_name: "Cardboard Box"
+  category: "structure"
+
+visuals:
+  color: ""
+  origin_point: "top_left"
+  background:
+    enabled: true
+    display_mode: "stretch"
+    offset_x: 0
+    offset_y: 0
+    states:
+      normal:
+        image_path: "Images/boxes/box_normal"
+      damaged:
+        image_path: "Images/boxes/box_damaged"
+      dead:
+        image_path: "Images/boxes/box_dead"
+
+physics:
+  occupy_width: 1
+  occupy_height: 1
+  is_collidable: true
+  is_knockbackable: true
+
+logic:
+  action_handler: "none"
+  max_health: 4
+  defense: 0
+  faction: "neutral"

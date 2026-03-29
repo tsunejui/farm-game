@@ -48,3 +48,15 @@ entities:
   - item: "rock"
     tile_x: 28
     tile_y: 25
+
+  - item: "box"
+    tile_x: 12
+    tile_y: 10
+
+  - item: "box"
+    tile_x: 13
+    tile_y: 12
+
+  - item: "box"
+    tile_x: 18
+    tile_y: 8

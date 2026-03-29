@@ -59,6 +59,7 @@ physics:
   occupy_width: 1                  # width in tiles
   occupy_height: 1                 # height in tiles
   is_collidable: true              # true = blocks player movement
+  is_knockbackable: false          # true = pushed back when hit by attack
 
 # --- Logic -------------------------------------------------------------------
 # Game behavior. Code reads action_handler to decide what happens on interact.

@@ -93,6 +93,47 @@ public class GameMap
         return _entityGrid.GetValueOrDefault((x, y));
     }
 
+    /// <summary>
+    /// Move an entity from its current tile to a new tile.
+    /// Updates the spatial index and collision grid.
+    /// Returns false if the target position is blocked.
+    /// </summary>
+    public bool MoveEntity(EntityInstance entity, int newX, int newY)
+    {
+        // Check all target tiles are passable (and not occupied by another entity)
+        for (int x = newX; x < newX + entity.EffectiveWidth; x++)
+            for (int y = newY; y < newY + entity.EffectiveHeight; y++)
+            {
+                if (x < 0 || x >= Width || y < 0 || y >= Height) return false;
+                var occupant = _entityGrid.GetValueOrDefault((x, y));
+                if (occupant != null && occupant != entity) return false;
+            }
+
+        // Clear old grid entries and collision
+        for (int x = entity.TileX; x < entity.TileX + entity.EffectiveWidth; x++)
+            for (int y = entity.TileY; y < entity.TileY + entity.EffectiveHeight; y++)
+            {
+                _entityGrid.Remove((x, y));
+                if (entity.Definition.Physics.IsCollidable)
+                    _collisionGrid[x, y] = false;
+            }
+
+        // Update position
+        entity.TileX = newX;
+        entity.TileY = newY;
+
+        // Set new grid entries and collision
+        for (int x = newX; x < newX + entity.EffectiveWidth; x++)
+            for (int y = newY; y < newY + entity.EffectiveHeight; y++)
+            {
+                _entityGrid[(x, y)] = entity;
+                if (entity.Definition.Physics.IsCollidable)
+                    _collisionGrid[x, y] = true;
+            }
+
+        return true;
+    }
+
     // Update all entity states (damage-over-time ticks)
     public void Update(float deltaTime)
     {
