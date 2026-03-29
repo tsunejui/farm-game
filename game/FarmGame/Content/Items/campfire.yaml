@@ -31,6 +31,8 @@ logic:
   default_effects:
     - effect_id: "high_temperature"
       ttl: 0
+    - effect_id: "heat_resistance"
+      ttl: 0
   action_handler: "none"
   max_health: 15
   defense: 0

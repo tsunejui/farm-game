@@ -4,67 +4,67 @@ type: "png"
 output_dir: "Images/fences"
 palette:
   ".": "#00000000"
-  "A": "#9d5d4a"
-  "B": "#9f604c"
-  "C": "#a1614d"
-  "D": "#a56450"
-  "E": "#a76651"
-  "F": "#aa6853"
-  "G": "#ab6953"
-  "H": "#8c513f"
-  "I": "#a66550"
-  "J": "#ae6c56"
-  "K": "#8f5340"
-  "L": "#a1624d"
-  "M": "#9e5f4b"
-  "N": "#905341"
-  "O": "#a0614c"
-  "P": "#8d513f"
-  "Q": "#a4644f"
-  "R": "#935643"
-  "S": "#935543"
-  "T": "#925542"
-  "U": "#8e513f"
-  "V": "#8f5240"
-  "W": "#a3634e"
-  "X": "#9d5e4a"
-  "Y": "#a4634f"
-  "Z": "#a3624e"
-  "a": "#a5644f"
-  "b": "#a4634e"
-  "c": "#a0604c"
-  "d": "#aa6953"
+  "A": "#792119"
+  "B": "#7f241a"
+  "C": "#82251b"
+  "D": "#84261c"
+  "E": "#86271c"
+  "F": "#88281d"
+  "G": "#741f18"
+  "H": "#8f2b1e"
+  "I": "#8b291d"
+  "J": "#762018"
+  "K": "#711e17"
+  "L": "#85261c"
+  "M": "#772118"
+  "N": "#89281d"
+  "O": "#8d2a1e"
+  "P": "#731f17"
+  "Q": "#752018"
+  "R": "#721f17"
+  "S": "#87271c"
+  "T": "#782119"
+  "U": "#742018"
+  "V": "#8a291d"
+  "W": "#83251b"
+  "X": "#81251b"
+  "Y": "#83261b"
+  "Z": "#8c291e"
+  "a": "#8e2a1e"
+  "b": "#85271c"
+  "c": "#721e17"
+  "d": "#80241b"
 data:
   - |
-    ABCDEFG..................ABCDEFG
-    ABCDEFG..................ABCDEFG
-    ABCDEFG..................ABCDEFG
-    .HIJFK....................HLFMH.
-    .NEJLH....................HMEMH.
-    .HOGLH....................PIJEN.
-    .HQJPRSRRPHPTRRTTSNNHUNNKTNVEWN.
-    .HMFXYZaIXAXCWYZbWCcXXBCcWZMdBH.
-    .HEJbGFGJQLbEFGFGFEEaYIEEFGaGWN.
-    .HLGXYZaIXAXCZYZYWCcMXBCCWWXJEH.
-    .HWJURSRRUHVTTRTRTNVKUNTTTTPJWH.
-    .HOECP....................HQJLH.
-    .HAIMH....................HOdMH.
-    .HMEZV....................HMdQK.
-    .HCENTRRPTTRRVUHVNUVRTSRSUPPJIH.
-    .HOFBCDYALYaIBAAMCXcEWWWWXAXJLH.
-    .HZJIEJGWFGGJILLIEbEJFFFFWWbJFT.
-    .HXEMCabXZaQIBAAMCXcIWWZZXAAdBH.
-    .VIdKNRTUTRSRVPHKNVVRRSSTPPHJEN.
-    .HXFZV....................HMdLH.
-    .HLGLH....................HMdWH.
-    .HCEOH....................HCdBH.
-    .HIJTTNVRRRTKNKUTKTTTNTRTKUHFWP.
-    .HOIZYcBQIEWcCMMbMLbWcWYYcXAdOH.
-    .HMEFGIIGJJGIEaaGIEGFIFGGIbWJCH.
-    .PQGZQcBQIIYcCMMbMLQZcZYQcXAJIP.
-    .HBJTRNVRRRRNTUUSKRRNNTRRNPPGIR.
-    .TFJWH....................KEJBH.
-    .PBQBH....................HQGLH.
-    .HWJWH....................HMGIN.
+    ABBCDEF..................ABBCDEF
+    ABBCDEF..................ABBCDEF
+    ABBCDEF..................ABBCDEF
+    .GFHIJ....................KLICK.
+    .MNHLK....................KCNCK.
+    .KDOLP....................QNHNJ.
+    .RSHRTMTARKRMTAJMMQQKPQJUJQGVEJ.
+    .PWIXSEFNXBXDESESEDDXXYDDEECZYK.
+    .PNHSOZaHSbSVZOZOZVNSSNVVOOFOEJ.
+    .PLOXSEFNXBXDESbSEDYCXWDDEEXHNG.
+    .KEHPTMTAPcGMJTJTMQGUPQJJMMPaEP.
+    .KDNDQ....................PSaLK.
+    .KdFCG....................PDZCK.
+    .KCVbQ....................GCZSJ.
+    .PDNQJATPJMTAGPcGQPGAMMTMPRRHFG.
+    .cDIYLFSXbSFNYddCDXYNEEEEXdXaLK.
+    .GbaFIHOEZOaHNLbFISNHOOZZEEEHIT.
+    .KXNWDFSXbSSNYdBWDXYNEEEEXddZYK.
+    .QFZUQTMPMAMTPRKGQGGATMMJRRKHNM.
+    .KXIbQ....................KCZLK.
+    .RLOLG....................KCZER.
+    .RDNDP....................RDZYK.
+    .cFHJMQGTAAMUQUPMUMMMQMTMUPKIEQ.
+    .GDFbSYYSFNEYDCCSWLSEYESSYXdZDc.
+    .KCVZONNOHHONVFFOFIOONOOONSEHDK.
+    .QSOESYYSNNSYLCCSWbSEYESSYXXHNQ.
+    .KYaJTQGTAATQMPPMUTAQQJTTQPcONA.
+    .TIHEK....................JVHYK.
+    .QYSYP....................cSOLP.
+    .KEHEP....................KWOFJ.
     ................................
     ................................

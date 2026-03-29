@@ -140,12 +140,13 @@ public class WorldObject
     }
 
     // Run damage through all active effects (returns modified damage)
-    public int ApplyEffectsToDamage(int damage)
+    public int ApplyEffectsToDamage(int damage, Combat.AttackInfo attackInfo = null)
     {
+        attackInfo ??= Combat.AttackInfo.Physical;
         foreach (var ae in Effects)
         {
             if (ae.IsExpired) continue;
-            damage = ae.Effect.ModifyDamage(this, damage);
+            damage = ae.Effect.ModifyDamage(this, damage, attackInfo);
         }
         return damage;
     }

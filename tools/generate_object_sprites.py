@@ -554,9 +554,9 @@ def generate_fence(W, H, variant=0, state='normal'):
                     light = 0.25 + 0.45 * math.sin(rel * math.pi)
                     grain = fbm(x, y * 3, seed, 2, 3.0) * 0.08
                     light = max(0.0, min(1.0, light + grain))
-                    r = int(lerp(120, 195, light))
-                    g = int(lerp(65, 125, light))
-                    b = int(lerp(50, 100, light))
+                    r = int(lerp(100, 160, light))
+                    g = int(lerp(25, 50, light))
+                    b = int(lerp(20, 35, light))
                     if state == 'damaged' and random.Random(x * H + y).random() < 0.08:
                         continue
                     if state == 'dead' and random.Random(x * H + y).random() < 0.2:
@@ -570,9 +570,9 @@ def generate_fence(W, H, variant=0, state='normal'):
                 y = cap_y + dy
                 if 0 <= x < W and 0 <= y < H:
                     light = 0.5 + 0.15 * (dx / max(1, post_w))
-                    r = int(lerp(130, 200, light))
-                    g = int(lerp(70, 130, light))
-                    b = int(lerp(55, 105, light))
+                    r = int(lerp(100, 160, light))
+                    g = int(lerp(25, 50, light))
+                    b = int(lerp(20, 35, light))
                     pixels[y][x] = rgb_to_hex(r, g, b)
 
     # Three horizontal rails between posts
@@ -587,9 +587,9 @@ def generate_fence(W, H, variant=0, state='normal'):
                     light = 0.3 + 0.35 * math.sin(rel_y * math.pi)
                     grain = fbm(x * 3, y * 0.5, seed + 30, 2, 4.0) * 0.08
                     light = max(0.0, min(1.0, light + grain))
-                    r = int(lerp(125, 192, light))
-                    g = int(lerp(68, 122, light))
-                    b = int(lerp(52, 98, light))
+                    r = int(lerp(100, 160, light))
+                    g = int(lerp(25, 50, light))
+                    b = int(lerp(20, 35, light))
                     if state == 'damaged' and random.Random(x * H + y).random() < 0.06:
                         continue
                     if state == 'dead' and random.Random(x * H + y).random() < 0.15:
@@ -627,9 +627,9 @@ def generate_fence_rail(W, H, variant=0, state='normal'):
                     if abs(knot_n) < 0.05:
                         light -= 0.12
                     light = max(0.0, min(1.0, light + grain))
-                    r = int(lerp(122, 190, light))
-                    g = int(lerp(65, 120, light))
-                    b = int(lerp(50, 96, light))
+                    r = int(lerp(100, 160, light))
+                    g = int(lerp(25, 50, light))
+                    b = int(lerp(20, 35, light))
                     # Top/bottom edge darkening
                     if y == plank_top or y == plank_bot:
                         r = max(0, r - 25)
