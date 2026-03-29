@@ -141,8 +141,17 @@ public class AttackAction : IPlayerAction
             isCritical = hitCtx.IsCritical;
 
             if (!hitCtx.Cancelled)
+            {
                 Log.Debug("Attack: {ItemId} queued {Damage} damage{Crit}",
                     obj.ItemId, hitCtx.Damage, isCritical ? " (CRIT!)" : "");
+
+                // Attacking a neutral creature makes it hostile
+                if (obj.Category == ObjectCategory.Creature
+                    && obj.State.Behavior != BehaviorState.Hostile)
+                {
+                    obj.State.Behavior = BehaviorState.Hostile;
+                }
+            }
         }
 
         // Enqueue knockback event — critical hits push further

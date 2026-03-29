@@ -22,12 +22,21 @@ public enum Faction
     Enemy      // Can be attacked; may attack player in the future
 }
 
+public enum BehaviorState
+{
+    Idle,      // Standing still, no action
+    Neutral,   // Default state, passive
+    Hostile    // Aggressive, will chase and attack player
+}
+
 public class ObjectState
 {
     public int MaxHp { get; }
     public int CurrentHp { get; private set; }
     public bool IsAlive => CurrentHp > 0;
     public Faction Faction { get; }
+    public BehaviorState Behavior { get; set; } = BehaviorState.Neutral;
+    public int Level { get; }
 
     // Damage-over-time tracking
     private float _pendingDamage;
@@ -65,18 +74,22 @@ public class ObjectState
     public bool ShowDamageNumber => _damageNumberTimer > 0f;
     public float DamageNumberProgress => 1f - _damageNumberTimer / DamageNumberDurationMs;
 
-    public ObjectState(int maxHp, Faction faction)
+    public ObjectState(int maxHp, Faction faction, BehaviorState behavior = BehaviorState.Neutral, int level = 1)
     {
         MaxHp = maxHp;
         CurrentHp = maxHp;
         Faction = faction;
+        Behavior = behavior;
+        Level = level;
     }
 
-    public ObjectState(int maxHp, int currentHp, Faction faction)
+    public ObjectState(int maxHp, int currentHp, Faction faction, BehaviorState behavior = BehaviorState.Neutral, int level = 1)
     {
         MaxHp = maxHp;
         CurrentHp = Math.Clamp(currentHp, 0, maxHp);
         Faction = faction;
+        Behavior = behavior;
+        Level = level;
     }
 
     // Sync HP from external source (used by Player proxy)
@@ -173,6 +186,16 @@ public class ObjectState
             "friendly" => Faction.Friendly,
             "enemy" => Faction.Enemy,
             _ => Faction.Neutral,
+        };
+    }
+
+    public static BehaviorState ParseBehavior(string value)
+    {
+        return value?.ToLowerInvariant() switch
+        {
+            "idle" => BehaviorState.Idle,
+            "hostile" => BehaviorState.Hostile,
+            _ => BehaviorState.Neutral,
         };
     }
 }

@@ -73,8 +73,10 @@ public class WorldObject
 
         // Initialize runtime combat state from definition
         var faction = ObjectState.ParseFaction(definition.Logic.Faction);
+        var behavior = ObjectState.ParseBehavior(definition.Logic.DefaultBehavior);
         int maxHp = definition.Logic.MaxHealth;
-        State = new ObjectState(maxHp > 0 ? maxHp : 1, faction);
+        int level = definition.Logic.Level;
+        State = new ObjectState(maxHp > 0 ? maxHp : 1, faction, behavior, level);
 
         // Set up interaction behavior from YAML config
         InitInteractionBehavior();
@@ -247,8 +249,10 @@ public class WorldObject
     public void RestoreState(int currentHp)
     {
         var faction = ObjectState.ParseFaction(Definition.Logic.Faction);
+        var behavior = ObjectState.ParseBehavior(Definition.Logic.DefaultBehavior);
         int maxHp = Definition.Logic.MaxHealth;
-        State = new ObjectState(maxHp > 0 ? maxHp : 1, currentHp, faction);
+        int level = Definition.Logic.Level;
+        State = new ObjectState(maxHp > 0 ? maxHp : 1, currentHp, faction, behavior, level);
     }
 
     private static ObjectCategory ParseCategory(string category)

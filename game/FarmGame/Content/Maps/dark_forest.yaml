@@ -195,6 +195,26 @@ entities:
     tile_x: 39
     tile_y: 23
 
+  # Slimes in the forest
+  - item: "slime"
+    tile_x: 8
+    tile_y: 18
+  - item: "slime"
+    tile_x: 15
+    tile_y: 22
+  - item: "slime"
+    tile_x: 30
+    tile_y: 18
+  - item: "slime"
+    tile_x: 37
+    tile_y: 26
+  - item: "slime"
+    tile_x: 45
+    tile_y: 22
+  - item: "slime"
+    tile_x: 22
+    tile_y: 26
+
   # Portal to Starter Farm — lands left of farm_home portal (56,17)
   - item: "portal"
     tile_x: 24
