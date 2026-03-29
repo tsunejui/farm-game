@@ -17,6 +17,7 @@ public class InitManager
     public SpriteBatch SpriteBatch { get; private set; }
     public ScreenManager ScreenManager { get; private set; }
     public GameSession Session { get; private set; }
+    public PlayingScreen PlayingScreen { get; private set; }
 
     private string _contentDir;
     private string _databaseError;
@@ -90,6 +91,7 @@ public class InitManager
         settingsScreen.Initialize();
 
         var playingScreen = new PlayingScreen(game.GraphicsDevice, registry, loadTexture, Session);
+        PlayingScreen = playingScreen;
 
         var loading = new LoadingScreen();
         loading.Initialize();

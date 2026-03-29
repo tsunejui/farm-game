@@ -36,6 +36,7 @@ public interface IScreen
     void Initialize();
     void Rebuild();
     void OnEnter(GameState fromState);
+    void OnExit(GameState toState) { }
     ScreenTransition Update(GameTime gameTime);
     void Draw(SpriteBatch spriteBatch);
 }

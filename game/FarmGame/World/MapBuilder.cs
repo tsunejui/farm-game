@@ -85,20 +85,13 @@ public static class MapBuilder
                 placement.TileX, placement.TileY,
                 placement.Properties);
 
-            map.Entities.Add(entity);
+            map.RegisterEntity(entity);
 
             // Apply collision grid
             if (itemDef.Physics.IsCollidable)
             {
-                int ew = itemDef.Physics.OccupyWidth;
-                int eh = itemDef.Physics.OccupyHeight;
-                if (placement.Properties.TryGetValue("fill_width", out var fw))
-                    ew = Convert.ToInt32(fw);
-                if (placement.Properties.TryGetValue("fill_height", out var fh))
-                    eh = Convert.ToInt32(fh);
-
-                for (int x = placement.TileX; x < placement.TileX + ew; x++)
-                    for (int y = placement.TileY; y < placement.TileY + eh; y++)
+                for (int x = placement.TileX; x < placement.TileX + entity.EffectiveWidth; x++)
+                    for (int y = placement.TileY; y < placement.TileY + entity.EffectiveHeight; y++)
                         map.SetCollision(x, y, true);
             }
 

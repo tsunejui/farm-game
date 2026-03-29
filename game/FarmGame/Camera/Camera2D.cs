@@ -19,13 +19,16 @@ public class Camera2D
         _camera = new OrthographicCamera(graphicsDevice);
     }
 
-    public void Update(Player player, GameMap map)
+    // Call once when the map is loaded or changed
+    public void SetWorldBounds(GameMap map)
     {
         int mapPixelWidth = map.Width * GameConstants.TileSize;
         int mapPixelHeight = map.Height * GameConstants.TileSize;
-
         _camera.EnableWorldBounds(new Rectangle(0, 0, mapPixelWidth, mapPixelHeight));
+    }
 
+    public void Update(Player player)
+    {
         var target = player.PixelPosition + new Vector2(GameConstants.TileSize / 2f);
         _camera.LookAt(target);
     }
