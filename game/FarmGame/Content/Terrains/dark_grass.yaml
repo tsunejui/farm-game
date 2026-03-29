@@ -1,0 +1,16 @@
+metadata:
+  terrain_id: "dark_grass"
+  display_name: "Dark Grass"
+  category: "natural"
+
+visuals:
+  color: "#1A4A1A"
+  decorations:
+    - image_path: "Images/decorations/deco_mushroom"
+      coverage: 0.04
+    - image_path: "Images/decorations/deco_dead_leaves"
+      coverage: 0.06
+    - image_path: "Images/decorations/deco_green_grass"
+      coverage: 0.03
+    - image_path: "Images/decorations/deco_bush"
+      coverage: 0.03

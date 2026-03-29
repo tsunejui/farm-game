@@ -1,0 +1,19 @@
+metadata:
+  name: "deco_dead_leaves"
+type: "png"
+output_dir: "Images/decorations"
+palette:
+  "B": "#8B6914"
+  "D": "#6B4914"
+  "Y": "#A08030"
+  "K": "#4A3010"
+data:
+  - |
+    ........
+    .B..D...
+    ..YB.DY.
+    .D.KY.B.
+    ..BD.K..
+    .Y..BD..
+    ...D....
+    ........

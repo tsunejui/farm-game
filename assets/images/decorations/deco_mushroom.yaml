@@ -1,0 +1,19 @@
+metadata:
+  name: "deco_mushroom"
+type: "png"
+output_dir: "Images/decorations"
+palette:
+  "R": "#8B2020"
+  "W": "#F0E0D0"
+  "B": "#D4A060"
+  "S": "#C08040"
+data:
+  - |
+    ........
+    ...RR...
+    ..RWWR..
+    ..RWWR..
+    ...SS...
+    ...SS...
+    ...BB...
+    ........
