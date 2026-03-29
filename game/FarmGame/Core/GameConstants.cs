@@ -21,6 +21,12 @@ public static class GameConstants
     public static int PlayerAttackWidth { get; private set; } = 20;
     public static Color PlayerAttackColor { get; private set; } = Color.Gold;
     public static int PlayerMaxHp { get; private set; } = 20;
+    public static float PlayerStrength { get; private set; } = 5f;
+    public static float PlayerDexterity { get; private set; } = 3f;
+    public static float PlayerWeaponAtk { get; private set; } = 2f;
+    public static float PlayerBuffPercent { get; private set; } = 0f;
+    public static float PlayerCritRate { get; private set; } = 0.1f;
+    public static float PlayerCritDamage { get; private set; } = 1.5f;
     public static string DefaultLanguage { get; private set; } = "en";
     public static float AutoSaveInterval { get; private set; } = 60f;
 
@@ -42,8 +48,9 @@ public static class GameConstants
 
     // Combat
     public static int DamageTickDurationMs { get; private set; } = 500;
-    public static int DefaultMinDamage { get; private set; } = 1;
-    public static int DefaultMaxDamage { get; private set; } = 3;
+    public static string DefenseModel { get; private set; } = "subtraction";
+    public static float DefenseConstant { get; private set; } = 100f;
+    public static float DamageVariance { get; private set; } = 0.05f;
     public static float DamageFlashOpacity { get; private set; } = 0.01f;
 
     // HUD — Map Transition
@@ -70,6 +77,12 @@ public static class GameConstants
         PlayerAttackWidth = config.Player.AttackWidth;
         PlayerAttackColor = ColorHelper.FromHex(config.Player.AttackColor);
         PlayerMaxHp = config.Player.MaxHp;
+        PlayerStrength = config.Player.Strength;
+        PlayerDexterity = config.Player.Dexterity;
+        PlayerWeaponAtk = config.Player.WeaponAtk;
+        PlayerBuffPercent = config.Player.BuffPercent;
+        PlayerCritRate = config.Player.CritRate;
+        PlayerCritDamage = config.Player.CritDamage;
         DefaultLanguage = config.Game.DefaultLanguage;
         AutoSaveInterval = config.Save.AutoSaveInterval;
 
@@ -93,8 +106,9 @@ public static class GameConstants
         EntityInfoNameOffsetY = config.EntityInfo.NameOffsetY;
 
         DamageTickDurationMs = config.Combat.DamageTickDurationMs;
-        DefaultMinDamage = config.Combat.DefaultMinDamage;
-        DefaultMaxDamage = config.Combat.DefaultMaxDamage;
+        DefenseModel = config.Combat.DefenseModel;
+        DefenseConstant = config.Combat.DefenseConstant;
+        DamageVariance = config.Combat.DamageVariance;
         DamageFlashOpacity = config.Combat.FlashOpacity;
     }
 }

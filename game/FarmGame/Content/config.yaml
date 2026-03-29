@@ -27,6 +27,12 @@ player:
   attack_width: 20        # attack effect width in pixels
   attack_color: "#FFD700" # Gold (attack effect color)
   max_hp: 20              # player starting/max HP
+  strength: 5             # base STR (contributes to ATK)
+  dexterity: 3            # base DEX (contributes to ATK)
+  weapon_atk: 2           # base weapon ATK (added to STR+DEX)
+  buff_percent: 0.0       # equipment/buff ATK% bonus (0.1 = +10%)
+  crit_rate: 0.1          # critical hit chance (0.0 ~ 1.0)
+  crit_damage: 1.5        # critical hit damage multiplier
 
 # Game startup
 game:
@@ -41,8 +47,9 @@ save:
 # Combat settings
 combat:
   damage_tick_duration_ms: 500   # damage is distributed over this duration
-  default_min_damage: 1          # minimum random damage per attack
-  default_max_damage: 3          # maximum random damage per attack
+  defense_model: "subtraction"   # "subtraction" or "division"
+  defense_constant: 100          # used by division model: ATK * (C / (C + DEF))
+  damage_variance: 0.05          # random fluctuation range (0.05 = 95%~105%)
   flash_opacity: 0.01            # dark gray overlay opacity during damage (1% per spec)
 
 # Entity info display (name + HP bar shown when player is nearby)

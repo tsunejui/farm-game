@@ -11,6 +11,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.Input;
+using Serilog;
+using FarmGame.Combat;
 using FarmGame.Core;
 using FarmGame.World;
 
@@ -18,8 +20,6 @@ namespace FarmGame.Entities.Actions.Player;
 
 public class AttackAction : IPlayerAction
 {
-    private static readonly Random Rng = new();
-
     private readonly GameMap _map;
     private readonly Func<Point> _getGridPosition;
     private readonly Func<Direction> _getFacingDirection;
@@ -118,7 +118,24 @@ public class AttackAction : IPlayerAction
         if (!entity.State.IsAlive) return;
         if (entity.Definition.Logic.MaxHealth <= 0) return;
 
-        int damage = Rng.Next(GameConstants.DefaultMinDamage, GameConstants.DefaultMaxDamage + 1);
+        // Build damage context from player stats + target defense
+        var ctx = new DamageContext
+        {
+            Strength = GameConstants.PlayerStrength,
+            Dexterity = GameConstants.PlayerDexterity,
+            WeaponAtk = GameConstants.PlayerWeaponAtk,
+            BuffPercent = GameConstants.PlayerBuffPercent,
+            SkillPowerPercent = 1f,
+            CritRate = GameConstants.PlayerCritRate,
+            CritDamageMultiplier = GameConstants.PlayerCritDamage,
+            TargetDefense = entity.Definition.Logic.Defense,
+        };
+
+        int damage = DamagePipeline.CalculateDamage(ctx);
         entity.State.TakeDamage(damage);
+
+        Log.Debug("Attack: {ItemId} took {Damage} damage{Crit}, hp={Hp}/{MaxHp}",
+            entity.ItemId, damage, ctx.IsCritical ? " (CRIT!)" : "",
+            entity.State.CurrentHp, entity.State.MaxHp);
     }
 }

@@ -74,6 +74,21 @@ public class PlayerConfig
 
     [YamlMember(Alias = "max_hp")]
     public int MaxHp { get; set; } = 20;
+
+    public float Strength { get; set; } = 5f;
+    public float Dexterity { get; set; } = 3f;
+
+    [YamlMember(Alias = "weapon_atk")]
+    public float WeaponAtk { get; set; } = 2f;
+
+    [YamlMember(Alias = "buff_percent")]
+    public float BuffPercent { get; set; } = 0f;
+
+    [YamlMember(Alias = "crit_rate")]
+    public float CritRate { get; set; } = 0.1f;
+
+    [YamlMember(Alias = "crit_damage")]
+    public float CritDamage { get; set; } = 1.5f;
 }
 
 public class GameStartConfig
@@ -163,11 +178,14 @@ public class CombatConfig
     [YamlMember(Alias = "damage_tick_duration_ms")]
     public int DamageTickDurationMs { get; set; } = 500;
 
-    [YamlMember(Alias = "default_min_damage")]
-    public int DefaultMinDamage { get; set; } = 1;
+    [YamlMember(Alias = "defense_model")]
+    public string DefenseModel { get; set; } = "subtraction";
 
-    [YamlMember(Alias = "default_max_damage")]
-    public int DefaultMaxDamage { get; set; } = 3;
+    [YamlMember(Alias = "defense_constant")]
+    public float DefenseConstant { get; set; } = 100f;
+
+    [YamlMember(Alias = "damage_variance")]
+    public float DamageVariance { get; set; } = 0.05f;
 
     [YamlMember(Alias = "flash_opacity")]
     public float FlashOpacity { get; set; } = 0.01f;
