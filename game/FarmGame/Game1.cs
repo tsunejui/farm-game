@@ -198,18 +198,11 @@ public class Game1 : Game
         {
             var target = transition.Target.Value;
 
-            // Pre-transition hooks
-            if (target == GameState.Paused && _screenManager.TryGet(GameState.Paused, out var pauseScreen))
-                ((PauseScreen)pauseScreen).Reset();
-
             if (target == GameState.TitleScreen && _gameState == GameState.Paused)
                 SavePlayerState();
 
-            if (target == GameState.Settings && _screenManager.TryGet(GameState.Settings, out var settingsScreen))
-            {
-                ((SettingsScreen)settingsScreen).ReturnState = _gameState;
-                settingsScreen.Rebuild();
-            }
+            if (_screenManager.TryGet(target, out var screen))
+                screen.OnEnter(_gameState);
 
             _gameState = target;
         }

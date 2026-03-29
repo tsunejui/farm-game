@@ -18,8 +18,9 @@ public class PauseScreen : IScreen
 
     public void Initialize() { _selectedIndex = 0; BuildUI(); }
     public void Rebuild() { _selectedIndex = 0; BuildUI(); }
+    public void OnEnter(GameState fromState) { Reset(); }
 
-    public void Reset() { _selectedIndex = 0; UpdateButtonFocus(); }
+    private void Reset() { _selectedIndex = 0; UpdateButtonFocus(); }
 
     private void BuildUI()
     {

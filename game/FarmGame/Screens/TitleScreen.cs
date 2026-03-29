@@ -20,6 +20,7 @@ public class TitleScreen : IScreen
 
     public void Initialize() { _selectedIndex = 0; BuildUI(); }
     public void Rebuild() { _selectedIndex = 0; BuildUI(); }
+    public void OnEnter(GameState fromState) { }
 
     private void BuildUI()
     {

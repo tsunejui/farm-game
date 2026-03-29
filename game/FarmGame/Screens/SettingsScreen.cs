@@ -21,6 +21,7 @@ public class SettingsScreen : IScreen
 
     public void Initialize() { _selectedIndex = 0; BuildUI(); }
     public void Rebuild() { _selectedIndex = 0; BuildUI(); }
+    public void OnEnter(GameState fromState) { ReturnState = fromState; Rebuild(); }
 
     private void BuildUI()
     {
