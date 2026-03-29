@@ -1,9 +1,8 @@
 // =============================================================================
-// RefreshEffectsEvent.cs — Periodic self-check of active effects
+// RefreshEffectsEvent.cs — Periodic effect tick and cleanup
 //
-// Iterates the object's Effects array. For each non-expired effect,
-// confirms it is still active (future effects may have on-tick logic).
-// Expired effects are removed. Completes immediately.
+// 1. Calls OnTick() on each active effect (aura/DoT logic)
+// 2. Removes expired effects
 // =============================================================================
 
 using Serilog;
@@ -16,6 +15,14 @@ public class RefreshEffectsEvent : IObjectEvent
 
     public void Start(WorldObject obj, GameMap map)
     {
+        // Tick active effects (aura damage, buffs, etc.)
+        foreach (var ae in obj.Effects)
+        {
+            if (!ae.IsExpired)
+                ae.Effect.OnTick(obj, map);
+        }
+
+        // Remove expired effects
         int removed = 0;
         for (int i = obj.Effects.Count - 1; i >= 0; i--)
         {
@@ -27,10 +34,6 @@ public class RefreshEffectsEvent : IObjectEvent
                 removed++;
             }
         }
-
-        if (removed > 0)
-            Log.Debug("RefreshEffects: {ItemId} — {Removed} expired, {Remaining} active",
-                obj.ItemId, removed, obj.Effects.Count);
 
         IsComplete = true;
     }
