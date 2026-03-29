@@ -24,6 +24,8 @@ fi
 mkdir -p "$DEST_DIR"
 
 cp "$SRC_DIR/$FONT_FILE" "$DEST_DIR/$FONT_FILE"
+# Myra's built-in stylesheet references Inter-Regular.ttf by name.
+# Alias our Chinese font so Myra can render CJK characters.
 cp "$SRC_DIR/$FONT_FILE" "$DEST_DIR/Inter-Regular.ttf"
 
 echo "Fonts copied to $DEST_DIR:"
