@@ -13,7 +13,7 @@ public class ScreenManager
 {
     private readonly Dictionary<GameState, IScreen> _screens = new();
     private readonly string _contentDir;
-    private readonly SettingRepository _settings;
+    private SettingRepository _settings;
 
     public ScreenManager(string contentDir, SettingRepository settings)
     {
@@ -29,6 +29,11 @@ public class ScreenManager
     public bool TryGet(GameState state, out IScreen screen)
     {
         return _screens.TryGetValue(state, out screen);
+    }
+
+    public void UpdateSettings(SettingRepository settings)
+    {
+        _settings = settings;
     }
 
     public void ChangeLanguage(string language)

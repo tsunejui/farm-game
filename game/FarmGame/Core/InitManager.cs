@@ -94,9 +94,15 @@ public class InitManager
                 // Re-initialize database with fresh state
                 var freshDb = DatabaseInitializer.Run();
                 if (freshDb.Success)
+                {
                     StateSaver = new PlayerStateSaver(freshDb.PlayerStateRepo, freshDb.PlayerUuid);
+                    ScreenManager.UpdateSettings(freshDb.Settings);
+                }
                 else
+                {
                     StateSaver = null;
+                    ScreenManager.UpdateSettings(null);
+                }
 
                 _initialSavedState = null;
                 titleScreen.HasSavedState = false;
