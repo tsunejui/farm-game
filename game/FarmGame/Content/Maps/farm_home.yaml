@@ -10,118 +10,192 @@ config:
   player_start: [10, 10]
 
 terrains:
-  - terrain: "path"
+  # Main stone road — organic winding path
+  - terrain: "stone_road"
     regions:
-      - { x: 0, y: 14, w: 40, h: 2 }
-      - { x: 20, y: 0, w: 2, h: 30 }
+      - { x: 0, y: 14, w: 15, h: 2 }
+      - { x: 14, y: 13, w: 3, h: 1 }
+      - { x: 16, y: 14, w: 8, h: 2 }
+      - { x: 23, y: 13, w: 2, h: 1 }
+      - { x: 24, y: 14, w: 16, h: 2 }
+      # North-south crossroad
+      - { x: 19, y: 0, w: 2, h: 14 }
+      - { x: 19, y: 16, w: 2, h: 14 }
+      - { x: 18, y: 6, w: 1, h: 2 }
+      - { x: 21, y: 10, w: 1, h: 2 }
+
+  # Farm dirt patches — irregular plots
   - terrain: "dirt"
     regions:
-      - { x: 8, y: 8, w: 6, h: 4 }
+      - { x: 7, y: 7, w: 5, h: 3 }
+      - { x: 8, y: 10, w: 3, h: 2 }
+      - { x: 6, y: 8, w: 1, h: 2 }
+      - { x: 12, y: 8, w: 1, h: 1 }
+      - { x: 25, y: 5, w: 3, h: 2 }
+      - { x: 26, y: 7, w: 2, h: 1 }
+      - { x: 3, y: 22, w: 4, h: 3 }
+      - { x: 4, y: 25, w: 2, h: 1 }
+
+  # Worn path connectors
+  - terrain: "path"
+    regions:
+      - { x: 10, y: 12, w: 2, h: 2 }
+      - { x: 25, y: 4, w: 2, h: 1 }
+      - { x: 3, y: 21, w: 2, h: 1 }
 
 entities:
+  # === Water features ===
   - item: "water_body"
     tile_x: 30
-    tile_y: 5
-    properties:
-      fill_width: 5
-      fill_height: 4
-
-  - item: "water_body"
-    tile_x: 2
-    tile_y: 22
+    tile_y: 4
     properties:
       fill_width: 4
-      fill_height: 4
+      fill_height: 3
+  - item: "water_body"
+    tile_x: 2
+    tile_y: 24
+    properties:
+      fill_width: 3
+      fill_height: 3
 
-  - item: "tree"
+  # === Animated tree variants ===
+  # Northwest grove
+  - item: "oak_tree_a"
+    tile_x: 2
+    tile_y: 1
+  - item: "pine_tree_b"
     tile_x: 5
+    tile_y: 0
+  - item: "oak_tree_c"
+    tile_x: 1
+    tile_y: 4
+
+  # Northeast
+  - item: "pine_tree_a"
+    tile_x: 25
+    tile_y: 1
+  - item: "birch_tree_b"
+    tile_x: 29
+    tile_y: 2
+  - item: "pine_tree_c"
+    tile_x: 35
+    tile_y: 0
+
+  # Southeast
+  - item: "oak_tree_b"
+    tile_x: 35
+    tile_y: 19
+  - item: "apple_tree_a"
+    tile_x: 32
+    tile_y: 22
+
+  # Southwest orchard
+  - item: "apple_tree_b"
+    tile_x: 7
+    tile_y: 18
+  - item: "apple_tree_c"
+    tile_x: 10
+    tile_y: 20
+  - item: "birch_tree_a"
+    tile_x: 13
+    tile_y: 17
+
+  # Central
+  - item: "birch_tree_c"
+    tile_x: 15
     tile_y: 3
 
-  - item: "tree"
-    tile_x: 35
-    tile_y: 20
-
+  # === Rocks ===
   - item: "rock"
-    tile_x: 15
+    tile_x: 14
     tile_y: 5
-
   - item: "rock"
     tile_x: 28
     tile_y: 25
-
-  - item: "box"
-    tile_x: 12
-    tile_y: 10
-
-  - item: "box"
-    tile_x: 13
-    tile_y: 12
-
-  - item: "box"
-    tile_x: 18
+  - item: "rock"
+    tile_x: 6
+    tile_y: 14
+  - item: "rock"
+    tile_x: 33
     tile_y: 8
 
+  # === Fence rails along road ===
+  - item: "fence_rail"
+    tile_x: 1
+    tile_y: 13
+  - item: "fence_rail"
+    tile_x: 2
+    tile_y: 13
+  - item: "fence_rail"
+    tile_x: 3
+    tile_y: 13
+  - item: "fence_rail"
+    tile_x: 4
+    tile_y: 13
+  - item: "fence_rail"
+    tile_x: 5
+    tile_y: 13
+  - item: "fence_rail"
+    tile_x: 1
+    tile_y: 16
+  - item: "fence_rail"
+    tile_x: 2
+    tile_y: 16
+  - item: "fence_rail"
+    tile_x: 3
+    tile_y: 16
+  - item: "fence_rail"
+    tile_x: 4
+    tile_y: 16
+  - item: "fence_rail"
+    tile_x: 5
+    tile_y: 16
+
+  # === Flowers ===
+  - item: "morning_glory"
+    tile_x: 24
+    tile_y: 10
+  - item: "red_flower"
+    tile_x: 26
+    tile_y: 11
+  - item: "chrysanthemum"
+    tile_x: 28
+    tile_y: 10
+  - item: "red_flower"
+    tile_x: 16
+    tile_y: 6
+
+  # === Campfire area ===
   - item: "campfire"
     tile_x: 10
     tile_y: 13
-
   - item: "firewood"
     tile_x: 8
     tile_y: 13
-
   - item: "firewood"
     tile_x: 12
     tile_y: 13
 
+  # === Boxes ===
+  - item: "box"
+    tile_x: 12
+    tile_y: 10
+  - item: "box"
+    tile_x: 23
+    tile_y: 8
+
+  # === Training dummies ===
   - item: "dummy"
     tile_x: 14
-    tile_y: 18
-
+    tile_y: 20
   - item: "dummy"
     tile_x: 16
-    tile_y: 18
-
+    tile_y: 20
   - item: "dummy"
     tile_x: 18
-    tile_y: 18
+    tile_y: 20
 
-  - item: "dummy"
-    tile_x: 20
-    tile_y: 18
-
-  - item: "dummy"
-    tile_x: 22
-    tile_y: 18
-
-  - item: "oak_tree"
-    tile_x: 2
-    tile_y: 2
-
-  - item: "pine_tree"
-    tile_x: 25
-    tile_y: 2
-
-  - item: "birch_tree"
-    tile_x: 32
-    tile_y: 10
-
-  - item: "apple_tree"
-    tile_x: 7
-    tile_y: 18
-
-  - item: "morning_glory"
-    tile_x: 25
-    tile_y: 12
-
-  - item: "red_flower"
-    tile_x: 27
-    tile_y: 12
-
-  - item: "chrysanthemum"
-    tile_x: 29
-    tile_y: 12
-
-  # Signpost — near portal area
+  # === Signpost near portal ===
   - item: "signpost"
     tile_x: 34
     tile_y: 17
@@ -130,7 +204,7 @@ entities:
         - "signpost_farm_portal_right"
         - "signpost_farm_portal_left"
 
-  # Portal to Black Forest — lands right of dark_forest portal (24,22)
+  # === Portal to Black Forest ===
   - item: "portal"
     tile_x: 38
     tile_y: 14

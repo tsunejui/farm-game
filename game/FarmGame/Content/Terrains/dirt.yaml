@@ -5,6 +5,9 @@ metadata:
 
 visuals:
   color: "#8B7765"
+  decorations:
+    - image_path: "Images/decorations/deco_pebbles"
+      coverage: 0.06
 
 properties:
   is_plantable: true

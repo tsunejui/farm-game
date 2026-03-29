@@ -1,0 +1,37 @@
+metadata:
+  item_id: "birch_tree_b"
+  display_name: "Birch Tree"
+  category: "natural_resource"
+
+visuals:
+  color: ""
+  origin_point: "top_left"
+  background:
+    enabled: true
+    display_mode: "stretch"
+    offset_x: 0
+    offset_y: 0
+    states:
+      normal:
+        image_path: "Images/birch_trees/birch_tree_b_normal"
+        file_type: "gif"
+        frame_delay: 800
+      damaged:
+        image_path: "Images/birch_trees/birch_tree_damaged"
+      dead:
+        image_path: "Images/birch_trees/birch_tree_dead"
+
+physics:
+  occupy_width: 2
+  occupy_height: 2
+  is_collidable: true
+
+logic:
+  default_effects: []
+  action_handler: "tree_logic"
+  max_health: 10
+  defense: 0
+  faction: "neutral"
+  drops:
+    - item: "wood"
+      amount: 4

@@ -16,5 +16,18 @@
   "morning_glory": "牽牛花",
   "red_flower": "紅花",
   "chrysanthemum": "菊花",
-  "signpost": "路牌"
+  "signpost": "路牌",
+  "oak_tree_a": "橡樹",
+  "oak_tree_b": "橡樹",
+  "oak_tree_c": "橡樹",
+  "pine_tree_a": "松樹",
+  "pine_tree_b": "松樹",
+  "pine_tree_c": "松樹",
+  "birch_tree_a": "樺樹",
+  "birch_tree_b": "樺樹",
+  "birch_tree_c": "樺樹",
+  "apple_tree_a": "蘋果樹",
+  "apple_tree_b": "蘋果樹",
+  "apple_tree_c": "蘋果樹",
+  "fence_rail": "柵欄"
 }

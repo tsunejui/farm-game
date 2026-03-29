@@ -16,5 +16,18 @@
   "morning_glory": "Morning Glory",
   "red_flower": "Red Flower",
   "chrysanthemum": "Chrysanthemum",
-  "signpost": "Signpost"
+  "signpost": "Signpost",
+  "oak_tree_a": "Oak Tree",
+  "oak_tree_b": "Oak Tree",
+  "oak_tree_c": "Oak Tree",
+  "pine_tree_a": "Pine Tree",
+  "pine_tree_b": "Pine Tree",
+  "pine_tree_c": "Pine Tree",
+  "birch_tree_a": "Birch Tree",
+  "birch_tree_b": "Birch Tree",
+  "birch_tree_c": "Birch Tree",
+  "apple_tree_a": "Apple Tree",
+  "apple_tree_b": "Apple Tree",
+  "apple_tree_c": "Apple Tree",
+  "fence_rail": "Fence Rail"
 }

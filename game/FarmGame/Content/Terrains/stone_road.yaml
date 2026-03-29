@@ -1,0 +1,12 @@
+metadata:
+  terrain_id: "stone_road"
+  display_name: "Stone Road"
+  category: "constructed"
+
+visuals:
+  color: "#8A8A80"
+  decorations:
+    - image_path: "Images/decorations/deco_cobblestone"
+      coverage: 0.30
+    - image_path: "Images/decorations/deco_stone_crack"
+      coverage: 0.05
