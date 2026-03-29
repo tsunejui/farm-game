@@ -17,6 +17,7 @@ public class SettingsScreen : IScreen
     private int _selectedIndex;
 
     public Action<string> OnLanguageChanged { get; set; }
+    public GameState ReturnState { get; set; } = GameState.TitleScreen;
 
     public void Initialize() { _selectedIndex = 0; BuildUI(); }
     public void Rebuild() { _selectedIndex = 0; BuildUI(); }
@@ -90,11 +91,11 @@ public class SettingsScreen : IScreen
                 OnLanguageChanged?.Invoke(lang);
                 return ScreenTransition.None;
             }
-            return ScreenTransition.To(GameState.TitleScreen);
+            return ScreenTransition.To(ReturnState);
         }
 
         if (kb.WasKeyPressed(Keys.Escape))
-            return ScreenTransition.To(GameState.TitleScreen);
+            return ScreenTransition.To(ReturnState);
 
         return ScreenTransition.None;
     }

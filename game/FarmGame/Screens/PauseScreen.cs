@@ -14,6 +14,7 @@ public class PauseScreen : IScreen
     private Desktop _desktop;
     private Button[] _buttons;
     private int _selectedIndex;
+    private ScreenTransition _pendingTransition;
 
     public void Initialize() { _selectedIndex = 0; BuildUI(); }
     public void Rebuild() { _selectedIndex = 0; BuildUI(); }
@@ -40,13 +41,21 @@ public class PauseScreen : IScreen
         title.Margin = new Myra.Graphics2D.Thickness(0, 0, 0, 20);
         panel.Widgets.Add(title);
 
+        _pendingTransition = null;
+
         var resumeBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "resume"));
+        resumeBtn.Click += (_, _) => _pendingTransition = ScreenTransition.To(GameState.Playing);
         panel.Widgets.Add(resumeBtn);
 
+        var settingsBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "settings"));
+        settingsBtn.Click += (_, _) => _pendingTransition = ScreenTransition.To(GameState.Settings);
+        panel.Widgets.Add(settingsBtn);
+
         var exitBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "exit_game"));
+        exitBtn.Click += (_, _) => _pendingTransition = ScreenTransition.To(GameState.TitleScreen);
         panel.Widgets.Add(exitBtn);
 
-        _buttons = new[] { resumeBtn, exitBtn };
+        _buttons = new[] { resumeBtn, settingsBtn, exitBtn };
 
         _desktop = new Desktop { Root = new Panel { Widgets = { panel } } };
         UpdateButtonFocus();
@@ -62,13 +71,23 @@ public class PauseScreen : IScreen
 
         if (kb.WasKeyPressed(Keys.Enter) || kb.WasKeyPressed(Keys.Space))
         {
-            return _selectedIndex == 0
-                ? ScreenTransition.To(GameState.Playing)
-                : ScreenTransition.ExitGame();
+            return _selectedIndex switch
+            {
+                0 => ScreenTransition.To(GameState.Playing),
+                1 => ScreenTransition.To(GameState.Settings),
+                _ => ScreenTransition.To(GameState.TitleScreen),
+            };
         }
 
         if (kb.WasKeyPressed(Keys.Escape))
             return ScreenTransition.To(GameState.Playing);
+
+        if (_pendingTransition != null)
+        {
+            var t = _pendingTransition;
+            _pendingTransition = null;
+            return t;
+        }
 
         return ScreenTransition.None;
     }
