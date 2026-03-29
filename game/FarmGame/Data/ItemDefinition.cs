@@ -71,6 +71,10 @@ public class ItemBackgroundState
     [YamlMember(Alias = "file_type")]
     public string FileType { get; set; } = "png";
 
+    // Frame delay in ms for GIF animations (default 150)
+    [YamlMember(Alias = "frame_delay")]
+    public float FrameDelay { get; set; } = 150f;
+
     // Optional per-state display_mode override (null = inherit from parent)
     [YamlMember(Alias = "display_mode")]
     public string DisplayMode { get; set; }

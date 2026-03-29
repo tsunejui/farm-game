@@ -15,6 +15,7 @@ visuals:
       normal:
         image_path: "Images/campfires/campfire_normal"
         file_type: "gif"
+        frame_delay: 180
       damaged:
         image_path: "Images/campfires/campfire_damaged"
       dead:

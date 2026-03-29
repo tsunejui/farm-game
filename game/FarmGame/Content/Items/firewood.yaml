@@ -15,6 +15,7 @@ visuals:
       normal:
         image_path: "Images/firewoods/firewood_normal"
         file_type: "gif"
+        frame_delay: 160
       damaged:
         image_path: "Images/firewoods/firewood_damaged"
       dead:

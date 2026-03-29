@@ -118,7 +118,8 @@ public static class MapBuilder
                         {
                             // Load animated frames: imagePath_frame0.png, _frame1.png, ...
                             var anim = AnimatedTexture.LoadFrames(
-                                graphicsDevice, contentDir, stateConfig.ImagePath);
+                                graphicsDevice, contentDir, stateConfig.ImagePath,
+                                stateConfig.FrameDelay);
                             if (anim.FrameCount > 0)
                                 map.SetAnimatedTexture(placement.Item, texKey, anim);
                         }
