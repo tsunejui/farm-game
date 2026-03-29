@@ -6,14 +6,8 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Serilog;
 using MonoGame.Extended.Input;
-using FarmGame.Bootstrap;
 using FarmGame.Core;
-using FarmGame.Data;
-using FarmGame.Persistence;
-using FarmGame.Persistence.Models;
-using FarmGame.Persistence.Repositories;
 using FarmGame.Screens;
 
 namespace FarmGame;
@@ -21,20 +15,9 @@ namespace FarmGame;
 public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
-    private GameState _gameState;
     private string _contentDir;
-
-    // Screens
-    private ScreenManager _screenManager;
-    private PlayingScreen _playingScreen;
-
-    // Data
-    private DataRegistry _registry;
-    private string _databaseError;
-    private SettingRepository _settings;
-    private PlayerStateSaver _stateSaver;
-    private PlayerState _savedState;
+    private GameState _gameState;
+    private InitManager _init;
 
     public Game1()
     {
@@ -45,66 +28,21 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-        // 1. Config
         _contentDir = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
-        ConfigInitializer.Run(_contentDir);
-
-        // 2. Database
-        var dbResult = DatabaseInitializer.Run();
-        if (dbResult.Success)
-        {
-            _settings = dbResult.Settings;
-            _stateSaver = new PlayerStateSaver(dbResult.PlayerStateRepo, dbResult.PlayerUuid);
-            _savedState = dbResult.SavedState;
-        }
-        else
-        {
-            _databaseError = dbResult.Error;
-        }
-
-        // 3. Locale
-        LocaleInitializer.Run(_contentDir, _settings);
-
+        _init = new InitManager();
+        _init.InitializeCore(_contentDir);
         _gameState = GameState.TitleScreen;
         base.Initialize();
     }
 
     protected override void LoadContent()
     {
-        // 4. Graphics + Font + Myra
-        _spriteBatch = GraphicsInitializer.Run(this, _graphics, _contentDir);
-
-        // 5. Data Registry
-        _registry = DataInitializer.Run(_contentDir);
-
-        // 6. Screens
-        var titleScreen = new TitleScreen();
-        titleScreen.OnStartGame = StartGame;
-        titleScreen.Initialize();
-        if (!string.IsNullOrEmpty(_databaseError))
-            titleScreen.SetError(_databaseError);
-
-        var pauseScreen = new PauseScreen();
-        pauseScreen.Initialize();
-
-        var settingsScreen = new SettingsScreen();
-        _screenManager = new ScreenManager(_contentDir, _settings);
-        settingsScreen.OnLanguageChanged = _screenManager.ChangeLanguage;
-        settingsScreen.Initialize();
-
-        _playingScreen = new PlayingScreen(GraphicsDevice, _registry, LoadTexture);
-
-        _screenManager.Register(GameState.TitleScreen, titleScreen);
-        _screenManager.Register(GameState.Settings, settingsScreen);
-        _screenManager.Register(GameState.Paused, pauseScreen);
-        _screenManager.Register(GameState.Playing, _playingScreen);
-
-        Log.Information("[Init] Screens initialized");
+        _init.LoadContent(this, _graphics, _contentDir, StartGame, LoadTexture);
     }
 
     private void StartGame()
     {
-        _playingScreen.StartGame(_savedState);
+        _init.PlayingScreen.StartGame(_init.LoadSavedState());
         _gameState = GameState.Playing;
     }
 
@@ -127,7 +65,8 @@ public class Game1 : Game
 
     private void SavePlayerState()
     {
-        _stateSaver?.Save(_playingScreen?.Player, _playingScreen?.CurrentMap?.MapId ?? GameConstants.StartMap);
+        var playing = _init.PlayingScreen;
+        _init.StateSaver?.Save(playing?.Player, playing?.CurrentMap?.MapId ?? GameConstants.StartMap);
     }
 
     private void HandleTransition(ScreenTransition transition)
@@ -145,7 +84,7 @@ public class Game1 : Game
             if (target == GameState.TitleScreen && _gameState == GameState.Paused)
                 SavePlayerState();
 
-            if (_screenManager.TryGet(target, out var screen))
+            if (_init.ScreenManager.TryGet(target, out var screen))
                 screen.OnEnter(_gameState);
 
             _gameState = target;
@@ -159,7 +98,7 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
             Exit();
 
-        if (_screenManager.TryGet(_gameState, out var screen))
+        if (_init.ScreenManager.TryGet(_gameState, out var screen))
         {
             var transition = screen.Update(gameTime);
             if (transition != ScreenTransition.None)
@@ -174,10 +113,10 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.Black);
 
         if (_gameState == GameState.Paused)
-            _playingScreen.DrawWorld(_spriteBatch);
+            _init.PlayingScreen.DrawWorld(_init.SpriteBatch);
 
-        if (_screenManager.TryGet(_gameState, out var activeScreen))
-            activeScreen.Draw(_spriteBatch);
+        if (_init.ScreenManager.TryGet(_gameState, out var activeScreen))
+            activeScreen.Draw(_init.SpriteBatch);
 
         base.Draw(gameTime);
     }

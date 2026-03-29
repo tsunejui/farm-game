@@ -1,5 +1,5 @@
 // =============================================================================
-// PlayerStateSaver.cs — Saves player state to database
+// PlayerStateSaver.cs — Loads and saves player state to database
 // =============================================================================
 
 using FarmGame.Core;
@@ -19,6 +19,12 @@ public class PlayerStateSaver
     {
         _repo = repo;
         _playerUuid = playerUuid;
+    }
+
+    public PlayerState Load()
+    {
+        var result = _repo.Load(_playerUuid);
+        return result.Success ? result.Value : null;
     }
 
     public void Save(Player player, string currentMap)
