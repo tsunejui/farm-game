@@ -82,22 +82,22 @@ public class MovementAction : IPlayerAction
     {
         Point direction = Point.Zero;
 
-        if (keyboard.IsKeyDown(Keys.W) || keyboard.IsKeyDown(Keys.Up))
+        if (keyboard.IsKeyDown(Keys.Up))
         {
             direction = new Point(0, -1);
             FacingDirection = Direction.Up;
         }
-        else if (keyboard.IsKeyDown(Keys.S) || keyboard.IsKeyDown(Keys.Down))
+        else if (keyboard.IsKeyDown(Keys.Down))
         {
             direction = new Point(0, 1);
             FacingDirection = Direction.Down;
         }
-        else if (keyboard.IsKeyDown(Keys.A) || keyboard.IsKeyDown(Keys.Left))
+        else if (keyboard.IsKeyDown(Keys.Left))
         {
             direction = new Point(-1, 0);
             FacingDirection = Direction.Left;
         }
-        else if (keyboard.IsKeyDown(Keys.D) || keyboard.IsKeyDown(Keys.Right))
+        else if (keyboard.IsKeyDown(Keys.Right))
         {
             direction = new Point(1, 0);
             FacingDirection = Direction.Right;
