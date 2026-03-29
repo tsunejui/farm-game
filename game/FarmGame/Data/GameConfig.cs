@@ -6,6 +6,9 @@ namespace FarmGame.Data;
 
 public class GameConfig
 {
+    [YamlMember(Alias = "log_level")]
+    public string LogLevel { get; set; } = "info";
+
     public ScreenConfig Screen { get; set; } = new();
     public TileConfig Tile { get; set; } = new();
     public PlayerConfig Player { get; set; } = new();

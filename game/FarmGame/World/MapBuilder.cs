@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Serilog;
 using FarmGame.Core;
 using FarmGame.Data;
 
@@ -46,7 +47,7 @@ public static class MapBuilder
             var terrainId = placement.Terrain;
             if (!registry.Terrains.ContainsKey(terrainId))
             {
-                Console.WriteLine($"Warning: unknown terrain '{terrainId}' in map '{mapDef.Metadata.MapId}'");
+                Log.Warning("Unknown terrain '{TerrainId}' in map '{MapId}'", terrainId, mapDef.Metadata.MapId);
                 continue;
             }
 
@@ -76,7 +77,7 @@ public static class MapBuilder
         {
             if (!registry.Items.TryGetValue(placement.Item, out var itemDef))
             {
-                Console.WriteLine($"Warning: unknown item '{placement.Item}' in map '{mapDef.Metadata.MapId}'");
+                Log.Warning("Unknown item '{ItemId}' in map '{MapId}'", placement.Item, mapDef.Metadata.MapId);
                 continue;
             }
 
@@ -86,6 +87,10 @@ public static class MapBuilder
                 placement.Properties);
 
             map.RegisterEntity(entity);
+            Log.Debug("Entity created: {ItemId} at ({X},{Y}), hp={Hp}, faction={Faction}, size={W}x{H}",
+                entity.ItemId, entity.TileX, entity.TileY,
+                entity.State.MaxHp, entity.State.Faction,
+                entity.EffectiveWidth, entity.EffectiveHeight);
 
             // Apply collision grid
             if (itemDef.Physics.IsCollidable)
@@ -109,7 +114,8 @@ public static class MapBuilder
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Warning: failed to load background '{imagePath}' for '{placement.Item}': {ex.Message}");
+                        Log.Warning("Failed to load background '{ImagePath}' for '{ItemId}': {Error}",
+                            imagePath, placement.Item, ex.Message);
                     }
                 }
             }

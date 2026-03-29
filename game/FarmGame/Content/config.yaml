@@ -2,6 +2,9 @@
 # Game Configuration
 # =============================================================================
 
+# Logging: "debug" for development, "info" for release
+log_level: "debug"
+
 # Display settings
 screen:
   width: 800

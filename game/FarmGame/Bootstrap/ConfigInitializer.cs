@@ -14,6 +14,9 @@ public static class ConfigInitializer
         var config = GameConfig.Load(configPath);
         GameConstants.LoadFrom(config);
 
+        // Reconfigure logger with the level from config.yaml
+        LogManager.Reconfigure(config.LogLevel);
+
         Log.Information("[Init] Config loaded: {Width}x{Height}, tile size {TileSize}",
             config.Screen.Width, config.Screen.Height, config.Tile.Size);
 
