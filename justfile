@@ -3,8 +3,7 @@ set shell := ['/bin/sh', '-cu']
 import 'justfiles/db.just'
 import 'justfiles/download.just'
 import 'justfiles/env.just'
-import 'justfiles/font.just'
-import 'justfiles/image.just'
+import 'justfiles/generate.just'
 import 'justfiles/map.just'
 import 'justfiles/release.just'
 
