@@ -30,3 +30,6 @@ logic:
   max_health: 1000
   defense: 0
   faction: "neutral"
+  default_effects:
+    - effect_id: "indestructible"
+      ttl: 0

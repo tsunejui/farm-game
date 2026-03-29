@@ -12,6 +12,7 @@ using FarmGame.Persistence;
 using FarmGame.Persistence.Models;
 using FarmGame.Persistence.Repositories;
 using FarmGame.World;
+using FarmGame.World.Effects;
 using Serilog;
 
 namespace FarmGame.Core;
@@ -121,6 +122,9 @@ public class GameSession
                     obj.InstanceId = record.Id;
                     obj.RestoreState(record.Hp);
 
+                    // Restore effects from DB
+                    RestoreObjectEffects(obj);
+
                     // Restore saved position (may differ from YAML due to knockback)
                     if (obj.TileX != record.TileX || obj.TileY != record.TileY)
                         map.MoveObject(obj, record.TileX, record.TileY);
@@ -139,11 +143,14 @@ public class GameSession
         {
             CurrentMapStateId = createResult.Value;
 
-            // Assign instance IDs to all objects
+            // Assign instance IDs and apply default effects
             foreach (var obj in map.Objects)
+            {
                 obj.InstanceId = Guid.NewGuid().ToString();
+                ApplyDefaultEffects(obj);
+            }
 
-            // Persist initial object states
+            // Persist initial object states + effects
             SaveMapObjects(map);
             Log.Information("Map state created: {MapId}, stateId={StateId}", mapId, CurrentMapStateId);
         }
@@ -169,10 +176,67 @@ public class GameSession
 
         var result = _mapStateRepo.SaveObjects(CurrentMapStateId, records);
         if (result.Success)
-            Log.Debug("Map entities saved: stateId={StateId}, count={Count}",
+        {
+            Log.Debug("Map objects saved: stateId={StateId}, count={Count}",
                 CurrentMapStateId, records.Count);
+
+            // Save effects for each object
+            foreach (var obj in map.Objects)
+                SaveObjectEffects(obj);
+        }
         else
-            Log.Error("Failed to save map entities: {Error}", result.ErrorMessage);
+            Log.Error("Failed to save map objects: {Error}", result.ErrorMessage);
+    }
+
+    private void ApplyDefaultEffects(WorldObject obj)
+    {
+        foreach (var defEffect in obj.Definition.Logic.DefaultEffects)
+        {
+            var effect = EffectRegistry.Get(defEffect.EffectId);
+            if (effect == null)
+            {
+                Log.Warning("Unknown default effect '{EffectId}' on '{ItemId}'",
+                    defEffect.EffectId, obj.ItemId);
+                continue;
+            }
+            obj.AddEffect(new ActiveEffect(effect, defEffect.Ttl));
+        }
+    }
+
+    private void RestoreObjectEffects(WorldObject obj)
+    {
+        if (_mapStateRepo == null || string.IsNullOrEmpty(obj.InstanceId)) return;
+
+        var loadResult = _mapStateRepo.LoadEffects(obj.InstanceId);
+        if (!loadResult.Success) return;
+
+        foreach (var record in loadResult.Value)
+        {
+            var effect = EffectRegistry.Get(record.EffectId);
+            if (effect == null) continue;
+
+            DateTime appliedAt = DateTime.TryParse(record.UpdatedAt, out var dt)
+                ? dt : DateTime.UtcNow;
+
+            var ae = ActiveEffect.FromPersisted(effect, record.Ttl, appliedAt);
+            if (!ae.IsExpired)
+                obj.AddEffect(ae);
+        }
+    }
+
+    private void SaveObjectEffects(WorldObject obj)
+    {
+        if (_mapStateRepo == null || string.IsNullOrEmpty(obj.InstanceId)) return;
+
+        var effectRecords = obj.Effects
+            .Where(ae => !ae.IsExpired)
+            .Select(ae => new ObjectEffectRecord
+            {
+                EffectId = ae.EffectId,
+                Ttl = ae.TtlSeconds,
+            }).ToList();
+
+        _mapStateRepo.SaveEffects(obj.InstanceId, effectRecords);
     }
 
     public void SaveSetting(string key, string value)

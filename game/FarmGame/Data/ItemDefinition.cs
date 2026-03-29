@@ -113,7 +113,19 @@ public class ItemLogic
     public bool IsInvincible { get; set; }
 
     public List<DropEntry> Drops { get; set; } = new();
+
+    [YamlMember(Alias = "default_effects")]
+    public List<DefaultEffectEntry> DefaultEffects { get; set; } = new();
+
     public Dictionary<string, object> Properties { get; set; } = new();
+}
+
+public class DefaultEffectEntry
+{
+    [YamlMember(Alias = "effect_id")]
+    public string EffectId { get; set; } = "";
+
+    public float Ttl { get; set; }  // 0 = permanent
 }
 
 public class DropEntry

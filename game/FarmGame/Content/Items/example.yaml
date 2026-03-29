@@ -83,6 +83,14 @@ logic:
   # Invincible: takes no damage, no damage numbers shown
   is_invincible: false
 
+  # Default effects applied when the object is first placed on a map.
+  # Each effect has an effect_id (registered in EffectRegistry) and ttl
+  # (time-to-live in seconds; 0 = permanent).
+  # Available effects: "indestructible" (sets all damage to 0)
+  default_effects:
+    # - effect_id: "indestructible"
+    #   ttl: 0
+
   # Items dropped when destroyed
   drops:
     - item: "wood"                 # item_id of the drop

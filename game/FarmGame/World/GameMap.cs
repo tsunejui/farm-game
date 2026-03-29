@@ -134,12 +134,13 @@ public class GameMap
         return true;
     }
 
-    // Update all object states and process event queues
+    // Update all object states, effects, and event queues
     public void Update(float deltaTime)
     {
         foreach (var obj in Objects)
         {
             obj.State.Update(deltaTime);
+            obj.UpdateEffects(deltaTime);
             obj.UpdateEvents(this, deltaTime);
         }
     }

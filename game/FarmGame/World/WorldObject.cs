@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FarmGame.Data;
+using FarmGame.World.Effects;
 using FarmGame.World.Events;
 
 namespace FarmGame.World;
@@ -30,6 +32,9 @@ public class WorldObject
     // Unique instance ID for persistence (set when saving to / loading from DB)
     public string InstanceId { get; set; }
 
+    // Active effects (stackable buffs/debuffs with TTL tracking)
+    public List<ActiveEffect> Effects { get; } = new();
+
     // Event queue — events are processed one at a time per frame
     private readonly Queue<IObjectEvent> _eventQueue = new();
     private IObjectEvent _currentEvent;
@@ -56,6 +61,40 @@ public class WorldObject
         var faction = ObjectState.ParseFaction(definition.Logic.Faction);
         int maxHp = definition.Logic.MaxHealth;
         State = new ObjectState(maxHp > 0 ? maxHp : 1, faction);
+    }
+
+    // Add an effect to this object
+    public void AddEffect(ActiveEffect effect)
+    {
+        Effects.Add(effect);
+    }
+
+    // Check if this object has a specific effect
+    public bool HasEffect(string effectId)
+    {
+        return Effects.Any(e => e.EffectId == effectId && !e.IsExpired);
+    }
+
+    // Run damage through all active effects (returns modified damage)
+    public int ApplyEffectsToDamage(int damage)
+    {
+        foreach (var ae in Effects)
+        {
+            if (ae.IsExpired) continue;
+            damage = ae.Effect.ModifyDamage(this, damage);
+        }
+        return damage;
+    }
+
+    // Tick effect TTLs and remove expired ones
+    public void UpdateEffects(float deltaTime)
+    {
+        for (int i = Effects.Count - 1; i >= 0; i--)
+        {
+            Effects[i].Update(deltaTime);
+            if (Effects[i].IsExpired)
+                Effects.RemoveAt(i);
+        }
     }
 
     // Add an event to the queue (processed sequentially, one per frame tick)

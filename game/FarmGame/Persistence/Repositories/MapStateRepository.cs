@@ -121,4 +121,51 @@ public class MapStateRepository
                 $"Failed to load objects: {ex.Message}");
         }
     }
+
+    public DatabaseResult SaveEffects(string objectId, List<ObjectEffectRecord> effects)
+    {
+        try
+        {
+            using var db = _db.CreateConnection();
+            var now = DateTime.UtcNow.ToString("o");
+
+            db.Execute("DELETE FROM object_effect WHERE object_id = ?", objectId);
+
+            foreach (var eff in effects)
+            {
+                eff.ObjectId = objectId;
+                if (string.IsNullOrEmpty(eff.Id))
+                    eff.Id = Guid.NewGuid().ToString();
+                if (string.IsNullOrEmpty(eff.CreatedAt))
+                    eff.CreatedAt = now;
+                eff.UpdatedAt = now;
+                db.Insert(eff);
+            }
+
+            return DatabaseResult.Ok();
+        }
+        catch (Exception ex)
+        {
+            return DatabaseResult.Fail(DatabaseErrorKind.ConnectionFailed,
+                $"Failed to save effects: {ex.Message}");
+        }
+    }
+
+    public DatabaseResult<List<ObjectEffectRecord>> LoadEffects(string objectId)
+    {
+        try
+        {
+            using var db = _db.CreateConnection();
+            var records = db.Table<ObjectEffectRecord>()
+                .Where(r => r.ObjectId == objectId)
+                .ToList();
+
+            return DatabaseResult<List<ObjectEffectRecord>>.Ok(records);
+        }
+        catch (Exception ex)
+        {
+            return DatabaseResult<List<ObjectEffectRecord>>.Fail(DatabaseErrorKind.ConnectionFailed,
+                $"Failed to load effects: {ex.Message}");
+        }
+    }
 }
