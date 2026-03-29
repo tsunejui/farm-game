@@ -1,0 +1,95 @@
+metadata:
+  name: skills_118
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#091b24'
+  b: '#131c21'
+  c: '#0e0f11'
+  d: '#090c0e'
+  e: '#131212'
+  f: '#514e4c'
+  g: '#6b6c6b'
+  h: '#626362'
+  i: '#19191a'
+  j: '#091116'
+  k: '#07161f'
+  l: '#02111a'
+  m: '#2a4650'
+  n: '#131618'
+  o: '#1a1e20'
+  p: '#23282a'
+  q: '#1e1e1e'
+  r: '#040609'
+  s: '#232222'
+  t: '#302d2c'
+  u: '#5e514a'
+  v: '#8b553e'
+  w: '#8b6e61'
+  x: '#2f383c'
+  y: '#a7a9a8'
+  z: '#ca7044'
+  '0': '#868683'
+  '1': '#b9bab8'
+  '2': '#a49a93'
+  '3': '#020001'
+  '4': '#000004'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ..........aa..............abbcdefghghhfidjklammmmm
+  .....k....jk................bjjnopnqeeedeqnlammmmm
+  ....ak....no.................la.kkjcceeeeqerkmmmmm
+  ....bb....spb......................cituftttoammmmm
+  ....bnsh.hfojl.....................dqvwvvvuxxmmmmm
+  ....jcih.ygidl.....................bsvwwzvvftxpxpx
+  ....oosf..gidj.....................bsuvwzvvutttxxx
+  ...h00hspffsqra.....................ptuwvvvvvvvvvu
+  akbg110ectxfork........................uuvzzzzzzvv
+  ljogy1giipxxira.........................tvzzzzzzzz
+  ljpg21gqqnopoj...........................uwzzzzzzz
+  ljsgy10iecntpn...........................fuvvvzzzz
+  ljqgy10secnpsna............................uuvzzzz
+  ldphy10fxncccob.............................tfvwvz
+  ljpg21yy0edcq.................................fuuv
+  ljpg00y10ir3....bl..............................tu
+  llb.gh21gddc..y.jr..............................tu
+  ak...f21giet.y1.drk..............................f
+  ....bsh00h0hfhg.qo................................
+  ....rdf0002hnrnef...kk............................
+  ...ardtfg20fdddch.y.jla...........................
+  ....rrdcx22xddcn....rja...........................
+  ....l4r4xy2fcrcctg.foo............................
+  ....lljjtg0fdrni.......la.........................
+  .......bdcxxeessii..1y.da.........................
+  .......a44etiispcr.y1..ojka.......................
+  ........ao.fqncidc..y...njl.......................
+  ............sedinns..fyudra.......................
+  .........h..hfpsesqndfyf3ra.....................ff
+  ..........j..g.pcedr3f1udda....................gww
+  .........al..y.q3dcd3x0xccb...................fwzz
+  ..........aj.y.....uuguerrb...................fvzz
+  ...........k.......111ginss..bkkrnja...........uvz
+  .............h....g000gu0gxidcnpps.............uvz
+  ..................ssth0200xecds................fwv
+  .................rrcshg0guffhf..yyyy...lla......hv
+  .................lrdriqsst021yh.......onj........f
+  .................lljdrrr3s0y0fsstpth....f.........
+  ....................lrdecp0yurreieq..h..y.nk......
+  .......................nnsfhxrrqsttnqh.y..nja.....
+  ........................nqtxqrcostpcoh.y.h........
+  ........................dittidcentpno..h..2y......
+  .......................kdqfgfxtnitpnesqxu..y......
+  ........................dqg221giitqdcqpfh.g.......
+  .......................arnhy21gecqqitxxfh.........
+  ........................koh..2gqiset02gsn.h.......
+  ............................s....ghg110icssij.....
+  ...........................bn..11y1y0hxceptqnoa...
+  ............................b..yy2yyfqddeqsicidl..
+  ..............................hgftfhu..f....f.....
+  ..............................anbds.y..2...2y1y1..
+  ..............................klab..........y111y.
+  ................................a...hhf.fhhhh.....
+  ....................................bbbbboppbbb...
+  ....................................kklkkkaklllll.
+  ...............................................a..

@@ -1,0 +1,76 @@
+metadata:
+  name: skills_051
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#256b9b'
+  b: '#2771a1'
+  c: '#59a2ca'
+  d: '#6ebde5'
+  e: '#74c3e8'
+  f: '#65b5dd'
+  g: '#5eafd6'
+  h: '#7ecdec'
+  i: '#8cd6f0'
+  j: '#8ddbf5'
+  k: '#86d5f2'
+  l: '#81d2f0'
+  m: '#94e0f6'
+  n: '#98e4fa'
+  o: '#9eeafc'
+  p: '#abeffb'
+  q: '#98c1d1'
+  r: '#306183'
+  s: '#c1ced2'
+  t: '#89b6d0'
+  u: '#0e1720'
+  v: '#c3d1d6'
+  w: '#bbcacf'
+  x: '#c7d6da'
+  y: '#cfd9de'
+  z: '#b6c7cc'
+  '0': '#d8e4e8'
+  '1': '#afc3c8'
+  '2': '#b6c2c9'
+  '3': '#bbced3'
+  '4': '#b5c9cf'
+  '5': '#000000'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ..................a.ab....................
+  .......................cddedeedeedfdefedfd
+  ........................dfdffggffgcgfddffe
+  .................b......gggggggcgccccfg..g
+  ............g..ggcg.defehhijikiljihilmj...
+  ..........a.ffgeedlknonopoppoopppoopppm...
+  ..........b.ffgfddjnmmnoppooooppooopppp...
+  ............hnldhinoooommnniiimjimiiipq...
+  .........a..mpjimmnnpponnoojehjkhkli....rr
+  .....a......jommniiheeedehed..gfgg......st
+  ......f.fjedmoonooj..gg...............u.vw
+  ........gllhmmmiinl...bbb...aaa......r..xy
+  .......hhkniiomhhke...baaabb.........yvzss
+  .......nnmonmnjljkd.g..aaaaa.ar....u.0yszw
+  ....f.gjnjkllfccfg.................u.0ys1z
+  abb.kkhnmkhddbbbb................rr..xyxz1
+  b..gjklnmnhggcb..................yyy22szzz
+  a..glelhmohggcbab................s0ys2ww3z
+  b..fkkldllg...aaa..............u.20xw12wvw
+  b..fkkhfdg.......................1xsw12334
+  b..fllleed....................20ywssz1wvx3
+  a..gkjd.......................2yx3333wwvv4
+  a..gkk........................1yvzz3344434
+  b..fjk...................u.vw2ws3z43x343vx
+  a..gjj..................uu.0yxvvvw43x33xvy
+  a..gkl.....................yvwwz3wz43zwxxy
+  b..gkh..................112ww1zz3v333zzyys
+  a..gjk...............uu.0yysvzzzvv33xvv00z
+  a..gjk..............uuu.0yxwww443343yy0001
+  a..fjk.................1sss14w414z1sxvy003
+  a..dkk............u.yyywzzw24z4z33wx0st...
+  a..ekk...........uu.xyx2113z41443yy00x....
+  a...eh............u.wsv111w4341130y00x..r.
+  .aa.fh........uu.2111w31114141112yv111....
+  ....fj.......uuu.svw111111z444z1s0y.......
+  ...agh.......u5u.2vz11111411134wy0y..r....

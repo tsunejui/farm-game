@@ -1,0 +1,70 @@
+metadata:
+  name: skills_144
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#2859a5'
+  b: '#1e559f'
+  c: '#2662a5'
+  d: '#388ac6'
+  e: '#4a95d0'
+  f: '#2675ba'
+  g: '#2471b6'
+  h: '#5fa1dd'
+  i: '#265b9e'
+  j: '#355d9d'
+  k: '#2b5aa3'
+  l: '#23539f'
+  m: '#2355a0'
+  n: '#356bb3'
+  o: '#88c1f0'
+  p: '#76a6db'
+  q: '#00102d'
+  r: '#000b2b'
+  s: '#3362a1'
+  t: '#2c7bc0'
+  u: '#3263ad'
+  v: '#2d62ab'
+  w: '#2656a1'
+  x: '#70ade5'
+  y: '#28569f'
+  z: '#285ca6'
+  '0': '#2569ac'
+  '1': '#3365ad'
+  '2': '#2b5ca6'
+  '3': '#2e5da7'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  abbc.....................c.defgfhhhdddij
+  klm..n..o.p..qr..........s.ftfffeeefdeoo
+  uka..vc.......q..............fggtgtddeoo
+  .uwavb....x.................i.dtdtttdexo
+  ..ywl.a........................tfgtexehh
+  j..ka.w..vz...p...qq.....r....ccgttexedd
+  ..yi..b.zmmvi.p...q......q....ii0tftddtd
+  .......1vmv2vxop..r.............0gfggggd
+  ........vbavc......................ggged
+  .......12bluzb..p..p..r............t0gee
+  .......ykw31um1..x....q..........j.icftd
+  ........s331vazcn..s.................ggg
+  ..q......sk33zmb....................s0f0
+  ...........yu2ban.hh.po..q...........iib
+  ......q..jyyuua1n1........q............0
+  ..........jyvu2vnlm.x...................
+  ......r..jyykyy22l2.h...................
+  ......q...s.3llan121..i.x.o..q..........
+  ......r..p..ywl21nvlm..s................
+  .........o..llll2uazw.w.xo..............
+  ....q......2awkyuu2amlw.....p...........
+  ......j..131n3uk3lla122wz...............
+  ......px.1.vnvmwa.wun3w.m.ahox..o.......
+  .......h....uw..u..su33..2veoxx.pj......
+  ..j..v3vc1..uk......jsy.l2v1............
+  ......vcimz2k3.j........klabb.xx......r.
+  ........vbvmi..j.......s.u2wz.oo..x...r.
+  .......h..................wla.hh...po...
+  .....1...........qqq....jy..lauvmiv.....
+  .3v..h.2y..................31aamz.......
+  .vz.hx.i...j..............jj.klmnh....pp
+  .vz.....y.....q.......r...j.....v..i....

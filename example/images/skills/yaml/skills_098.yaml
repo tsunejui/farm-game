@@ -1,0 +1,74 @@
+metadata:
+  name: skills_098
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#8cbad3'
+  b: '#bbdfef'
+  c: '#395b93'
+  d: '#3a5993'
+  e: '#355995'
+  f: '#3a5e96'
+  g: '#355b99'
+  h: '#385c97'
+  i: '#345c98'
+  j: '#335a96'
+  k: '#355d99'
+  l: '#385f9a'
+  m: '#335b96'
+  n: '#375e98'
+  o: '#305894'
+  p: '#365a95'
+  q: '#375a93'
+  r: '#345893'
+  s: '#325994'
+  t: '#365b96'
+  u: '#345b95'
+  v: '#365d96'
+  w: '#335a92'
+  x: '#355993'
+  y: '#375b95'
+  z: '#335791'
+  '0': '#355892'
+  '1': '#325690'
+  '2': '#355a91'
+  '3': '#365992'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  aaaaa....abba.........................ab
+  ba.......a...a...........c...........aaa
+  ba....a...............c..............a.a
+  aa....aaa...............................
+  .....aaa.......d..e..f..................
+  .......a...........g...fc...............
+  ...a.a..........h..i.ji.................
+  ...aa............klm..ilf...............
+  ......a........n..ilkilli.......c.......
+  ..a............k.lllllliojp.............
+  ..a..........qh..jlkkllioi..............
+  ............cce.ijlkookiklnl...d........
+  .............frngglliikiilg...h.......ba
+  babb.........cplllgikjosgjj..sn.......bb
+  bbbb..........elllkjjiijthegjilfd.....bb
+  bbbb.........hpiukiigumlthlll.........bb
+  .baa..........lilgilkigggllllg........aa
+  .aaa...d.....nkmgjskkigosgglg..e.d....aa
+  .a.........f.nliiiggiimmillskuj.........
+  ..........qfvwikkllgjmssskgjuv.efq......
+  .........qpnnvknpnnuuujuisilvv.....d....
+  ..........funnhprpuuuswuisj......ued....
+  ..........fphfhxyhyvuwwwwoshhp.jj.......
+  ........qqypxxrrxyyuuwwzwueprhh.j..kpd..
+  .........urtyxprwurzuwwowpx0rtk.....elh.
+  .....fcf..herz1yuwrjvwsjxr01x...skkerhh.
+  ......fqcyvwwwxxrxrukoorxxzpx.xxehltprgg
+  ..q..vy2qqwuuz22pzrrjsreyyzpuxy0zxhhergl
+  .fy.qfhhyxwuurrppjreepx0xrx1xxxxhylhpegg
+  .fq.q2hxxzzwpx3prepeteqppzzzzpyphpgerklg
+  ..cccfy0zzrpperr1ypexzzxuwzzwwhpwuggskku
+  ..cz3fy1pxeepr12zzxzxrzzwwxr2wrewwinkiny
+  ...c3d33qqr0z231zz0qyz0xryx2z2y.xhthe1yf
+  ......d3zq03qqqzz3d33q30p2qq2qh.xh3f3hq.
+  .......cf0qff..cdddddfqccqqhcq.....d..c.
+  .......ccq.q.p..3cdd3d.q...3.qcf3....d..
