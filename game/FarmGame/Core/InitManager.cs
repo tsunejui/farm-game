@@ -96,6 +96,7 @@ public class InitManager
                 if (freshDb.Success)
                 {
                     StateSaver = new PlayerStateSaver(freshDb.PlayerStateRepo, freshDb.PlayerUuid);
+                    freshDb.Settings.Set("language", LocaleManager.CurrentLanguage);
                     ScreenManager.UpdateSettings(freshDb.Settings);
                 }
                 else
