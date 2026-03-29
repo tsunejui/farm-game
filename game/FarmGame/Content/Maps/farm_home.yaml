@@ -121,9 +121,9 @@ entities:
     tile_x: 29
     tile_y: 12
 
-  # Signpost — left-bottom of portal
+  # Signpost — near portal area
   - item: "signpost"
-    tile_x: 37
+    tile_x: 34
     tile_y: 17
     properties:
       dialogue_lines:

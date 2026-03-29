@@ -402,8 +402,8 @@ public class GameMap
 
         foreach (var obj in Objects)
         {
-            // Skip entities with no HP (indestructible / terrain features)
-            if (obj.Definition.Logic.MaxHealth <= 0) continue;
+            // Skip objects with no HP unless they are interactable
+            if (obj.Definition.Logic.MaxHealth <= 0 && !obj.Definition.Logic.IsInteractable) continue;
 
             // Proximity check (Chebyshev distance from player to nearest entity tile)
             int nearestX = Math.Clamp(playerGridPos.X, obj.TileX, obj.TileX + obj.EffectiveWidth - 1);
@@ -486,7 +486,8 @@ public class GameMap
                 }
             }
 
-            // --- Draw HP bar below entity ---
+            // --- Draw HP bar below entity (skip for objects with no HP) ---
+            if (obj.Definition.Logic.MaxHealth <= 0) continue;
             int barW = GameConstants.ObjectInfoHpBarWidth;
             int barH = GameConstants.ObjectInfoHpBarHeight;
             int barOffsetY = GameConstants.ObjectInfoHpBarOffsetY;
