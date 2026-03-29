@@ -1,0 +1,75 @@
+metadata:
+  name: road_124
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#111c1f'
+  b: '#02131c'
+  c: '#020607'
+  d: '#060b0c'
+  e: '#101413'
+  f: '#000000'
+  g: '#202321'
+  h: '#302b23'
+  i: '#615543'
+  j: '#4f4638'
+  k: '#604d37'
+  l: '#6e5f4c'
+  m: '#ad9272'
+  n: '#c0a689'
+  o: '#b79b7c'
+  p: '#a88b6a'
+  q: '#74654f'
+  r: '#6e5943'
+  s: '#897054'
+  t: '#41392d'
+  u: '#777471'
+  v: '#a4835f'
+  w: '#927a5d'
+  x: '#92908f'
+  y: '#9c7b58'
+  z: '#6b543d'
+  '0': '#a0a09d'
+  '1': '#b3b7b6'
+  '2': '#bfc3c3'
+  '3': '#82888a'
+  '4': '#888073'
+  '5': '#e6e5e5'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .............aa........bb...........
+  ............accddddeddcfcb..........
+  ........abageddedeeeddedda..........
+  ........bcdhiiiijkiikkilijgabb......
+  ........dfdjmnommpmmomonoqhfcd......
+  ........gghrmnnnnooonnnnosthga......
+  .....bbhqusvmmpppvvpmmpmmwswu.......
+  .....bdtxnooopyyvyyyyvyyvpmnoqgbb...
+  .....bctmnmmmvyvpvyyvvyyvppomqgcb...
+  .....dchwopyvyyvvvvvvvyyyyvmplhcb...
+  .....ddtsvyvvysyyyyvvyyyvyppwlhcb...
+  .....ddhqsswyyyyyswyvyyvvvvvsigcb...
+  .....ddhlssssyyyyyvppppppmpwlihfd...
+  .....dchlssswwwssvmonnonooowqigfd...
+  .....ddhiqqwwwywyponnnnnompwqkgfd...
+  .....cdhilqsssssswpppmmmvwwqijhdd...
+  ....acetlrrrlrzrzrrqrqqqrzrkiitecba.
+  ....ghhjiizzzzkkkkkkkzzzzkkkiljhea..
+  .ab..ultjirzzzrkkkkzzrrrrkkkjjj....a
+  .bb.00uttirzzrrkkkzrqqqqqzkjjjiu00.a
+  bda.12lhtiizzrzkjjklqqqqqlijjhtu113g
+  bcg311lhtiirlrzkjjklqqqllqithhhu013g
+  adg322utttjirrkjjkirllrllijhghj3113g
+  acg3224jttjiiiikjjkilllqljjhhjix21ug
+  adhx22xuqljttttthhtjjjjjjhhju430113g
+  bdhx111110lheeeedeeggeegeeejx10x00.g
+  bdh3000221utghhhggghgggggghl010333..
+  bda..x0122100000xx33uuuuuu3x0x3....a
+  abba.x011255555555222122211213.....a
+  .bbd.x0x0255555552211111111103.....a
+  ..bb.3x..315555203333..333........b.
+  .........ux112203.................b.
+  ....ab.....u3xx33...................
+  ....bda.33..3xxxu...............bb..
+  ....bc.303...3u.................db..

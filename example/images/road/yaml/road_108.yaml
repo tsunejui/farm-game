@@ -1,0 +1,104 @@
+metadata:
+  name: road_108
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#071824'
+  b: '#06141c'
+  c: '#021019'
+  d: '#1f2020'
+  e: '#8e8f85'
+  f: '#9c9c8f'
+  g: '#87867c'
+  h: '#78796f'
+  i: '#282827'
+  j: '#040a0f'
+  k: '#181819'
+  l: '#818279'
+  m: '#7f7f75'
+  n: '#0d1013'
+  o: '#a7a799'
+  p: '#a1a093'
+  q: '#73746a'
+  r: '#010000'
+  s: '#8d8c7f'
+  t: '#959689'
+  u: '#88897f'
+  v: '#7d7c71'
+  w: '#2c2d2a'
+  x: '#242624'
+  y: '#9a9889'
+  z: '#939182'
+  '0': '#868477'
+  '1': '#848274'
+  '2': '#8c897a'
+  '3': '#52524b'
+  '4': '#b9b8ab'
+  '5': '#000000'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ......abaaabcbbccccd..efgh........idjjjccccjjjk.....hhlem......ncbcbbbbaaaaa......
+  .....abcbcbcjjnjjjjk..opgq.........nnjjjjjjjjrjk..h.qhepe......njjccjccjccccca....
+  ...acb...........ink..ppsq.........nk........kjd.....qeot......nk...........a.....
+  ...ajj.lteeeuhhuv.dk.hppu..........k.........wjd.q...qspe.....wn..................
+  .....x.ltetotlgpe.dn.hpfm..........n.........wjk.q....ups......n...............aa.
+  ba.m...qq.qhq..lg.xk.qftv.........ik..........ni...q..mys.....wnx...............a.
+  ca.pug.........q..dk..fylq........kx.........inx......vfz.....iki.................
+  cb.etg............dk..tfu.......dnnd..........kki.....lpt......k................aa
+  cn.usmhq........q.dk..ftl.......kjjd..........kknd....lpe.....wn................ba
+  cn.egvgm........h.dk..pfm.......kjk...........xkni....loe.....wni...............aa
+  cn.es001q...h.....kn.qttl.......kjd.............nw....eof.....xjx...............a.
+  cn.fy011mhqhmh....kn..h.........xjk.............nd....luu.....dni...............ba
+  cn.fyss21mlmlm....dndiww.........jd.............jd..........dxkd................ba
+  jj.eyzsszseumhhh...kkjknddidkx...nd.............ni...widww.ikdkx................aa
+  cn.gzs22zzzsmhmgu..xi.....iidi...nd.............k.....www.....i.................aa
+  cn.l0v01022mhlgll.dk3tof.........jk.............ki.......qhmuqwx................aa
+  cn.lvh1mm11lmmq...knweofh.......ink.............kx...hsuvmgtfqwnd...............aa
+  cj.mmvqqvvhlul3wi.ww3vh..........kk.............d....hgvqqqquqikd...............aa
+  jj.uevhqvvvllq3dk..mhh...........nk.............d......q333qqq33wwx.............aa
+  cj.ffzvqhhvem3xnk.eotu...........nn.............n..lh...qqqqqvue3wni............ba
+  cj.pof1qqhltgwnk..eptuq..........nk.............ni......uemqqltfq3x.............ba
+  jj.poymqhlvmqwdwmgl0vvmh.......ii...............nd.....metemhq0sll..x...........aa
+  cj.fof0hvgq3wx3eop1hqhmh......kni..................kd.veftsmhqhqhfg..x..........aa
+  jj.fop1h0yqwndq44f1hhqqq....idnk...................nk.heftggsu0hmff.xni.........aa
+  cn.pof1hsoqxrkq44yhqhqqqm...nkw....................ww..hfpffo4psgtl.xkw.........ba
+  cj.posvqgpqxrkq44tvqqqqqlm..kx.......................x..fo44o4oyypm.wxw..q...h..ba
+  cj.fpgqq1fqxnd3o4ouhhqqhq..dki.......................dw.lf44444444lwnd..qhqqhum.cb
+  cj.tfgqq0pl3wkwu44fteutu..dkk..........................wwqo4444444uwrx.hmvqqhel.bb
+  cj.ef2112pth3id3telmmhl..dni..........hllmlul..........kjwmo4oooopqini.lvhqqvte.cc
+  cj.fystzstzeu3dkiwwwwwwddnd.........hlguuguugh..........dddwwwwwwwxii3lgqqhhheu.cb
+  cj.py2yt220toqd5rrrrrrrrkw.........qlegglmvlmh...........djrjjnrnjni3ltevqhqheu.cb
+  jj.ffytzs22fouwnnnkkdknkwquv..hvvhml0glvvvvvvmmmvmvvhhlg..xxixwwxdx3eots001vlfe.cc
+  cj.poopfyytfofvqqqqqq33qh0zgvm0gu00001vvvhvv11022222022sslhhqqqqqqqlfpe00ss0epe.cb
+  cj.o44oooofzzszettesstss22210002200022011101111022220212tyyftestteetpfyyzyyyyot.cb
+  cj.ooopooopz11s2s21m0s2211v2zs2sszzzyyzs22222022222022202szeu11gsu10szpofypyyot.jc
+  cj.ooyyypptz22010v112211vq10zz22zyyzyzs21022200001022zyz210011101mvv12fopzyypoe.jc
+  jn.fptzzytzz212sz00stts0v1112012zttsz11vvvv11vv11vv12yfz202s2sg011m112zyyzzyoos.nb
+  jj.fooyyyyfpzszyzs2zyyzs01122zszzytyz11110101vv1vv112yfys2szyttszzzz22zyzzypo4t.jc
+  cb.p44ooooooofpoopppopfppfyfooooo4o4oppooopyzszzsz22ypoopffpooopppppyyfpfyfpooe.jb
+  cc.epfypoopfffypoooooooooooo444444444444444oppppppyfpo4oopooopppfffypfyyyyz22mh.ba
+  cj..hqqhmvvhqqqmg2ssss22222szttyyyyyffytttzssus2222sssssg2sugllmvvhvvvvv10mq....cb
+  cc.........3..3...................................................33............ba
+  cc.................................33.3.........................................ba
+  cc..............................................................................ba
+  cc..............................................................................ca
+  cc..............................................................................ca
+  cb..............................................................................ca
+  cc..............wxiixxiixxxx..ixiiiwxdxxx.ixixxxxxxxxxdxdddxdxdddxi.............ca
+  cb..............ww.wiiiwiwwi.....w..wxiii..wwwiww.ii.iiwiiiiiwiiwxi..hm.........ca
+  cb............i...................................................ww.ll.........ba
+  cc............w...................................................ww.mv.........ca
+  cb............w......................................................hq.........ca
+  cb............w...................................................ww.v..........ba
+  bb............w...................................................w..mh.........ba
+  cc...................................................................lv.........ca
+  cb..............q...................................................hlq.........ca
+  cb............leeeeeeeueeuueeeeeeseeeuuuuuueggueuuglueuulglluullgugs00..........ca
+  bb............ueuguulluuuulguuuguggglllgllllvvmlmgllglmlvmmlgulmlellhh..........ba
+  bb..............................................................................ba
+  cb..............................................................................ba
+  bb..............................................................................ba
+  ba..............................................................................b.
+  aa.............................................................................aa.
+  .a...............................................d.............dd............aaa..

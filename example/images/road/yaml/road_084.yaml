@@ -1,0 +1,80 @@
+metadata:
+  name: road_084
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#061016'
+  b: '#00090f'
+  c: '#0b161b'
+  d: '#88897b'
+  e: '#8f9082'
+  f: '#8c8d7f'
+  g: '#969787'
+  h: '#939283'
+  i: '#808275'
+  j: '#acab9a'
+  k: '#afaf9d'
+  l: '#b5b5a4'
+  m: '#a2a392'
+  n: '#7b7c6f'
+  o: '#1c2222'
+  p: '#aaa795'
+  q: '#9e9e8e'
+  r: '#3f3f36'
+  s: '#a8a491'
+  t: '#9c9a8a'
+  u: '#58574c'
+  v: '#858577'
+  w: '#8b8979'
+  x: '#868677'
+  y: '#7e7c6f'
+  z: '#848273'
+  '0': '#757669'
+  '1': '#7f7f71'
+  '2': '#78796c'
+  '3': '#717164'
+  '4': '#000000'
+  '5': '#676659'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .............abbbbaabbbbbbbaaba.........
+  ...........c............................
+  ..........ca..ddeeffeegeghi.....ca......
+  .........c...ejkllkkklllllmhgn..bbc.....
+  .......cbo.fgjpjkkjjjjkkkkpmqg..occc....
+  .......abrgllkqqppssspppsptgqteni..c....
+  .......oouqllmqskkpssppkpmtfhgmqqe.bc...
+  .....c..vvhfhwhjjkpsspjkpgxyztjmtf.c....
+  ....ab.jlqd0yyhppppssppmtw12zhmtgf......
+  ....bb.llqw02wfgthgskkpei0n0nvhw1v1i..c.
+  ...cbc.jlmhzzegfehgpkkqv0320nnvynivgi.aa
+  ...cbo.mmfwwxwwz1wfhhhi332in1n1zv22hi.ab
+  ...c4c.mhzzxzzwzzw13555u5yxv12n1v2ni..aa
+  ...c4o0phyyxzyzwhf15ruuu5nvvi0301001..ac
+  ...cbo3qh1zwxyzwfhe3uu530zwin20220nd..ca
+  ...bc.0twzwhefwxtpmh11fvzxww1i10yn2v2.oa
+  ...co.0fxzwgmgetqspgwfhfdwegggevin0n....
+  .......22xwmkjpspljf0ni1zettqpqfinn0....
+  ca.....3n1xslkjmpkjf03y2xgttqpqfnvi3....
+  aa.....0inxtkljssptxy2yyvhtggttf1ii.....
+  aa...c.id1xqkkjqqtf1zwwxdgqghgtf11y.....
+  cc...c.vdy1qkpsppqtfeqtgqqmpqmpgi23.....
+  ao...o.113ygjppjkmgwxffdfgpqplkmd2332...
+  cc.....ii232xvfhhz35550n3201ftgdn0322...
+  ccc.vqdvd35u5uu5555uu313............0...
+  .aa.vmefe0urrrurru552ttv..r.....u.......
+  .ao.0hfhv3rrrrrrruu1ejjf.rr.............
+  ccc..iqsw5uuurruu51qkjmn...........ii...
+  ccaco.mjhwdy5rruu5hkllt3..........0vd..a
+  ..obc.qpggjd5rruu5hlllg3......idev02i.oc
+  en.bo.hhfqje55u5u5hjsjg0.3....dhgdniv..a
+  kq.ao.gvzfgd230350hqskq1.ndi22dddvifi.oc
+  kt....fdzxvyddxinfsqmkqhddfdnvhi0.0vn.co
+  gqe....02232empmjjkgfggqjpme11i0......o.
+  qjq......330iqmjlkh3..2hkkme20........o.
+  sqf......333.2xjlp3rr...eth11n........co
+  phi.r....00...1hqh.rr.r.01vii2........co
+  s13u.rr..20.u..22......u300...........or
+  t13u.....2n.u......u....3.............oo
+  xyy30..o.......u...0hgf0..............oo

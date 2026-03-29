@@ -1,0 +1,95 @@
+metadata:
+  name: road_122
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#132024'
+  b: '#09161e'
+  c: '#060c0e'
+  d: '#030606'
+  e: '#171612'
+  f: '#3f342a'
+  g: '#5a4b3b'
+  h: '#4d4034'
+  i: '#615344'
+  j: '#2e2721'
+  k: '#03141d'
+  l: '#796653'
+  m: '#bba080'
+  n: '#a48c70'
+  o: '#b1906e'
+  p: '#a07f5a'
+  q: '#967653'
+  r: '#8d6e4d'
+  s: '#000004'
+  t: '#000000'
+  u: '#725944'
+  v: '#6c513a'
+  w: '#8b9498'
+  x: '#7e8484'
+  y: '#b6bcbd'
+  z: '#9fa5a7'
+  '0': '#a0b5b8'
+  '1': '#899ca0'
+  '2': '#becfd2'
+  '3': '#d5e7e9'
+  '4': '#8da4a9'
+  '5': '#7b939a'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  .................a......ba..........
+  .............cddcdccccdcddb.........
+  ..........baedddddcecdeecde.........
+  .........ccefghghgighgiiihjck.......
+  ........addelmmnnnmmonomnljddb......
+  ........jjjhpmmmmmmmmmmmmqgjej......
+  ......aehlppomoppppppppnnpqll..aa...
+  .....accimmmmonqrrrqqqqqqponmngck...
+  .....kddinmmooopqrrrrqqrrpoomngcc...
+  .....bdcinopponpqppqpppqqpppongddb..
+  .....bdeippqppqqpoppppopqqqqnphdd...
+  .....kddgpppqqrqppppppppqqqpoqfdd...
+  .....bddgqpqrqrrqoooppppppppnqhdsa..
+  .....kdegqpqrrrrpmmmoomoopoqprftsb..
+  .....ktegqprrrurpmmmmmmmopqrlijdsb..
+  .....cdegqqrrrrrqnoooooonqrvggjtsk..
+  ....kbcjglrrqruuuuulrrrlluuvugjddb..
+  ....k..fgiurqruvvvvvvvuvvvvguhfjj...
+  ..b....hffglluuvvvvvvvvvvvughhg....k
+  .kb.wwlfejguuuuuluuuuuuuullighgxxx..
+  .kk.yyxfefhuvvullluullluulllijflxyw.
+  .kb.yyljejfivuulluuuullluigggjhlwyz.
+  .kc.yyxhjfhgguiiuuuvuuuuuhjjfjgwz01.
+  .kb.yyxllhffhiiiiiiiiiiiifeefjgwzy1.
+  .kb.yyzxxijjfhfffffffffhhjjjixxxwy1.
+  .kc.y22zxihffeeceeeeeeeeeejlzwwx10w.
+  .kk.y22yywwlijjjjjffjjeejjhw22zxwx..
+  .kc.1yzy232yzzwwwzzwxxllxxwz2ywxx...
+  .kc..x.z333333333332yz1zyyy00zwwx..k
+  .bkaa..z2333332223320w1zz00wwwxx..bk
+  ...bca.0232yyzw11zz41x............ak
+  ....bb.4y015w.......x...............
+  .....k..www......................a..
+  .....kb..55..x............xx....ak..
+  .....ck..x......................ak..
+  .....kb.55......................ak..
+  .....ck.00...................w1.bk..
+  .....ck.y2x.................x44.ak..
+  .....cb.021.................5zw.ak..
+  .....cb.z24.................545..b..
+  .....kb.zy1.................x45.ak..
+  ....bcb.0y1...55............x4w.bk..
+  ....bcb.zy1...44............x4w.ak..
+  ....bck.405...44............x45..k..
+  ....ack.511414225............11.ak..
+  ....ack.w14222335............4z.ak..
+  ....kck.550332325............41.ak..
+  ....bb..x54233325............5w..k..
+  ...ka.....503334.............4z.....
+  ......115..4220.............50455...
+  .....101....54...............550205.
+  kk.x1y24.......................5yy4.
+  a..140045.......................4455
+  ...55x50220.......................54
+  541....0232........................5

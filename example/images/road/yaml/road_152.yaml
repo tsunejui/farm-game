@@ -1,0 +1,75 @@
+metadata:
+  name: road_152
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#080c25'
+  b: '#1f1d3d'
+  c: '#8b6da2'
+  d: '#7d5a96'
+  e: '#9778ac'
+  f: '#9d79b3'
+  g: '#826299'
+  h: '#7b5695'
+  i: '#754e90'
+  j: '#a785bc'
+  k: '#b28cc6'
+  l: '#9472aa'
+  m: '#8a67a2'
+  n: '#946faa'
+  o: '#a17db8'
+  p: '#bf9fcf'
+  q: '#d6bae3'
+  r: '#9971b0'
+  s: '#916ba8'
+  t: '#e5cfef'
+  u: '#9266ab'
+  v: '#a278b9'
+  w: '#966baf'
+  x: '#a97ebf'
+  y: '#9e71b6'
+  z: '#ae83c5'
+  '0': '#8b62a3'
+  '1': '#855d9c'
+  '2': '#7a5394'
+  '3': '#895ea3'
+  '4': '#84599e'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ............................a...............
+  ................aaaaaaaaaaaaaaa.............
+  ................aab.a...bbb.ba..............
+  ............a.a.............................
+  ..........aaaaa..cdd...dd.......aaa.........
+  .........ab.bbb.defg...dhi.ii....aa.........
+  ........aa......cjklgcgcccmnlmm.....a.......
+  .......aa..eoeoeefeepqppelfffncclg..aaa.....
+  .....aa...dcoforsmglqtttjlforsmsecd.baa.....
+  ...aaaa.gcccssmuvsceqtttjelrrsmmsgh.........
+  ...aaab.gelmssuwvmmfqttqjlfoffnrrggi........
+  ........clnwxvvyvwsjttttkefzfoorlssmhd...aa.
+  .a...cgcolfokzzyyffjqqqqkffooxonmsmlcg....a.
+  aa..cfrrofjoxzxxzkjjjjjkjoxojorsceeecch.....
+  a...mswrfjpppjvzzzzofeeffozvooefjppocmd....a
+  ...cmmyffkqqqkjxxvvxzooxxoxfrnljqtqjccsgi...
+  ..dmmwvvfkqqqkovzxvzzzzzxvvffslpttqjccs0g...
+  ..immrrvffpttpjxxxzxzzxxzxxvfleqttqjess1d...
+  ..msmnmfffkpppkkkzzkkzxxkkzvrnekqpkenss1dii.
+  dhmllflfovojojkppkkkkzxxzzzvvrneoeecsrs01ii.
+  ghdeppkeffvfvzxzkkkzzzzzzxxvyrrnsmsnss011h22
+  mggjqtqlnvvyvxxvvxxxvzzxxvrwwyywwsnnmm1g10hh
+  ghmkqtpcsrrwwrrvyvxvyvvrwyruwrrwrrnsslelg1d2
+  gdgcpqknsuwyrwurvyyrwnfssrrssssssnmmepqpmd1h
+  22dgnersuuyvywuyxvvwrfkkfrrssrfnsnmmottqeg0d
+  .idd100rwuwyyyvyywwunpqtpssnfppjsm0glpqpcg12
+  .id1030wwuwwyvxyyu03spttk10mkqqkm131meocg10d
+  .i24344333u33uu3uuwunpqqjm0skqqkm10s1dd210s1
+  .idi2hh44333330340yuurrfn00moppf11030d2h20mm
+  ..iiid444h4334243uwww3111uw0ssrs13400422i011
+  ....i4344h4442243uu001143uw311310dd342i21s02
+  .....hdhh44444443434333444u0u0403h22hiih4m1.
+  ......iiiii22hh00444444440uuu4441d242iiiii..
+  a..........id0330422h2224uuu32i2hhd1hi......
+  a...........1m042i2hd22hd3331hi22d2h2.......
+  ab..........2dh2iii2i2hiiiidddd22hi2i.......

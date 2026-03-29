@@ -1,0 +1,84 @@
+metadata:
+  name: road_072
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#141915'
+  b: '#0f1311'
+  c: '#000000'
+  d: '#38362c'
+  e: '#191e19'
+  f: '#2d2d24'
+  g: '#0c0c07'
+  h: '#26261c'
+  i: '#928d7e'
+  j: '#787466'
+  k: '#5a574a'
+  l: '#474336'
+  m: '#201c11'
+  n: '#8b8067'
+  o: '#756447'
+  p: '#baa980'
+  q: '#cfbc91'
+  r: '#1d1508'
+  s: '#1c0f02'
+  t: '#3c2c14'
+  u: '#2a1d09'
+  v: '#49371d'
+  w: '#59401b'
+  x: '#614a28'
+  y: '#877350'
+  z: '#b49d6b'
+  '0': '#6f562b'
+  '1': '#f5e193'
+  '2': '#ecd389'
+  '3': '#aa915f'
+  '4': '#fbef91'
+  '5': '#fae885'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ....aabcb......d....ef...ag.....
+  ...bgah.............hhh...eae...
+  ..abb...............fef....aga..
+  e...................dff.....ee..
+  a.iii................ddff.......
+  b.iij.dd............dd.fabb....h
+  b.iii..................fabbd...a
+  b.iiij.kk..............lfmh..j.e
+  a.njnjjjooj.............klk....a
+  b...kjnniiiij....j..dd.kj.....fb
+  ahfdlojnpqqpi.j.npi.dd..j.k.deab
+  .agafkknpqqpijnniqi.ddlkklffagbh
+  .hbaefdkjiinnjjnipijllklddhebbb.
+  ...femhffllkkkllkniklkkdrrrgbf..
+  ....egsrmmfllldflklldkltsssrm...
+  ....bghldurruuuruuthhdvwvvugm...
+  ....rrkpouruuuututttttxyzytshkj.
+  ....mhnqzyoyooynnniouu0p1pvsmkj.
+  ...lmtypqzpqq211111pvtyq23vsmkj.
+  ....rropyw0z2114111pwtxp23tshkj.
+  ...dgrnqxuty2111111zvu0p23tstkj.
+  ...drhp10uw32441444zwt0q13tsukj.
+  ...dmdp1n0035544441zw0y213wuhkj.
+  ....rdp1p00z5555441zxoz113xutkj.
+  ....st32z0032555541zw0z14zwuvkj.
+  ....run223y35555545zwx344pwudoj.
+  ....rfnpq3y325555553wwz11zvrtk..
+  ....ahjyo00325555553ww3p3ytsdk..
+  ....amdlttw325555553ww0ovtrshk..
+  ....hehuuvx325555523xwwvusmmd...
+  ....famgstw324522523wxovugma....
+  ....ebhruuwz2152211zx0ylrggb....
+  ....eadlvvx3pqpzpqpyxxkldmmbf...
+  ...eafkiinoxx00000xvttljnkfgb...
+  ...bakppqqxusuuuussussvipilggh..
+  ...aakinppxssutvvusussvnijdbgf..
+  ....ffddjnowvw0y0vtvddkkklhah...
+  .....ebgdnpiippppijjjiodmmh.....
+  ......erfoiniqqqqpiijnkmgm......
+  ........hfdloiinnnnjldhmh.......
+  ........hbgadkkkkkkkhbgh........
+  .........fhhfdllllldfhf.........
+  .............heeeeee............
+  .............ebbbbga............

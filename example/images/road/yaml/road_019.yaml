@@ -1,0 +1,96 @@
+metadata:
+  name: road_019
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#161310'
+  b: '#1f1c1a'
+  c: '#322e29'
+  d: '#453c37'
+  e: '#49433e'
+  f: '#514640'
+  g: '#382e29'
+  h: '#26211d'
+  i: '#272524'
+  j: '#181817'
+  k: '#090b0c'
+  l: '#292826'
+  m: '#393430'
+  n: '#40362f'
+  o: '#1e2021'
+  p: '#0d1215'
+  q: '#2b2b29'
+  r: '#000000'
+  s: '#342823'
+  t: '#47372f'
+  u: '#5b483c'
+  v: '#624e43'
+  w: '#1e1815'
+  x: '#64554d'
+  y: '#534036'
+  z: '#655e5a'
+  '0': '#6d6763'
+  '1': '#797673'
+  '2': '#565350'
+  '3': '#554c46'
+  '4': '#898785'
+  '5': '#0f171d'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  ...abcdefdghah..........ijkl........
+  ...abmnnnnchh...........loo.........
+  ...pbmmcl............pkj.........oko
+  ...pjlcli...........lkko.........aki
+  ...ppb..........................qokl
+  ...jkb..........okro.........licdqaq
+  ....l...........okkl.......qbjhcemal
+  ..............oo...........lhbsndgai
+  .............opb........limgggtffsal
+  ..........ol...........iaaldfuuvugai
+  ........okrpo..........lawsduvvxyski
+  ........oppp..........mclhgeyvuvfsai
+  .....iool.........ijjocdnggnnttyemao
+  .....kkp.......ooobaahgddgnddngsdcai
+  .....oo.......iajlqhhisgndfzzescdiko
+  ..i...........owimefeghhnxz012eddqao
+  .okj........qilgfxxx3dgnfz2f32002mjo
+  opki.......lawsex00zz0xx11daje140qjl
+  5.........qlhgny3zzz111444dkkc01zikl
+  i......ojbiddddtnyxxx04444fwwcz03oki
+  .......ppbgefdssgdgd300z0113mjd2eop.
+  .....bbjbmdeeswhsdhsz1zmn14zcki3elpi
+  ....ljomddmgggn22dsg142hq012laq22qji
+  ..babmmffdcbhf140gwg01elez2mbhe02lpi
+  ..jaleeefmihm044zwks23qmemhjao202qpo
+  ..abe2fmchbm2112garh3ngeejrjim012qji
+  ..jbe2fshaje010mibwgdgsndjkmz010eo5.
+  ..aagensbkje14zqhddclhwwbkke4403mjpo
+  ..jasntshab3142lhf3mclkkwpjz44zembko
+  ..jahdysiwl2112ql33mihbwcd3z00xf3lao
+  ..jagyyghal214zmbmdbkwmd21zdcndxxnbb
+  ..awgyythkh2141mjjjakiz1140chstxxfli
+  ..awsyynhabd041eloljae41zzessfvvfgh.
+  ..aasttynwac2010zzz33z4zmshwtxxfgwa.
+  ..aastyudshcde2z4444123msgssyvvnshh.
+  ..aasyyufffmcai34444zmhas3vv3nshl...
+  ..wwtuyyvvxeckac2zeemqihdz0zfbakh...
+  ..whyvuyuvxecwwcgcwkacefx000fhaaq...
+  ..jhyvvuyyfnmshsnhwwwn33xzx3........
+  ..awyxvyttngtdfdnghsd33eeemc........
+  ..awdvutsgngtfvvuyyyyffnihql........
+  ..jheytgggttyuvvvxvvvtgiib..........
+  ..bhntsssyuyyuvvvxvvvgbwq...........
+  ..bwsngsnyuuyyyuvvuyeghb............
+  ..bwsntttyuuyyuuyynne............o.5
+  ..abnyyyyuuvvuytghwh...........o5kkp
+  ..abd3vyyyuvu3fnswbh..........p5op5.
+  ..jhdvvyyyufyedmmlc..........5p5....
+  ..bhduvvuuytgssm..........opp55.....
+  ..whdxxvvyfghwh...........5kp.......
+  ..ahdxxuuydgqhq...........5p5.......
+  ..jhf33dgssn...........555..........
+  ..jbddgshwh............pp...........
+  ..bbihbliic........o..555...........
+  ..babiq...........pkp55.............
+  ..obb...1.........5p5...............

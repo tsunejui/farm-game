@@ -1,0 +1,80 @@
+metadata:
+  name: road_015
+type: png
+output_dir: Images/extracted_trees
+palette:
+  a: '#b6b8b1'
+  b: '#87867e'
+  c: '#20201d'
+  d: '#171411'
+  e: '#1a1916'
+  f: '#2c2a26'
+  g: '#25221d'
+  h: '#201a16'
+  i: '#2d2720'
+  j: '#36322a'
+  k: '#5d574e'
+  l: '#0e0d0a'
+  m: '#494136'
+  n: '#2a221d'
+  o: '#342e25'
+  p: '#3c352b'
+  q: '#40382d'
+  r: '#493d2f'
+  s: '#372f25'
+  t: '#463a2c'
+  u: '#463929'
+  v: '#483b2c'
+  w: '#44392b'
+  x: '#423628'
+  y: '#423525'
+  z: '#4e4132'
+  '0': '#3e3325'
+  '1': '#3b3022'
+  '2': '#3b3226'
+  '3': '#342b21'
+  '4': '#3f3528'
+  '5': '#000000'
+data:
+- !<tag:yaml.org,002:str> |2
+
+  aaaaaab.........cdefghcgigj.k......c
+  aaaaaa.ggj......ellhheelldgjmk.....l
+  aaaaaa.cc......jnnnopoihhgggf..kk..e
+  aaaaab.fj....gcnomqqrrqsspohej.k...f
+  aaab.........edgjmmrtuuuvmqiggfmk...
+  aab.jj......fcnjpqwxxyuyvzmpfeejmk..
+  aab.f......gipprr010xrrvvrtqohejmk..
+  aa.......ffnfmrqryyxvzzzvy12jggjmmm.
+  ab......edhoprrxyyuzzzzzv00qpjjommm.
+  b......fhhiprzry00uzzzvvuyt2ppjfommm
+  ......igfqqwrrryyuvrrvry11022pfhiqm.
+  .....hdgpmmwyxuuvuuuyy001333p3ndhpk.
+  .....ednqzzvuyuvvvru011011332sihhqm.
+  ....fgn4vrvuuvvuvvvx1331wx11sqjhhjm.
+  ...jgi3wvzuxuvuuyww42331wxx4tq3hdj..
+  ...gdnptuuyyxuy0110443s11xrmmmodh.k.
+  ...gensttuyuuuw11104x410xtrmmqfhc...
+  ...fhi1yyyyyu001104110xvvzwqiijj....
+  ..poi311xux013i33xwx0urrzmq3hh..b...
+  .fio2xyyyxx13nn31wvuurrt4poihg..b...
+  .hhi4wx001s333i11yurzzz0hhgq........
+  .ee34xx113ii300y0urzzzz3dlh...jfj...
+  .dhj4xx1s3i32wuuuzzrw0pqpip.....p...
+  .dh341112ssqwwvrzzz41nik............
+  .eh32131244wwrrzzrq2mrq.bb.......cgf
+  .hn313330x44xrzzr3nskbb.........c5le
+  ceg341110x00xttt4nh2bbb.p.....feeldf
+  ldns440y0yxww433sqpm.k...j...feldf..
+  lc3s000urvxx4snnrkb.......ffccghf...
+  dip11yurzzwsn33jmbb..j....cdlf......
+  ei211uvuzt2s3mkkk........fcec.......
+  dn4wuut11insqkbb......felef.........
+  lgxvztq33hgmk.k.k.....gdlcj......p..
+  diqtt23smmm........cdegcg...........
+  dfpsihgqkbbk..q...flldj.......j.....
+  dijigdg.bbb.....gcdce........fhf....
+  legijp....kk...fele..........clg....
+  dddp.....f....flldf..........edf....
+  cec.........fcgde..........jfelf....
+  ...........fllf.........jghcfcdf....
