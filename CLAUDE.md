@@ -19,11 +19,13 @@ just release          # Build for all platforms
 - **Action system**: Player behaviors (movement, jump, attack) are separate `IPlayerAction` implementations
 - **Persistence**: SQLite database via sqlite-net-pcl ORM for player state and settings
 - **Game loop**: MonoGame standard `Initialize → LoadContent → [Update → Draw]`
-- **State machine**: TitleScreen → Playing → Paused
+- **Localization**: JSON language packs in `Content/Locales/<lang>/`, supports English and Chinese
+- **HUD**: In-game overlays (map transition, toast alerts) with FontStashSharp Unicode rendering
+- **State machine**: TitleScreen → Settings → Playing → Paused
 
 ## Key Directories
 
-- `game/FarmGame/Core/` — GameConstants (loaded from config.yaml), GameState enum, ColorHelper
+- `game/FarmGame/Core/` — GameConstants, GameState, ColorHelper, LocaleManager, FontManager
 - `game/FarmGame/Data/` — DataRegistry, GameConfig, terrain/item/map definitions
 - `game/FarmGame/World/` — GameMap, MapBuilder, EntityInstance
 - `game/FarmGame/Entities/` — Player coordinator, Direction enum
@@ -33,8 +35,9 @@ just release          # Build for all platforms
 - `game/FarmGame/Persistence/Models/` — PlayerState, PlayerStateRecord, Setting, SchemaVersion
 - `game/FarmGame/Persistence/Repositories/` — PlayerStateRepository, SettingRepository
 - `game/FarmGame/Camera/` — 2D camera with boundary clamping
-- `game/FarmGame/Screens/` — Title and pause screen UI
-- `game/FarmGame/Content/` — config.yaml, Maps/, Terrains/, Items/
+- `game/FarmGame/Screens/` — TitleScreen, PauseScreen, SettingsScreen (Myra UI)
+- `game/FarmGame/Screens/HUD/` — MapTransitionOverlay, ToastAlert (in-game overlays)
+- `game/FarmGame/Content/` — config.yaml, Maps/, Terrains/, Items/, Locales/, Fonts/, Images/
 
 ## Conventions
 

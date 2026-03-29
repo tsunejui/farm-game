@@ -63,11 +63,18 @@ farm-game/
         │   └── Camera2D.cs         # Viewport camera that follows the player
         ├── Screens/
         │   ├── TitleScreen.cs      # Title menu screen (with DB error display)
-        │   └── PauseScreen.cs      # Pause overlay screen
+        │   ├── PauseScreen.cs      # Pause overlay screen
+        │   ├── SettingsScreen.cs   # Language and game settings
+        │   └── HUD/
+        │       ├── MapTransitionOverlay.cs  # Map name fade-in/out on map load
+        │       └── ToastAlert.cs            # Event notification toast (bottom-left)
         └── Content/
             ├── config.yaml         # Game-wide configuration
             ├── Content.mgcb        # MonoGame content pipeline config
             ├── DefaultFont.spritefont  # Default font asset
+            ├── Fonts/              # TTF/OTF fonts (NotoSansCJK for Chinese)
+            ├── Locales/            # i18n JSON files (en/, zh-TW/)
+            ├── Images/             # Generated pixel art PNGs
             ├── Terrains/           # Terrain type definitions (*.yaml)
             ├── Items/              # Item type definitions (*.yaml)
             └── Maps/               # Map definitions (*.yaml)
@@ -80,8 +87,10 @@ farm-game/
 Contains shared constants and state definitions.
 
 - **GameConstants**: Static properties loaded from `config.yaml` at startup — tile size, screen resolution, player speed, jump/attack parameters, colors.
-- **GameState**: Enum controlling game flow — `TitleScreen`, `Playing`, `Paused`.
+- **GameState**: Enum controlling game flow — `TitleScreen`, `Settings`, `Playing`, `Paused`.
 - **ColorHelper**: Parses hex color codes (e.g., `#FF4500`) to MonoGame `Color`.
+- **LocaleManager**: Loads JSON language packs from `Content/Locales/<lang>/`, provides string lookup with fallback to English.
+- **FontManager**: Loads TTF/OTF fonts via FontStashSharp for Unicode (Chinese) text rendering. Also configures Myra's default font.
 
 ### Data
 
@@ -143,23 +152,32 @@ SQLite database layer using sqlite-net-pcl ORM.
 
 ### Screens
 
-- **TitleScreen**: Main menu with "Start Game" and "Exit Game" options. Displays database error messages in red when initialization fails.
+- **TitleScreen**: Main menu with "Start Game", "Settings", and "Exit Game" options. Displays database error messages. All text localized via `LocaleManager`.
 - **PauseScreen**: Semi-transparent overlay with "Resume" and "Exit Game" options. Game world renders underneath.
+- **SettingsScreen**: Game settings page with language selection (English / 中文). Stores preference in SQLite `setting` table.
+
+#### HUD
+
+In-game overlay elements rendered on top of the gameplay scene in screen-space.
+
+- **MapTransitionOverlay**: Shows map name with fade-in/hold/fade-out animation when entering a map. Uses FontStashSharp for Chinese text rendering.
+- **ToastAlert**: Event notification toast at bottom-left. Supports stacking up to 5 messages with fade animations. Used for map entry, save events, etc.
 
 ### Game1 (Orchestrator)
 
 The main game class wires all systems together:
 
-1. **Initialize** — Loads `config.yaml`, sets screen resolution, initializes SQLite database, creates/loads player UUID.
-2. **LoadContent** — Creates a 1x1 white pixel texture, loads font, initializes screen UIs, loads all data via `DataRegistry`.
-3. **StartGame** — Builds map via `MapBuilder`, spawns player, initializes camera.
-4. **Update** — Routes input and updates based on current `GameState`.
-5. **Draw** — Renders map, player, and action effects using the camera transform.
+1. **Initialize** — Loads `config.yaml`, sets screen resolution, initializes SQLite database, loads language from settings, initializes `LocaleManager`.
+2. **LoadContent** — Initializes Myra UI, FontManager, all screens (Title, Pause, Settings), HUD (MapTransition, Toast), and loads all data via `DataRegistry`.
+3. **StartGame** — Builds map via `MapBuilder`, spawns player, initializes camera, shows localized map transition and toast.
+4. **Update** — Routes input and updates based on current `GameState` (TitleScreen, Settings, Playing, Paused).
+5. **Draw** — Renders map, player, HUD overlays, and Myra UI screens.
 6. **OnExiting** — Saves player state to database on game exit.
+7. **ChangeLanguage** — Reloads locale, saves to DB, rebuilds all screen UIs.
 
 ## Rendering Approach
 
-All graphics use a single 1x1 white pixel `Texture2D`, tinted with different colors via `SpriteBatch.Draw`. Colors are defined in YAML definition files (terrains, items) and `config.yaml` (player). This placeholder approach allows focusing on game logic before introducing sprite assets.
+Graphics use MonoGame.Extended `FillRectangle` for colored rectangles and pixel art PNG textures for entities. Colors are defined in YAML definition files (terrains, items) and `config.yaml` (player). Myra handles all menu UI rendering. FontStashSharp renders Unicode text (Chinese) in HUD overlays.
 
 ## Database
 
