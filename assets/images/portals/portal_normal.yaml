@@ -1,7 +1,7 @@
 metadata:
   name: "portal_normal"
 type: "gif"
-frame_delay: 180
+frame_delay: 400
 output_dir: "Images/portals"
 palette:
   ".": "#00000000"
