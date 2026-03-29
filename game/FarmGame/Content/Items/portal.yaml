@@ -17,8 +17,8 @@ visuals:
         file_type: "gif"
 
 physics:
-  occupy_width: 1
-  occupy_height: 2
+  occupy_width: 2
+  occupy_height: 3
   is_collidable: false
 
 logic:
