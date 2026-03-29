@@ -16,7 +16,6 @@ using Serilog;
 using FarmGame.Combat;
 using FarmGame.Core;
 using FarmGame.World;
-using FarmGame.World.Events;
 
 namespace FarmGame.Entities.Actions.Player;
 
@@ -135,29 +134,15 @@ public class AttackAction : IPlayerAction
 
         bool isCritical = false;
 
-        // Enqueue damage event for alive objects with HP
+        // Run hit chain: CalculateDamage → ApplyEffects → EnqueueDamageEvent
         if (obj.State.IsAlive && obj.Definition.Logic.MaxHealth > 0)
         {
-            var player = _getPlayer();
-            var ctx = new DamageContext
-            {
-                Strength = player.Strength,
-                Dexterity = player.Dexterity,
-                WeaponAtk = player.WeaponAtk,
-                BuffPercent = player.BuffPercent,
-                SkillPowerPercent = 1f,
-                CritRate = player.CritRate,
-                CritDamageMultiplier = player.CritDamage,
-                TargetDefense = obj.Definition.Logic.Defense,
-            };
+            var hitCtx = HitPipeline.Execute(_getPlayer(), obj);
+            isCritical = hitCtx.IsCritical;
 
-            int damage = DamagePipeline.CalculateDamage(ctx);
-            isCritical = ctx.IsCritical;
-
-            obj.EnqueueEvent(new TakeDamageEvent(damage, isCritical));
-
-            Log.Debug("Attack: {ItemId} queued {Damage} damage{Crit}",
-                obj.ItemId, damage, isCritical ? " (CRIT!)" : "");
+            if (!hitCtx.Cancelled)
+                Log.Debug("Attack: {ItemId} queued {Damage} damage{Crit}",
+                    obj.ItemId, hitCtx.Damage, isCritical ? " (CRIT!)" : "");
         }
 
         // Enqueue knockback event — critical hits push further
@@ -171,7 +156,7 @@ public class AttackAction : IPlayerAction
             int dirX = dir switch { Direction.Left => -1, Direction.Right => 1, _ => 0 };
             int dirY = dir switch { Direction.Up => -1, Direction.Down => 1, _ => 0 };
 
-            obj.EnqueueEvent(new KnockbackEvent(dirX, dirY, kb));
+            obj.EnqueueEvent(new World.Events.KnockbackEvent(dirX, dirY, kb));
         }
     }
 }
