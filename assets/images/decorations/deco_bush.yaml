@@ -3,21 +3,60 @@ metadata:
 type: "png"
 output_dir: "Images/decorations"
 palette:
-  "G": "#1E7A1E"
-  "L": "#2EA82E"
-  "D": "#145A14"
-  "K": "#0C3C0C"
-  "H": "#3CB43C"
-  "l": "#50C850"
+  ".": "#00000000"
+  "A": "#193a10"
+  "B": "#224b16"
+  "C": "#275419"
+  "D": "#28561a"
+  "E": "#255018"
+  "F": "#1f4614"
+  "G": "#1a3c11"
+  "H": "#193b10"
+  "I": "#265319"
+  "J": "#29571a"
+  "K": "#234d17"
+  "L": "#2c5d1c"
+  "M": "#2e611e"
+  "N": "#30641f"
+  "O": "#275519"
+  "P": "#29581b"
+  "Q": "#2b5c1c"
+  "R": "#2e601d"
+  "S": "#31661f"
+  "T": "#346b21"
+  "U": "#2f631e"
+  "V": "#265218"
+  "W": "#2a5a1b"
+  "X": "#2d5f1d"
+  "Y": "#244f17"
+  "Z": "#30651f"
+  "a": "#2b5b1b"
+  "b": "#244e17"
+  "c": "#255118"
+  "d": "#2f621e"
 data:
   - |
-    ..........
-    ...lHLl...
-    ..HLGDLH..
-    .HLGKDGLH.
-    .LGDKGKDGL
-    .LGKDGKDGL
-    .HDGKDGKDH
-    ..DLGKGLD.
-    ...DKKD...
-    ..........
+    ........................
+    ........................
+    ........................
+    ........................
+    ...........AAA..........
+    ........AABCBDEFG.......
+    ......AFHIJKLKMNIBA.....
+    .....AAFJOPKQDRSTUPB....
+    ....AFVFLPKWXYWLZaQQG...
+    ...AAGHFEDFJBQLTMMTZBG..
+    ...AAFBYQbFQCUZTJXSTXF..
+    ...AAGYcFaLZUaTZSSUXWI..
+    ..AAGGFFVVESXPXTYLXXSEA.
+    ..AAAAFBBBLUXdJSTDTTJQA.
+    ..AAHFYKVCERNDNJCLZULEG.
+    ...AAFKYBFXVcEXXSTQURF..
+    ...AAAAFBFOOMXCNddUIJG..
+    ...AAAAGFKJIECWXXDSREA..
+    ....AAFFFFbFPFBbXMJGA...
+    .....AAFGFYFBFFWOFFG....
+    ......AAGAAAHYcYFGA.....
+    ........AAABGGKAA.......
+    ...........AAA..........
+    ........................

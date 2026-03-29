@@ -4,28 +4,67 @@ type: "png"
 output_dir: "Images/fences"
 palette:
   ".": "#00000000"
-  "B": "#7A4A1A"
-  "D": "#5A3210"
-  "K": "#3A2008"
-  "L": "#AA7A4A"
-  "T": "#9A6838"
-  "W": "#C4A470"
-  "H": "#D8BA88"
+  "A": "#5e3d20"
+  "B": "#5f3e20"
+  "C": "#644122"
+  "D": "#674323"
+  "E": "#664223"
+  "F": "#5a3a1e"
+  "G": "#56381d"
+  "H": "#634022"
+  "I": "#6c4625"
+  "J": "#684424"
+  "K": "#5b3b1f"
+  "L": "#603e21"
+  "M": "#6a4525"
+  "N": "#52351b"
+  "O": "#5c3c1f"
+  "P": "#613f21"
+  "Q": "#714a27"
+  "R": "#764d29"
+  "S": "#6d4726"
+  "T": "#734b28"
+  "U": "#704927"
+  "V": "#6b4625"
+  "W": "#664323"
+  "X": "#6e4826"
+  "Y": "#654223"
+  "Z": "#603f21"
+  "a": "#634122"
+  "b": "#624021"
+  "c": "#58391e"
+  "d": "#593a1e"
 data:
   - |
     ................................................
     ................................................
     ................................................
-    .WHLLTBBLLTBBLLTBBLLTBBLLTBBLLTBBLLTBBLLTBBLLHW.
-    .HLTBDKKDBTBDKKDBTBDKKDBTBDKKDBTBDKKDBTBDKBTLH.
-    .WHLLTBBLLTBBLLTBBLLTBBLLTBBLLTBBLLTBBLLTBBLLHW.
     ................................................
-    ........KD............KD........................
-    ........KD............KD........................
-    ........DB............DB........................
-    ........DB............DB........................
-    ........KD............KD........................
-    ........KD............KD........................
-    ........KK............KK........................
+    ................................................
+    ................................................
+    ................................................
+    ................................................
+    ..ABCDCECFGHIJBAKAFLEEMJBGNNGFKOEEDHEPPHCPHLAO..
+    ..QQRRRRRSJTRRUUMSVQRRRRUCCDWVXURRRRRQQRRTTTQX..
+    ..UURTRTTIYQRRSXEJJXQTRRSZPYHJIXRRTTTXXRTQUQXV..
+    ..XSTQTUUJaXRTVIYDESUQTTMBLHPDJVTTTQTISTQSSXIM..
+    ..SVUUUXIDbIUUJJEWCISUTUJBLPPYHDQTQUUMVQSJJMMJ..
+    ..MJSUXMJWZJSIWYEYHVJSUSYAZbPCBbSXXSXMMXMYDJJW..
+    ..DYJXSWYYBYVDaaEHCMCJXVaAZbPHOADMMJIMJVDHEJDH..
+    ..aHYSMbPHAHJaZPYPYJLWIJbAPHbbFFHYWEMMDJCPCJYP..
+    ..BAaMWAOPAZCBALabYEAHJJPAPCHPcFBPHHWDEEbBPCCZ..
+    ..OdbJHKdLBOBOKBbCYCOZWJBAHYCBcKKKBZHbYCLAALCZ..
+    ..cGBELcGAPFKFdOZCaZKBWJABHWCAGKcGOABAbbAOFObZ..
+    ..GNKCOGNOBdcdcFAHPOFBJEAZbDCFGFGNcKAOBZKFGcBP..
+    ..NNcbFNNdOGNcGcOPAFcAJaOZBEHcNcGNGdKFOBcdNGOL..
+    ..NNGAdNNcdGNGNNdAKGGKaPFOAbLGNGNNNGdcdOGGNNFO..
+    ..NNNccNNGGNNNNNGFGNNGABcdFOKGNGNNNGcGGdNNNNcc..
+    ..NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN..
+    ................................................
+    ................................................
+    ................................................
+    ................................................
+    ................................................
+    ................................................
     ................................................
     ................................................
