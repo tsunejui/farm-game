@@ -90,10 +90,17 @@ public class InitManager
                 DatabaseBackup.Backup(dbPath);
                 if (File.Exists(dbPath))
                     File.Delete(dbPath);
-                StateSaver = null;
+
+                // Re-initialize database with fresh state
+                var freshDb = DatabaseInitializer.Run();
+                if (freshDb.Success)
+                    StateSaver = new PlayerStateSaver(freshDb.PlayerStateRepo, freshDb.PlayerUuid);
+                else
+                    StateSaver = null;
+
                 _initialSavedState = null;
                 titleScreen.HasSavedState = false;
-                Log.Information("Character deleted, database removed");
+                Log.Information("Character deleted, database re-initialized");
             }, GameState.TitleScreen);
         };
         settingsScreen.Initialize();
