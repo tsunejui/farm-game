@@ -65,6 +65,14 @@ entities:
     tile_x: 10
     tile_y: 13
 
+  - item: "firewood"
+    tile_x: 8
+    tile_y: 13
+
+  - item: "firewood"
+    tile_x: 12
+    tile_y: 13
+
   - item: "dummy"
     tile_x: 14
     tile_y: 18

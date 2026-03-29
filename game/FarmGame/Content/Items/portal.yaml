@@ -14,6 +14,7 @@ visuals:
     states:
       normal:
         image_path: "Images/portals/portal_normal"
+        file_type: "gif"
 
 physics:
   occupy_width: 1
