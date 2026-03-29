@@ -7,7 +7,7 @@ namespace FarmGame.Persistence;
 
 public static class MigrationManager
 {
-    public const int CurrentSchemaVersion = 1;
+    public const int CurrentSchemaVersion = 2;
 
     public static DatabaseResult Migrate(SQLiteConnection db)
     {
@@ -50,6 +50,16 @@ public static class MigrationManager
                             Version = 1,
                             AppliedAt = DateTime.UtcNow.ToString("o"),
                             Description = "Initial schema"
+                        });
+                        break;
+
+                    case 2:
+                        db.Execute("ALTER TABLE map_state ADD COLUMN TtlUtc INTEGER NOT NULL DEFAULT 0");
+                        db.Insert(new SchemaVersion
+                        {
+                            Version = 2,
+                            AppliedAt = DateTime.UtcNow.ToString("o"),
+                            Description = "Add TtlUtc column to map_state"
                         });
                         break;
 

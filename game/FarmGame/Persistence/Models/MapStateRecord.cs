@@ -20,4 +20,10 @@ public class MapStateRecord
 
     [Column("updated_at")]
     public string UpdatedAt { get; set; }
+
+    /// <summary>
+    /// Unix timestamp (seconds) when this map state expires. 0 = active/no expiry.
+    /// </summary>
+    [Column("TtlUtc")]
+    public long TtlUtc { get; set; }
 }

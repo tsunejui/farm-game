@@ -61,6 +61,10 @@ public static class MapBuilder
                     {
                         map.SetTerrain(x, y, terrainId);
 
+                        // Block movement on water terrain
+                        if (terrainDef.Properties.ContainsKey("is_water"))
+                            map.SetCollision(x, y, true);
+
                         // Apply properties from terrain definition
                         foreach (var (propName, propValue) in terrainDef.Properties)
                             map.SetTileProperty(x, y, propName, propValue);
@@ -73,12 +77,28 @@ public static class MapBuilder
             }
         }
 
-        // Load terrain base textures
+        // Load terrain base textures (static and animated)
         if (loadTexture != null)
         {
             foreach (var (terrainId, terrainDef) in registry.Terrains)
             {
                 string basePath = $"Images/terrain_bases/{terrainId}_base";
+
+                // Try animated first (e.g. water)
+                if (graphicsDevice != null && contentDir != null)
+                {
+                    try
+                    {
+                        var anim = AnimatedTexture.LoadFrames(graphicsDevice, contentDir, basePath, 500f);
+                        if (anim.FrameCount > 0)
+                        {
+                            map.SetTerrainAnimBaseTexture(terrainId, anim);
+                            continue;
+                        }
+                    }
+                    catch { }
+                }
+
                 try
                 {
                     var tex = loadTexture(basePath);

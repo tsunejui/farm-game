@@ -1,0 +1,33 @@
+metadata:
+  item_id: "bush"
+  display_name: "Bush"
+  category: "natural_resource"
+
+visuals:
+  color: ""
+  origin_point: "top_left"
+  background:
+    enabled: true
+    display_mode: "stretch"
+    offset_x: 0
+    offset_y: 0
+    states:
+      normal:
+        image_path: "Images/bushes/bush_normal"
+
+physics:
+  occupy_width: 2
+  occupy_height: 1
+  is_collidable: true
+  is_knockbackable: false
+
+logic:
+  default_effects: []
+  action_handler: "none"
+  max_health: 6
+  defense: 0
+  level: 1
+  faction: "neutral"
+  drops:
+    - item: "leaf"
+      amount: 2

@@ -25,6 +25,7 @@ public class GameMap
     // Key: (itemId, state) — animated textures (GIF frames)
     private readonly Dictionary<(string, string), AnimatedTexture> _animatedTextures = new();
     private readonly Dictionary<string, Texture2D> _terrainBaseTextures = new();
+    private readonly Dictionary<string, AnimatedTexture> _terrainAnimBaseTextures = new();
     private readonly Dictionary<(int, int), WorldObject> _objectGrid = new();
 
     // Terrain decorations: each tile may have one decoration index (-1 = none)
@@ -58,6 +59,11 @@ public class GameMap
     public void SetTerrainBaseTexture(string terrainId, Texture2D texture)
     {
         _terrainBaseTextures[terrainId] = texture;
+    }
+
+    public void SetTerrainAnimBaseTexture(string terrainId, AnimatedTexture anim)
+    {
+        _terrainAnimBaseTextures[terrainId] = anim;
     }
 
     public void SetBackgroundTexture(string itemId, string state, Texture2D texture)
@@ -251,6 +257,10 @@ public class GameMap
         foreach (var anim in _animatedTextures.Values)
             anim.Update(deltaTime);
 
+        // Tick animated terrain base textures
+        foreach (var anim in _terrainAnimBaseTextures.Values)
+            anim.Update(deltaTime);
+
         // Tick decoration animations
         foreach (var animList in _decoAnimTextures.Values)
             foreach (var anim in animList)
@@ -279,7 +289,9 @@ public class GameMap
                 var tid = _terrain[x, y];
                 if (tid != null)
                 {
-                    if (_terrainBaseTextures.TryGetValue(tid, out var baseTex))
+                    if (_terrainAnimBaseTextures.TryGetValue(tid, out var animBase))
+                        spriteBatch.Draw(animBase.CurrentFrame, rect, Color.White);
+                    else if (_terrainBaseTextures.TryGetValue(tid, out var baseTex))
                         spriteBatch.Draw(baseTex, rect, Color.White);
                     else if (_terrainColors.TryGetValue(tid, out var color))
                         spriteBatch.FillRectangle(rect, color);

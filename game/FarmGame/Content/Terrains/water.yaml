@@ -1,0 +1,10 @@
+metadata:
+  terrain_id: "water"
+  display_name: "Water"
+  category: "natural"
+
+visuals:
+  color: "#2266AA"
+
+properties:
+  is_water: true

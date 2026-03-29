@@ -111,6 +111,12 @@ public class ObjectState
         _damageNumberTimer = DamageNumberDurationMs;
     }
 
+    public void Heal(int amount)
+    {
+        if (!IsAlive || amount <= 0) return;
+        CurrentHp = Math.Min(CurrentHp + amount, MaxHp);
+    }
+
     public void TakeDamage(int amount, bool isCritical = false)
     {
         if (!IsAlive || amount <= 0) return;

@@ -26,6 +26,13 @@ terrains:
       # Clearing in the center
       - { x: 23, y: 18, w: 5, h: 4 }
 
+  # Water pond (irregular)
+  - terrain: "water"
+    regions:
+      - { x: 40, y: 20, w: 4, h: 2 }
+      - { x: 41, y: 22, w: 3, h: 1 }
+      - { x: 39, y: 21, w: 2, h: 2 }
+
 entities:
   # Dense pine trees along the borders
   - item: "pine_tree"
@@ -167,14 +174,6 @@ entities:
   - item: "firewood"
     tile_x: 27
     tile_y: 19
-
-  # Water pond
-  - item: "water_body"
-    tile_x: 40
-    tile_y: 20
-    properties:
-      fill_width: 4
-      fill_height: 3
 
   # Mushroom-themed boxes (loot)
   - item: "box"

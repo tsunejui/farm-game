@@ -1,0 +1,3 @@
+effect_id: "rest"
+description: "Resting. Recovers 1% of max HP every 2 seconds."
+image_path: "Images/effects/rest"
