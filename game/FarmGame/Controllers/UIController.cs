@@ -14,7 +14,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Serilog;
 using FarmGame.Core;
 using FarmGame.Queues;
-using FarmGame.Queues.Events;
 using FarmGame.Screens.Panels;
 
 namespace FarmGame.Controllers;

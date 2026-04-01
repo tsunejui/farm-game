@@ -19,7 +19,6 @@ using MonoGame.Extended.Input;
 using Serilog;
 using FarmGame.Core;
 using FarmGame.Queues;
-using FarmGame.Queues.Events;
 using FarmGame.Bootstrap;
 using FarmGame.Camera;
 using FarmGame.Data;
