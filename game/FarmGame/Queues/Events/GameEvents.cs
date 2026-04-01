@@ -34,6 +34,9 @@ public record InventoryToggleEvent(bool IsOpen) : INotification;
 /// <summary>Game should pause/unpause.</summary>
 public record GamePausedEvent(bool IsPaused) : INotification;
 
+/// <summary>Toggle pause state (from Escape key).</summary>
+public record TogglePauseEvent : INotification;
+
 // ─── System Events ──────────────────────────────────────────
 /// <summary>Database connection was lost.</summary>
 public record DatabaseDisconnectedEvent(string Reason) : INotification;

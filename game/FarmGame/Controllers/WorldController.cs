@@ -25,6 +25,7 @@ using FarmGame.Camera;
 using FarmGame.Data;
 using FarmGame.Entities;
 using FarmGame.Models;
+using FarmGame.Services;
 using FarmGame.World;
 using FarmGame.World.Interactions;
 
@@ -67,26 +68,21 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
     public override string Name => "World";
     public override int Order => 100;
 
-    private readonly GraphicsDevice _graphicsDevice;
+    private readonly IAssetService _assets;
     private readonly DataRegistry _registry;
-    private readonly Func<string, Texture2D> _loadTexture;
     private readonly GameSession _session;
-    private readonly string _contentDir;
     private readonly QueueManager _queue;
 
     public WorldController(
-        GraphicsDevice graphicsDevice,
+        IAssetService assets,
         DataRegistry registry,
-        Func<string, Texture2D> loadTexture,
         GameSession session,
-        string contentDir,
         QueueManager queue)
     {
-        _graphicsDevice = graphicsDevice;
+        // (assets injected via constructor)
+        _assets = assets;
         _registry = registry;
-        _loadTexture = loadTexture;
         _session = session;
-        _contentDir = contentDir;
         _queue = queue;
     }
 
@@ -104,7 +100,7 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
 
     private void LoadMap(PlayerState savedState)
     {
-        var result = GameplayInitializer.Run(savedState, _registry, _loadTexture, _graphicsDevice, _contentDir);
+        var result = GameplayInitializer.Run(savedState, _registry, _assets.LoadTexture, _assets.GraphicsDevice, _assets.ContentDir);
         LogicState.CurrentMap = result.Map;
         LogicState.Player = result.Player;
         LogicState.Camera = result.Camera;
@@ -223,7 +219,7 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
                 CritDamage = LogicState.Player.CritDamage,
             };
 
-            var result = GameplayInitializer.Run(teleportState, _registry, _loadTexture, _graphicsDevice, _contentDir);
+            var result = GameplayInitializer.Run(teleportState, _registry, _assets.LoadTexture, _assets.GraphicsDevice, _assets.ContentDir);
             LogicState.CurrentMap = result.Map;
             LogicState.Player = result.Player;
             LogicState.Camera = result.Camera;
