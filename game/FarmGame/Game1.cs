@@ -1,49 +1,15 @@
 // =============================================================================
-// Game1.cs — Main game entry class
+// Game1.cs — Main game entry class (Controller-based architecture)
 //
-// This is the MonoGame application root. It owns the game loop lifecycle:
-//   Initialize → LoadContent → [Update → Draw per frame] → OnExiting
+// Architecture: Double-buffered state + Responsibility chain rendering +
+//               Event-driven communication via MediatR + Parallel update.
 //
-// Responsibilities:
-//   - Bootstrap the engine via InitManager (config, database, screens)
-//   - Drive the screen-based state machine (TitleScreen / Playing / Paused / etc.)
-//   - Manage texture loading with an in-memory cache
-//   - Persist player state on exit and on screen transitions
-//
-// The class deliberately avoids knowing concrete screen logic. Screen transitions
-// are handled through the IScreen / ScreenTransition abstraction; the only
-// exception is PlayingScreen, which is held directly for StartGame / SaveState
-// calls (exposed via InitManager.PlayingScreen to avoid unsafe downcasts).
-//
-// Functions:
-//   - Game1()                : Constructor. Creates GraphicsDeviceManager and
-//                              sets the Content root directory.
-//   - Initialize()           : MonoGame lifecycle. Resolves content path, runs
-//                              core bootstrap (config, DB, locale, ScreenManager),
-//                              and sets initial state to TitleScreen.
-//   - LoadContent()          : MonoGame lifecycle. Delegates to InitManager to
-//                              create SpriteBatch, load DataRegistry, build all
-//                              screens, and wire callbacks.
-//   - StartGame()            : Callback from TitleScreen. Loads saved state (or
-//                              null for new game), hands it to PlayingScreen,
-//                              and switches state to Playing.
-//   - LoadTexture(path)      : Texture loader with Dictionary cache. Tries raw
-//                              .png first, falls back to Content Pipeline XNB.
-//                              Passed as Func<string,Texture2D> to MapBuilder.
-//   - UnloadTextures()       : Disposes all cached FromStream textures. Called
-//                              on exit; should also be called on map switch.
-//   - OnExiting(sender,args) : MonoGame lifecycle. Persists player state to
-//                              SQLite and releases cached GPU resources.
-//   - SavePlayerState()      : Null-safe delegate to PlayingScreen.SaveState().
-//   - HandleTransition(t)    : Processes ScreenTransition from Update. Calls
-//                              OnExit on the current screen, OnEnter on the
-//                              target screen, then commits the state change.
-//   - Update(gameTime)       : Per-frame logic. Refreshes input, checks gamepad
-//                              quit, delegates to active screen, and processes
-//                              any returned ScreenTransition. No rendering here.
-//   - Draw(gameTime)         : Per-frame render. Clears to black, draws frozen
-//                              world behind pause overlay if Paused, then draws
-//                              active screen. No state mutations here.
+// Lifecycle:
+//   Game1()      → Initialize MediatR QueueManager, ControllerManager, graphics.
+//   Initialize() → Register all controllers, subscribe to event queues.
+//   LoadContent() → Load resources via each controller's LoadResource method.
+//   Update()     → Input → Parallel UpdateLogic → Event Processing → SyncState.
+//   Draw()       → Responsibility chain: controllers drawn in Order sequence.
 // =============================================================================
 
 using System.Collections.Generic;
@@ -52,99 +18,132 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input;
+using Serilog;
+using FarmGame.Architecture;
+using FarmGame.Architecture.Events;
+using FarmGame.Bootstrap;
+using FarmGame.Controllers;
 using FarmGame.Core;
+using FarmGame.Data;
 using FarmGame.Screens;
 
 namespace FarmGame;
 
 public class Game1 : Game
 {
+    // ─── Core Systems ───────────────────────────────────────
     private GraphicsDeviceManager _graphics;
-    private string _contentDir;          // Absolute path to the Content directory
-    private GameState _gameState;        // Current screen state (drives Update/Draw routing)
-    private InitManager _init;           // Holds all initialization results (screens, session, etc.)
+    private SpriteBatch _spriteBatch;
+    private string _contentDir;
 
-    // Texture cache — avoids reloading the same asset from disk multiple times.
-    // Textures loaded via FromStream are NOT managed by ContentManager, so we
-    // must track and Dispose them ourselves in UnloadTextures().
+    // ─── Architecture ───────────────────────────────────────
+    private QueueManager _queue;
+    private ControllerManager _controllerManager;
+
+    // ─── Legacy Systems (screen-based, kept for title/pause/settings) ──
+    private GameState _gameState;
+    private InitManager _init;
     private readonly Dictionary<string, Texture2D> _textureCache = new();
+
+    // ─── Controllers ────────────────────────────────────────
+    private WorldController _worldController;
+    private UIController _uiController;
 
     // =========================================================================
     // Game1() — Constructor
     //
-    // Creates the GraphicsDeviceManager (required before Initialize) and sets
-    // the content root directory for the MonoGame content pipeline.
+    // Initializes QueueManager (MediatR event bus), ControllerManager
+    // (responsibility chain), and GraphicsDeviceManager.
     // =========================================================================
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+
+        _queue = new QueueManager();
+        _controllerManager = new ControllerManager();
     }
 
     // =========================================================================
-    // Initialize() — Called once before the first frame
+    // Initialize() — Register controllers and subscribe to event queues
     //
-    // Resolves the absolute content directory path, then runs the core
-    // initialization sequence (config loading, database setup, locale loading,
-    // screen manager creation). Sets the initial game state to TitleScreen.
+    // Each controller is instantiated and registered with ControllerManager.
+    // Controllers subscribe to specific events via QueueManager.
     // =========================================================================
     protected override void Initialize()
     {
-        // Resolve absolute path: {exe directory}/Content
         _contentDir = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
 
+        // Core initialization (config, database, locale)
         _init = new InitManager();
         _init.InitializeCore(_contentDir);
 
-        // Game always starts on the title screen
         _gameState = GameState.TitleScreen;
-
         base.Initialize(); // triggers LoadContent()
     }
 
     // =========================================================================
-    // LoadContent() — Called once after Initialize, before the first Update
+    // LoadContent() — Load resources via controllers and legacy screens
     //
-    // Delegates to InitManager to set up the SpriteBatch, load the DataRegistry
-    // (YAML terrain/item/map definitions), create all screen instances, and wire
-    // up callbacks (start game, language change, character deletion).
+    // Initializes SpriteBatch, loads DataRegistry, creates controllers,
+    // wires up legacy screen system for title/pause/settings.
     // =========================================================================
     protected override void LoadContent()
     {
+        // Legacy content loading (screens, fonts, data)
         _init.LoadContent(this, _graphics, _contentDir, StartGame, LoadTexture);
+        _spriteBatch = _init.SpriteBatch;
+
+        // Create controllers with dependencies
+        var registry = DataInitializer.GetCachedRegistry();
+
+        // BackgroundController (Order: 0)
+        var bgController = new BackgroundController();
+        _controllerManager.Register(bgController);
+
+        // WorldController (Order: 100)
+        _worldController = new WorldController(
+            GraphicsDevice, registry ?? new DataRegistry(),
+            LoadTexture, _init.Session, _contentDir, _queue);
+        _controllerManager.Register(_worldController);
+
+        // ParticleController (Order: 200)
+        var particleController = new ParticleController();
+        _controllerManager.Register(particleController);
+
+        // UIController (Order: 300)
+        _uiController = new UIController();
+        _controllerManager.Register(_uiController);
+
+        // NetworkSystemController (Order: 900)
+        var networkController = new NetworkSystemController();
+        _controllerManager.Register(networkController);
+
+        // Subscribe all controllers to events
+        _controllerManager.SubscribeAll(_queue);
+
+        // Load controller resources
+        _controllerManager.LoadAllResources(GraphicsDevice, _contentDir);
+
+        Log.Information("[Game1] All controllers registered and resources loaded");
     }
 
     // =========================================================================
-    // StartGame() — Callback invoked by TitleScreen when the player presses Start
-    //
-    // Loads the saved player state (or null for a new game) and hands it to
-    // PlayingScreen, which builds the map, player entity, and camera.
-    // Then transitions the state machine to Playing.
+    // StartGame() — Transition from title screen to gameplay
     // =========================================================================
     private void StartGame()
     {
-        _init.PlayingScreen.StartGame(_init.Session?.LoadPlayer());
+        var savedState = _init.Session?.LoadPlayer();
+        _worldController.StartGame(savedState);
         _gameState = GameState.Playing;
     }
 
     // =========================================================================
-    // LoadTexture(path) — Loads a Texture2D with caching
-    //
-    // Passed as a Func<string, Texture2D> callback to MapBuilder so that the
-    // world layer doesn't depend on Game/ContentManager directly.
-    //
-    // Lookup order:
-    //   1. Return from cache if already loaded.
-    //   2. Try loading a raw .png file from the Content directory.
-    //   3. Fall back to the MonoGame Content Pipeline (XNB).
-    //
-    // Cached textures must be released via UnloadTextures() since FromStream
-    // textures are not tracked by ContentManager.
+    // LoadTexture() — Texture loader with cache
     // =========================================================================
     private Texture2D LoadTexture(string path)
     {
-        // Cache hit — return immediately without disk I/O
         if (_textureCache.TryGetValue(path, out var cached))
             return cached;
 
@@ -153,13 +152,11 @@ public class Game1 : Game
 
         if (File.Exists(pngPath))
         {
-            // Raw PNG path — load directly from file stream
             using var stream = File.OpenRead(pngPath);
             texture = Texture2D.FromStream(GraphicsDevice, stream);
         }
         else
         {
-            // Content Pipeline fallback (loads pre-compiled XNB asset)
             texture = Content.Load<Texture2D>(path);
         }
 
@@ -167,12 +164,6 @@ public class Game1 : Game
         return texture;
     }
 
-    // =========================================================================
-    // UnloadTextures() — Disposes all cached textures and clears the cache
-    //
-    // Called during OnExiting to release GPU resources. Should also be called
-    // before a map switch if the old map's textures are no longer needed.
-    // =========================================================================
     private void UnloadTextures()
     {
         foreach (var tex in _textureCache.Values)
@@ -181,43 +172,107 @@ public class Game1 : Game
     }
 
     // =========================================================================
-    // OnExiting() — Called when the game window is closing
-    //
-    // Ensures the player's state is persisted to the SQLite database and all
-    // manually loaded textures are properly disposed before shutdown.
+    // OnExiting() — Persist state and release resources
     // =========================================================================
     protected override void OnExiting(object sender, ExitingEventArgs args)
     {
-        SavePlayerState();   // Persist player position/direction/map to DB
-        UnloadTextures();    // Release GPU resources not managed by ContentManager
+        _worldController?.SaveState();
+        UnloadTextures();
+        _queue?.Dispose();
         base.OnExiting(sender, args);
     }
 
     // =========================================================================
-    // SavePlayerState() — Delegates save to PlayingScreen → GameSession
+    // Update(gameTime) — Input → Parallel Update → Event Processing → Sync
     //
-    // Null-safe: does nothing if PlayingScreen was never initialized (e.g. the
-    // player quit from the title screen without ever starting a game).
+    // 1. Input Handle: capture keyboard and publish InputEvent.
+    // 2. Parallel Update: Parallel.ForEach on all active controllers.
+    // 3. Event Processing: drain pending events from QueueManager.
+    // 4. Sync Point: copy LogicState → RenderState on main thread.
     // =========================================================================
-    private void SavePlayerState()
+    protected override void Update(GameTime gameTime)
     {
-        _init.PlayingScreen?.SaveState();
+        KeyboardExtended.Update();
+
+        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            Exit();
+
+        // ── Legacy screen handling (title, settings, pause) ──
+        if (_gameState != GameState.Playing)
+        {
+            if (_init.ScreenManager.TryGet(_gameState, out var screen))
+            {
+                var transition = screen.Update(gameTime);
+                if (transition != ScreenTransition.None)
+                    HandleTransition(transition);
+            }
+            base.Update(gameTime);
+            return;
+        }
+
+        // ── Controller-based update (Playing state) ──
+
+        // 1. Input Handle: publish keyboard state as event
+        var keyboard = KeyboardExtended.GetState();
+        _queue.Publish(new InputEvent(Keyboard.GetState(), gameTime));
+
+        // Check pause
+        if (keyboard.WasKeyPressed(Keys.Escape))
+        {
+            _worldController.SaveState();
+            _gameState = GameState.Paused;
+            if (_init.ScreenManager.TryGet(GameState.Paused, out var pauseScreen))
+                pauseScreen.OnEnter(GameState.Playing);
+            base.Update(gameTime);
+            return;
+        }
+
+        // 2. Parallel Update: all controllers run UpdateLogic concurrently
+        _controllerManager.ParallelUpdate(gameTime);
+
+        // 3. Event Processing: process accumulated events on main thread
+        _queue.ProcessPendingEvents();
+
+        // 4. Sync Point: LogicState → RenderState (main thread)
+        _controllerManager.SyncAll();
+
+        base.Update(gameTime);
     }
 
     // =========================================================================
-    // HandleTransition(transition) — Processes a screen transition request
+    // Draw(gameTime) — Responsibility chain rendering
     //
-    // Called when a screen's Update() returns a non-None ScreenTransition.
-    //
-    // Flow:
-    //   1. If Exit is requested, shut down the game.
-    //   2. Otherwise, notify the current screen via OnExit (allows PlayingScreen
-    //      to auto-save), notify the target screen via OnEnter, then update
-    //      the state machine.
+    // Clear screen, then draw controllers in Order sequence.
+    // Legacy screens (pause overlay) drawn on top when applicable.
+    // =========================================================================
+    protected override void Draw(GameTime gameTime)
+    {
+        GraphicsDevice.Clear(Color.Black);
+
+        if (_gameState == GameState.Playing)
+        {
+            // Responsibility chain: controllers drawn in Order sequence
+            _controllerManager.DrawAll(_spriteBatch);
+        }
+
+        // Legacy screens (title, pause overlay, settings)
+        if (_gameState == GameState.Paused)
+        {
+            // Draw frozen world behind pause overlay
+            _controllerManager.DrawAll(_spriteBatch);
+        }
+
+        if (_init.ScreenManager.TryGet(_gameState, out var activeScreen))
+            activeScreen.Draw(_spriteBatch);
+
+        base.Draw(gameTime);
+    }
+
+    // =========================================================================
+    // HandleTransition() — Process legacy screen transitions
     // =========================================================================
     private void HandleTransition(ScreenTransition transition)
     {
-        // Exit request (e.g. "Close Game" on TitleScreen)
         if (transition.Exit)
         {
             Exit();
@@ -228,76 +283,17 @@ public class Game1 : Game
         {
             var target = transition.Target.Value;
 
-            // Notify current screen it is being exited (e.g. PlayingScreen saves state)
             if (_init.ScreenManager.TryGet(_gameState, out var currentScreen))
                 currentScreen.OnExit(target);
 
-            // Notify target screen it is being entered (e.g. PauseScreen resets selection)
-            if (_init.ScreenManager.TryGet(target, out var nextScreen))
+            if (target == GameState.Playing && _gameState == GameState.Paused)
+            {
+                // Resuming from pause — no need to rebuild
+            }
+            else if (_init.ScreenManager.TryGet(target, out var nextScreen))
                 nextScreen.OnEnter(_gameState);
 
-            // Commit state change
             _gameState = target;
         }
-    }
-
-    // =========================================================================
-    // Update(gameTime) — Per-frame logic tick (60 fps by default)
-    //
-    // Responsibilities:
-    //   1. Refresh input state (MonoGame.Extended keyboard tracker).
-    //   2. Check for gamepad Back button (universal quit shortcut).
-    //   3. Delegate to the active screen's Update, which returns a
-    //      ScreenTransition indicating whether to stay or change state.
-    //   4. If a transition is requested, process it via HandleTransition.
-    //
-    // No rendering occurs here — that is strictly in Draw().
-    // =========================================================================
-    protected override void Update(GameTime gameTime)
-    {
-        // Refresh extended keyboard state (tracks WasKeyPressed / IsKeyDown)
-        KeyboardExtended.Update();
-
-        // Universal quit via gamepad Back button
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-            Exit();
-
-        // Delegate to active screen and handle any requested transition
-        if (_init.ScreenManager.TryGet(_gameState, out var screen))
-        {
-            var transition = screen.Update(gameTime);
-            if (transition != ScreenTransition.None)
-                HandleTransition(transition);
-        }
-
-        base.Update(gameTime);
-    }
-
-    // =========================================================================
-    // Draw(gameTime) — Per-frame render pass
-    //
-    // Rendering order:
-    //   1. Clear the back buffer to black.
-    //   2. If Paused, draw the gameplay world as a frozen background so the
-    //      pause menu overlays the game scene (via IWorldRenderer.DrawWorld).
-    //   3. Draw the active screen (title menu, pause overlay, playing HUD, etc.)
-    //
-    // All state mutations happen in Update — Draw is purely presentational.
-    // =========================================================================
-    protected override void Draw(GameTime gameTime)
-    {
-        // Clear to black — serves as the default background for all screens
-        GraphicsDevice.Clear(Color.Black);
-
-        // When paused, render the gameplay world behind the pause overlay
-        if (_gameState == GameState.Paused &&
-            _init.ScreenManager.TryGet(GameState.Playing, out var playingScreen))
-            (playingScreen as IWorldRenderer)?.DrawWorld(_init.SpriteBatch);
-
-        // Render the active screen (menus, HUD, or gameplay)
-        if (_init.ScreenManager.TryGet(_gameState, out var activeScreen))
-            activeScreen.Draw(_init.SpriteBatch);
-
-        base.Draw(gameTime);
     }
 }
