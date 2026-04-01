@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.Xna.Framework;
 using FarmGame.Combat;
 
-namespace FarmGame.Queues;
+namespace FarmGame.Core;
 
 // ─── Command: Damage ────────────────────────────────────────
 /// <summary>Apply damage to a target entity.</summary>

@@ -6,7 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
-namespace FarmGame.Queues;
+using FarmGame.Queues;
+
+namespace FarmGame.Core;
 
 /// <summary>
 /// Centralized queue manager holding typed sub-queues (Command and Event).

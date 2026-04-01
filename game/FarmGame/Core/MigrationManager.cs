@@ -1,9 +1,10 @@
 using System;
 using System.Linq;
 using SQLite;
+using FarmGame.Persistence;
 using FarmGame.Persistence.Entities;
 
-namespace FarmGame.Persistence;
+namespace FarmGame.Core;
 
 public static class MigrationManager
 {
