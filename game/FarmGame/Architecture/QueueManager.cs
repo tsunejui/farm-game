@@ -6,6 +6,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace FarmGame.Architecture;
@@ -28,6 +29,7 @@ public class QueueManager : IDisposable
     public QueueManager()
     {
         var services = new ServiceCollection();
+        services.AddLogging();
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssembly(typeof(QueueManager).Assembly);
