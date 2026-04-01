@@ -10,7 +10,7 @@ using MonoGame.Extended;
 using FarmGame.Core;
 using FarmGame.World;
 
-namespace FarmGame.Screens.Components;
+namespace FarmGame.Screens.HUD;
 
 public class WorldMarker
 {

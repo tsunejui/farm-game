@@ -10,6 +10,7 @@ using FarmGame.Bootstrap;
 using FarmGame.Data;
 using FarmGame.Screens;
 using FarmGame.Screens.Components;
+using FarmGame.Screens.HUD;
 using FarmGame.Screens.Panels;
 
 namespace FarmGame.Core;
