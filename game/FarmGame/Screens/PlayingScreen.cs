@@ -196,19 +196,24 @@ public class PlayingScreen : IScreen, IWorldRenderer
             return;
         }
 
-        DrawWorld(spriteBatch);
+        if (_currentMap != null)
+        {
+            DrawWorld(spriteBatch);
 
-        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        _inspector.DrawHUD(spriteBatch);
-        _toast.Draw(spriteBatch);
-        if (_mapTransition.IsActive)
-            _mapTransition.Draw(spriteBatch);
-        _dialogue.Draw(spriteBatch);
-        spriteBatch.End();
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            _inspector.DrawHUD(spriteBatch);
+            _toast.Draw(spriteBatch);
+            if (_mapTransition.IsActive)
+                _mapTransition.Draw(spriteBatch);
+            _dialogue.Draw(spriteBatch);
+            spriteBatch.End();
+        }
     }
 
     public void DrawWorld(SpriteBatch spriteBatch)
     {
+        if (_currentMap == null || _camera == null || _player == null) return;
+
         spriteBatch.Begin(
             transformMatrix: _camera.TransformMatrix,
             samplerState: SamplerState.PointClamp);

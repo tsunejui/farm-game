@@ -64,8 +64,8 @@ public class QueueManager : IDisposable
     {
         _services.AddMediatR(cfg =>
         {
-            // Don't auto-register from assembly — we registered handlers manually
-            cfg.RegisterServicesFromAssembly(typeof(QueueManager).Assembly);
+            // Use a dummy assembly with no handlers — we registered handlers manually above
+            cfg.RegisterServicesFromAssembly(typeof(MediatR.IMediator).Assembly);
         });
 
         _serviceProvider = _services.BuildServiceProvider();
