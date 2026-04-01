@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using FarmGame.Combat;
 
-namespace FarmGame.Queues.Events;
+namespace FarmGame.Queues;
 
 // ─── Input Events ───────────────────────────────────────────
 /// <summary>Keyboard state snapshot published each frame.</summary>

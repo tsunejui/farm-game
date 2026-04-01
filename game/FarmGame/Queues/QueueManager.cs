@@ -5,8 +5,6 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using FarmGame.Queues.Commands;
-using FarmGame.Queues.Events;
 
 namespace FarmGame.Queues;
 
