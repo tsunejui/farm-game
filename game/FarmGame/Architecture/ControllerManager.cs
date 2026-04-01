@@ -28,11 +28,17 @@ public class ControllerManager
         return _controllers.OfType<T>().FirstOrDefault();
     }
 
-    /// <summary>Subscribe all controllers to events.</summary>
+    /// <summary>
+    /// Register all controllers as MediatR handlers and build the QueueManager.
+    /// </summary>
     public void SubscribeAll(QueueManager queue)
     {
         foreach (var c in _controllers)
+        {
+            queue.RegisterHandler(c);
             c.Subscribe(queue);
+        }
+        queue.Build();
     }
 
     /// <summary>Load resources for all controllers.</summary>

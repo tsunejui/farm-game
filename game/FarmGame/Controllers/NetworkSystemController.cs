@@ -71,6 +71,8 @@ public class NetworkSystemController : BaseController<NetworkLogicState, Network
         int screenW = GameConstants.ScreenWidth;
         int screenH = GameConstants.ScreenHeight;
 
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
         // Semi-transparent black overlay
         spriteBatch.FillRectangle(
             new Rectangle(0, 0, screenW, screenH),
@@ -104,6 +106,8 @@ public class NetworkSystemController : BaseController<NetworkLogicState, Network
                 smallFont.DrawText(spriteBatch, RenderState.DisconnectReason, reasonPos, Color.Gray);
             }
         }
+
+        spriteBatch.End();
     }
 
     protected override void CopyState(NetworkLogicState logic, NetworkRenderState render)
