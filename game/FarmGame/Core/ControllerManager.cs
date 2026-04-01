@@ -12,38 +12,61 @@ using FarmGame.Services;
 namespace FarmGame.Core;
 
 /// <summary>
-/// Manages all controllers: creation, registration, game loop orchestration.
+/// Manages all controllers. Controllers are registered once during init
+/// and persist for the game's lifetime. ScreenManager activates/deactivates
+/// subsets based on the current scene.
 ///
-/// Update pipeline (called from Game1.Update):
-///   Phase 1: Parallel UpdateLogic — each controller on its own thread
-///   Phase 2: ProcessQueues — drain all queues on main thread
-///   Phase 3: SyncState — copy LogicState → RenderState on main thread
-///
-/// Draw pipeline (called from Game1.Draw):
-///   Single-thread responsibility chain — controllers drawn in Order sequence
+/// Update: active controllers run in parallel (Parallel.ForEach) → queue drain → sync.
+/// Draw: active controllers drawn in Order sequence (single-thread responsibility chain).
 /// </summary>
 public class ControllerManager
 {
-    private readonly List<IController> _controllers = new();
-    private IController[] _sortedForDraw;
+    private readonly Dictionary<string, IController> _allControllers = new();
+    private readonly HashSet<string> _activeSet = new();
+    private IController[] _activeForUpdate;
+    private IController[] _activeForDraw;
+
     private QueueManager _queue;
 
+    // Named access to key controllers
     public WorldController World { get; private set; }
     public UIController UI { get; private set; }
+    public TitleController Title { get; private set; }
+    public SettingsController Settings { get; private set; }
+    public LoadingController Loading { get; private set; }
 
     public Action OnLeaveGame { get; set; }
     public Action OnSettings { get; set; }
 
     // ─── Initialization ─────────────────────────────────────
 
+    /// <summary>
+    /// Create and register all controllers. Called once during LoadContent.
+    /// All controllers exist for the entire game lifetime.
+    /// ScreenManager decides which are active per scene.
+    /// </summary>
     public void ConfigureAll(
         IAssetService assets,
         DataRegistry registry,
         GameSession session,
-        QueueManager queue)
+        QueueManager queue,
+        TitleController titleController,
+        SettingsController settingsController,
+        LoadingController loadingController)
     {
         _queue = queue;
 
+        // Scene controllers (title, settings, loading)
+        Title = titleController;
+        Register(Title);
+
+        Settings = settingsController;
+        Register(Settings);
+
+        Loading = loadingController;
+        Register(Loading);
+
+        // Playing scene controllers
         Register(new BackgroundController());
 
         World = new WorldController(assets, registry, session, queue);
@@ -58,67 +81,104 @@ public class ControllerManager
 
         Register(new NetworkSystemController());
 
-        foreach (var c in _controllers)
+        // Register all as MediatR handlers and build queue
+        foreach (var c in _allControllers.Values)
         {
             queue.RegisterHandler(c);
             c.Subscribe(queue);
         }
         queue.Build();
 
-        foreach (var c in _controllers)
+        // Load resources for all
+        foreach (var c in _allControllers.Values)
             c.LoadResource(assets.GraphicsDevice, assets.ContentDir);
 
-        Log.Information("[ControllerManager] All controllers configured");
+        Log.Information("[ControllerManager] {Count} controllers configured", _allControllers.Count);
     }
 
     private void Register(IController controller)
     {
-        _controllers.Add(controller);
-        _sortedForDraw = null;
-        Log.Information("[ControllerManager] Registered: {Name} (order={Order})",
-            controller.Name, controller.Order);
+        _allControllers[controller.Name] = controller;
+        Log.Information("[ControllerManager] Registered: {Name} (order={Order})", controller.Name, controller.Order);
     }
 
     public T Get<T>() where T : class, IController
     {
-        return _controllers.OfType<T>().FirstOrDefault();
+        return _allControllers.Values.OfType<T>().FirstOrDefault();
     }
 
-    // ─── Update: multi-threaded logic → main-thread sync ────
+    // ─── Activation (called by ScreenManager) ───────────────
+
+    /// <summary>Deactivate all controllers.</summary>
+    public void DeactivateAll()
+    {
+        _activeSet.Clear();
+        InvalidateCache();
+    }
+
+    /// <summary>Activate a controller by instance (must already be registered).</summary>
+    public void Activate(IController controller)
+    {
+        _activeSet.Add(controller.Name);
+        InvalidateCache();
+    }
+
+    /// <summary>Activate a controller by name.</summary>
+    public void Activate(string name)
+    {
+        if (_allControllers.ContainsKey(name))
+        {
+            _activeSet.Add(name);
+            InvalidateCache();
+        }
+    }
+
+    private void InvalidateCache()
+    {
+        _activeForUpdate = null;
+        _activeForDraw = null;
+    }
+
+    private IController[] GetActive()
+    {
+        return _allControllers
+            .Where(kv => _activeSet.Contains(kv.Key))
+            .Select(kv => kv.Value)
+            .ToArray();
+    }
+
+    // ─── Update: multi-threaded → main-thread sync ──────────
 
     /// <summary>
-    /// Full update pipeline. Called once per frame from Game1.Update.
-    ///
-    /// Phase 1: Each controller's UpdateLogic runs in parallel (Parallel.ForEach).
-    ///          Controllers write to their own LogicState only — no shared mutation.
-    /// Phase 2: Drain all queues via MediatR on the main thread.
-    /// Phase 3: Copy each controller's LogicState → RenderState on the main thread.
+    /// Phase 1: Parallel update — each active controller on its own thread.
+    /// Phase 2: Drain queues on main thread.
+    /// Phase 3: Sync LogicState → RenderState on main thread.
     /// </summary>
     public void Update(GameTime gameTime)
     {
-        // Phase 1: Parallel update — each controller on its own thread
-        var active = _controllers.Where(c => c.IsActive).ToArray();
-        Parallel.ForEach(active, controller => controller.UpdateLogic(gameTime));
+        _activeForUpdate ??= GetActive();
 
-        // Phase 2: Process queues — main thread (Commands first, then Events)
-        _queue.ProcessAll();
+        // Phase 1: Parallel
+        Parallel.ForEach(_activeForUpdate, c => c.UpdateLogic(gameTime));
 
-        // Phase 3: Sync — copy LogicState → RenderState on main thread
-        foreach (var c in _controllers)
+        // Phase 2: Queue drain
+        _queue?.ProcessAll();
+
+        // Phase 3: Sync
+        foreach (var c in _activeForUpdate)
             c.SyncState();
     }
 
     // ─── Draw: single-thread responsibility chain ───────────
 
     /// <summary>
-    /// Draw all controllers in Order sequence on the main thread.
-    /// Lower Order = drawn first (behind). Higher Order = drawn on top.
+    /// Draw active controllers in Order sequence on the main thread.
     /// </summary>
     public void Draw(SpriteBatch spriteBatch)
     {
-        _sortedForDraw ??= _controllers.OrderBy(c => c.Order).ToArray();
+        _activeForDraw ??= GetActive().OrderBy(c => c.Order).ToArray();
 
-        foreach (var c in _sortedForDraw)
+        foreach (var c in _activeForDraw)
             c.DrawRender(spriteBatch);
     }
 }
