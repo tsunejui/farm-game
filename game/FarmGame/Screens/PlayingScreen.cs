@@ -158,10 +158,6 @@ public class PlayingScreen : IScreen, IWorldRenderer
         if (_dialogue.Update())
             return ScreenTransition.None;
 
-        var keyboard = KeyboardExtended.GetState();
-        if (keyboard.WasKeyPressed(Keys.Escape))
-            return ScreenTransition.To(GameState.Paused);
-
         _player.Update(gameTime);
         _currentMap.Update(dt);
         _camera.Update(_player);

@@ -1,7 +1,5 @@
 using Serilog;
 using FarmGame.Screens;
-using FarmGame.Screens.Components;
-using FarmGame.Screens.HUD;
 using FarmGame.Screens.Panels;
 
 namespace FarmGame.Bootstrap;
@@ -9,7 +7,6 @@ namespace FarmGame.Bootstrap;
 public class ScreenInitResult
 {
     public TitleScreen TitleScreen { get; init; }
-    public PausePanel PausePanel { get; init; }
     public SettingsScreen SettingsScreen { get; init; }
     public MapTransitionOverlay MapTransition { get; init; }
     public ToastAlert Toast { get; init; }
@@ -24,9 +21,6 @@ public static class ScreenInitializer
         if (!string.IsNullOrEmpty(databaseError))
             titleScreen.SetError(databaseError);
 
-        var pausePanel = new PausePanel();
-        pausePanel.Initialize();
-
         var settingsScreen = new SettingsScreen();
         settingsScreen.Initialize();
 
@@ -38,7 +32,6 @@ public static class ScreenInitializer
         return new ScreenInitResult
         {
             TitleScreen = titleScreen,
-            PausePanel = pausePanel,
             SettingsScreen = settingsScreen,
             MapTransition = mapTransition,
             Toast = toast,

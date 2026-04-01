@@ -40,8 +40,7 @@ public class UIRenderState
 
 public class UIController : BaseController<UILogicState, UIRenderState>,
     INotificationHandler<MapLoadedEvent>,
-    INotificationHandler<DamageDealtEvent>,
-    INotificationHandler<GamePausedEvent>
+    INotificationHandler<DamageDealtEvent>
 {
     public override string Name => "UI";
     public override int Order => 300;
@@ -94,9 +93,4 @@ public class UIController : BaseController<UILogicState, UIRenderState>,
         return Task.CompletedTask;
     }
 
-    public Task Handle(GamePausedEvent notification, CancellationToken ct)
-    {
-        LogicState.IsPaused = notification.IsPaused;
-        return Task.CompletedTask;
-    }
 }
