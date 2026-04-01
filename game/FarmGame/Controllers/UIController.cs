@@ -43,6 +43,9 @@ public class UIController : BaseController<UILogicState, UIRenderState>,
     private readonly ToastAlert _toast = new();
     private readonly GameMenuPanel _gameMenu = new();
 
+    /// <summary>Whether the in-game menu is currently open.</summary>
+    public bool IsMenuOpen => _gameMenu.IsOpen;
+
     /// <summary>Fired when player selects "Leave Game" from the menu.</summary>
     public Action OnLeaveGame { get; set; }
 
