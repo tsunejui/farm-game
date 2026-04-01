@@ -1,5 +1,13 @@
 // =============================================================================
-// InitManager.cs — Manages all game initialization and holds results
+// InitManager.cs — Fluent game initialization pipeline
+//
+// Usage (Method Chaining / Fluent Interface):
+//   _init
+//     .WithConfig(contentDir)
+//     .WithDatabase()
+//     .WithLocale()
+//     .WithControllers(controllerManager)
+//     .Bootstrap();
 // =============================================================================
 
 using System;
@@ -8,9 +16,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Serilog;
 using FarmGame.Bootstrap;
 using FarmGame.Data;
+using FarmGame.Queues;
 using FarmGame.Screens;
 using FarmGame.Screens.Components;
 using FarmGame.Screens.HUD;
+using FarmGame.Services;
+
 namespace FarmGame.Core;
 
 public class InitManager
@@ -19,49 +30,84 @@ public class InitManager
     public ScreenManager ScreenManager { get; private set; }
     public GameSession Session { get; private set; }
     public PlayingScreen PlayingScreen { get; private set; }
+    public DataRegistry Registry { get; private set; }
 
     private string _contentDir;
     private string _databaseError;
+    private ControllerManager _controllerManager;
 
-    public void InitializeCore(string contentDir)
+    // ─── Fluent Chain Methods ───────────────────────────────
+
+    /// <summary>Step 1: Load config.yaml and apply game constants.</summary>
+    public InitManager WithConfig(string contentDir)
     {
         _contentDir = contentDir;
-
-        // 1. Config
         ConfigInitializer.Run(contentDir);
+        return this;
+    }
 
-        // 2. Database
+    /// <summary>Step 2: Initialize SQLite database, migrations, player UUID.</summary>
+    public InitManager WithDatabase()
+    {
         var dbResult = DatabaseInitializer.Run();
         if (dbResult.Success)
-        {
             Session = new GameSession(dbResult);
-            LocaleInitializer.Run(contentDir, dbResult.Settings);
+        else
+            _databaseError = dbResult.Error;
+        return this;
+    }
+
+    /// <summary>Step 3: Load locale files based on saved language preference.</summary>
+    public InitManager WithLocale()
+    {
+        if (Session != null)
+        {
+            var dbResult = DatabaseInitializer.GetCachedResult();
+            LocaleInitializer.Run(_contentDir, dbResult?.Settings);
         }
         else
         {
-            _databaseError = dbResult.Error;
-            LocaleInitializer.Run(contentDir, null);
+            LocaleInitializer.Run(_contentDir, null);
         }
-
-        // 3. ScreenManager
-        ScreenManager = new ScreenManager();
+        return this;
     }
+
+    /// <summary>Step 4: Register the ControllerManager for later configuration.</summary>
+    public InitManager WithControllers(ControllerManager controllerManager)
+    {
+        _controllerManager = controllerManager;
+        return this;
+    }
+
+    /// <summary>
+    /// Final step: execute all deferred initialization.
+    /// Must be called after the fluent chain is complete.
+    /// </summary>
+    public InitManager Bootstrap()
+    {
+        ScreenManager = new ScreenManager();
+        Log.Information("[Init] Bootstrap complete");
+        return this;
+    }
+
+    // ─── Content Loading (called from LoadContent) ──────────
 
     public void LoadContent(
         Game game,
         GraphicsDeviceManager graphics,
         string contentDir,
         Action startGameCallback,
-        Func<string, Texture2D> loadTexture)
+        IAssetService assets,
+        QueueManager queue)
     {
-        // 4. Graphics + Font + Myra
+        // Graphics + Font + Myra
         SpriteBatch = GraphicsInitializer.Run(game, graphics, contentDir);
 
-        // 5. Data Registry + Effect definitions
-        var registry = DataInitializer.Run(contentDir);
-        FarmGame.World.Effects.EffectRegistry.LoadDefinitions(contentDir, loadTexture);
+        // Data Registry + Effects
+        Registry = DataInitializer.Run(contentDir);
+        FarmGame.World.Effects.EffectRegistry.LoadDefinitions(contentDir, assets.LoadTexture);
 
-        // 6. Screens
+        // Screens
         var titleScreen = new TitleScreen();
         titleScreen.OnStartGame = startGameCallback;
         titleScreen.HasSavedState = Session?.HasSavedState ?? false;
@@ -78,19 +124,19 @@ public class InitManager
         };
         settingsScreen.OnDeleteCharacter = () =>
         {
-            var loadingScreen = (LoadingScreen)null;
             if (ScreenManager.TryGet(GameState.Loading, out var screen))
-                loadingScreen = (LoadingScreen)screen;
-
-            loadingScreen?.Configure(() =>
             {
-                Session?.DeleteAndReset();
-                titleScreen.HasSavedState = false;
-            }, GameState.TitleScreen);
+                var loadingScreen = (LoadingScreen)screen;
+                loadingScreen.Configure(() =>
+                {
+                    Session?.DeleteAndReset();
+                    titleScreen.HasSavedState = false;
+                }, GameState.TitleScreen);
+            }
         };
         settingsScreen.Initialize();
 
-        var playingScreen = new PlayingScreen(game.GraphicsDevice, registry, loadTexture, Session, contentDir);
+        var playingScreen = new PlayingScreen(game.GraphicsDevice, Registry, assets.LoadTexture, Session, contentDir);
         PlayingScreen = playingScreen;
 
         var loading = new LoadingScreen();
@@ -101,6 +147,9 @@ public class InitManager
         ScreenManager.Register(GameState.Playing, playingScreen);
         ScreenManager.Register(GameState.Loading, loading);
 
-        Log.Information("[Init] All initialization complete");
+        // Configure controllers (QueueManager passed in, controllers subscribe to queues)
+        _controllerManager?.ConfigureAll(assets, Registry, Session, queue);
+
+        Log.Information("[Init] All content loaded");
     }
 }

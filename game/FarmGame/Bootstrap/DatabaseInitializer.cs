@@ -22,6 +22,10 @@ public class DatabaseInitResult
 
 public static class DatabaseInitializer
 {
+    private static DatabaseInitResult _cachedResult;
+
+    public static DatabaseInitResult GetCachedResult() => _cachedResult;
+
     public static DatabaseInitResult Run()
     {
         var dbDir = DatabasePathResolver.GetDatabaseDirectory(GameConstants.GameTitle);
@@ -80,7 +84,7 @@ public static class DatabaseInitializer
 
         Log.Information("[Init] Database initialized");
 
-        return new DatabaseInitResult
+        _cachedResult = new DatabaseInitResult
         {
             Database = database,
             Settings = settings,
@@ -89,5 +93,6 @@ public static class DatabaseInitializer
             PlayerUuid = playerUuid,
             SavedState = savedState,
         };
+        return _cachedResult;
     }
 }

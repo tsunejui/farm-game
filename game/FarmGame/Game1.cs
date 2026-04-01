@@ -1,15 +1,12 @@
 // =============================================================================
-// Game1.cs — Main game entry class (Controller-based architecture)
+// Game1.cs — Main game entry class
 //
 // Lifecycle:
-//   Game1()      → Initialize QueueManager, ControllerManager, GraphicsDevice.
-//   Initialize() → Core bootstrap (config, database, locale).
-//   LoadContent() → Create AssetService, configure controllers, load screens.
-//   Update()     → InputSystem.Process → Parallel UpdateLogic → Events → Sync.
-//   Draw()       → Responsibility chain: controllers drawn in Order sequence.
-//
-// Once in Playing state, the world never stops. Menu panels are managed
-// by UIController as in-game overlays, not as separate game states.
+//   Game1()      → Create InitManager, QueueManager, ControllerManager.
+//   Initialize() → Fluent bootstrap chain: Config → Database → Locale → Controllers.
+//   LoadContent() → Load assets, screens, configure controllers.
+//   Update()     → InputSystem → Parallel Update → ProcessQueues → Sync.
+//   Draw()       → Responsibility chain rendering.
 // =============================================================================
 
 using System.IO;
@@ -18,7 +15,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Serilog;
 using FarmGame.Core;
 using FarmGame.Queues;
-using FarmGame.Bootstrap;
 using FarmGame.Screens;
 using FarmGame.Services;
 
@@ -30,16 +26,16 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
     private string _contentDir;
 
-    private QueueManager _queue;
-    private ControllerManager _controllerManager;
+    private readonly InitManager _init;
+    private readonly QueueManager _queue;
+    private readonly ControllerManager _controllerManager;
     private IAssetService _assets;
     private InputSystem _input;
 
     private GameState _gameState;
-    private InitManager _init;
 
     // =========================================================================
-    // Constructor
+    // Constructor — Create all managers
     // =========================================================================
     public Game1()
     {
@@ -47,36 +43,26 @@ public class Game1 : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
+        _init = new InitManager();
         _queue = new QueueManager();
         _controllerManager = new ControllerManager();
     }
 
     // =========================================================================
-    // Initialize
+    // Initialize — Fluent bootstrap chain
     // =========================================================================
     protected override void Initialize()
     {
         _contentDir = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
 
-        _init = new InitManager();
-        _init.InitializeCore(_contentDir);
+        _init
+            .WithConfig(_contentDir)
+            .WithDatabase()
+            .WithLocale()
+            .WithControllers(_controllerManager)
+            .Bootstrap();
 
-        _gameState = GameState.TitleScreen;
-        base.Initialize();
-    }
-
-    // =========================================================================
-    // LoadContent
-    // =========================================================================
-    protected override void LoadContent()
-    {
-        _assets = new AssetService(GraphicsDevice, Content, _contentDir);
-
-        _init.LoadContent(this, _graphics, _contentDir, StartGame, _assets.LoadTexture);
-        _spriteBatch = _init.SpriteBatch;
-
-        var registry = DataInitializer.GetCachedRegistry() ?? new Data.DataRegistry();
-
+        // Wire controller callbacks (screen transitions triggered from in-game menu)
         _controllerManager.OnLeaveGame = () =>
         {
             _controllerManager.World?.SaveState();
@@ -90,9 +76,21 @@ public class Game1 : Game
             if (_init.ScreenManager.TryGet(GameState.Settings, out var settings))
                 settings.OnEnter(GameState.Playing);
         };
-        _controllerManager.ConfigureAll(_assets, registry, _init.Session, _queue);
 
+        _gameState = GameState.TitleScreen;
+        base.Initialize();
+    }
+
+    // =========================================================================
+    // LoadContent — Assets, screens, controllers
+    // =========================================================================
+    protected override void LoadContent()
+    {
+        _assets = new AssetService(GraphicsDevice, Content, _contentDir);
         _input = new InputSystem(_queue);
+
+        _init.LoadContent(this, _graphics, _contentDir, StartGame, _assets, _queue);
+        _spriteBatch = _init.SpriteBatch;
 
         Log.Information("[Game1] Initialization complete");
     }
@@ -126,7 +124,7 @@ public class Game1 : Game
             return;
         }
 
-        // Pre-game screens (title, loading) — world not started yet
+        // Pre-game screens (title, loading) — world not started
         if (_gameState != GameState.Playing)
         {
             if (_init.ScreenManager.TryGet(_gameState, out var screen))
@@ -139,7 +137,7 @@ public class Game1 : Game
             return;
         }
 
-        // In-game — world always runs, no pause state
+        // In-game — world always runs
         _controllerManager.ParallelUpdate(gameTime);
         _queue.ProcessAll();
         _controllerManager.SyncAll();
@@ -157,7 +155,6 @@ public class Game1 : Game
         if (_gameState == GameState.Playing)
             _controllerManager.DrawAll(_spriteBatch);
 
-        // Pre-game screens (title, settings, loading)
         if (_gameState != GameState.Playing &&
             _init.ScreenManager.TryGet(_gameState, out var activeScreen))
             activeScreen.Draw(_spriteBatch);
