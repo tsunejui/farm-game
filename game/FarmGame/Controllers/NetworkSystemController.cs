@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using FarmGame.Core;
-using FarmGame.Queues;
 
 namespace FarmGame.Controllers;
 

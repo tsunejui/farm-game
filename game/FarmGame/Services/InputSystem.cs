@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input;
-using FarmGame.Queues;
+using FarmGame.Core;
 
 namespace FarmGame.Services;
 
