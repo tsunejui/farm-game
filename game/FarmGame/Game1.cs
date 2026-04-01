@@ -136,6 +136,9 @@ public class Game1 : Game
             return;
         }
 
+        // Sync input blocking — menu open = game input suppressed
+        _input.InputBlocked = _controllerManager.UI?.IsMenuOpen ?? false;
+
         // In-game — world always runs
         _controllerManager.ParallelUpdate(gameTime);
         _queue.ProcessAll();
