@@ -135,8 +135,11 @@ public class Game1 : Game
             return;
         }
 
-        // Sync input blocking before update
-        _input.InputBlocked = _controllerManager.UI?.IsMenuOpen ?? false;
+        // Sync input blocking — menu open = all game input suppressed
+        bool menuOpen = _controllerManager.UI?.IsMenuOpen ?? false;
+        _input.InputBlocked = menuOpen;
+        if (_controllerManager.World != null)
+            _controllerManager.World.InputBlocked = menuOpen;
 
         // Controllers update: parallel threads → queue drain → state sync
         _controllerManager.Update(gameTime);
