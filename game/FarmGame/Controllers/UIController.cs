@@ -1,10 +1,11 @@
 // =============================================================================
-// UIController.cs — HUD, toast alerts, map transition, dialogue overlays
+// UIController.cs — HUD, toast alerts, map transition, in-game menu
 //
 // Order: 300 (drawn above particles, below network overlay)
-// Manages all screen-space UI elements.
+// Manages all screen-space UI elements including the ESC game menu.
 // =============================================================================
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -22,46 +23,55 @@ namespace FarmGame.Controllers;
 
 public class UILogicState
 {
-    public bool IsMapTransitionActive { get; set; }
-    public string MapTransitionName { get; set; } = "";
-    public float MapTransitionTimer { get; set; }
-    public bool IsPaused { get; set; }
+    public bool IsMenuOpen { get; set; }
 }
 
 public class UIRenderState
 {
-    public bool IsMapTransitionActive { get; set; }
-    public string MapTransitionName { get; set; } = "";
-    public float MapTransitionTimer { get; set; }
-    public bool IsPaused { get; set; }
+    public bool IsMenuOpen { get; set; }
 }
 
 // ─── Controller ─────────────────────────────────────────────
 
 public class UIController : BaseController<UILogicState, UIRenderState>,
     INotificationHandler<MapLoadedEvent>,
-    INotificationHandler<DamageDealtEvent>
+    INotificationHandler<DamageDealtEvent>,
+    INotificationHandler<TogglePauseEvent>
 {
     public override string Name => "UI";
     public override int Order => 300;
 
     private readonly MapTransitionOverlay _mapTransition = new();
     private readonly ToastAlert _toast = new();
+    private readonly GameMenuPanel _gameMenu = new();
+
+    /// <summary>Fired when player selects "Leave Game" from the menu.</summary>
+    public Action OnLeaveGame { get; set; }
+
+    /// <summary>Fired when player selects "Settings" from the menu.</summary>
+    public Action OnSettings { get; set; }
 
     public override void Subscribe(QueueManager queue) { }
-    public override void LoadResource(GraphicsDevice graphicsDevice, string contentDir) { }
+
+    public override void LoadResource(GraphicsDevice graphicsDevice, string contentDir)
+    {
+        _gameMenu.OnLeaveGame = () => OnLeaveGame?.Invoke();
+        _gameMenu.OnSettings = () => OnSettings?.Invoke();
+    }
 
     public override void UpdateLogic(GameTime gameTime)
     {
         float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
         _mapTransition.Update(dt);
         _toast.Update(dt);
+        _gameMenu.Update();
+
+        LogicState.IsMenuOpen = _gameMenu.IsOpen;
     }
 
     protected override void CopyState(UILogicState logic, UIRenderState render)
     {
-        render.IsMapTransitionActive = _mapTransition.IsActive;
-        render.IsPaused = logic.IsPaused;
+        render.IsMenuOpen = logic.IsMenuOpen;
     }
 
     public override void DrawRender(SpriteBatch spriteBatch)
@@ -70,10 +80,10 @@ public class UIController : BaseController<UILogicState, UIRenderState>,
         _toast.Draw(spriteBatch);
         if (_mapTransition.IsActive)
             _mapTransition.Draw(spriteBatch);
+        _gameMenu.Draw(spriteBatch);
         spriteBatch.End();
     }
 
-    /// <summary>Start map transition overlay (called by WorldController after map load).</summary>
     public void ShowMapTransition(string mapName)
     {
         _mapTransition.Start(mapName);
@@ -89,8 +99,12 @@ public class UIController : BaseController<UILogicState, UIRenderState>,
 
     public Task Handle(DamageDealtEvent notification, CancellationToken ct)
     {
-        // Damage numbers are handled by ParticleController
         return Task.CompletedTask;
     }
 
+    public Task Handle(TogglePauseEvent notification, CancellationToken ct)
+    {
+        _gameMenu.Toggle();
+        return Task.CompletedTask;
+    }
 }

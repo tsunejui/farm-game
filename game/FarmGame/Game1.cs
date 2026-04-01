@@ -76,6 +76,20 @@ public class Game1 : Game
         _spriteBatch = _init.SpriteBatch;
 
         var registry = DataInitializer.GetCachedRegistry() ?? new Data.DataRegistry();
+
+        _controllerManager.OnLeaveGame = () =>
+        {
+            _controllerManager.World?.SaveState();
+            _gameState = GameState.TitleScreen;
+            if (_init.ScreenManager.TryGet(GameState.TitleScreen, out var title))
+                title.OnEnter(GameState.Playing);
+        };
+        _controllerManager.OnSettings = () =>
+        {
+            _gameState = GameState.Settings;
+            if (_init.ScreenManager.TryGet(GameState.Settings, out var settings))
+                settings.OnEnter(GameState.Playing);
+        };
         _controllerManager.ConfigureAll(_assets, registry, _init.Session, _queue);
 
         _input = new InputSystem(_queue);

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,6 +28,12 @@ public class ControllerManager
     /// Create and register all controllers with their dependencies.
     /// Encapsulates the full controller wiring — Game1 just calls this once.
     /// </summary>
+    /// <summary>Callback when player selects "Leave Game" from in-game menu.</summary>
+    public Action OnLeaveGame { get; set; }
+
+    /// <summary>Callback when player selects "Settings" from in-game menu.</summary>
+    public Action OnSettings { get; set; }
+
     public void ConfigureAll(
         IAssetService assets,
         DataRegistry registry,
@@ -41,6 +48,8 @@ public class ControllerManager
         Register(new ParticleController());
 
         UI = new UIController();
+        UI.OnLeaveGame = () => OnLeaveGame?.Invoke();
+        UI.OnSettings = () => OnSettings?.Invoke();
         Register(UI);
 
         Register(new NetworkSystemController());
