@@ -95,10 +95,13 @@ public class Player
         CritDamage = savedState.CritDamage;
     }
 
+    /// <summary>When true, player ignores all keyboard input.</summary>
+    public bool InputBlocked { get; set; }
+
     public void Update(GameTime gameTime)
     {
         float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        var keyboard = KeyboardExtended.GetState();
+        var keyboard = InputBlocked ? default : KeyboardExtended.GetState();
 
         foreach (var action in _actions)
             action.Update(deltaTime, keyboard);

@@ -38,6 +38,7 @@ public class WorldLogicState
     public Camera2D Camera { get; set; }
     public float AutoSaveTimer { get; set; }
     public bool IsPaused { get; set; }
+    public bool InputBlocked { get; set; }
     public bool IsLoading { get; set; }
     public int LoadingFrameCount { get; set; }
     public Action DeferredLoadAction { get; set; }
@@ -64,6 +65,9 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
 {
     public override string Name => "World";
     public override int Order => 100;
+
+    /// <summary>Set to true to block player keyboard input (e.g. menu open).</summary>
+    public bool InputBlocked { set => LogicState.InputBlocked = value; }
 
     private readonly IAssetService _assets;
     private readonly DataRegistry _registry;
@@ -169,9 +173,12 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
             }
         }
 
-        // Player update
+        // Player update (block input when menu is open)
         if (LogicState.Player != null && LogicState.CurrentGameTime != null)
+        {
+            LogicState.Player.InputBlocked = LogicState.InputBlocked;
             LogicState.Player.Update(LogicState.CurrentGameTime);
+        }
 
         // Map update (entities, AI, effects)
         LogicState.CurrentMap.Update(dt);
