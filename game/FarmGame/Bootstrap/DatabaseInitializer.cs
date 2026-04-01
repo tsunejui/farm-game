@@ -2,7 +2,8 @@ using System;
 using Serilog;
 using FarmGame.Core;
 using FarmGame.Persistence;
-using FarmGame.Persistence.Models;
+using FarmGame.Models;
+using FarmGame.Persistence.Entities;
 using FarmGame.Persistence.Repositories;
 
 namespace FarmGame.Bootstrap;

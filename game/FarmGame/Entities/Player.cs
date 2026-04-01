@@ -7,7 +7,7 @@ using MonoGame.Extended.Input;
 using FarmGame.Core;
 using FarmGame.Entities.Actions;
 using FarmGame.Entities.Actions.Player;
-using FarmGame.Persistence.Models;
+using FarmGame.Models;
 using FarmGame.World;
 
 namespace FarmGame.Entities;

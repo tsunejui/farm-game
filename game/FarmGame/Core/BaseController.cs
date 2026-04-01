@@ -1,7 +1,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarmGame.Architecture;
+using FarmGame.Queues;
+
+namespace FarmGame.Core;
 
 /// <summary>
 /// Base class for all controllers implementing double-buffered state.

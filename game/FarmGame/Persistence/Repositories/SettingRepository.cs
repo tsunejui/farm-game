@@ -1,5 +1,5 @@
 using System;
-using FarmGame.Persistence.Models;
+using FarmGame.Persistence.Entities;
 
 namespace FarmGame.Persistence.Repositories;
 

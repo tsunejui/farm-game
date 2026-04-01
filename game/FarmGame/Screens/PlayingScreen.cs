@@ -11,7 +11,7 @@ using FarmGame.Bootstrap;
 using FarmGame.Camera;
 using FarmGame.Core;
 using FarmGame.Data;
-using FarmGame.Persistence.Models;
+using FarmGame.Models;
 using FarmGame.Screens.HUD;
 using FarmGame.World;
 using FarmGame.World.Interactions;

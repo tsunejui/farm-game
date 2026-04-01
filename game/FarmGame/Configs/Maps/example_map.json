@@ -1,0 +1,301 @@
+{ "compressionlevel":-1,
+ "height":15,
+ "infinite":false,
+ "layers":[
+        {
+         "data":[2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 4, 4, 4, 4, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
+         "height":15,
+         "id":1,
+         "name":"terrain",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":20,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "data":[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 8, 0, 0, 0, 0, 8, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 8, 0, 0, 0, 0, 8, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 9,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0,
+            0, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 5, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         "height":15,
+         "id":2,
+         "name":"objects",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":20,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":3,
+         "name":"spawns",
+         "objects":[
+                {
+                 "height":32,
+                 "id":1,
+                 "name":"player_start",
+                 "opacity":1,
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":160,
+                 "y":224
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
+        }],
+ "nextlayerid":4,
+ "nextobjectid":2,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.12.1",
+ "tileheight":32,
+ "tilesets":[
+        {
+         "columns":4,
+         "firstgid":1,
+         "image":"..\/..\/..\/..\/build\/maps\/example_map_tiles.png",
+         "imageheight":96,
+         "imagewidth":128,
+         "margin":0,
+         "name":"example_map_tiles",
+         "spacing":0,
+         "tilecount":9,
+         "tileheight":32,
+         "tiles":[
+                {
+                 "id":0,
+                 "properties":[
+                        {
+                         "name":"color",
+                         "type":"string",
+                         "value":"#8B7765"
+                        }, 
+                        {
+                         "name":"layer",
+                         "type":"string",
+                         "value":"terrain"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"dirt"
+                        }]
+                }, 
+                {
+                 "id":1,
+                 "properties":[
+                        {
+                         "name":"color",
+                         "type":"string",
+                         "value":"#228B22"
+                        }, 
+                        {
+                         "name":"layer",
+                         "type":"string",
+                         "value":"terrain"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"grass"
+                        }]
+                }, 
+                {
+                 "id":2,
+                 "properties":[
+                        {
+                         "name":"color",
+                         "type":"string",
+                         "value":"#D2B48C"
+                        }, 
+                        {
+                         "name":"layer",
+                         "type":"string",
+                         "value":"terrain"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"path"
+                        }]
+                }, 
+                {
+                 "id":3,
+                 "properties":[
+                        {
+                         "name":"color",
+                         "type":"string",
+                         "value":"#EED6AF"
+                        }, 
+                        {
+                         "name":"layer",
+                         "type":"string",
+                         "value":"terrain"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"sand"
+                        }]
+                }, 
+                {
+                 "id":4,
+                 "properties":[
+                        {
+                         "name":"color",
+                         "type":"string",
+                         "value":"#1E90FF"
+                        }, 
+                        {
+                         "name":"is_collidable",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"layer",
+                         "type":"string",
+                         "value":"object"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"water_body"
+                        }]
+                }, 
+                {
+                 "id":5,
+                 "properties":[
+                        {
+                         "name":"color",
+                         "type":"string",
+                         "value":"#146414"
+                        }, 
+                        {
+                         "name":"is_collidable",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"layer",
+                         "type":"string",
+                         "value":"object"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"tree"
+                        }]
+                }, 
+                {
+                 "id":6,
+                 "properties":[
+                        {
+                         "name":"color",
+                         "type":"string",
+                         "value":"#808080"
+                        }, 
+                        {
+                         "name":"is_collidable",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"layer",
+                         "type":"string",
+                         "value":"object"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"rock"
+                        }]
+                }, 
+                {
+                 "id":7,
+                 "properties":[
+                        {
+                         "name":"color",
+                         "type":"string",
+                         "value":"#8B5A2B"
+                        }, 
+                        {
+                         "name":"is_collidable",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"layer",
+                         "type":"string",
+                         "value":"object"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"fence"
+                        }]
+                }, 
+                {
+                 "id":8,
+                 "properties":[
+                        {
+                         "name":"color",
+                         "type":"string",
+                         "value":"#B464FF"
+                        }, 
+                        {
+                         "name":"is_collidable",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"layer",
+                         "type":"string",
+                         "value":"object"
+                        }, 
+                        {
+                         "name":"type",
+                         "type":"string",
+                         "value":"portal"
+                        }]
+                }],
+         "tilewidth":32
+        }],
+ "tilewidth":32,
+ "type":"map",
+ "version":"1.10",
+ "width":20
+}

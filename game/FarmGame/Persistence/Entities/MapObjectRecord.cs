@@ -1,6 +1,6 @@
 using SQLite;
 
-namespace FarmGame.Persistence.Models;
+namespace FarmGame.Persistence.Entities;
 
 [Table("map_object")]
 public class MapObjectRecord

@@ -1,7 +1,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace FarmGame.Architecture;
+using FarmGame.Queues;
+
+namespace FarmGame.Core;
 
 /// <summary>
 /// Interface for all game controllers in the responsibility chain.

@@ -11,9 +11,9 @@ using MediatR;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Serilog;
-using FarmGame.Architecture;
-using FarmGame.Architecture.Events;
 using FarmGame.Core;
+using FarmGame.Queues;
+using FarmGame.Queues.Events;
 using FarmGame.Screens.HUD;
 
 namespace FarmGame.Controllers;
