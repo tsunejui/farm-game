@@ -15,7 +15,7 @@ using MonoGame.Extended;
 using MonoGame.Extended.Input;
 using FarmGame.Core;
 
-namespace FarmGame.Screens.HUD;
+namespace FarmGame.Screens.Panels;
 
 public class DialogueOverlay
 {

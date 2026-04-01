@@ -7,9 +7,11 @@ using Myra.Graphics2D.UI;
 using MonoGame.Extended.Input;
 using FarmGame.Core;
 
-namespace FarmGame.Screens;
+using FarmGame.Screens.Components;
 
-public class PauseScreen : IScreen
+namespace FarmGame.Screens.Panels;
+
+public class PausePanel : IScreen
 {
     private Desktop _desktop;
     private Button[] _buttons;

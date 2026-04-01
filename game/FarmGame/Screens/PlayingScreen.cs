@@ -12,7 +12,7 @@ using FarmGame.Camera;
 using FarmGame.Core;
 using FarmGame.Data;
 using FarmGame.Models;
-using FarmGame.Screens.HUD;
+using FarmGame.Screens.Panels;
 using FarmGame.World;
 using FarmGame.World.Interactions;
 using Serilog;

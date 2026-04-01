@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
 using FarmGame.Core;
 
-namespace FarmGame.Screens;
+namespace FarmGame.Screens.Components;
 
 public class LoadingScreen : IScreen
 {

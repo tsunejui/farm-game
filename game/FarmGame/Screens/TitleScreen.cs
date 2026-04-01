@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using Myra.Graphics2D.UI;
 using MonoGame.Extended.Input;
 using FarmGame.Core;
+using FarmGame.Screens.Components;
 
 namespace FarmGame.Screens;
 

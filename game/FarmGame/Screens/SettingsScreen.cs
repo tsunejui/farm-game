@@ -6,6 +6,7 @@ using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 using MonoGame.Extended.Input;
 using FarmGame.Core;
+using FarmGame.Screens.Components;
 
 namespace FarmGame.Screens;
 
