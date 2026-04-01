@@ -8,8 +8,8 @@
 //   Update()     → InputSystem.Process → Parallel UpdateLogic → Events → Sync.
 //   Draw()       → Responsibility chain: controllers drawn in Order sequence.
 //
-// Note: The game world continues running even when menu panels are open.
-//       Panels (pause, settings) are overlays, not full-screen state changes.
+// Once in Playing state, the world never stops. Menu panels are managed
+// by UIController as in-game overlays, not as separate game states.
 // =============================================================================
 
 using System.IO;
@@ -103,9 +103,6 @@ public class Game1 : Game
 
     // =========================================================================
     // Update
-    //
-    // Pre-game screens (title) block the world.
-    // In-game panels (pause, settings) are overlays — the world keeps running.
     // =========================================================================
     protected override void Update(GameTime gameTime)
     {
@@ -115,8 +112,8 @@ public class Game1 : Game
             return;
         }
 
-        // ── Pre-game screens: title, loading (world not yet started) ──
-        if (_gameState == GameState.TitleScreen || _gameState == GameState.Loading)
+        // Pre-game screens (title, loading) — world not started yet
+        if (_gameState != GameState.Playing)
         {
             if (_init.ScreenManager.TryGet(_gameState, out var screen))
             {
@@ -128,59 +125,27 @@ public class Game1 : Game
             return;
         }
 
-        // ── In-game: world always runs, panels are overlays ──
-
-        // Toggle pause overlay
-        if (_input.PauseToggled)
-        {
-            if (_gameState == GameState.Paused)
-            {
-                _gameState = GameState.Playing;
-            }
-            else if (_gameState == GameState.Playing)
-            {
-                _gameState = GameState.Paused;
-                if (_init.ScreenManager.TryGet(GameState.Paused, out var panel))
-                    panel.OnEnter(GameState.Playing);
-            }
-        }
-
-        // World update (always runs regardless of panel state)
+        // In-game — world always runs, no pause state
         _controllerManager.ParallelUpdate(gameTime);
         _queue.ProcessAll();
         _controllerManager.SyncAll();
-
-        // Panel update (if an overlay is open)
-        if (_gameState != GameState.Playing &&
-            _init.ScreenManager.TryGet(_gameState, out var overlay))
-        {
-            var transition = overlay.Update(gameTime);
-            if (transition != ScreenTransition.None)
-                HandleTransition(transition);
-        }
 
         base.Update(gameTime);
     }
 
     // =========================================================================
     // Draw
-    //
-    // World is always drawn when in-game. Panels render on top as overlays.
     // =========================================================================
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.Black);
 
-        bool inGame = _gameState == GameState.Playing
-                   || _gameState == GameState.Paused
-                   || _gameState == GameState.Settings;
-
-        // Draw world (controller chain) when in-game
-        if (inGame)
+        if (_gameState == GameState.Playing)
             _controllerManager.DrawAll(_spriteBatch);
 
-        // Draw active screen/panel on top
-        if (_init.ScreenManager.TryGet(_gameState, out var activeScreen))
+        // Pre-game screens (title, settings, loading)
+        if (_gameState != GameState.Playing &&
+            _init.ScreenManager.TryGet(_gameState, out var activeScreen))
             activeScreen.Draw(_spriteBatch);
 
         base.Draw(gameTime);

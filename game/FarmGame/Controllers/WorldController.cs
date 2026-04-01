@@ -62,8 +62,7 @@ public class WorldRenderState
 public class WorldController : BaseController<WorldLogicState, WorldRenderState>,
     INotificationHandler<InputEvent>,
     INotificationHandler<DatabaseDisconnectedEvent>,
-    INotificationHandler<DatabaseReconnectedEvent>,
-    INotificationHandler<GamePausedEvent>
+    INotificationHandler<DatabaseReconnectedEvent>
 {
     public override string Name => "World";
     public override int Order => 100;
@@ -310,9 +309,4 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
         return Task.CompletedTask;
     }
 
-    public Task Handle(GamePausedEvent notification, CancellationToken ct)
-    {
-        LogicState.IsPaused = notification.IsPaused;
-        return Task.CompletedTask;
-    }
 }

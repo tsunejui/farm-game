@@ -5,6 +5,5 @@ public enum GameState
     TitleScreen,
     Settings,
     Playing,
-    Paused,
     Loading
 }

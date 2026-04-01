@@ -42,9 +42,6 @@ public record VFXRequestEvent(
 /// <summary>Toggle inventory open/close.</summary>
 public record InventoryToggleEvent(bool IsOpen) : INotification;
 
-/// <summary>Game should pause/unpause.</summary>
-public record GamePausedEvent(bool IsPaused) : INotification;
-
 // ─── System Events ──────────────────────────────────────────
 /// <summary>Database connection was lost.</summary>
 public record DatabaseDisconnectedEvent(string Reason) : INotification;
