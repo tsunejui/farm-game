@@ -3,10 +3,13 @@
 //
 // Lifecycle:
 //   Game1()      → Create InitManager, QueueManager, ControllerManager.
-//   Initialize() → Fluent bootstrap: Config → Database → Locale → Controllers.
-//   LoadContent() → Assets, screens, controller configuration.
-//   Update()     → InputSystem → ControllerManager.Update (parallel threads).
+//   Initialize() → Fluent bootstrap, wire callbacks.
+//   LoadContent() → Create assets, controllers, register scenes in ScreenManager.
+//   Update()     → InputSystem → ControllerManager.Update (parallel).
 //   Draw()       → ControllerManager.Draw (single-thread responsibility chain).
+//
+// ScreenManager decides which controllers are active per scene.
+// No more manual if/else on GameState in Update/Draw.
 // =============================================================================
 
 using System.IO;
@@ -14,7 +17,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Serilog;
 using FarmGame.Core;
+using FarmGame.Controllers;
 using FarmGame.Screens;
+using FarmGame.Screens.HUD;
 using FarmGame.Services;
 
 namespace FarmGame;
@@ -28,10 +33,9 @@ public class Game1 : Game
     private readonly InitManager _init;
     private readonly QueueManager _queue;
     private readonly ControllerManager _controllerManager;
+    private ScreenManager _screenManager;
     private IAssetService _assets;
     private InputSystem _input;
-
-    private GameState _gameState;
 
     // =========================================================================
     // Constructor
@@ -61,21 +65,10 @@ public class Game1 : Game
             .WithControllers(_controllerManager)
             .Bootstrap();
 
-        _controllerManager.OnLeaveGame = () =>
-        {
-            _controllerManager.World?.SaveState();
-            _gameState = GameState.TitleScreen;
-            if (_init.ScreenManager.TryGet(GameState.TitleScreen, out var title))
-                title.OnEnter(GameState.Playing);
-        };
-        _controllerManager.OnSettings = () =>
-        {
-            _gameState = GameState.Settings;
-            if (_init.ScreenManager.TryGet(GameState.Settings, out var settings))
-                settings.OnEnter(GameState.Playing);
-        };
+        // Wire controller callbacks for scene transitions
+        _controllerManager.OnLeaveGame = () => _screenManager.TransitionTo(GameState.TitleScreen);
+        _controllerManager.OnSettings = () => _screenManager.TransitionTo(GameState.Settings);
 
-        _gameState = GameState.TitleScreen;
         base.Initialize();
     }
 
@@ -87,8 +80,80 @@ public class Game1 : Game
         _assets = new AssetService(GraphicsDevice, Content, _contentDir);
         _input = new InputSystem(_queue);
 
-        _init.LoadContent(this, _graphics, _contentDir, StartGame, _assets, _queue);
-        _spriteBatch = _init.SpriteBatch;
+        // Create screen-based controllers
+        var titleScreen = new TitleScreen();
+        titleScreen.OnStartGame = StartGame;
+        titleScreen.HasSavedState = _init.Session?.HasSavedState ?? false;
+        titleScreen.Initialize();
+
+        var settingsScreen = new SettingsScreen();
+        settingsScreen.HasSavedState = () => _init.Session?.HasSavedState ?? false;
+        settingsScreen.OnLanguageChanged = (lang) =>
+        {
+            _init.Session?.ChangeLanguage(lang, _contentDir);
+        };
+        settingsScreen.OnDeleteCharacter = () =>
+        {
+            _controllerManager.Loading?.Configure(() =>
+            {
+                _init.Session?.DeleteAndReset();
+                titleScreen.HasSavedState = false;
+            }, GameState.TitleScreen);
+            _screenManager.TransitionTo(GameState.Loading);
+        };
+        settingsScreen.Initialize();
+
+        var loadingScreen = new LoadingScreen();
+        loadingScreen.Initialize();
+
+        var titleCtrl = new TitleController(titleScreen);
+        var settingsCtrl = new SettingsController(settingsScreen);
+        var loadingCtrl = new LoadingController(loadingScreen);
+
+        // Wire transition callbacks
+        void HandleTransition(ScreenTransition t)
+        {
+            if (t.Exit) { Exit(); return; }
+            if (t.Target.HasValue) _screenManager.TransitionTo(t.Target.Value);
+        }
+        titleCtrl.OnTransition = HandleTransition;
+        settingsCtrl.OnTransition = HandleTransition;
+        loadingCtrl.OnTransition = HandleTransition;
+
+        // Load data & effects
+        _spriteBatch = Bootstrap.GraphicsInitializer.Run(this, _graphics, _contentDir);
+        Bootstrap.DataInitializer.Run(_contentDir);
+        World.Effects.EffectRegistry.LoadDefinitions(_contentDir, _assets.LoadTexture);
+
+        // Configure all controllers
+        var registry = Bootstrap.DataInitializer.GetCachedRegistry() ?? new Data.DataRegistry();
+        _controllerManager.ConfigureAll(_assets, registry, _init.Session, _queue,
+            titleCtrl, settingsCtrl, loadingCtrl);
+
+        // ScreenManager: register scenes (which controllers per GameState)
+        _screenManager = new ScreenManager(_controllerManager);
+
+        _screenManager.RegisterScene(GameState.TitleScreen, () =>
+            new IController[] { _controllerManager.Title });
+
+        _screenManager.RegisterScene(GameState.Settings, () =>
+            new IController[] { _controllerManager.Settings });
+
+        _screenManager.RegisterScene(GameState.Loading, () =>
+            new IController[] { _controllerManager.Loading });
+
+        _screenManager.RegisterScene(GameState.Playing, () =>
+            new IController[]
+            {
+                _controllerManager.Get<BackgroundController>(),
+                _controllerManager.World,
+                _controllerManager.Get<ParticleController>(),
+                _controllerManager.UI,
+                _controllerManager.Get<NetworkSystemController>(),
+            });
+
+        // Start on title screen
+        _screenManager.Initialize(GameState.TitleScreen);
 
         Log.Information("[Game1] Initialization complete");
     }
@@ -97,7 +162,7 @@ public class Game1 : Game
     {
         var savedState = _init.Session?.LoadPlayer();
         _controllerManager.World.StartGame(savedState);
-        _gameState = GameState.Playing;
+        _screenManager.TransitionTo(GameState.Playing);
     }
 
     // =========================================================================
@@ -112,7 +177,7 @@ public class Game1 : Game
     }
 
     // =========================================================================
-    // Update — Input → ControllerManager.Update (parallel threads + sync)
+    // Update — InputSystem → ControllerManager.Update (parallel)
     // =========================================================================
     protected override void Update(GameTime gameTime)
     {
@@ -122,26 +187,13 @@ public class Game1 : Game
             return;
         }
 
-        // Pre-game screens (title, loading)
-        if (_gameState != GameState.Playing)
-        {
-            if (_init.ScreenManager.TryGet(_gameState, out var screen))
-            {
-                var transition = screen.Update(gameTime);
-                if (transition != ScreenTransition.None)
-                    HandleTransition(transition);
-            }
-            base.Update(gameTime);
-            return;
-        }
-
-        // Sync input blocking — menu open = all game input suppressed
+        // Sync input blocking
         bool menuOpen = _controllerManager.UI?.IsMenuOpen ?? false;
         _input.InputBlocked = menuOpen;
         if (_controllerManager.World != null)
             _controllerManager.World.InputBlocked = menuOpen;
 
-        // Controllers update: parallel threads → queue drain → state sync
+        // All active controllers update (parallel) → queue drain → sync
         _controllerManager.Update(gameTime);
 
         base.Update(gameTime);
@@ -153,39 +205,7 @@ public class Game1 : Game
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.Black);
-
-        if (_gameState == GameState.Playing)
-            _controllerManager.Draw(_spriteBatch);
-
-        if (_gameState != GameState.Playing &&
-            _init.ScreenManager.TryGet(_gameState, out var activeScreen))
-            activeScreen.Draw(_spriteBatch);
-
+        _controllerManager.Draw(_spriteBatch);
         base.Draw(gameTime);
-    }
-
-    // =========================================================================
-    // HandleTransition
-    // =========================================================================
-    private void HandleTransition(ScreenTransition transition)
-    {
-        if (transition.Exit)
-        {
-            Exit();
-            return;
-        }
-
-        if (transition.Target.HasValue)
-        {
-            var target = transition.Target.Value;
-
-            if (_init.ScreenManager.TryGet(_gameState, out var currentScreen))
-                currentScreen.OnExit(target);
-
-            if (_init.ScreenManager.TryGet(target, out var nextScreen))
-                nextScreen.OnEnter(_gameState);
-
-            _gameState = target;
-        }
     }
 }

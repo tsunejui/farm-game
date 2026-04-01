@@ -1,29 +1,79 @@
 // =============================================================================
-// ScreenManager.cs — Manages screen registration, lookup, and lifecycle
+// ScreenManager.cs — Scene orchestrator
+//
+// Manages game scenes (GameState). Each scene defines which controllers
+// are active. On scene transition, ScreenManager swaps the active set
+// in ControllerManager.
+//
+// Scenes:
+//   TitleScreen → TitleController only
+//   Settings    → SettingsController only
+//   Loading     → LoadingController only
+//   Playing     → Background + World + Particle + UI + Network
 // =============================================================================
 
+using System;
 using System.Collections.Generic;
-using FarmGame.Screens;
+using Serilog;
 
 namespace FarmGame.Core;
 
+/// <summary>
+/// A scene definition: which controllers to activate for a given GameState.
+/// </summary>
+public class SceneDefinition
+{
+    public GameState State { get; init; }
+    public Func<IController[]> ControllerFactory { get; init; }
+}
+
+/// <summary>
+/// Orchestrates scene transitions by swapping active controllers.
+/// </summary>
 public class ScreenManager
 {
-    private readonly Dictionary<GameState, IScreen> _screens = new();
+    private readonly Dictionary<GameState, SceneDefinition> _scenes = new();
+    private readonly ControllerManager _controllerManager;
+    private GameState _currentState;
 
-    public void Register(GameState state, IScreen screen)
+    public GameState CurrentState => _currentState;
+
+    public ScreenManager(ControllerManager controllerManager)
     {
-        _screens[state] = screen;
+        _controllerManager = controllerManager;
     }
 
-    public bool TryGet(GameState state, out IScreen screen)
+    /// <summary>Register a scene definition for a game state.</summary>
+    public void RegisterScene(GameState state, Func<IController[]> controllerFactory)
     {
-        return _screens.TryGetValue(state, out screen);
+        _scenes[state] = new SceneDefinition { State = state, ControllerFactory = controllerFactory };
     }
 
-    public void RebuildAll()
+    /// <summary>
+    /// Transition to a new scene. Deactivates all controllers,
+    /// then activates only the ones defined for the target scene.
+    /// </summary>
+    public void TransitionTo(GameState target)
     {
-        foreach (var screen in _screens.Values)
-            screen.Rebuild();
+        var from = _currentState;
+        _currentState = target;
+
+        _controllerManager.DeactivateAll();
+
+        if (_scenes.TryGetValue(target, out var scene))
+        {
+            var controllers = scene.ControllerFactory();
+            foreach (var c in controllers)
+                _controllerManager.Activate(c);
+        }
+
+        Log.Information("[ScreenManager] {From} → {To}", from, target);
+    }
+
+    /// <summary>Initialize the first scene.</summary>
+    public void Initialize(GameState initialState)
+    {
+        _currentState = initialState;
+        TransitionTo(initialState);
     }
 }
