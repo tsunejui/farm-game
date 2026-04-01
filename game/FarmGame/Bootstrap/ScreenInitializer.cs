@@ -1,6 +1,7 @@
 using Serilog;
 using FarmGame.Screens;
 using FarmGame.Screens.Components;
+using FarmGame.Screens.HUD;
 using FarmGame.Screens.Panels;
 
 namespace FarmGame.Bootstrap;

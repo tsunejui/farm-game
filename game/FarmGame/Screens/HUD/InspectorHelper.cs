@@ -5,7 +5,7 @@
 using FarmGame.Core;
 using FarmGame.World;
 
-namespace FarmGame.Screens.Components;
+namespace FarmGame.Screens.HUD;
 
 public static class InspectorHelper
 {

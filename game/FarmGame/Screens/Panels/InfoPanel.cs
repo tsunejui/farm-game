@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using FarmGame.Core;
 using FarmGame.World;
-using FarmGame.Screens.Components;
+using FarmGame.Screens.HUD;
 
 namespace FarmGame.Screens.Panels;
 
