@@ -43,10 +43,11 @@ public static class EffectRegistry
 
     public static bool Exists(string id) => _effects.ContainsKey(id);
 
-    // Load YAML definitions + textures from Content/Effects/
+    // Load YAML definitions from Configs/Effects/ + textures from Content/
     public static void LoadDefinitions(string contentDir, Func<string, Texture2D> loadTexture)
     {
-        var effectsDir = Path.Combine(contentDir, "Effects");
+        var configsDir = Path.Combine(Path.GetDirectoryName(contentDir), "Configs");
+        var effectsDir = Path.Combine(configsDir, "Effects");
         Log.Information("[EffectRegistry] Loading definitions from: {Dir}", effectsDir);
         if (!Directory.Exists(effectsDir))
         {

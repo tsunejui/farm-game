@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
 
-namespace FarmGame.Architecture;
+namespace FarmGame.Queues;
 
 /// <summary>
 /// Event bus using MediatR for pub/sub and System.Threading.Channels

@@ -14,13 +14,14 @@ public class DataRegistry
 
     public static DataRegistry LoadAll(string contentDir)
     {
+        var configsDir = Path.Combine(Path.GetDirectoryName(contentDir), "Configs");
         var registry = new DataRegistry();
         var deserializer = new DeserializerBuilder()
             .WithNamingConvention(UnderscoredNamingConvention.Instance)
             .Build();
 
         // Load terrain definitions
-        var terrainsDir = Path.Combine(contentDir, "Terrains");
+        var terrainsDir = Path.Combine(configsDir, "Terrains");
         if (Directory.Exists(terrainsDir))
         {
             foreach (var file in Directory.GetFiles(terrainsDir, "*.yaml"))
@@ -32,7 +33,7 @@ public class DataRegistry
         }
 
         // Load item definitions
-        var itemsDir = Path.Combine(contentDir, "Items");
+        var itemsDir = Path.Combine(configsDir, "Items");
         if (Directory.Exists(itemsDir))
         {
             foreach (var file in Directory.GetFiles(itemsDir, "*.yaml"))
@@ -44,7 +45,7 @@ public class DataRegistry
         }
 
         // Load map definitions
-        var mapsDir = Path.Combine(contentDir, "Maps");
+        var mapsDir = Path.Combine(configsDir, "Maps");
         if (Directory.Exists(mapsDir))
         {
             foreach (var file in Directory.GetFiles(mapsDir, "*.yaml"))

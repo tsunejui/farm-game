@@ -5,7 +5,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Serilog;
 
-namespace FarmGame.Architecture;
+using FarmGame.Queues;
+
+namespace FarmGame.Core;
 
 /// <summary>
 /// Manages all controllers: registration, parallel update, ordered draw.

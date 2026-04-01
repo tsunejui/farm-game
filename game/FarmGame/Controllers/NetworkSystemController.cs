@@ -5,9 +5,8 @@ using MediatR;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using FarmGame.Architecture;
-using FarmGame.Architecture.Events;
 using FarmGame.Core;
+using FarmGame.Queues.Events;
 
 namespace FarmGame.Controllers;
 

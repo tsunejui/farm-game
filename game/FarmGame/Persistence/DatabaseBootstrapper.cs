@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using SQLite;
-using FarmGame.Persistence.Models;
+using FarmGame.Persistence.Entities;
 
 namespace FarmGame.Persistence;
 

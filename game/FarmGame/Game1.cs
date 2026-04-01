@@ -19,11 +19,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input;
 using Serilog;
-using FarmGame.Architecture;
-using FarmGame.Architecture.Events;
+using FarmGame.Core;
+using FarmGame.Queues;
+using FarmGame.Queues.Events;
 using FarmGame.Bootstrap;
 using FarmGame.Controllers;
-using FarmGame.Core;
 using FarmGame.Data;
 using FarmGame.Screens;
 

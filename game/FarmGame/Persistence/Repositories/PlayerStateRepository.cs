@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
-using FarmGame.Persistence.Models;
+using FarmGame.Models;
+using FarmGame.Persistence.Entities;
 
 namespace FarmGame.Persistence.Repositories;
 

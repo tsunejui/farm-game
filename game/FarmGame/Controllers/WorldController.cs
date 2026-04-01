@@ -17,14 +17,14 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input;
 using Serilog;
-using FarmGame.Architecture;
-using FarmGame.Architecture.Events;
+using FarmGame.Core;
+using FarmGame.Queues;
+using FarmGame.Queues.Events;
 using FarmGame.Bootstrap;
 using FarmGame.Camera;
-using FarmGame.Core;
 using FarmGame.Data;
 using FarmGame.Entities;
-using FarmGame.Persistence.Models;
+using FarmGame.Models;
 using FarmGame.World;
 using FarmGame.World.Interactions;
 

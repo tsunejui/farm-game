@@ -10,7 +10,8 @@ public static class ConfigInitializer
 {
     public static string Run(string contentDir)
     {
-        var configPath = Path.Combine(contentDir, "config.yaml");
+        var configsDir = Path.Combine(Path.GetDirectoryName(contentDir), "Configs");
+        var configPath = Path.Combine(configsDir, "config.yaml");
         var config = GameConfig.Load(configPath);
         GameConstants.LoadFrom(config);
 

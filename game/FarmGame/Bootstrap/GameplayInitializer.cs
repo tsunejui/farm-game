@@ -9,7 +9,7 @@ using FarmGame.Camera;
 using FarmGame.Core;
 using FarmGame.Data;
 using FarmGame.Entities;
-using FarmGame.Persistence.Models;
+using FarmGame.Models;
 using FarmGame.World;
 
 namespace FarmGame.Bootstrap;
