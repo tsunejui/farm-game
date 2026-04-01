@@ -7,6 +7,9 @@
 //   LoadContent() → Create AssetService, configure controllers, load screens.
 //   Update()     → InputSystem.Process → Parallel UpdateLogic → Events → Sync.
 //   Draw()       → Responsibility chain: controllers drawn in Order sequence.
+//
+// Note: The game world continues running even when menu panels are open.
+//       Panels (pause, settings) are overlays, not full-screen state changes.
 // =============================================================================
 
 using System.IO;
@@ -32,12 +35,11 @@ public class Game1 : Game
     private IAssetService _assets;
     private InputSystem _input;
 
-    // Legacy screen system (title, pause, settings)
     private GameState _gameState;
     private InitManager _init;
 
     // =========================================================================
-    // Constructor — GraphicsDevice + QueueManager + ControllerManager
+    // Constructor
     // =========================================================================
     public Game1()
     {
@@ -50,7 +52,7 @@ public class Game1 : Game
     }
 
     // =========================================================================
-    // Initialize — Core bootstrap (config, database, locale)
+    // Initialize
     // =========================================================================
     protected override void Initialize()
     {
@@ -64,22 +66,18 @@ public class Game1 : Game
     }
 
     // =========================================================================
-    // LoadContent — Create services, configure controllers, load screens
+    // LoadContent
     // =========================================================================
     protected override void LoadContent()
     {
-        // Create AssetService (replaces raw LoadTexture in Game1)
         _assets = new AssetService(GraphicsDevice, Content, _contentDir);
 
-        // Legacy screen loading (title, pause, settings)
         _init.LoadContent(this, _graphics, _contentDir, StartGame, _assets.LoadTexture);
         _spriteBatch = _init.SpriteBatch;
 
-        // Configure all controllers in one call
         var registry = DataInitializer.GetCachedRegistry() ?? new Data.DataRegistry();
         _controllerManager.ConfigureAll(_assets, registry, _init.Session, _queue);
 
-        // Create input system
         _input = new InputSystem(_queue);
 
         Log.Information("[Game1] Initialization complete");
@@ -93,7 +91,7 @@ public class Game1 : Game
     }
 
     // =========================================================================
-    // OnExiting — Persist state and release resources
+    // OnExiting
     // =========================================================================
     protected override void OnExiting(object sender, ExitingEventArgs args)
     {
@@ -104,19 +102,21 @@ public class Game1 : Game
     }
 
     // =========================================================================
-    // Update — InputSystem → Parallel Update → Event Processing → SyncState
+    // Update
+    //
+    // Pre-game screens (title) block the world.
+    // In-game panels (pause, settings) are overlays — the world keeps running.
     // =========================================================================
     protected override void Update(GameTime gameTime)
     {
-        // InputSystem reads keyboard/gamepad and publishes semantic events
         if (_input.Process(gameTime))
         {
             Exit();
             return;
         }
 
-        // Legacy screen handling (title, settings, pause)
-        if (_gameState != GameState.Playing)
+        // ── Pre-game screens: title, loading (world not yet started) ──
+        if (_gameState == GameState.TitleScreen || _gameState == GameState.Loading)
         {
             if (_init.ScreenManager.TryGet(_gameState, out var screen))
             {
@@ -128,35 +128,58 @@ public class Game1 : Game
             return;
         }
 
-        // Handle pause toggle from InputSystem
+        // ── In-game: world always runs, panels are overlays ──
+
+        // Toggle pause overlay
         if (_input.PauseToggled)
         {
-            _controllerManager.World?.SaveState();
-            _gameState = GameState.Paused;
-            if (_init.ScreenManager.TryGet(GameState.Paused, out var pausePanel))
-                pausePanel.OnEnter(GameState.Playing);
-            base.Update(gameTime);
-            return;
+            if (_gameState == GameState.Paused)
+            {
+                _gameState = GameState.Playing;
+            }
+            else if (_gameState == GameState.Playing)
+            {
+                _gameState = GameState.Paused;
+                if (_init.ScreenManager.TryGet(GameState.Paused, out var panel))
+                    panel.OnEnter(GameState.Playing);
+            }
         }
 
-        // Parallel Update → Event Processing → Sync
+        // World update (always runs regardless of panel state)
         _controllerManager.ParallelUpdate(gameTime);
         _queue.ProcessAll();
         _controllerManager.SyncAll();
+
+        // Panel update (if an overlay is open)
+        if (_gameState != GameState.Playing &&
+            _init.ScreenManager.TryGet(_gameState, out var overlay))
+        {
+            var transition = overlay.Update(gameTime);
+            if (transition != ScreenTransition.None)
+                HandleTransition(transition);
+        }
 
         base.Update(gameTime);
     }
 
     // =========================================================================
-    // Draw — Responsibility chain rendering
+    // Draw
+    //
+    // World is always drawn when in-game. Panels render on top as overlays.
     // =========================================================================
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.Black);
 
-        if (_gameState == GameState.Playing || _gameState == GameState.Paused)
+        bool inGame = _gameState == GameState.Playing
+                   || _gameState == GameState.Paused
+                   || _gameState == GameState.Settings;
+
+        // Draw world (controller chain) when in-game
+        if (inGame)
             _controllerManager.DrawAll(_spriteBatch);
 
+        // Draw active screen/panel on top
         if (_init.ScreenManager.TryGet(_gameState, out var activeScreen))
             activeScreen.Draw(_spriteBatch);
 
@@ -164,7 +187,7 @@ public class Game1 : Game
     }
 
     // =========================================================================
-    // HandleTransition — Process legacy screen transitions
+    // HandleTransition
     // =========================================================================
     private void HandleTransition(ScreenTransition transition)
     {
@@ -181,11 +204,7 @@ public class Game1 : Game
             if (_init.ScreenManager.TryGet(_gameState, out var currentScreen))
                 currentScreen.OnExit(target);
 
-            if (target == GameState.Playing && _gameState == GameState.Paused)
-            {
-                // Resuming from pause
-            }
-            else if (_init.ScreenManager.TryGet(target, out var nextScreen))
+            if (_init.ScreenManager.TryGet(target, out var nextScreen))
                 nextScreen.OnEnter(_gameState);
 
             _gameState = target;
