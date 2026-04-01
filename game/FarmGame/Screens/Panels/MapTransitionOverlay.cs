@@ -4,7 +4,7 @@ using FontStashSharp;
 using MonoGame.Extended;
 using FarmGame.Core;
 
-namespace FarmGame.Screens.HUD;
+namespace FarmGame.Screens.Panels;
 
 // =============================================================================
 // MapTransitionOverlay.cs — Map loading transition effect

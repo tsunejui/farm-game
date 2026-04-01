@@ -14,7 +14,7 @@ using Serilog;
 using FarmGame.Core;
 using FarmGame.Queues;
 using FarmGame.Queues.Events;
-using FarmGame.Screens.HUD;
+using FarmGame.Screens.Panels;
 
 namespace FarmGame.Controllers;
 

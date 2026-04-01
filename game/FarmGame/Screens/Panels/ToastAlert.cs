@@ -5,7 +5,7 @@ using FontStashSharp;
 using MonoGame.Extended;
 using FarmGame.Core;
 
-namespace FarmGame.Screens.HUD;
+namespace FarmGame.Screens.Panels;
 
 // =============================================================================
 // ToastAlert.cs — Event notification toast at bottom-left of gameplay screen

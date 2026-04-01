@@ -9,6 +9,8 @@ using Serilog;
 using FarmGame.Bootstrap;
 using FarmGame.Data;
 using FarmGame.Screens;
+using FarmGame.Screens.Components;
+using FarmGame.Screens.Panels;
 
 namespace FarmGame.Core;
 
@@ -68,8 +70,8 @@ public class InitManager
         if (!string.IsNullOrEmpty(_databaseError))
             titleScreen.SetError(_databaseError);
 
-        var pauseScreen = new PauseScreen();
-        pauseScreen.Initialize();
+        var pausePanel = new PausePanel();
+        pausePanel.Initialize();
 
         var settingsScreen = new SettingsScreen();
         settingsScreen.HasSavedState = () => Session?.HasSavedState ?? false;
@@ -100,7 +102,7 @@ public class InitManager
 
         ScreenManager.Register(GameState.TitleScreen, titleScreen);
         ScreenManager.Register(GameState.Settings, settingsScreen);
-        ScreenManager.Register(GameState.Paused, pauseScreen);
+        ScreenManager.Register(GameState.Paused, pausePanel);
         ScreenManager.Register(GameState.Playing, playingScreen);
         ScreenManager.Register(GameState.Loading, loading);
 

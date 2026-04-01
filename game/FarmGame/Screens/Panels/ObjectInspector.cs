@@ -14,7 +14,9 @@ using FarmGame.Camera;
 using FarmGame.Core;
 using FarmGame.World;
 
-namespace FarmGame.Screens.HUD;
+using FarmGame.Screens.Components;
+
+namespace FarmGame.Screens.Panels;
 
 public class ObjectInspector
 {
