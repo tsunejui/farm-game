@@ -141,7 +141,7 @@ public class Game1 : Game
 
         // Parallel Update → Event Processing → Sync
         _controllerManager.ParallelUpdate(gameTime);
-        _queue.ProcessPendingEvents();
+        _queue.ProcessAll();
         _controllerManager.SyncAll();
 
         base.Update(gameTime);
