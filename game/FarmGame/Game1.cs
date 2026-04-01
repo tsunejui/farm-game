@@ -77,8 +77,15 @@ public class Game1 : Game
     // =========================================================================
     protected override void LoadContent()
     {
+        // Graphics + Font + Myra must init before any UI creation
+        _spriteBatch = Bootstrap.GraphicsInitializer.Run(this, _graphics, _contentDir);
+
         _assets = new AssetService(GraphicsDevice, Content, _contentDir);
         _input = new InputSystem(_queue);
+
+        // Load data & effects
+        Bootstrap.DataInitializer.Run(_contentDir);
+        World.Effects.EffectRegistry.LoadDefinitions(_contentDir, _assets.LoadTexture);
 
         // Create screen-based controllers
         var titleScreen = new TitleScreen();
@@ -119,11 +126,6 @@ public class Game1 : Game
         titleCtrl.OnTransition = HandleTransition;
         settingsCtrl.OnTransition = HandleTransition;
         loadingCtrl.OnTransition = HandleTransition;
-
-        // Load data & effects
-        _spriteBatch = Bootstrap.GraphicsInitializer.Run(this, _graphics, _contentDir);
-        Bootstrap.DataInitializer.Run(_contentDir);
-        World.Effects.EffectRegistry.LoadDefinitions(_contentDir, _assets.LoadTexture);
 
         // Configure all controllers
         var registry = Bootstrap.DataInitializer.GetCachedRegistry() ?? new Data.DataRegistry();
