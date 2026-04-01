@@ -3,10 +3,10 @@
 //
 // Lifecycle:
 //   Game1()      → Create InitManager, QueueManager, ControllerManager.
-//   Initialize() → Fluent bootstrap chain: Config → Database → Locale → Controllers.
-//   LoadContent() → Load assets, screens, configure controllers.
-//   Update()     → InputSystem → Parallel Update → ProcessQueues → Sync.
-//   Draw()       → Responsibility chain rendering.
+//   Initialize() → Fluent bootstrap: Config → Database → Locale → Controllers.
+//   LoadContent() → Assets, screens, controller configuration.
+//   Update()     → InputSystem → ControllerManager.Update (parallel threads).
+//   Draw()       → ControllerManager.Draw (single-thread responsibility chain).
 // =============================================================================
 
 using System.IO;
@@ -34,7 +34,7 @@ public class Game1 : Game
     private GameState _gameState;
 
     // =========================================================================
-    // Constructor — Create all managers
+    // Constructor
     // =========================================================================
     public Game1()
     {
@@ -48,7 +48,7 @@ public class Game1 : Game
     }
 
     // =========================================================================
-    // Initialize — Fluent bootstrap chain
+    // Initialize
     // =========================================================================
     protected override void Initialize()
     {
@@ -61,7 +61,6 @@ public class Game1 : Game
             .WithControllers(_controllerManager)
             .Bootstrap();
 
-        // Wire controller callbacks (screen transitions triggered from in-game menu)
         _controllerManager.OnLeaveGame = () =>
         {
             _controllerManager.World?.SaveState();
@@ -81,7 +80,7 @@ public class Game1 : Game
     }
 
     // =========================================================================
-    // LoadContent — Assets, screens, controllers
+    // LoadContent
     // =========================================================================
     protected override void LoadContent()
     {
@@ -113,7 +112,7 @@ public class Game1 : Game
     }
 
     // =========================================================================
-    // Update
+    // Update — Input → ControllerManager.Update (parallel threads + sync)
     // =========================================================================
     protected override void Update(GameTime gameTime)
     {
@@ -123,7 +122,7 @@ public class Game1 : Game
             return;
         }
 
-        // Pre-game screens (title, loading) — world not started
+        // Pre-game screens (title, loading)
         if (_gameState != GameState.Playing)
         {
             if (_init.ScreenManager.TryGet(_gameState, out var screen))
@@ -136,26 +135,24 @@ public class Game1 : Game
             return;
         }
 
-        // Sync input blocking — menu open = game input suppressed
+        // Sync input blocking before update
         _input.InputBlocked = _controllerManager.UI?.IsMenuOpen ?? false;
 
-        // In-game — world always runs
-        _controllerManager.ParallelUpdate(gameTime);
-        _queue.ProcessAll();
-        _controllerManager.SyncAll();
+        // Controllers update: parallel threads → queue drain → state sync
+        _controllerManager.Update(gameTime);
 
         base.Update(gameTime);
     }
 
     // =========================================================================
-    // Draw
+    // Draw — ControllerManager.Draw (single-thread responsibility chain)
     // =========================================================================
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.Black);
 
         if (_gameState == GameState.Playing)
-            _controllerManager.DrawAll(_spriteBatch);
+            _controllerManager.Draw(_spriteBatch);
 
         if (_gameState != GameState.Playing &&
             _init.ScreenManager.TryGet(_gameState, out var activeScreen))
