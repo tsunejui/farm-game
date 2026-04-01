@@ -87,10 +87,12 @@ public class ParticleController : BaseController<ParticleLogicState, ParticleRen
         if (numbers.Count == 0)
             return;
 
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
         foreach (var dn in numbers)
         {
             float progress = dn.Timer / dn.Duration;
-            float alpha = 1f - progress; // fade out linearly
+            float alpha = 1f - progress;
 
             int fontSize = dn.IsCritical ? CritFontSize : FontSize;
             var font = FontManager.GetFont(fontSize);
@@ -99,10 +101,11 @@ public class ParticleController : BaseController<ParticleLogicState, ParticleRen
             string text = dn.IsCritical ? $"{dn.Amount}!" : dn.Amount.ToString();
             var color = dn.IsCritical ? Color.Yellow : Color.White;
 
-            // Draw at world position (screen-space approximation for now)
             var pos = dn.WorldPosition;
             font.DrawText(spriteBatch, text, pos, color * alpha);
         }
+
+        spriteBatch.End();
     }
 
     protected override void CopyState(ParticleLogicState logic, ParticleRenderState render)

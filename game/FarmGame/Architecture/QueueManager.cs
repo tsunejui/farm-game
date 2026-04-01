@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -14,31 +13,66 @@ namespace FarmGame.Architecture;
 /// <summary>
 /// Event bus using MediatR for pub/sub and System.Threading.Channels
 /// for high-performance async event queuing.
-/// Controllers publish events here; subscribers receive them.
+///
+/// Controllers are registered as singleton instances so MediatR resolves
+/// the existing objects rather than trying to construct new ones.
+/// Call Build() after all controllers are registered.
 /// </summary>
 public class QueueManager : IDisposable
 {
-    private readonly IMediator _mediator;
-    private readonly IServiceProvider _serviceProvider;
+    private IMediator _mediator;
+    private IServiceProvider _serviceProvider;
     private readonly Channel<INotification> _eventChannel;
     private readonly CancellationTokenSource _cts = new();
-
-    // Pending events accumulated during parallel update, processed on main thread
     private readonly ConcurrentQueue<INotification> _pendingEvents = new();
+
+    // Collect handler instances before building
+    private readonly ServiceCollection _services = new();
+    private bool _built;
 
     public QueueManager()
     {
-        var services = new ServiceCollection();
-        services.AddLogging();
-        services.AddMediatR(cfg =>
-        {
-            cfg.RegisterServicesFromAssembly(typeof(QueueManager).Assembly);
-        });
-        _serviceProvider = services.BuildServiceProvider();
-        _mediator = _serviceProvider.GetRequiredService<IMediator>();
-
+        _services.AddLogging();
         _eventChannel = Channel.CreateUnbounded<INotification>(
             new UnboundedChannelOptions { SingleReader = true });
+    }
+
+    /// <summary>
+    /// Register a controller instance as a MediatR notification handler.
+    /// Must be called before Build().
+    /// </summary>
+    public void RegisterHandler(object handler)
+    {
+        var handlerType = handler.GetType();
+
+        // Register each INotificationHandler<T> interface the handler implements
+        foreach (var iface in handlerType.GetInterfaces())
+        {
+            if (iface.IsGenericType &&
+                iface.GetGenericTypeDefinition() == typeof(INotificationHandler<>))
+            {
+                _services.AddSingleton(iface, handler);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Build the DI container and create the MediatR instance.
+    /// Call after all controllers are registered via RegisterHandler().
+    /// </summary>
+    public void Build()
+    {
+        _services.AddMediatR(cfg =>
+        {
+            // Don't auto-register from assembly — we registered handlers manually
+            cfg.RegisterServicesFromAssembly(typeof(QueueManager).Assembly);
+        });
+
+        _serviceProvider = _services.BuildServiceProvider();
+        _mediator = _serviceProvider.GetRequiredService<IMediator>();
+        _built = true;
+
+        Log.Information("[QueueManager] Built with MediatR");
     }
 
     /// <summary>
@@ -51,19 +85,13 @@ public class QueueManager : IDisposable
     }
 
     /// <summary>
-    /// Publish an event immediately via MediatR (main thread only).
-    /// </summary>
-    public async Task PublishImmediate(INotification notification)
-    {
-        await _mediator.Publish(notification, _cts.Token);
-    }
-
-    /// <summary>
     /// Process all pending events on the main thread.
     /// Called after parallel update completes.
     /// </summary>
     public void ProcessPendingEvents()
     {
+        if (!_built) return;
+
         while (_pendingEvents.TryDequeue(out var notification))
         {
             try
@@ -76,9 +104,6 @@ public class QueueManager : IDisposable
             }
         }
     }
-
-    /// <summary>Get a service from the DI container (for handler registration).</summary>
-    public T GetService<T>() => _serviceProvider.GetService<T>();
 
     public void Dispose()
     {

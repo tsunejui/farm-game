@@ -47,7 +47,8 @@ public class BackgroundController : BaseController<BackgroundLogicState, Backgro
         int screenW = GameConstants.ScreenWidth;
         int screenH = GameConstants.ScreenHeight;
 
-        // Draw a vertical gradient by splitting the screen into horizontal bands
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+
         const int bandCount = 16;
         int bandHeight = screenH / bandCount + 1;
 
@@ -60,6 +61,8 @@ public class BackgroundController : BaseController<BackgroundLogicState, Backgro
                 new Rectangle(0, y, screenW, bandHeight),
                 color);
         }
+
+        spriteBatch.End();
     }
 
     protected override void CopyState(BackgroundLogicState logic, BackgroundRenderState render)
