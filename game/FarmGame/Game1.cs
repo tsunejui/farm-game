@@ -83,8 +83,7 @@ public class Game1 : Game
         _assets = new AssetService(GraphicsDevice, Content, _contentDir);
         _input = new InputSystem(_queue);
 
-        // Load data & effects
-        Bootstrap.DataInitializer.Run(_contentDir);
+        // Load effects (configs already loaded by ConfigManager in InitManager)
         World.Effects.EffectRegistry.LoadDefinitions(_contentDir, _assets.LoadTexture);
 
         // Create screen-based controllers
@@ -128,7 +127,7 @@ public class Game1 : Game
         loadingCtrl.OnTransition = HandleTransition;
 
         // Configure all controllers
-        var registry = Bootstrap.DataInitializer.GetCachedRegistry() ?? new Data.DataRegistry();
+        var registry = _init.Config.ToDataRegistry();
         _controllerManager.ConfigureAll(_assets, registry, _init.Session, _queue,
             titleCtrl, settingsCtrl, loadingCtrl);
 
