@@ -136,11 +136,8 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
         // Build DataRegistry from ConfigManager
         _registry = system.Config.ToDataRegistry();
 
-        // Create asset service (needs GraphicsDevice — set via SetGraphicsDevice)
-        if (_graphicsDevice != null)
-        {
-            Maps.Configure(_registry, _loadTexture, _graphicsDevice, system.ContentDir);
-        }
+        // Configure MapManager (GraphicsDevice set via SetGraphicsContext before Load)
+        Maps.Configure(_registry, _loadTexture, _graphicsDevice, system.ContentDir);
 
         // Wire game menu callbacks
         OnLeaveGame = () => controllers.Background.TransitionTo(GameState.TitleScreen);
