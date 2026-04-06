@@ -1,6 +1,7 @@
 using System;
 using Serilog;
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 using FarmGame.Persistence;
 
 // Load .env.local before anything else

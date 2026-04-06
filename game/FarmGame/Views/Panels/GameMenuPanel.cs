@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.Input;
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 
 namespace FarmGame.Views.Panels;
 

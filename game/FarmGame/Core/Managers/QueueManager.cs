@@ -7,7 +7,7 @@ using Serilog;
 
 using FarmGame.Queues;
 
-namespace FarmGame.Core;
+namespace FarmGame.Core.Managers;
 
 /// <summary>
 /// Centralized queue manager holding typed sub-queues (Command and Event).

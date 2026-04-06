@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Myra;
 using Serilog;
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 using FarmGame.Controllers;
 using FarmGame.Services;
 

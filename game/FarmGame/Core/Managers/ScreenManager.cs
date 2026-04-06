@@ -5,7 +5,7 @@
 // managed by BackgroundController which owns the IScreen instances.
 // =============================================================================
 
-namespace FarmGame.Core;
+namespace FarmGame.Core.Managers;
 
 /// <summary>
 /// Tracks the current game state for screen transitions.

@@ -16,7 +16,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Serilog;
 using FarmGame.Controllers;
 
-namespace FarmGame.Core;
+namespace FarmGame.Core.Managers;
 
 public class ControllerManager
 {

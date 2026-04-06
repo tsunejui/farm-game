@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Serilog;
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 using FarmGame.Models;
 using FarmGame.Persistence;
 using FarmGame.Persistence.Repositories;

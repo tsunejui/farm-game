@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using FarmGame.Camera;
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 using FarmGame.World.AI;
 
 namespace FarmGame.World;
