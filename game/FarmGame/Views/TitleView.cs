@@ -5,17 +5,17 @@ using Microsoft.Xna.Framework.Input;
 using Myra.Graphics2D.UI;
 using MonoGame.Extended.Input;
 using FarmGame.Core;
-using FarmGame.Screens.Components;
+using FarmGame.Views.Components;
 
-namespace FarmGame.Screens;
+namespace FarmGame.Views;
 
-public class TitleScreen : IScreen
+public class TitleView : IView
 {
     private Desktop _desktop;
     private Label _errorLabel;
     private Button[] _buttons;
     private int _selectedIndex;
-    private ScreenTransition _pendingTransition;
+    private ViewTransition _pendingTransition;
 
     public Action OnStartGame { get; set; }
     public bool HasSavedState { get; set; }
@@ -45,11 +45,11 @@ public class TitleScreen : IScreen
         root.Widgets.Add(startBtn);
 
         var settingsBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "settings"));
-        settingsBtn.Click += (_, _) => _pendingTransition = ScreenTransition.To(GameState.Settings);
+        settingsBtn.Click += (_, _) => _pendingTransition = ViewTransition.To(GameState.Settings);
         root.Widgets.Add(settingsBtn);
 
         var exitBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "close_game"));
-        exitBtn.Click += (_, _) => _pendingTransition = ScreenTransition.ExitGame();
+        exitBtn.Click += (_, _) => _pendingTransition = ViewTransition.ExitGame();
         root.Widgets.Add(exitBtn);
 
         _buttons = new[] { startBtn, settingsBtn, exitBtn };
@@ -69,7 +69,7 @@ public class TitleScreen : IScreen
         UpdateButtonFocus();
     }
 
-    public ScreenTransition Update(GameTime gameTime)
+    public ViewTransition Update(GameTime gameTime)
     {
         var kb = KeyboardExtended.GetState();
         if (kb.WasKeyPressed(Keys.Up) || kb.WasKeyPressed(Keys.W))
@@ -82,8 +82,8 @@ public class TitleScreen : IScreen
             switch (_selectedIndex)
             {
                 case 0: OnStartGame?.Invoke(); break;
-                case 1: return ScreenTransition.To(GameState.Settings);
-                case 2: return ScreenTransition.ExitGame();
+                case 1: return ViewTransition.To(GameState.Settings);
+                case 2: return ViewTransition.ExitGame();
             }
         }
 
@@ -94,7 +94,7 @@ public class TitleScreen : IScreen
             return t;
         }
 
-        return ScreenTransition.None;
+        return ViewTransition.None;
     }
 
     public void SetError(string msg) { if (_errorLabel != null) _errorLabel.Text = msg ?? ""; }

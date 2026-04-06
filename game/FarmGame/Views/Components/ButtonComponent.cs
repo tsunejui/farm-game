@@ -1,6 +1,6 @@
 using Myra.Graphics2D.UI;
 
-namespace FarmGame.Screens.Components;
+namespace FarmGame.Views.Components;
 
 public static class ButtonComponent
 {

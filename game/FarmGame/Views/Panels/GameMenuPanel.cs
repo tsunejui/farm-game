@@ -16,7 +16,7 @@ using MonoGame.Extended;
 using MonoGame.Extended.Input;
 using FarmGame.Core;
 
-namespace FarmGame.Screens.Panels;
+namespace FarmGame.Views.Panels;
 
 public class GameMenuPanel
 {

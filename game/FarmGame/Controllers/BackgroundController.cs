@@ -15,8 +15,8 @@ using MonoGame.Extended;
 using Serilog;
 using FarmGame.Audio;
 using FarmGame.Core;
-using FarmGame.Screens;
-using FarmGame.Screens.HUD;
+using FarmGame.Views;
+using FarmGame.Views.HUD;
 
 namespace FarmGame.Controllers;
 
@@ -25,7 +25,7 @@ public class BackgroundLogicState
     public float ScrollOffset { get; set; }
     public Color TopColor { get; set; } = new Color(20, 40, 20);
     public Color BottomColor { get; set; } = new Color(10, 25, 10);
-    public ScreenTransition PendingTransition { get; set; }
+    public ViewTransition PendingTransition { get; set; }
 }
 
 public class BackgroundRenderState
@@ -50,8 +50,8 @@ public class BackgroundController : BaseController<BackgroundLogicState, Backgro
 
     // ─── Screen Instances (managed by ScreenManager) ────────
 
-    private IScreen _activeScreen;
-    private readonly System.Collections.Generic.Dictionary<GameState, IScreen> _screens = new();
+    private IView _activeScreen;
+    private readonly System.Collections.Generic.Dictionary<GameState, IView> _screens = new();
 
     /// <summary>Callback when screen transition requests game exit.</summary>
     public Action OnExitGame { get; set; }
@@ -76,28 +76,28 @@ public class BackgroundController : BaseController<BackgroundLogicState, Backgro
         var contentDir = controllers.System.ContentDir;
 
         // Create and register screens
-        var titleScreen = new TitleScreen();
-        titleScreen.OnStartGame = () => OnStartGame?.Invoke();
-        titleScreen.HasSavedState = session?.HasSavedState ?? false;
-        titleScreen.Initialize();
+        var titleView = new TitleView();
+        titleView.OnStartGame = () => OnStartGame?.Invoke();
+        titleView.HasSavedState = session?.HasSavedState ?? false;
+        titleView.Initialize();
 
-        var settingsScreen = new SettingsScreen();
-        settingsScreen.HasSavedState = () => session?.HasSavedState ?? false;
-        settingsScreen.OnLanguageChanged = (lang) => session?.ChangeLanguage(lang, contentDir);
-        settingsScreen.OnDeleteCharacter = () =>
+        var settingsView = new SettingsView();
+        settingsView.HasSavedState = () => session?.HasSavedState ?? false;
+        settingsView.OnLanguageChanged = (lang) => session?.ChangeLanguage(lang, contentDir);
+        settingsView.OnDeleteCharacter = () =>
         {
             session?.DeleteAndReset();
-            titleScreen.HasSavedState = false;
+            titleView.HasSavedState = false;
             TransitionTo(GameState.TitleScreen);
         };
-        settingsScreen.Initialize();
+        settingsView.Initialize();
 
-        var loadingScreen = new LoadingScreen();
-        loadingScreen.Initialize();
+        var loadingView = new LoadingView();
+        loadingView.Initialize();
 
-        RegisterScreen(GameState.TitleScreen, titleScreen);
-        RegisterScreen(GameState.Settings, settingsScreen);
-        RegisterScreen(GameState.Loading, loadingScreen);
+        RegisterScreen(GameState.TitleScreen, titleView);
+        RegisterScreen(GameState.Settings, settingsView);
+        RegisterScreen(GameState.Loading, loadingView);
 
         // Wire callbacks
         OnStartGame = () =>
@@ -112,7 +112,7 @@ public class BackgroundController : BaseController<BackgroundLogicState, Backgro
     }
 
     /// <summary>Register a screen for a game state.</summary>
-    public void RegisterScreen(GameState state, IScreen screen)
+    public void RegisterScreen(GameState state, IView screen)
     {
         _screens[state] = screen;
     }
@@ -176,7 +176,7 @@ public class BackgroundController : BaseController<BackgroundLogicState, Backgro
         if (_activeScreen != null)
         {
             var transition = _activeScreen.Update(gameTime);
-            if (transition != null && transition != ScreenTransition.None)
+            if (transition != null && transition != ViewTransition.None)
                 LogicState.PendingTransition = transition;
         }
     }

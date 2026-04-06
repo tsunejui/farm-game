@@ -6,18 +6,18 @@ using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 using MonoGame.Extended.Input;
 using FarmGame.Core;
-using FarmGame.Screens.Components;
+using FarmGame.Views.Components;
 
-namespace FarmGame.Screens;
+namespace FarmGame.Views;
 
-public class SettingsScreen : IScreen
+public class SettingsView : IView
 {
     private Desktop _desktop;
     private Button[] _buttons;
     private string[] _buttonLangs;
     private int _selectedIndex;
     private bool _showDeleteConfirmation;
-    private ScreenTransition _pendingTransition;
+    private ViewTransition _pendingTransition;
 
     public Action<string> OnLanguageChanged { get; set; }
     public Action OnDeleteCharacter { get; set; }
@@ -92,7 +92,7 @@ public class SettingsScreen : IScreen
         root.Widgets.Add(deleteBtn);
 
         var backBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "back"));
-        backBtn.Click += (_, _) => _pendingTransition = ScreenTransition.To(ReturnState);
+        backBtn.Click += (_, _) => _pendingTransition = ViewTransition.To(ReturnState);
         backBtn.Margin = new Myra.Graphics2D.Thickness(0, 8, 0, 0);
         root.Widgets.Add(backBtn);
 
@@ -141,7 +141,7 @@ public class SettingsScreen : IScreen
         confirmBtn.Click += (_, _) =>
         {
             OnDeleteCharacter?.Invoke();
-            _pendingTransition = ScreenTransition.To(GameState.Loading);
+            _pendingTransition = ViewTransition.To(GameState.Loading);
         };
 
         var btnRow = new HorizontalStackPanel
@@ -160,7 +160,7 @@ public class SettingsScreen : IScreen
         UpdateButtonFocus();
     }
 
-    public ScreenTransition Update(GameTime gameTime)
+    public ViewTransition Update(GameTime gameTime)
     {
         var kb = KeyboardExtended.GetState();
         if (kb.WasKeyPressed(Keys.Up) || kb.WasKeyPressed(Keys.W) ||
@@ -179,12 +179,12 @@ public class SettingsScreen : IScreen
                     _showDeleteConfirmation = false;
                     _selectedIndex = 0;
                     BuildUI();
-                    return ScreenTransition.None;
+                    return ViewTransition.None;
                 }
                 else
                 {
                     OnDeleteCharacter?.Invoke();
-                    return ScreenTransition.To(GameState.Loading);
+                    return ViewTransition.To(GameState.Loading);
                 }
             }
 
@@ -192,19 +192,19 @@ public class SettingsScreen : IScreen
             if (lang != null)
             {
                 OnLanguageChanged?.Invoke(lang);
-                return ScreenTransition.None;
+                return ViewTransition.None;
             }
             // deleteBtn is index 2, backBtn is index 3
             if (_selectedIndex == 2)
             {
                 if (!(HasSavedState?.Invoke() ?? false))
-                    return ScreenTransition.None; // disabled, ignore
+                    return ViewTransition.None; // disabled, ignore
                 _showDeleteConfirmation = true;
                 _selectedIndex = 0;
                 BuildUI();
-                return ScreenTransition.None;
+                return ViewTransition.None;
             }
-            return ScreenTransition.To(ReturnState);
+            return ViewTransition.To(ReturnState);
         }
 
         if (kb.WasKeyPressed(Keys.Escape))
@@ -214,9 +214,9 @@ public class SettingsScreen : IScreen
                 _showDeleteConfirmation = false;
                 _selectedIndex = 0;
                 BuildUI();
-                return ScreenTransition.None;
+                return ViewTransition.None;
             }
-            return ScreenTransition.To(ReturnState);
+            return ViewTransition.To(ReturnState);
         }
 
         if (_pendingTransition != null)
@@ -226,7 +226,7 @@ public class SettingsScreen : IScreen
             return t;
         }
 
-        return ScreenTransition.None;
+        return ViewTransition.None;
     }
 
     public void Draw(SpriteBatch spriteBatch) { _desktop?.Render(); }
