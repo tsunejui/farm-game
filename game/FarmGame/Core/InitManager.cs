@@ -10,6 +10,7 @@
 //     .Bootstrap();
 // =============================================================================
 
+using System.IO;
 using Serilog;
 using FarmGame.Bootstrap;
 
@@ -18,14 +19,29 @@ namespace FarmGame.Core;
 public class InitManager
 {
     public GameSession Session { get; private set; }
+    public ConfigManager Config { get; private set; }
 
     private string _contentDir;
+    private string _configsDir;
     private ControllerManager _controllerManager;
 
     public InitManager WithConfig(string contentDir)
     {
         _contentDir = contentDir;
-        ConfigInitializer.Run(contentDir);
+        _configsDir = Path.Combine(Path.GetDirectoryName(contentDir), "Configs");
+
+        // Initialize ConfigManager — loads all YAML configs
+        Config = new ConfigManager();
+        Config.Initialize(_configsDir);
+
+        // Populate GameConstants from loaded game settings
+        if (Config.GameSettings != null)
+        {
+            GameConstants.LoadFrom(Config.GameSettings.Data);
+            LogManager.Reconfigure(Config.GameSettings.Data.LogLevel);
+        }
+
+        Log.Information("[Init] Config loaded via ConfigManager");
         return this;
     }
 
