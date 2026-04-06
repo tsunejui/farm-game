@@ -7,6 +7,7 @@
 
 using System;
 using FarmGame.Combat;
+using FarmGame.Entities.Objects;
 using FarmGame.World.Events;
 
 namespace FarmGame.World.Effects;
@@ -18,7 +19,7 @@ public class HighTemperatureEffect : IEffect
     public string Id => "high_temperature";
     public string DisplayName => "High Temperature";
 
-    public void OnTick(WorldObject owner, GameMap map)
+    public void OnTick(BaseObject owner, GameMap map)
     {
         int minX = owner.TileX - 1;
         int maxX = owner.TileX + owner.EffectiveWidth;
@@ -32,7 +33,7 @@ public class HighTemperatureEffect : IEffect
             TryDamage(map.PlayerProxy, owner, minX, maxX, minY, maxY);
     }
 
-    private void TryDamage(WorldObject target, WorldObject owner,
+    private void TryDamage(BaseObject target, BaseObject owner,
         int minX, int maxX, int minY, int maxY)
     {
         if (target == owner) return;

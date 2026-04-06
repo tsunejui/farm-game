@@ -7,6 +7,7 @@
 // =============================================================================
 
 using FarmGame.Combat;
+using FarmGame.Entities.Objects;
 
 namespace FarmGame.World.Events;
 
@@ -26,7 +27,7 @@ public class TakeDamageEvent : IObjectEvent
         _attackInfo = attackInfo ?? AttackInfo.Physical;
     }
 
-    public void Start(WorldObject obj, GameMap map)
+    public void Start(BaseObject obj, GameMap map)
     {
         _started = true;
 
@@ -43,7 +44,7 @@ public class TakeDamageEvent : IObjectEvent
         obj.State.TakeDamage(finalAmount, _isCritical);
     }
 
-    public void Update(WorldObject obj, GameMap map, float deltaTime)
+    public void Update(BaseObject obj, GameMap map, float deltaTime)
     {
         if (!_started) return;
 

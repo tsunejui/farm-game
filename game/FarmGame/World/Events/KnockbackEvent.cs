@@ -5,6 +5,7 @@
 // if blocked. Triggers bounce animation on alive objects.
 // =============================================================================
 
+using FarmGame.Entities.Objects;
 using Serilog;
 
 namespace FarmGame.World.Events;
@@ -27,25 +28,28 @@ public class KnockbackEvent : IObjectEvent
         _distance = distance;
     }
 
-    public void Start(WorldObject obj, GameMap map)
+    public void Start(BaseObject obj, GameMap map)
     {
-        // Try full distance, reduce if blocked
-        for (int dist = _distance; dist > 0; dist--)
+        // MoveObject requires WorldObject; cast is safe since all map objects are WorldObject
+        if (obj is WorldObject wo)
         {
-            int newX = obj.TileX + _dirX * dist;
-            int newY = obj.TileY + _dirY * dist;
-            if (map.MoveObject(obj, newX, newY))
+            for (int dist = _distance; dist > 0; dist--)
             {
-                if (obj.State.IsAlive)
-                    obj.State.TriggerBounce();
-                Log.Debug("Knockback: {ItemId} pushed {Dist} tiles to ({X},{Y})",
-                    obj.ItemId, dist, newX, newY);
-                break;
+                int newX = wo.TileX + _dirX * dist;
+                int newY = wo.TileY + _dirY * dist;
+                if (map.MoveObject(wo, newX, newY))
+                {
+                    if (wo.State.IsAlive)
+                        wo.State.TriggerBounce();
+                    Log.Debug("Knockback: {ItemId} pushed {Dist} tiles to ({X},{Y})",
+                        wo.ItemId, dist, newX, newY);
+                    break;
+                }
             }
         }
 
         IsComplete = true;
     }
 
-    public void Update(WorldObject obj, GameMap map, float deltaTime) { }
+    public void Update(BaseObject obj, GameMap map, float deltaTime) { }
 }
