@@ -47,7 +47,7 @@ public class SystemController : BaseController<SystemLogicState, SystemRenderSta
         // Read configs dir from env (set by .env.local), fallback to relative path
         var configsDir = Environment.GetEnvironmentVariable("CONFIGS_DIR");
         if (string.IsNullOrEmpty(configsDir) || !Directory.Exists(configsDir))
-            configsDir = Path.Combine(Path.GetDirectoryName(ContentDir), "Configs");
+            configsDir = Path.Combine(Path.GetDirectoryName(ContentDir), "configs");
 
         // 1. ConfigManager — load all YAML configs
         Config = new ConfigManager();

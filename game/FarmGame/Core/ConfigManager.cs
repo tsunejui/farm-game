@@ -82,7 +82,7 @@ public class ConfigManager
 
     private void LoadGameSettings(string configsDir)
     {
-        var configPath = Path.Combine(configsDir, "config.yaml");
+        var configPath = Path.Combine(configsDir, "system.yaml");
         if (!File.Exists(configPath)) return;
 
         var data = _deserializer.Deserialize<GameConfig>(File.ReadAllText(configPath));
@@ -115,7 +115,7 @@ public class ConfigManager
 
     private void LoadTerrains(string configsDir)
     {
-        var dir = Path.Combine(configsDir, "Terrains");
+        var dir = Path.Combine(configsDir, "terrains");
         if (!Directory.Exists(dir)) return;
 
         foreach (var file in Directory.GetFiles(dir, "*.yaml"))
@@ -145,7 +145,7 @@ public class ConfigManager
 
     private void LoadItems(string configsDir)
     {
-        var dir = Path.Combine(configsDir, "Items");
+        var dir = Path.Combine(configsDir, "items");
         if (!Directory.Exists(dir)) return;
 
         foreach (var file in Directory.GetFiles(dir, "*.yaml"))
@@ -175,7 +175,7 @@ public class ConfigManager
 
     private void LoadMaps(string configsDir)
     {
-        var dir = Path.Combine(configsDir, "Maps");
+        var dir = Path.Combine(configsDir, "maps");
         if (!Directory.Exists(dir)) return;
 
         foreach (var file in Directory.GetFiles(dir, "*.yaml"))
@@ -205,7 +205,7 @@ public class ConfigManager
 
     private void LoadEffects(string configsDir)
     {
-        var dir = Path.Combine(configsDir, "Effects");
+        var dir = Path.Combine(configsDir, "effects");
         if (!Directory.Exists(dir)) return;
 
         foreach (var file in Directory.GetFiles(dir, "*.yaml"))
