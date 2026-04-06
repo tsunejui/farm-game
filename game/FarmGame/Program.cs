@@ -3,7 +3,7 @@ using FarmGame.Core;
 using FarmGame.Persistence;
 
 var logDir = System.IO.Path.Combine(
-    DatabasePathResolver.GetDatabaseDirectory("Farm Game"), "logs");
+    DatabaseManager.ResolveDatabaseDirectory("Farm Game"), "logs");
 LogManager.Initialize(logDir);
 
 try

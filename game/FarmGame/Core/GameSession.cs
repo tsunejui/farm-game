@@ -6,12 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using FarmGame.Bootstrap;
 using FarmGame.Entities;
 using FarmGame.Persistence;
 using FarmGame.Models;
 using FarmGame.Persistence.Entities;
-using FarmGame.Persistence.Repositories;
 using FarmGame.World;
 using FarmGame.World.Effects;
 using Serilog;
@@ -20,26 +18,22 @@ namespace FarmGame.Core;
 
 public class GameSession
 {
-    private PlayerStateRepository _playerStateRepo;
-    private MapStateRepository _mapStateRepo;
-    private SettingRepository _settings;
+    private DatabaseManager _db;
     private string _playerUuid;
     // Single source of truth: driven only by LoadPlayer() result
     public bool HasSavedState { get; private set; }
 
-    public GameSession(DatabaseInitResult dbResult)
+    public GameSession(DatabaseManager db, string playerUuid, PlayerState savedState)
     {
-        _playerStateRepo = dbResult.PlayerStateRepo;
-        _mapStateRepo = dbResult.MapStateRepo;
-        _settings = dbResult.Settings;
-        _playerUuid = dbResult.PlayerUuid;
-        HasSavedState = dbResult.SavedState != null;
+        _db = db;
+        _playerUuid = playerUuid;
+        HasSavedState = savedState != null;
     }
 
     public PlayerState LoadPlayer()
     {
-        if (_playerStateRepo == null) return null;
-        var result = _playerStateRepo.Load(_playerUuid);
+        if (_db == null) return null;
+        var result = _db.LoadPlayerState(_playerUuid);
         var state = result.Success ? result.Value : null;
         HasSavedState = state != null;
         return state;
@@ -50,7 +44,7 @@ public class GameSession
 
     public void SavePlayer(Player player, string currentMap)
     {
-        if (player == null || _playerStateRepo == null) return;
+        if (player == null || _db == null) return;
 
         var state = new PlayerState
         {
@@ -70,7 +64,7 @@ public class GameSession
             CritDamage = player.CritDamage,
         };
 
-        var result = _playerStateRepo.Save(_playerUuid, state, GameConstants.GameTitle);
+        var result = _db.SavePlayerState(_playerUuid, state, GameConstants.GameTitle);
         if (result.Success)
             Log.Information("Player state saved: pos=({X},{Y}), dir={Dir}, mapState={MapState}",
                 state.PositionX, state.PositionY, state.FacingDirection, CurrentMapStateId ?? "null");
@@ -84,7 +78,7 @@ public class GameSession
     /// </summary>
     public void LoadOrCreateMapState(string mapId, GameMap map, PlayerState savedState)
     {
-        if (_mapStateRepo == null) return;
+        if (_db == null) return;
 
         var mapStateId = savedState?.CurrentMapStateId;
         Log.Debug("LoadOrCreateMapState: mapId={MapId}, savedMapStateId={StateId}",
@@ -93,7 +87,7 @@ public class GameSession
         // If no saved map state ID, try to find an existing one by map_id (handles TTL checks)
         if (mapStateId == null)
         {
-            var findResult = _mapStateRepo.FindByMapId(mapId);
+            var findResult = _db.FindMapStateByMapId(mapId);
             if (findResult.Success)
             {
                 mapStateId = findResult.Value.Id;
@@ -104,7 +98,7 @@ public class GameSession
         if (mapStateId != null)
         {
             // Restore object states from DB
-            var loadResult = _mapStateRepo.LoadObjects(mapStateId);
+            var loadResult = _db.LoadMapObjects(mapStateId);
             Log.Debug("LoadObjects result: success={Success}, count={Count}",
                 loadResult.Success, loadResult.Success ? loadResult.Value.Count : 0);
             if (loadResult.Success && loadResult.Value.Count > 0)
@@ -145,7 +139,7 @@ public class GameSession
                 CurrentMapStateId = mapStateId;
 
                 // Reset TTL to 0 — player is now on this map (active)
-                _mapStateRepo.SetTtl(mapStateId, 0);
+                _db.SetMapStateTtl(mapStateId, 0);
 
                 Log.Information("Map state restored: {MapId}, stateId={StateId}, objects={Count}",
                     mapId, mapStateId, loadResult.Value.Count);
@@ -154,7 +148,7 @@ public class GameSession
         }
 
         // First visit or expired state: create new map state
-        var createResult = _mapStateRepo.CreateMapState(mapId);
+        var createResult = _db.CreateMapState(mapId);
         if (createResult.Success)
         {
             CurrentMapStateId = createResult.Value;
@@ -177,7 +171,7 @@ public class GameSession
     /// </summary>
     public void SaveMapObjects(GameMap map)
     {
-        if (_mapStateRepo == null || CurrentMapStateId == null) return;
+        if (_db == null || CurrentMapStateId == null) return;
 
         var records = map.Objects.Select(o => new MapObjectRecord
         {
@@ -190,7 +184,7 @@ public class GameSession
             StateJson = "{}",
         }).ToList();
 
-        var result = _mapStateRepo.SaveObjects(CurrentMapStateId, records);
+        var result = _db.SaveMapObjects(CurrentMapStateId, records);
         if (result.Success)
         {
             Log.Debug("Map objects saved: stateId={StateId}, count={Count}",
@@ -209,10 +203,10 @@ public class GameSession
     /// </summary>
     public void SetMapStateTtlOnLeave()
     {
-        if (_mapStateRepo == null || CurrentMapStateId == null) return;
+        if (_db == null || CurrentMapStateId == null) return;
 
         long ttlUtc = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 300; // 5 minutes
-        var result = _mapStateRepo.SetTtl(CurrentMapStateId, ttlUtc);
+        var result = _db.SetMapStateTtl(CurrentMapStateId, ttlUtc);
         if (result.Success)
             Log.Information("Map state TTL set: stateId={StateId}, expiresAt={TtlUtc}",
                 CurrentMapStateId, ttlUtc);
@@ -237,9 +231,9 @@ public class GameSession
 
     private void RestoreObjectEffects(WorldObject obj)
     {
-        if (_mapStateRepo == null || string.IsNullOrEmpty(obj.InstanceId)) return;
+        if (_db == null || string.IsNullOrEmpty(obj.InstanceId)) return;
 
-        var loadResult = _mapStateRepo.LoadEffects(obj.InstanceId);
+        var loadResult = _db.LoadObjectEffects(obj.InstanceId);
         if (!loadResult.Success) return;
 
         foreach (var record in loadResult.Value)
@@ -258,7 +252,7 @@ public class GameSession
 
     private void SaveObjectEffects(WorldObject obj)
     {
-        if (_mapStateRepo == null || string.IsNullOrEmpty(obj.InstanceId)) return;
+        if (_db == null || string.IsNullOrEmpty(obj.InstanceId)) return;
 
         var effectRecords = obj.Effects
             .Where(ae => !ae.IsExpired)
@@ -268,17 +262,17 @@ public class GameSession
                 Ttl = ae.TtlSeconds,
             }).ToList();
 
-        _mapStateRepo.SaveEffects(obj.InstanceId, effectRecords);
+        _db.SaveObjectEffects(obj.InstanceId, effectRecords);
     }
 
     public void SaveSetting(string key, string value)
     {
-        _settings?.Set(key, value);
+        _db?.SetSetting(key, value);
     }
 
     public string GetSetting(string key, string defaultValue = null)
     {
-        return _settings?.Get(key, defaultValue) ?? defaultValue;
+        return _db?.GetSetting(key, defaultValue) ?? defaultValue;
     }
 
     public void ChangeLanguage(string language, string contentDir)
@@ -290,31 +284,28 @@ public class GameSession
 
     public void DeleteAndReset()
     {
-        var dbPath = DatabasePathResolver.GetDatabasePath(GameConstants.GameTitle);
+        var dbPath = _db.DatabasePath;
         var currentLanguage = LocaleManager.CurrentLanguage;
 
-        DatabaseBackup.Backup(dbPath);
+        _db.Backup();
         if (File.Exists(dbPath))
             File.Delete(dbPath);
 
-        var freshDb = DatabaseInitializer.Run();
-        if (freshDb.Success)
+        var freshDb = new DatabaseManager(GameConstants.GameTitle);
+        var initResult = freshDb.Initialize();
+        if (initResult.Success)
         {
-            _playerStateRepo = freshDb.PlayerStateRepo;
-            _mapStateRepo = freshDb.MapStateRepo;
-            _settings = freshDb.Settings;
-            _playerUuid = freshDb.PlayerUuid;
-            _settings.Set("language", currentLanguage);
+            _db = freshDb;
+            _playerUuid = Guid.NewGuid().ToString();
+            _db.SetSetting("player_uuid", _playerUuid);
+            _db.SetSetting("language", currentLanguage);
         }
         else
         {
-            _playerStateRepo = null;
-            _mapStateRepo = null;
-            _settings = null;
+            _db = null;
         }
 
         CurrentMapStateId = null;
-
         HasSavedState = false;
         Log.Information("Character deleted, database re-initialized");
     }
