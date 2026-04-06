@@ -82,7 +82,13 @@ public class BackgroundController : BaseController<BackgroundLogicState, Backgro
 
         var settingsView = new SettingsView();
         settingsView.HasSavedState = () => session?.HasSavedState ?? false;
-        settingsView.OnLanguageChanged = (lang) => session?.ChangeLanguage(lang, contentDir);
+        settingsView.OnLanguageChanged = (lang) =>
+        {
+            session?.ChangeLanguage(lang, contentDir);
+            // Rebuild all views to reflect the new language
+            foreach (var view in _screens.Values)
+                view.Rebuild();
+        };
         settingsView.OnDeleteCharacter = () =>
         {
             session?.DeleteAndReset();
