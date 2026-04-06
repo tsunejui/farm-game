@@ -44,7 +44,12 @@ public class SystemController : BaseController<SystemLogicState, SystemRenderSta
 
     public override void Initialize()
     {
-        // Read configs dir from env (set by .env.local), fallback to relative path
+        // Read content dir from env, fallback to value set by Game1
+        var envContentDir = Environment.GetEnvironmentVariable("CONTENT_DIR");
+        if (!string.IsNullOrEmpty(envContentDir) && Directory.Exists(envContentDir))
+            ContentDir = envContentDir;
+
+        // Read configs dir from env, fallback to relative path
         var configsDir = Environment.GetEnvironmentVariable("CONFIGS_DIR");
         if (string.IsNullOrEmpty(configsDir) || !Directory.Exists(configsDir))
             configsDir = Path.Combine(Path.GetDirectoryName(ContentDir), "configs");

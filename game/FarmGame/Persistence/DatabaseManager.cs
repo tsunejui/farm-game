@@ -37,8 +37,18 @@ public class DatabaseManager
 
     public DatabaseManager(string gameName)
     {
-        _databaseDir = ResolveDatabaseDirectory(gameName);
-        _databasePath = Path.Combine(_databaseDir, DatabaseFileName);
+        // Check env for explicit DB path first
+        var envDbPath = System.Environment.GetEnvironmentVariable("DB_PATH");
+        if (!string.IsNullOrEmpty(envDbPath))
+        {
+            _databasePath = envDbPath;
+            _databaseDir = Path.GetDirectoryName(envDbPath);
+        }
+        else
+        {
+            _databaseDir = ResolveDatabaseDirectory(gameName);
+            _databasePath = Path.Combine(_databaseDir, DatabaseFileName);
+        }
     }
 
     // ─── Initialization ─────────────────────────────────────

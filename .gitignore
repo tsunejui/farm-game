@@ -40,3 +40,6 @@ vendir.lock.yml
 
 # Local environment config (auto-generated)
 .env.local
+
+# Local dev data (database, logs)
+.data/
