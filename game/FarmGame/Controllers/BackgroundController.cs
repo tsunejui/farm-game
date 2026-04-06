@@ -1,8 +1,21 @@
+// =============================================================================
+// BackgroundController.cs — Background rendering, audio, and screen management
+//
+// Order: 100 (drawn behind world and UI)
+// Owns AudioManager (BGM/SE) and ScreenManager (scene switching).
+// Draws gradient background. Manages screen lifecycle for title, settings,
+// loading, and gameplay screens.
+// =============================================================================
+
+using System;
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using Serilog;
+using FarmGame.Audio;
 using FarmGame.Core;
+using FarmGame.Screens;
 
 namespace FarmGame.Controllers;
 
@@ -11,6 +24,7 @@ public class BackgroundLogicState
     public float ScrollOffset { get; set; }
     public Color TopColor { get; set; } = new Color(20, 40, 20);
     public Color BottomColor { get; set; } = new Color(10, 25, 10);
+    public ScreenTransition PendingTransition { get; set; }
 }
 
 public class BackgroundRenderState
@@ -18,50 +32,116 @@ public class BackgroundRenderState
     public float ScrollOffset { get; set; }
     public Color TopColor { get; set; } = new Color(20, 40, 20);
     public Color BottomColor { get; set; } = new Color(10, 25, 10);
+    public GameState CurrentScreen { get; set; }
 }
 
-/// <summary>
-/// Draws a full-screen gradient background beneath all other layers.
-/// Always active, even when the game is paused.
-/// </summary>
 public class BackgroundController : BaseController<BackgroundLogicState, BackgroundRenderState>
 {
-    private const float ScrollSpeed = 8f; // pixels per second
+    private const float ScrollSpeed = 8f;
 
     public override string Name => "Background";
-    public override int Order => 0;
+    public override int Order => 100;
+
+    // ─── Managers ───────────────────────────────────────────
+
+    public AudioManager Audio { get; private set; }
+    public ScreenManager Screen { get; private set; }
+
+    // ─── Screen Instances (managed by ScreenManager) ────────
+
+    private IScreen _activeScreen;
+    private readonly System.Collections.Generic.Dictionary<GameState, IScreen> _screens = new();
+
+    /// <summary>Callback when screen transition requests game exit.</summary>
+    public Action OnExitGame { get; set; }
+
+    /// <summary>Callback when "Start Game" is triggered from title screen.</summary>
+    public Action OnStartGame { get; set; }
+
+    // ─── Lifecycle ──────────────────────────────────────────
+
+    public override void Initialize()
+    {
+        Audio = new AudioManager();
+        Audio.Initialize();
+
+        Screen = new ScreenManager();
+        Log.Information("[BackgroundController] Initialized");
+    }
+
+    public override void Load(ConfigManager config)
+    {
+        // Screens are registered externally from Game1 via RegisterScreen()
+    }
+
+    /// <summary>Register a screen for a game state.</summary>
+    public void RegisterScreen(GameState state, IScreen screen)
+    {
+        _screens[state] = screen;
+    }
+
+    /// <summary>Transition to a game state, activating its screen.</summary>
+    public void TransitionTo(GameState target)
+    {
+        var from = Screen.CurrentState;
+
+        // Exit old screen
+        _activeScreen?.OnExit(target);
+
+        Screen.TransitionTo(target);
+
+        // Enter new screen
+        if (_screens.TryGetValue(target, out var screen))
+        {
+            _activeScreen = screen;
+            _activeScreen.OnEnter(from);
+        }
+        else
+        {
+            _activeScreen = null;
+        }
+
+        Log.Information("[BackgroundController] Screen: {From} → {To}", from, target);
+    }
+
+    /// <summary>Initialize the first screen.</summary>
+    public void InitializeScreen(GameState initialState)
+    {
+        Screen.TransitionTo(initialState);
+        if (_screens.TryGetValue(initialState, out var screen))
+        {
+            _activeScreen = screen;
+            _activeScreen.OnEnter(initialState);
+        }
+    }
+
+    public override void Shutdown()
+    {
+        Audio?.Shutdown();
+        Log.Information("[BackgroundController] Shutdown");
+    }
+
+    // ─── Update ─────────────────────────────────────────────
 
     public override void UpdateLogic(GameTime gameTime)
     {
-        var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-        LogicState.ScrollOffset += ScrollSpeed * dt;
+        float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-        // Wrap to avoid float overflow over long sessions
+        // Gradient scroll
+        LogicState.ScrollOffset += ScrollSpeed * dt;
         if (LogicState.ScrollOffset > 10000f)
             LogicState.ScrollOffset -= 10000f;
-    }
 
-    public override void DrawRender(SpriteBatch spriteBatch)
-    {
-        int screenW = GameConstants.ScreenWidth;
-        int screenH = GameConstants.ScreenHeight;
+        // Audio
+        Audio?.Update(dt);
 
-        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-
-        const int bandCount = 16;
-        int bandHeight = screenH / bandCount + 1;
-
-        for (int i = 0; i < bandCount; i++)
+        // Active screen update
+        if (_activeScreen != null)
         {
-            float t = (float)i / (bandCount - 1);
-            var color = Color.Lerp(RenderState.TopColor, RenderState.BottomColor, t);
-            int y = i * (screenH / bandCount);
-            spriteBatch.FillRectangle(
-                new Rectangle(0, y, screenW, bandHeight),
-                color);
+            var transition = _activeScreen.Update(gameTime);
+            if (transition != null && transition != ScreenTransition.None)
+                LogicState.PendingTransition = transition;
         }
-
-        spriteBatch.End();
     }
 
     protected override void CopyState(BackgroundLogicState logic, BackgroundRenderState render)
@@ -69,5 +149,45 @@ public class BackgroundController : BaseController<BackgroundLogicState, Backgro
         render.ScrollOffset = logic.ScrollOffset;
         render.TopColor = logic.TopColor;
         render.BottomColor = logic.BottomColor;
+        render.CurrentScreen = Screen.CurrentState;
+
+        // Process pending transitions on main thread
+        if (logic.PendingTransition != null)
+        {
+            var t = logic.PendingTransition;
+            logic.PendingTransition = null;
+
+            if (t.Exit)
+                OnExitGame?.Invoke();
+            else if (t.Target.HasValue)
+                TransitionTo(t.Target.Value);
+        }
+    }
+
+    // ─── Draw ───────────────────────────────────────────────
+
+    public override void DrawRender(SpriteBatch spriteBatch)
+    {
+        int screenW = GameConstants.ScreenWidth;
+        int screenH = GameConstants.ScreenHeight;
+
+        // Gradient background
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        const int bandCount = 16;
+        int bandHeight = screenH / bandCount + 1;
+        for (int i = 0; i < bandCount; i++)
+        {
+            float t = (float)i / (bandCount - 1);
+            var color = Color.Lerp(RenderState.TopColor, RenderState.BottomColor, t);
+            int y = i * (screenH / bandCount);
+            spriteBatch.FillRectangle(new Rectangle(0, y, screenW, bandHeight), color);
+        }
+        spriteBatch.End();
+
+        // Active screen draw (title, settings, loading — but NOT gameplay world)
+        if (_activeScreen != null && RenderState.CurrentScreen != GameState.Playing)
+        {
+            _activeScreen.Draw(spriteBatch);
+        }
     }
 }

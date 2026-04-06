@@ -1,20 +1,23 @@
 // =============================================================================
-// GameplayInitializer.cs — Initializes gameplay state (map, player, camera)
+// MapManager.cs — Map loading and management
+//
+// Handles loading maps from definitions, building GameMap instances,
+// and managing map transitions (teleport).
 // =============================================================================
 
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Serilog;
 using FarmGame.Camera;
 using FarmGame.Core;
 using FarmGame.Data;
 using FarmGame.Entities;
 using FarmGame.Models;
-using FarmGame.World;
 
-namespace FarmGame.Bootstrap;
+namespace FarmGame.World;
 
-public class GameplayInitResult
+public class MapLoadResult
 {
     public GameMap Map { get; init; }
     public Player Player { get; init; }
@@ -22,18 +25,33 @@ public class GameplayInitResult
     public string MapName { get; init; }
 }
 
-public static class GameplayInitializer
+public class MapManager
 {
-    public static GameplayInitResult Run(
-        PlayerState savedState,
-        DataRegistry registry,
-        Func<string, Texture2D> loadTexture,
-        GraphicsDevice graphicsDevice,
-        string contentDir = null)
+    private DataRegistry _registry;
+    private Func<string, Texture2D> _loadTexture;
+    private GraphicsDevice _graphicsDevice;
+    private string _contentDir;
+
+    public GameMap CurrentMap { get; private set; }
+    public string CurrentMapId => CurrentMap?.MapId;
+
+    public void Configure(DataRegistry registry, Func<string, Texture2D> loadTexture,
+        GraphicsDevice graphicsDevice, string contentDir)
+    {
+        _registry = registry;
+        _loadTexture = loadTexture;
+        _graphicsDevice = graphicsDevice;
+        _contentDir = contentDir;
+    }
+
+    /// <summary>
+    /// Load a map and create player + camera from saved state or defaults.
+    /// </summary>
+    public MapLoadResult LoadMap(PlayerState savedState)
     {
         var mapId = savedState?.CurrentMap ?? GameConstants.StartMap;
-        var mapDef = registry.Maps[mapId];
-        var map = MapBuilder.Build(mapDef, registry, loadTexture, graphicsDevice, contentDir);
+        var mapDef = _registry.Maps[mapId];
+        var map = MapBuilder.Build(mapDef, _registry, _loadTexture, _graphicsDevice, _contentDir);
 
         var config = mapDef.Config;
         Point playerStart;
@@ -51,10 +69,12 @@ public static class GameplayInitializer
         }
 
         var player = new Player(playerStart, map, facingDirection);
-        var camera = new Camera2D(graphicsDevice);
+        var camera = new Camera2D(_graphicsDevice);
         var mapName = LocaleManager.Get("maps", mapId, mapDef.Metadata.DisplayName ?? mapId);
 
-        return new GameplayInitResult
+        CurrentMap = map;
+
+        return new MapLoadResult
         {
             Map = map,
             Player = player,

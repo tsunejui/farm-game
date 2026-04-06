@@ -2,19 +2,18 @@
 // Game1.cs — Main game entry class
 //
 // Lifecycle:
-//   Game1()      → Create InitManager, QueueManager, ControllerManager.
-//   Initialize() → Fluent bootstrap, wire callbacks.
-//   LoadContent() → Create assets, controllers, register scenes in ScreenManager.
-//   Update()     → InputSystem → ControllerManager.Update (parallel).
-//   Draw()       → ControllerManager.Draw (single-thread responsibility chain).
-//
-// ScreenManager decides which controllers are active per scene.
-// No more manual if/else on GameState in Update/Draw.
+//   Game1()      → Create 5 controllers, register to ControllerManager.
+//   Initialize() → ControllerManager.Initialize() (each controller creates managers).
+//   LoadContent() → Graphics init, ControllerManager.Load(), wire screens, build queue.
+//   Update()     → ControllerManager.Update() (parallel + queue drain + sync).
+//   Draw()       → ControllerManager.Draw() (sequential by Order).
+//   OnExiting()  → ControllerManager.Shutdown().
 // =============================================================================
 
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Myra;
 using Serilog;
 using FarmGame.Core;
 using FarmGame.Controllers;
@@ -30,15 +29,10 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
     private string _contentDir;
 
-    private readonly InitManager _init;
-    private readonly QueueManager _queue;
     private readonly ControllerManager _controllerManager;
-    private ScreenManager _screenManager;
-    private IAssetService _assets;
-    private InputSystem _input;
 
     // =========================================================================
-    // Constructor
+    // Constructor — Create and register 5 controllers
     // =========================================================================
     public Game1()
     {
@@ -46,167 +40,155 @@ public class Game1 : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
 
-        _init = new InitManager();
-        _queue = new QueueManager();
         _controllerManager = new ControllerManager();
+        _controllerManager.Register(new SystemController());
+        _controllerManager.Register(new InputController());
+        _controllerManager.Register(new BackgroundController());
+        _controllerManager.Register(new WorldController());
+        _controllerManager.Register(new NetworkController());
     }
 
     // =========================================================================
-    // Initialize
+    // Initialize — ControllerManager.Initialize()
     // =========================================================================
     protected override void Initialize()
     {
         _contentDir = Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, Content.RootDirectory);
 
-        _init
-            .WithConfig(_contentDir)
-            .WithDatabase()
-            .WithLocale()
-            .WithControllers(_controllerManager)
-            .Bootstrap();
+        // SystemController needs content dir before Initialize
+        _controllerManager.System.ContentDir = _contentDir;
 
-        // Wire controller callbacks for scene transitions
-        _controllerManager.OnLeaveGame = () => _screenManager.TransitionTo(GameState.TitleScreen);
-        _controllerManager.OnSettings = () => _screenManager.TransitionTo(GameState.Settings);
+        // Each controller creates its sub-managers
+        _controllerManager.Initialize();
 
         base.Initialize();
     }
 
     // =========================================================================
-    // LoadContent
+    // LoadContent — Graphics init, ControllerManager.Load(), wire screens
     // =========================================================================
     protected override void LoadContent()
     {
-        // Graphics + Font + Myra must init before any UI creation
-        _spriteBatch = Bootstrap.GraphicsInitializer.Run(this, _graphics, _contentDir);
+        // Graphics init (needs Game + GraphicsDeviceManager, stays in Game1)
+        _graphics.PreferredBackBufferWidth = GameConstants.ScreenWidth;
+        _graphics.PreferredBackBufferHeight = GameConstants.ScreenHeight;
+        _graphics.ApplyChanges();
+        _spriteBatch = new SpriteBatch(GraphicsDevice);
+        FontManager.Initialize(GraphicsDevice, _contentDir);
+        MyraEnvironment.Game = this;
 
-        _assets = new AssetService(GraphicsDevice, Content, _contentDir);
-        _input = new InputSystem(_queue);
+        // Create asset service
+        var assets = new AssetService(GraphicsDevice, Content, _contentDir);
 
-        // Load effects (configs already loaded by ConfigManager in InitManager)
-        World.Effects.EffectRegistry.LoadDefinitions(_contentDir, _assets.LoadTexture);
+        // Load effect definitions
+        World.Effects.EffectRegistry.LoadDefinitions(_contentDir, assets.LoadTexture);
 
-        // Create screen-based controllers
+        // Load controllers (each loads its resources)
+        _controllerManager.Load(_controllerManager.System.Config);
+
+        // Wire InputController to QueueManager
+        _controllerManager.Input.SetQueueManager(_controllerManager.System.Queue);
+
+        // Wire WorldController dependencies
+        var registry = _controllerManager.System.Config.ToDataRegistry();
+        _controllerManager.World.Configure(
+            assets, registry,
+            _controllerManager.System.Session,
+            _controllerManager.System.Queue,
+            _controllerManager.Background.Screen);
+
+        _controllerManager.World.OnLeaveGame = () =>
+            _controllerManager.Background.TransitionTo(GameState.TitleScreen);
+        _controllerManager.World.OnSettings = () =>
+            _controllerManager.Background.TransitionTo(GameState.Settings);
+
+        // BackgroundController exit callback
+        _controllerManager.Background.OnExitGame = () => Exit();
+        _controllerManager.Background.OnStartGame = () =>
+        {
+            var savedState = _controllerManager.System.Session?.LoadPlayer();
+            _controllerManager.World.StartGame(savedState);
+            _controllerManager.Background.TransitionTo(GameState.Playing);
+        };
+
+        // Create and register screens
         var titleScreen = new TitleScreen();
-        titleScreen.OnStartGame = StartGame;
-        titleScreen.HasSavedState = _init.Session?.HasSavedState ?? false;
+        titleScreen.OnStartGame = () => _controllerManager.Background.OnStartGame?.Invoke();
+        titleScreen.HasSavedState = _controllerManager.System.Session?.HasSavedState ?? false;
         titleScreen.Initialize();
 
         var settingsScreen = new SettingsScreen();
-        settingsScreen.HasSavedState = () => _init.Session?.HasSavedState ?? false;
+        settingsScreen.HasSavedState = () => _controllerManager.System.Session?.HasSavedState ?? false;
         settingsScreen.OnLanguageChanged = (lang) =>
         {
-            _init.Session?.ChangeLanguage(lang, _contentDir);
+            _controllerManager.System.Session?.ChangeLanguage(lang, _contentDir);
         };
         settingsScreen.OnDeleteCharacter = () =>
         {
-            _controllerManager.Loading?.Configure(() =>
-            {
-                _init.Session?.DeleteAndReset();
-                titleScreen.HasSavedState = false;
-            }, GameState.TitleScreen);
-            _screenManager.TransitionTo(GameState.Loading);
+            _controllerManager.System.Session?.DeleteAndReset();
+            titleScreen.HasSavedState = false;
+            _controllerManager.Background.TransitionTo(GameState.TitleScreen);
         };
         settingsScreen.Initialize();
 
         var loadingScreen = new LoadingScreen();
         loadingScreen.Initialize();
 
-        var titleCtrl = new TitleController(titleScreen);
-        var settingsCtrl = new SettingsController(settingsScreen);
-        var loadingCtrl = new LoadingController(loadingScreen);
+        _controllerManager.Background.RegisterScreen(GameState.TitleScreen, titleScreen);
+        _controllerManager.Background.RegisterScreen(GameState.Settings, settingsScreen);
+        _controllerManager.Background.RegisterScreen(GameState.Loading, loadingScreen);
 
-        // Wire transition callbacks
-        void HandleTransition(ScreenTransition t)
-        {
-            if (t.Exit) { Exit(); return; }
-            if (t.Target.HasValue) _screenManager.TransitionTo(t.Target.Value);
-        }
-        titleCtrl.OnTransition = HandleTransition;
-        settingsCtrl.OnTransition = HandleTransition;
-        loadingCtrl.OnTransition = HandleTransition;
-
-        // Configure all controllers
-        var registry = _init.Config.ToDataRegistry();
-        _controllerManager.ConfigureAll(_assets, registry, _init.Session, _queue,
-            titleCtrl, settingsCtrl, loadingCtrl);
-
-        // ScreenManager: register scenes (which controllers per GameState)
-        _screenManager = new ScreenManager(_controllerManager);
-
-        _screenManager.RegisterScene(GameState.TitleScreen, () =>
-            new IController[] { _controllerManager.Title });
-
-        _screenManager.RegisterScene(GameState.Settings, () =>
-            new IController[] { _controllerManager.Settings });
-
-        _screenManager.RegisterScene(GameState.Loading, () =>
-            new IController[] { _controllerManager.Loading });
-
-        _screenManager.RegisterScene(GameState.Playing, () =>
-            new IController[]
-            {
-                _controllerManager.Get<BackgroundController>(),
-                _controllerManager.World,
-                _controllerManager.Get<ParticleController>(),
-                _controllerManager.UI,
-                _controllerManager.Get<NetworkSystemController>(),
-            });
+        // Register MediatR handlers and build queue
+        var queue = _controllerManager.System.Queue;
+        queue.RegisterHandler(_controllerManager.World);
+        queue.RegisterHandler(_controllerManager.Network);
+        queue.Build();
 
         // Start on title screen
-        _screenManager.Initialize(GameState.TitleScreen);
+        _controllerManager.Background.InitializeScreen(GameState.TitleScreen);
 
         Log.Information("[Game1] Initialization complete");
     }
 
-    private void StartGame()
-    {
-        var savedState = _init.Session?.LoadPlayer();
-        _controllerManager.World.StartGame(savedState);
-        _screenManager.TransitionTo(GameState.Playing);
-    }
-
     // =========================================================================
-    // OnExiting
-    // =========================================================================
-    protected override void OnExiting(object sender, ExitingEventArgs args)
-    {
-        _controllerManager.World?.SaveState();
-        _assets?.UnloadAll();
-        _queue?.Dispose();
-        base.OnExiting(sender, args);
-    }
-
-    // =========================================================================
-    // Update — InputSystem → ControllerManager.Update (parallel)
+    // Update — ControllerManager.Update()
     // =========================================================================
     protected override void Update(GameTime gameTime)
     {
-        if (_input.Process(gameTime))
+        // Check exit request from InputController
+        if (_controllerManager.Input.ExitRequested)
         {
             Exit();
             return;
         }
 
-        // Sync input blocking
-        bool menuOpen = _controllerManager.UI?.IsMenuOpen ?? false;
-        _input.InputBlocked = menuOpen;
+        // Sync input blocking (menu open → block game input)
+        bool menuOpen = _controllerManager.World?.IsMenuOpen ?? false;
+        _controllerManager.Input.InputBlocked = menuOpen;
         if (_controllerManager.World != null)
             _controllerManager.World.InputBlocked = menuOpen;
 
-        // All active controllers update (parallel) → queue drain → sync
         _controllerManager.Update(gameTime);
 
         base.Update(gameTime);
     }
 
     // =========================================================================
-    // Draw — ControllerManager.Draw (single-thread responsibility chain)
+    // Draw — ControllerManager.Draw()
     // =========================================================================
     protected override void Draw(GameTime gameTime)
     {
         GraphicsDevice.Clear(Color.Black);
         _controllerManager.Draw(_spriteBatch);
         base.Draw(gameTime);
+    }
+
+    // =========================================================================
+    // OnExiting — ControllerManager.Shutdown()
+    // =========================================================================
+    protected override void OnExiting(object sender, ExitingEventArgs args)
+    {
+        _controllerManager.Shutdown();
+        base.OnExiting(sender, args);
     }
 }
