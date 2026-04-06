@@ -3,6 +3,7 @@ using Serilog;
 using FarmGame.Core;
 using FarmGame.Models;
 using FarmGame.Persistence;
+using FarmGame.Persistence.Repositories;
 
 namespace FarmGame.Bootstrap;
 
@@ -33,11 +34,14 @@ public static class DatabaseInitializer
             return new DatabaseInitResult { Error = initResult.ErrorMessage };
         }
 
-        var playerUuid = database.GetSetting("player_uuid");
+        var settings = new SettingRepository(database);
+        var playerStateRepo = new PlayerStateRepository(database);
+
+        var playerUuid = settings.Get("player_uuid");
         if (string.IsNullOrEmpty(playerUuid))
         {
             playerUuid = Guid.NewGuid().ToString();
-            database.SetSetting("player_uuid", playerUuid);
+            settings.Set("player_uuid", playerUuid);
             Log.Information("[Init] Created new player UUID: {Uuid}", playerUuid);
         }
         else
@@ -47,7 +51,7 @@ public static class DatabaseInitializer
 
         // Load saved player state
         PlayerState savedState = null;
-        var loadResult = database.LoadPlayerState(playerUuid);
+        var loadResult = playerStateRepo.Load(playerUuid);
         if (loadResult.Success)
         {
             savedState = loadResult.Value;

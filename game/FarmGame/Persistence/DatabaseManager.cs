@@ -1,24 +1,21 @@
 // =============================================================================
-// DatabaseManager.cs — Unified database access layer
+// DatabaseManager.cs — Database infrastructure management
 //
-// Consolidates all SQLite operations: connection management, schema migration,
-// backup, and CRUD for player state, map state, objects, effects, and settings.
+// Handles connection lifecycle, schema migration, backup, and path resolution.
+// CRUD operations live in the Repository classes under Persistence/Repositories/.
 //
 // Usage:
-//   var db = new DatabaseManager(gameName);
-//   db.Initialize();                          // Create tables, run migrations, backup
-//   db.SavePlayerState(uuid, state, ver);     // Player CRUD
-//   db.LoadPlayerState(uuid);
-//   db.GetSetting("language");                // Settings KV store
+//   var dbManager = new DatabaseManager(gameName);
+//   dbManager.Initialize();               // Dir check, create tables, migrate, backup
+//   using var conn = dbManager.Connect(); // Create a connection for repository use
+//   dbManager.Backup();                   // Manual backup
 // =============================================================================
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using FarmGame.Models;
 using FarmGame.Persistence.Entities;
 using Serilog;
 using SQLite;
@@ -63,7 +60,7 @@ public class DatabaseManager
 
         try
         {
-            using var db = CreateConnection();
+            using var db = Connect();
             db.CreateTable<SchemaVersion>();
             db.CreateTable<Setting>();
             db.CreateTable<PlayerStateRecord>();
@@ -77,11 +74,9 @@ public class DatabaseManager
                 $"Failed to initialize database: {ex.Message}");
         }
 
-        // Run schema migrations
         var migrationResult = Migrate();
         if (!migrationResult.Success) return migrationResult;
 
-        // Backup after successful init
         Backup();
 
         Log.Information("[DatabaseManager] Initialized: {Path}", _databasePath);
@@ -90,332 +85,18 @@ public class DatabaseManager
 
     // ─── Connection ─────────────────────────────────────────
 
-    private SQLiteConnection CreateConnection() => new(_databasePath);
-
-    // ─── Settings ───────────────────────────────────────────
-
-    public string GetSetting(string key, string defaultValue = null)
-    {
-        try
-        {
-            using var db = CreateConnection();
-            var setting = db.Find<Setting>(key);
-            return setting?.Value ?? defaultValue;
-        }
-        catch
-        {
-            return defaultValue;
-        }
-    }
-
-    public DatabaseResult SetSetting(string key, string value)
-    {
-        try
-        {
-            using var db = CreateConnection();
-            db.InsertOrReplace(new Setting { Key = key, Value = value });
-            return DatabaseResult.Ok();
-        }
-        catch (Exception ex)
-        {
-            return DatabaseResult.Fail(DatabaseErrorKind.ConnectionFailed,
-                $"Failed to save setting '{key}': {ex.Message}");
-        }
-    }
-
-    // ─── Player State ───────────────────────────────────────
-
-    public DatabaseResult SavePlayerState(string playerUuid, PlayerState state, string gameVersion)
-    {
-        try
-        {
-            using var db = CreateConnection();
-            var existing = db.Table<PlayerStateRecord>()
-                .FirstOrDefault(r => r.PlayerUuid == playerUuid);
-
-            var now = DateTime.UtcNow.ToString("o");
-
-            if (existing != null)
-            {
-                existing.StateJson = state.ToJson();
-                existing.GameVersion = gameVersion;
-                existing.MaxHp = state.MaxHp;
-                existing.CurrentHp = state.CurrentHp;
-                existing.Strength = state.Strength;
-                existing.Dexterity = state.Dexterity;
-                existing.WeaponAtk = state.WeaponAtk;
-                existing.BuffPercent = state.BuffPercent;
-                existing.CritRate = state.CritRate;
-                existing.CritDamage = state.CritDamage;
-                existing.UpdatedAt = now;
-                db.Update(existing);
-            }
-            else
-            {
-                db.Insert(new PlayerStateRecord
-                {
-                    PlayerUuid = playerUuid,
-                    StateJson = state.ToJson(),
-                    GameVersion = gameVersion,
-                    MaxHp = state.MaxHp,
-                    CurrentHp = state.CurrentHp,
-                    Strength = state.Strength,
-                    Dexterity = state.Dexterity,
-                    WeaponAtk = state.WeaponAtk,
-                    BuffPercent = state.BuffPercent,
-                    CritRate = state.CritRate,
-                    CritDamage = state.CritDamage,
-                    CreatedAt = now,
-                    UpdatedAt = now,
-                });
-            }
-
-            return DatabaseResult.Ok();
-        }
-        catch (Exception ex)
-        {
-            return DatabaseResult.Fail(DatabaseErrorKind.ConnectionFailed,
-                $"Failed to save player state: {ex.Message}");
-        }
-    }
-
-    public DatabaseResult<PlayerState> LoadPlayerState(string playerUuid)
-    {
-        try
-        {
-            using var db = CreateConnection();
-            var record = db.Table<PlayerStateRecord>()
-                .FirstOrDefault(r => r.PlayerUuid == playerUuid);
-
-            if (record == null)
-                return DatabaseResult<PlayerState>.Fail(DatabaseErrorKind.None,
-                    $"No save found for player '{playerUuid}'.");
-
-            var state = PlayerState.FromJson(record.StateJson);
-            return DatabaseResult<PlayerState>.Ok(state);
-        }
-        catch (Exception ex)
-        {
-            return DatabaseResult<PlayerState>.Fail(DatabaseErrorKind.ConnectionFailed,
-                $"Failed to load player state: {ex.Message}");
-        }
-    }
-
-    public DatabaseResult DeletePlayerState(string playerUuid)
-    {
-        try
-        {
-            using var db = CreateConnection();
-            db.Table<PlayerStateRecord>()
-                .Delete(r => r.PlayerUuid == playerUuid);
-            return DatabaseResult.Ok();
-        }
-        catch (Exception ex)
-        {
-            return DatabaseResult.Fail(DatabaseErrorKind.ConnectionFailed,
-                $"Failed to delete player state: {ex.Message}");
-        }
-    }
-
-    public bool PlayerStateExists(string playerUuid)
-    {
-        try
-        {
-            using var db = CreateConnection();
-            return db.Table<PlayerStateRecord>()
-                .Any(r => r.PlayerUuid == playerUuid);
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
-    // ─── Map State ──────────────────────────────────────────
-
-    public DatabaseResult<string> CreateMapState(string mapId, string stateJson = "{}")
-    {
-        try
-        {
-            using var db = CreateConnection();
-            var id = Guid.NewGuid().ToString();
-            var now = DateTime.UtcNow.ToString("o");
-
-            db.Insert(new MapStateRecord
-            {
-                Id = id,
-                MapId = mapId,
-                StateJson = stateJson,
-                CreatedAt = now,
-                UpdatedAt = now,
-            });
-
-            return DatabaseResult<string>.Ok(id);
-        }
-        catch (Exception ex)
-        {
-            return DatabaseResult<string>.Fail(DatabaseErrorKind.ConnectionFailed,
-                $"Failed to create map state: {ex.Message}");
-        }
-    }
-
-    public DatabaseResult<MapStateRecord> FindMapStateByMapId(string mapId)
-    {
-        try
-        {
-            using var db = CreateConnection();
-            var record = db.Table<MapStateRecord>()
-                .Where(r => r.MapId == mapId)
-                .OrderByDescending(r => r.UpdatedAt)
-                .FirstOrDefault();
-
-            if (record == null)
-                return DatabaseResult<MapStateRecord>.Fail(DatabaseErrorKind.None,
-                    $"No map state found for '{mapId}'");
-
-            // Check TTL expiry
-            if (record.TtlUtc > 0)
-            {
-                long nowUtc = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-                if (nowUtc > record.TtlUtc)
-                {
-                    db.Execute("DELETE FROM map_object WHERE map_state_id = ?", record.Id);
-                    db.Execute("DELETE FROM map_state WHERE id = ?", record.Id);
-                    return DatabaseResult<MapStateRecord>.Fail(DatabaseErrorKind.None,
-                        $"Map state for '{mapId}' expired (TTL)");
-                }
-            }
-
-            return DatabaseResult<MapStateRecord>.Ok(record);
-        }
-        catch (Exception ex)
-        {
-            return DatabaseResult<MapStateRecord>.Fail(DatabaseErrorKind.ConnectionFailed,
-                $"Failed to find map state: {ex.Message}");
-        }
-    }
-
-    public DatabaseResult SetMapStateTtl(string mapStateId, long ttlUtc)
-    {
-        try
-        {
-            using var db = CreateConnection();
-            db.Execute("UPDATE map_state SET TtlUtc = ? WHERE id = ?", ttlUtc, mapStateId);
-            return DatabaseResult.Ok();
-        }
-        catch (Exception ex)
-        {
-            return DatabaseResult.Fail(DatabaseErrorKind.ConnectionFailed,
-                $"Failed to set TTL: {ex.Message}");
-        }
-    }
-
-    // ─── Map Objects ────────────────────────────────────────
-
-    public DatabaseResult SaveMapObjects(string mapStateId, List<MapObjectRecord> objects)
-    {
-        try
-        {
-            using var db = CreateConnection();
-            var now = DateTime.UtcNow.ToString("o");
-
-            db.Execute("DELETE FROM map_object WHERE map_state_id = ?", mapStateId);
-
-            foreach (var obj in objects)
-            {
-                obj.MapStateId = mapStateId;
-                if (string.IsNullOrEmpty(obj.Id))
-                    obj.Id = Guid.NewGuid().ToString();
-                if (string.IsNullOrEmpty(obj.CreatedAt))
-                    obj.CreatedAt = now;
-                obj.UpdatedAt = now;
-                db.Insert(obj);
-            }
-
-            db.Execute("UPDATE map_state SET updated_at = ? WHERE id = ?", now, mapStateId);
-
-            return DatabaseResult.Ok();
-        }
-        catch (Exception ex)
-        {
-            return DatabaseResult.Fail(DatabaseErrorKind.ConnectionFailed,
-                $"Failed to save objects: {ex.Message}");
-        }
-    }
-
-    public DatabaseResult<List<MapObjectRecord>> LoadMapObjects(string mapStateId)
-    {
-        try
-        {
-            using var db = CreateConnection();
-            var records = db.Table<MapObjectRecord>()
-                .Where(r => r.MapStateId == mapStateId)
-                .ToList();
-
-            return DatabaseResult<List<MapObjectRecord>>.Ok(records);
-        }
-        catch (Exception ex)
-        {
-            return DatabaseResult<List<MapObjectRecord>>.Fail(DatabaseErrorKind.ConnectionFailed,
-                $"Failed to load objects: {ex.Message}");
-        }
-    }
-
-    // ─── Object Effects ──────────────────────��──────────────
-
-    public DatabaseResult SaveObjectEffects(string objectId, List<ObjectEffectRecord> effects)
-    {
-        try
-        {
-            using var db = CreateConnection();
-            var now = DateTime.UtcNow.ToString("o");
-
-            db.Execute("DELETE FROM object_effect WHERE object_id = ?", objectId);
-
-            foreach (var eff in effects)
-            {
-                eff.ObjectId = objectId;
-                if (string.IsNullOrEmpty(eff.Id))
-                    eff.Id = Guid.NewGuid().ToString();
-                if (string.IsNullOrEmpty(eff.CreatedAt))
-                    eff.CreatedAt = now;
-                eff.UpdatedAt = now;
-                db.Insert(eff);
-            }
-
-            return DatabaseResult.Ok();
-        }
-        catch (Exception ex)
-        {
-            return DatabaseResult.Fail(DatabaseErrorKind.ConnectionFailed,
-                $"Failed to save effects: {ex.Message}");
-        }
-    }
-
-    public DatabaseResult<List<ObjectEffectRecord>> LoadObjectEffects(string objectId)
-    {
-        try
-        {
-            using var db = CreateConnection();
-            var records = db.Table<ObjectEffectRecord>()
-                .Where(r => r.ObjectId == objectId)
-                .ToList();
-
-            return DatabaseResult<List<ObjectEffectRecord>>.Ok(records);
-        }
-        catch (Exception ex)
-        {
-            return DatabaseResult<List<ObjectEffectRecord>>.Fail(DatabaseErrorKind.ConnectionFailed,
-                $"Failed to load effects: {ex.Message}");
-        }
-    }
+    /// <summary>
+    /// Create a new SQLite connection. Caller is responsible for disposal.
+    /// Used by repositories for each operation.
+    /// </summary>
+    public SQLiteConnection Connect() => new(_databasePath);
 
     // ─── Backup ─────────────────────────────────────────────
 
     public DatabaseResult Backup()
     {
         if (!File.Exists(_databasePath))
-            return DatabaseResult.Ok(); // Nothing to back up yet
+            return DatabaseResult.Ok();
 
         try
         {
@@ -426,7 +107,6 @@ public class DatabaseManager
             var backupPath = Path.Combine(backupDir, $"game_{timestamp}.db");
             File.Copy(_databasePath, backupPath, overwrite: true);
 
-            // Clean old backups
             var files = new DirectoryInfo(backupDir).GetFiles("game_*.db");
             if (files.Length > MaxBackups)
             {
@@ -450,7 +130,7 @@ public class DatabaseManager
     {
         try
         {
-            using var db = CreateConnection();
+            using var db = Connect();
             int dbVersion = GetCurrentDbVersion(db);
 
             for (int version = dbVersion + 1; version <= CurrentSchemaVersion; version++)
@@ -508,9 +188,6 @@ public class DatabaseManager
 
     // ─── Path Resolution ────────────────────────────────────
 
-    /// <summary>
-    /// Resolve the platform-specific database directory for log path access.
-    /// </summary>
     public static string ResolveDatabaseDirectory(string gameName)
     {
         string safeName = SanitizeName(gameName);
@@ -532,7 +209,7 @@ public class DatabaseManager
         return Path.Combine(baseDir, safeName);
     }
 
-    // ──��� Filesystem Checks ──────────────────────────────────
+    // ─── Filesystem Checks ──────────────────────────────────
 
     private DatabaseResult EnsureDirectoryExists()
     {
