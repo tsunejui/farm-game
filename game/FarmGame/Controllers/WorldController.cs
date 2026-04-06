@@ -18,6 +18,7 @@ using MonoGame.Extended;
 using FontStashSharp;
 using Serilog;
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 using FarmGame.Camera;
 using FarmGame.Data;
 using FarmGame.Entities;

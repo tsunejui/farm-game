@@ -4,7 +4,7 @@ using System.IO;
 using System.Text.Json;
 using Serilog;
 
-namespace FarmGame.Core;
+namespace FarmGame.Core.Managers;
 
 public static class LocaleManager
 {

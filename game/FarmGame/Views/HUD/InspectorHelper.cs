@@ -3,6 +3,7 @@
 // =============================================================================
 
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 using FarmGame.World;
 
 namespace FarmGame.Views.HUD;

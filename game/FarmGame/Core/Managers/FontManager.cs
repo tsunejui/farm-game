@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using FontStashSharp;
 using Serilog;
 
-namespace FarmGame.Core;
+namespace FarmGame.Core.Managers;
 
 public static class FontManager
 {

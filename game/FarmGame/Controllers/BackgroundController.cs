@@ -14,6 +14,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Serilog;
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 using FarmGame.Views;
 using FarmGame.Views.HUD;
 

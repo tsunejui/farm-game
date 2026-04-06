@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Serilog;
 using FarmGame.Camera;
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 using FarmGame.Data;
 using FarmGame.Entities;
 using FarmGame.Models;

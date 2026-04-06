@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Input;
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 using FarmGame.Entities.Actions;
 using FarmGame.Entities.Actions.Player;
 using FarmGame.Models;

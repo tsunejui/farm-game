@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using FontStashSharp;
 using MonoGame.Extended;
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 
 namespace FarmGame.Views.Panels;
 

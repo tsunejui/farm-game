@@ -7,6 +7,7 @@
 // =============================================================================
 
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 using Serilog;
 
 namespace FarmGame.World.Interactions;

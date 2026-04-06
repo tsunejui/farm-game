@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 using FarmGame.World;
 using FarmGame.Views.HUD;
 

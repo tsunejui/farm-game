@@ -2,7 +2,7 @@ using System.IO;
 using Serilog;
 using Serilog.Events;
 
-namespace FarmGame.Core;
+namespace FarmGame.Core.Managers;
 
 // =============================================================================
 // LogManager.cs — Serilog logger initialization

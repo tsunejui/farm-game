@@ -21,7 +21,7 @@ using Serilog;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-namespace FarmGame.Core;
+namespace FarmGame.Core.Managers;
 
 public class ConfigManager
 {

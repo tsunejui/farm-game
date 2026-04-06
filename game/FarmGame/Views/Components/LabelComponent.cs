@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Myra.Graphics2D.UI;
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 
 namespace FarmGame.Views.Components;
 

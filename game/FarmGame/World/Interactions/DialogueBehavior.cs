@@ -11,6 +11,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 
 namespace FarmGame.World.Interactions;
 

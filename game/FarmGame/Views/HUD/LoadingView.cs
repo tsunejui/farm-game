@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
 using FarmGame.Core;
+using FarmGame.Core.Managers;
 using FarmGame.Views.Components;
 
 namespace FarmGame.Views.HUD;
