@@ -25,7 +25,7 @@ public abstract class BaseController<TLogic, TRender> : IController
     private readonly object _syncLock = new();
 
     public virtual void Initialize() { }
-    public virtual void Load(ConfigManager config) { }
+    public virtual void Load(ControllerManager controllers) { }
     public virtual void Shutdown() { }
     public virtual void UpdateLogic(GameTime gameTime) { }
     public virtual void DrawRender(SpriteBatch spriteBatch) { }

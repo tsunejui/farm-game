@@ -22,8 +22,11 @@ public interface IController
     /// <summary>Create sub-managers and internal state. No external dependencies needed.</summary>
     void Initialize();
 
-    /// <summary>Load resources, wire dependencies using config from SystemController.</summary>
-    void Load(ConfigManager config);
+    /// <summary>
+    /// Load resources and wire dependencies.
+    /// Access sibling controllers via ControllerManager (e.g. System.Config, System.Queue).
+    /// </summary>
+    void Load(ControllerManager controllers);
 
     /// <summary>Graceful shutdown: close connections, dispose managers, flush queues.</summary>
     void Shutdown();

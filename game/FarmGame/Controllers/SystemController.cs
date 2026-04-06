@@ -104,10 +104,15 @@ public class SystemController : BaseController<SystemLogicState, SystemRenderSta
         Log.Information("[SystemController] Initialized");
     }
 
-    public override void Load(ConfigManager config)
+    public override void Load(ControllerManager controllers)
     {
-        // QueueManager is already created; handlers will be registered externally
-        // after all controllers are created (in ControllerManager.Load)
+        // Register MediatR handlers from all controllers and build queue
+        foreach (var c in new IController[] { controllers.World, controllers.Network })
+        {
+            if (c != null) Queue.RegisterHandler(c);
+        }
+        Queue.Build();
+        Log.Information("[SystemController] QueueManager built");
     }
 
     public override void Shutdown()
