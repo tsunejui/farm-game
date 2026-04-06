@@ -42,15 +42,9 @@ public class InputController : BaseController<InputLogicState, InputRenderState>
     /// <summary>True when the player pressed Back button to exit.</summary>
     public bool ExitRequested => LogicState.ExitRequested;
 
-    public override void Load(ConfigManager config)
+    public override void Load(ControllerManager controllers)
     {
-        // Get QueueManager from SystemController (passed via ControllerManager wiring)
-    }
-
-    /// <summary>Set QueueManager reference. Called during Game1 wiring.</summary>
-    public void SetQueueManager(QueueManager queue)
-    {
-        _queue = queue;
+        _queue = controllers.System.Queue;
     }
 
     public override void UpdateLogic(GameTime gameTime)

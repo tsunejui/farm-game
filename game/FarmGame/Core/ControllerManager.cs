@@ -61,11 +61,11 @@ public class ControllerManager
         Log.Information("[ControllerManager] Initialized {Count} controllers", _controllers.Count);
     }
 
-    /// <summary>Call Load() on each controller in Order.</summary>
-    public void Load(ConfigManager config)
+    /// <summary>Call Load() on each controller in Order, passing this ControllerManager.</summary>
+    public void Load()
     {
         foreach (var c in _controllers.OrderBy(c => c.Order))
-            c.Load(config);
+            c.Load(this);
 
         Log.Information("[ControllerManager] Loaded {Count} controllers", _controllers.Count);
     }

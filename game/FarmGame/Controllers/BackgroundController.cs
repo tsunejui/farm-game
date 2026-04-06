@@ -16,6 +16,7 @@ using Serilog;
 using FarmGame.Audio;
 using FarmGame.Core;
 using FarmGame.Screens;
+using FarmGame.Screens.HUD;
 
 namespace FarmGame.Controllers;
 
@@ -69,9 +70,47 @@ public class BackgroundController : BaseController<BackgroundLogicState, Backgro
         Log.Information("[BackgroundController] Initialized");
     }
 
-    public override void Load(ConfigManager config)
+    public override void Load(ControllerManager controllers)
     {
-        // Screens are registered externally from Game1 via RegisterScreen()
+        var session = controllers.System.Session;
+        var contentDir = controllers.System.ContentDir;
+
+        // Create and register screens
+        var titleScreen = new TitleScreen();
+        titleScreen.OnStartGame = () => OnStartGame?.Invoke();
+        titleScreen.HasSavedState = session?.HasSavedState ?? false;
+        titleScreen.Initialize();
+
+        var settingsScreen = new SettingsScreen();
+        settingsScreen.HasSavedState = () => session?.HasSavedState ?? false;
+        settingsScreen.OnLanguageChanged = (lang) => session?.ChangeLanguage(lang, contentDir);
+        settingsScreen.OnDeleteCharacter = () =>
+        {
+            session?.DeleteAndReset();
+            titleScreen.HasSavedState = false;
+            TransitionTo(GameState.TitleScreen);
+        };
+        settingsScreen.Initialize();
+
+        var loadingScreen = new LoadingScreen();
+        loadingScreen.Initialize();
+
+        RegisterScreen(GameState.TitleScreen, titleScreen);
+        RegisterScreen(GameState.Settings, settingsScreen);
+        RegisterScreen(GameState.Loading, loadingScreen);
+
+        // Wire callbacks
+        OnStartGame = () =>
+        {
+            var savedState = session?.LoadPlayer();
+            controllers.World.StartGame(savedState);
+            TransitionTo(GameState.Playing);
+        };
+
+        OnExitGame = null; // Set by Game1 after Load
+
+        // Start on title screen
+        InitializeScreen(GameState.TitleScreen);
     }
 
     /// <summary>Register a screen for a game state.</summary>

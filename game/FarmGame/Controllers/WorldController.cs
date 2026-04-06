@@ -22,7 +22,6 @@ using FarmGame.Camera;
 using FarmGame.Data;
 using FarmGame.Entities;
 using FarmGame.Models;
-using FarmGame.Services;
 using FarmGame.Screens.Panels;
 using FarmGame.World;
 using FarmGame.World.Interactions;
@@ -93,7 +92,8 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
 
     // ─── External References (set during Load) ──────────────
 
-    private IAssetService _assets;
+    private GraphicsDevice _graphicsDevice;
+    private Func<string, Texture2D> _loadTexture;
     private DataRegistry _registry;
     private GameSession _session;
     private QueueManager _queue;
@@ -126,23 +126,37 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
         Log.Information("[WorldController] Initialized");
     }
 
-    public override void Load(ConfigManager config)
+    public override void Load(ControllerManager controllers)
     {
+        var system = controllers.System;
+        _session = system.Session;
+        _queue = system.Queue;
+        _screenManager = controllers.Background.Screen;
+
+        // Build DataRegistry from ConfigManager
+        _registry = system.Config.ToDataRegistry();
+
+        // Create asset service (needs GraphicsDevice — set via SetGraphicsDevice)
+        if (_graphicsDevice != null)
+        {
+            Maps.Configure(_registry, _loadTexture, _graphicsDevice, system.ContentDir);
+        }
+
+        // Wire game menu callbacks
+        OnLeaveGame = () => controllers.Background.TransitionTo(GameState.TitleScreen);
+        OnSettings = () => controllers.Background.TransitionTo(GameState.Settings);
         _gameMenu.OnLeaveGame = () => OnLeaveGame?.Invoke();
         _gameMenu.OnSettings = () => OnSettings?.Invoke();
+
+        // Load effect definitions
+        World.Effects.EffectRegistry.LoadDefinitions(system.ContentDir, _loadTexture);
     }
 
-    /// <summary>Configure external dependencies after all controllers are created.</summary>
-    public void Configure(IAssetService assets, DataRegistry registry,
-        GameSession session, QueueManager queue, ScreenManager screenManager)
+    /// <summary>Set graphics context for asset loading. Called from Game1 before Load.</summary>
+    public void SetGraphicsContext(GraphicsDevice graphicsDevice, Func<string, Texture2D> loadTexture)
     {
-        _assets = assets;
-        _registry = registry;
-        _session = session;
-        _queue = queue;
-        _screenManager = screenManager;
-
-        Maps.Configure(registry, assets.LoadTexture, assets.GraphicsDevice, assets.ContentDir);
+        _graphicsDevice = graphicsDevice;
+        _loadTexture = loadTexture;
     }
 
     public override void Shutdown()
