@@ -32,10 +32,12 @@ public static class EnvLoader
 
     private static string FindEnvFile()
     {
-        var dir = AppDomain.CurrentDomain.BaseDirectory;
+        // Start from executable directory, strip trailing separator
+        var dir = AppDomain.CurrentDomain.BaseDirectory.TrimEnd(
+            Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 
-        // Search upward up to 6 levels to find .env.local
-        for (int i = 0; i < 6; i++)
+        // Search upward up to 10 levels
+        for (int i = 0; i < 10; i++)
         {
             var candidate = Path.Combine(dir, ".env.local");
             if (File.Exists(candidate))
