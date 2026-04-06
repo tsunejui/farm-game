@@ -24,6 +24,9 @@ public class GameMenuPanel
     private int _selectedIndex;
     private bool _isOpen;
 
+    // Cached item rectangles for mouse hit testing (set during Draw)
+    private readonly Rectangle[] _itemRects = new Rectangle[MenuItems.Length];
+
     public bool IsOpen => _isOpen;
 
     /// <summary>Fired when "Leave Game" is selected.</summary>
@@ -59,21 +62,45 @@ public class GameMenuPanel
             return;
         }
 
-        // Navigation
+        // Keyboard navigation
         if (keyboard.WasKeyPressed(Keys.Up) || keyboard.WasKeyPressed(Keys.W))
             _selectedIndex = (_selectedIndex - 1 + MenuItems.Length) % MenuItems.Length;
         if (keyboard.WasKeyPressed(Keys.Down) || keyboard.WasKeyPressed(Keys.S))
             _selectedIndex = (_selectedIndex + 1) % MenuItems.Length;
 
-        // Confirm
+        // Keyboard confirm
         if (keyboard.WasKeyPressed(Keys.Enter) || keyboard.WasKeyPressed(Keys.Z))
         {
-            switch (_selectedIndex)
+            ExecuteSelected();
+            return;
+        }
+
+        // Mouse hover and click
+        var mouse = Mouse.GetState();
+        var mousePos = new Point(mouse.X, mouse.Y);
+
+        for (int i = 0; i < _itemRects.Length; i++)
+        {
+            if (_itemRects[i].Contains(mousePos))
             {
-                case 0: Close(); break;               // Resume
-                case 1: OnSettings?.Invoke(); break;   // Settings
-                case 2: OnLeaveGame?.Invoke(); break;  // Leave Game
+                _selectedIndex = i;
+
+                if (mouse.LeftButton == ButtonState.Pressed)
+                {
+                    ExecuteSelected();
+                    return;
+                }
             }
+        }
+    }
+
+    private void ExecuteSelected()
+    {
+        switch (_selectedIndex)
+        {
+            case 0: Close(); break;               // Resume
+            case 1: OnSettings?.Invoke(); break;   // Settings
+            case 2: OnLeaveGame?.Invoke(); break;  // Leave Game
         }
     }
 
@@ -123,15 +150,16 @@ public class GameMenuPanel
                 _ => MenuItems[i],
             };
 
-            float itemY = panelY + 40 + i * 40;
+            int itemY = panelY + 40 + i * 40;
             bool selected = i == _selectedIndex;
             Color color = selected ? Color.White : Color.Gray;
 
+            // Cache item rect for mouse hit testing
+            _itemRects[i] = new Rectangle(panelX + 4, itemY, panelW - 8, 36);
+
             if (selected)
             {
-                spriteBatch.FillRectangle(
-                    new Rectangle(panelX + 4, (int)itemY, panelW - 8, 36),
-                    new Color(50, 70, 50));
+                spriteBatch.FillRectangle(_itemRects[i], new Color(50, 70, 50));
             }
 
             var textSize = font.MeasureString(label);
