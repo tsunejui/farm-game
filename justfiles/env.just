@@ -1,7 +1,7 @@
 # Generate local environment config (.env.local)
 env:
 	#!/bin/sh
-	project_root="$(cd "$(dirname "$0")" && pwd)"
+	project_root="{{ justfile_directory() }}"
 	data_dir="$project_root/.data"
 	printf '%s\n' \
 		"# Auto-generated local environment config — do not commit" \
