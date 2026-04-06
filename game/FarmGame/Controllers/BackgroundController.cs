@@ -13,7 +13,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Serilog;
-using FarmGame.Audio;
 using FarmGame.Core;
 using FarmGame.Views;
 using FarmGame.Views.HUD;

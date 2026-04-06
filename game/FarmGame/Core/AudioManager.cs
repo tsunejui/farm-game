@@ -1,6 +1,6 @@
 using Serilog;
 
-namespace FarmGame.Audio;
+namespace FarmGame.Core;
 
 /// <summary>
 /// Manages BGM playback and sound effect (SE) triggering.
