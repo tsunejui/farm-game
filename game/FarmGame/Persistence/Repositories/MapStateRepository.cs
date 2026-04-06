@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FarmGame.Mappings;
+using FarmGame.Models;
 using FarmGame.Persistence.Entities;
 
 namespace FarmGame.Persistence.Repositories;
@@ -40,7 +42,7 @@ public class MapStateRepository
         }
     }
 
-    public DatabaseResult<MapStateRecord> FindByMapId(string mapId)
+    public DatabaseResult<MapStateModel> FindByMapId(string mapId)
     {
         try
         {
@@ -51,7 +53,7 @@ public class MapStateRepository
                 .FirstOrDefault();
 
             if (record == null)
-                return DatabaseResult<MapStateRecord>.Fail(DatabaseErrorKind.None,
+                return DatabaseResult<MapStateModel>.Fail(DatabaseErrorKind.None,
                     $"No map state found for '{mapId}'");
 
             if (record.TtlUtc > 0)
@@ -61,16 +63,16 @@ public class MapStateRepository
                 {
                     db.Execute("DELETE FROM map_object WHERE map_state_id = ?", record.Id);
                     db.Execute("DELETE FROM map_state WHERE id = ?", record.Id);
-                    return DatabaseResult<MapStateRecord>.Fail(DatabaseErrorKind.None,
+                    return DatabaseResult<MapStateModel>.Fail(DatabaseErrorKind.None,
                         $"Map state for '{mapId}' expired (TTL)");
                 }
             }
 
-            return DatabaseResult<MapStateRecord>.Ok(record);
+            return DatabaseResult<MapStateModel>.Ok(record.ToModel());
         }
         catch (Exception ex)
         {
-            return DatabaseResult<MapStateRecord>.Fail(DatabaseErrorKind.ConnectionFailed,
+            return DatabaseResult<MapStateModel>.Fail(DatabaseErrorKind.ConnectionFailed,
                 $"Failed to find map state: {ex.Message}");
         }
     }
@@ -90,7 +92,7 @@ public class MapStateRepository
         }
     }
 
-    public DatabaseResult SaveObjects(string mapStateId, List<MapObjectRecord> objects)
+    public DatabaseResult SaveObjects(string mapStateId, List<MapObjectModel> objects)
     {
         try
         {
@@ -99,15 +101,16 @@ public class MapStateRepository
 
             db.Execute("DELETE FROM map_object WHERE map_state_id = ?", mapStateId);
 
-            foreach (var obj in objects)
+            foreach (var model in objects)
             {
-                obj.MapStateId = mapStateId;
-                if (string.IsNullOrEmpty(obj.Id))
-                    obj.Id = Guid.NewGuid().ToString();
-                if (string.IsNullOrEmpty(obj.CreatedAt))
-                    obj.CreatedAt = now;
-                obj.UpdatedAt = now;
-                db.Insert(obj);
+                var entity = model.ToEntity();
+                entity.MapStateId = mapStateId;
+                if (string.IsNullOrEmpty(entity.Id))
+                    entity.Id = Guid.NewGuid().ToString();
+                if (string.IsNullOrEmpty(entity.CreatedAt))
+                    entity.CreatedAt = now;
+                entity.UpdatedAt = now;
+                db.Insert(entity);
             }
 
             db.Execute("UPDATE map_state SET updated_at = ? WHERE id = ?", now, mapStateId);
@@ -121,7 +124,7 @@ public class MapStateRepository
         }
     }
 
-    public DatabaseResult<List<MapObjectRecord>> LoadObjects(string mapStateId)
+    public DatabaseResult<List<MapObjectModel>> LoadObjects(string mapStateId)
     {
         try
         {
@@ -130,16 +133,16 @@ public class MapStateRepository
                 .Where(r => r.MapStateId == mapStateId)
                 .ToList();
 
-            return DatabaseResult<List<MapObjectRecord>>.Ok(records);
+            return DatabaseResult<List<MapObjectModel>>.Ok(records.ToModels());
         }
         catch (Exception ex)
         {
-            return DatabaseResult<List<MapObjectRecord>>.Fail(DatabaseErrorKind.ConnectionFailed,
+            return DatabaseResult<List<MapObjectModel>>.Fail(DatabaseErrorKind.ConnectionFailed,
                 $"Failed to load objects: {ex.Message}");
         }
     }
 
-    public DatabaseResult SaveEffects(string objectId, List<ObjectEffectRecord> effects)
+    public DatabaseResult SaveEffects(string objectId, List<ObjectEffectModel> effects)
     {
         try
         {
@@ -148,15 +151,16 @@ public class MapStateRepository
 
             db.Execute("DELETE FROM object_effect WHERE object_id = ?", objectId);
 
-            foreach (var eff in effects)
+            foreach (var model in effects)
             {
-                eff.ObjectId = objectId;
-                if (string.IsNullOrEmpty(eff.Id))
-                    eff.Id = Guid.NewGuid().ToString();
-                if (string.IsNullOrEmpty(eff.CreatedAt))
-                    eff.CreatedAt = now;
-                eff.UpdatedAt = now;
-                db.Insert(eff);
+                var entity = model.ToEntity();
+                entity.ObjectId = objectId;
+                if (string.IsNullOrEmpty(entity.Id))
+                    entity.Id = Guid.NewGuid().ToString();
+                if (string.IsNullOrEmpty(entity.CreatedAt))
+                    entity.CreatedAt = now;
+                entity.UpdatedAt = now;
+                db.Insert(entity);
             }
 
             return DatabaseResult.Ok();
@@ -168,7 +172,7 @@ public class MapStateRepository
         }
     }
 
-    public DatabaseResult<List<ObjectEffectRecord>> LoadEffects(string objectId)
+    public DatabaseResult<List<ObjectEffectModel>> LoadEffects(string objectId)
     {
         try
         {
@@ -177,11 +181,11 @@ public class MapStateRepository
                 .Where(r => r.ObjectId == objectId)
                 .ToList();
 
-            return DatabaseResult<List<ObjectEffectRecord>>.Ok(records);
+            return DatabaseResult<List<ObjectEffectModel>>.Ok(records.ToModels());
         }
         catch (Exception ex)
         {
-            return DatabaseResult<List<ObjectEffectRecord>>.Fail(DatabaseErrorKind.ConnectionFailed,
+            return DatabaseResult<List<ObjectEffectModel>>.Fail(DatabaseErrorKind.ConnectionFailed,
                 $"Failed to load effects: {ex.Message}");
         }
     }
