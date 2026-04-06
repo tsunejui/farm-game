@@ -135,6 +135,8 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
 
         // Build DataRegistry from ConfigManager
         _registry = system.Config.ToDataRegistry();
+        Log.Information("[WorldController] Registry: {T} terrains, {I} items, {M} maps",
+            _registry.Terrains.Count, _registry.Items.Count, _registry.Maps.Count);
 
         // Configure MapManager (GraphicsDevice set via SetGraphicsContext before Load)
         Maps.Configure(_registry, _loadTexture, _graphicsDevice, system.ContentDir);
