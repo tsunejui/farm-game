@@ -1,3 +1,4 @@
+using System;
 using Serilog;
 using FarmGame.Core;
 using FarmGame.Persistence;
@@ -5,8 +6,10 @@ using FarmGame.Persistence;
 // Load .env.local before anything else
 EnvLoader.Load();
 
-var logDir = System.IO.Path.Combine(
-    DatabaseManager.ResolveDatabaseDirectory("Farm Game"), "logs");
+var logDir = Environment.GetEnvironmentVariable("LOG_DIR");
+if (string.IsNullOrEmpty(logDir))
+    logDir = System.IO.Path.Combine(
+        DatabaseManager.ResolveDatabaseDirectory("Farm Game"), "logs");
 LogManager.Initialize(logDir);
 
 try
@@ -15,7 +18,7 @@ try
     using var game = new FarmGame.Game1();
     game.Run();
 }
-catch (System.Exception ex)
+catch (Exception ex)
 {
     Log.Fatal(ex, "FarmGame terminated unexpectedly");
 }
