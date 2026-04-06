@@ -1,10 +1,9 @@
 // =============================================================================
-// WorldController.cs — Core game world: map, player, camera, entities, AI
+// WorldController.cs — Core game world: map, player, camera, entities, AI, HUD
 //
-// Order: 100 (drawn above background, below particles/UI)
-// Manages GameMap, Player, Camera2D. Handles physics, AI, collision.
-// Subscribes to InputEvent for player control.
-// Pauses on DatabaseDisconnectedEvent / GamePausedEvent.
+// Order: 500 (drawn above background)
+// Owns MapManager (map loading/transitions) and ObjectManager (player/camera/entities).
+// Absorbs ParticleController (damage numbers) and UIController (HUD/toast/menu).
 // =============================================================================
 
 using System;
@@ -15,15 +14,16 @@ using MediatR;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended.Input;
+using MonoGame.Extended;
+using FontStashSharp;
 using Serilog;
 using FarmGame.Core;
-using FarmGame.Bootstrap;
 using FarmGame.Camera;
 using FarmGame.Data;
 using FarmGame.Entities;
 using FarmGame.Models;
 using FarmGame.Services;
+using FarmGame.Screens.Panels;
 using FarmGame.World;
 using FarmGame.World.Interactions;
 
@@ -43,8 +43,11 @@ public class WorldLogicState
     public int LoadingFrameCount { get; set; }
     public Action DeferredLoadAction { get; set; }
     public string MapName { get; set; }
-    public KeyboardStateExtended CurrentKeyboard { get; set; }
     public GameTime CurrentGameTime { get; set; }
+    // UI state
+    public bool IsMenuOpen { get; set; }
+    // Particle state
+    public List<DamageNumber> DamageNumbers { get; set; } = new();
 }
 
 public class WorldRenderState
@@ -54,6 +57,20 @@ public class WorldRenderState
     public Camera2D Camera { get; set; }
     public bool IsLoading { get; set; }
     public string MapName { get; set; }
+    // UI state
+    public bool IsMenuOpen { get; set; }
+    // Particle state
+    public List<DamageNumber> DamageNumbers { get; set; } = new();
+}
+
+/// <summary>Floating damage number data.</summary>
+public class DamageNumber
+{
+    public Vector2 WorldPosition { get; set; }
+    public int Amount { get; set; }
+    public bool IsCritical { get; set; }
+    public float Timer { get; set; }
+    public float Duration { get; set; } = 0.8f;
 }
 
 // ─── Controller ─────────────────────────────────────────────
@@ -61,34 +78,78 @@ public class WorldRenderState
 public class WorldController : BaseController<WorldLogicState, WorldRenderState>,
     INotificationHandler<InputEvent>,
     INotificationHandler<DatabaseDisconnectedEvent>,
-    INotificationHandler<DatabaseReconnectedEvent>
+    INotificationHandler<DatabaseReconnectedEvent>,
+    INotificationHandler<MapLoadedEvent>,
+    INotificationHandler<DamageDealtEvent>,
+    INotificationHandler<TogglePauseEvent>
 {
     public override string Name => "World";
-    public override int Order => 100;
+    public override int Order => 500;
 
-    /// <summary>Set to true to block player keyboard input (e.g. menu open).</summary>
+    // ─── Managers ───────────────────────────────────────────
+
+    public MapManager Maps { get; private set; }
+    public ObjectManager Objects { get; private set; }
+
+    // ─── External References (set during Load) ──────────────
+
+    private IAssetService _assets;
+    private DataRegistry _registry;
+    private GameSession _session;
+    private QueueManager _queue;
+    private ScreenManager _screenManager;
+
+    // ─── UI Components (absorbed from UIController) ─────────
+
+    private readonly MapTransitionOverlay _mapTransition = new();
+    private readonly ToastAlert _toast = new();
+    private readonly GameMenuPanel _gameMenu = new();
+
+    /// <summary>Whether the in-game menu is currently open.</summary>
+    public bool IsMenuOpen => _gameMenu.IsOpen;
+
+    /// <summary>Set to true to block player keyboard input.</summary>
     public bool InputBlocked { set => LogicState.InputBlocked = value; }
 
-    private readonly IAssetService _assets;
-    private readonly DataRegistry _registry;
-    private readonly GameSession _session;
-    private readonly QueueManager _queue;
+    /// <summary>Fired when player selects "Leave Game" from the menu.</summary>
+    public Action OnLeaveGame { get; set; }
 
-    public WorldController(
-        IAssetService assets,
-        DataRegistry registry,
-        GameSession session,
-        QueueManager queue)
+    /// <summary>Fired when player selects "Settings" from the menu.</summary>
+    public Action OnSettings { get; set; }
+
+    // ─── Lifecycle ──────────────────────────────────────────
+
+    public override void Initialize()
     {
-        // (assets injected via constructor)
+        Maps = new MapManager();
+        Objects = new ObjectManager();
+        Log.Information("[WorldController] Initialized");
+    }
+
+    public override void Load(ConfigManager config)
+    {
+        _gameMenu.OnLeaveGame = () => OnLeaveGame?.Invoke();
+        _gameMenu.OnSettings = () => OnSettings?.Invoke();
+    }
+
+    /// <summary>Configure external dependencies after all controllers are created.</summary>
+    public void Configure(IAssetService assets, DataRegistry registry,
+        GameSession session, QueueManager queue, ScreenManager screenManager)
+    {
         _assets = assets;
         _registry = registry;
         _session = session;
         _queue = queue;
+        _screenManager = screenManager;
+
+        Maps.Configure(registry, assets.LoadTexture, assets.GraphicsDevice, assets.ContentDir);
     }
 
-    public override void Subscribe(QueueManager queue) { }
-    public override void LoadResource(GraphicsDevice graphicsDevice, string contentDir) { }
+    public override void Shutdown()
+    {
+        SaveState();
+        Log.Information("[WorldController] Shutdown");
+    }
 
     // ─── Game Lifecycle ─────────────────────────────────────
 
@@ -101,12 +162,15 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
 
     private void LoadMap(PlayerState savedState)
     {
-        var result = GameplayInitializer.Run(savedState, _registry, _assets.LoadTexture, _assets.GraphicsDevice, _assets.ContentDir);
+        var result = Maps.LoadMap(savedState);
         LogicState.CurrentMap = result.Map;
         LogicState.Player = result.Player;
         LogicState.Camera = result.Camera;
         LogicState.AutoSaveTimer = 0f;
         LogicState.MapName = result.MapName;
+
+        Objects.Player = result.Player;
+        Objects.Camera = result.Camera;
 
         LogicState.Player.RestoreAttributes(savedState);
         _session.LoadOrCreateMapState(result.Map.MapId, result.Map, savedState);
@@ -115,10 +179,9 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
 
         LogicState.Player.OnInteract = obj =>
         {
-            if (obj.InteractionBehavior is DialogueBehavior db)
+            if (obj.InteractionBehavior is DialogueBehavior)
             {
                 string name = LocaleManager.Get("items", obj.ItemId, obj.Definition.Metadata.DisplayName);
-                // TODO: publish dialogue event
             }
             else
             {
@@ -128,19 +191,33 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
         };
 
         MessageQueue.Enqueue(LocaleManager.Format("ui", "entered_map", result.MapName));
+        _mapTransition.Start(result.MapName);
     }
 
     public void SaveState()
     {
         if (LogicState.Player == null || LogicState.CurrentMap == null) return;
-        _session.SavePlayer(LogicState.Player, LogicState.CurrentMap.MapId);
-        _session.SaveMapObjects(LogicState.CurrentMap);
+        _session?.SavePlayer(LogicState.Player, LogicState.CurrentMap.MapId);
+        _session?.SaveMapObjects(LogicState.CurrentMap);
     }
 
     // ─── Update Logic ───────────────────────────────────────
 
     public override void UpdateLogic(GameTime gameTime)
     {
+        // Only run when in Playing state
+        if (_screenManager != null && _screenManager.CurrentState != GameState.Playing)
+            return;
+
+        float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+        // UI components update
+        _mapTransition.Update(dt);
+        _toast.Update(dt);
+        _gameMenu.Update();
+        LogicState.IsMenuOpen = _gameMenu.IsOpen;
+
+        // Deferred loading
         if (LogicState.IsLoading)
         {
             LogicState.LoadingFrameCount++;
@@ -158,8 +235,6 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
 
         if (LogicState.IsPaused || LogicState.CurrentMap == null) return;
 
-        float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
         // Auto-save
         float interval = GameConstants.AutoSaveInterval;
         if (interval > 0f)
@@ -173,19 +248,8 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
             }
         }
 
-        // Player update (block input when menu is open)
-        if (LogicState.Player != null && LogicState.CurrentGameTime != null)
-        {
-            LogicState.Player.InputBlocked = LogicState.InputBlocked;
-            LogicState.Player.Update(LogicState.CurrentGameTime);
-        }
-
-        // Map update (entities, AI, effects)
-        LogicState.CurrentMap.Update(dt);
-
-        // Camera follow player
-        if (LogicState.Camera != null && LogicState.Player != null)
-            LogicState.Camera.Update(LogicState.Player);
+        // Object manager update (player, map entities, camera)
+        Objects.Update(LogicState.CurrentMap, dt, LogicState.CurrentGameTime, LogicState.InputBlocked);
 
         // Handle teleport
         if (LogicState.CurrentMap.PendingInteraction != null)
@@ -193,6 +257,22 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
             var req = LogicState.CurrentMap.PendingInteraction;
             LogicState.CurrentMap.PendingInteraction = null;
             HandleTeleport(req);
+        }
+
+        // Damage number particles
+        UpdateDamageNumbers(dt);
+    }
+
+    private void UpdateDamageNumbers(float dt)
+    {
+        var numbers = LogicState.DamageNumbers;
+        for (int i = numbers.Count - 1; i >= 0; i--)
+        {
+            var dn = numbers[i];
+            dn.Timer += dt;
+            dn.WorldPosition = new Vector2(dn.WorldPosition.X, dn.WorldPosition.Y - 40f * dt);
+            if (dn.Timer >= dn.Duration)
+                numbers.RemoveAt(i);
         }
     }
 
@@ -223,12 +303,15 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
                 CritDamage = LogicState.Player.CritDamage,
             };
 
-            var result = GameplayInitializer.Run(teleportState, _registry, _assets.LoadTexture, _assets.GraphicsDevice, _assets.ContentDir);
+            var result = Maps.LoadMap(teleportState);
             LogicState.CurrentMap = result.Map;
             LogicState.Player = result.Player;
             LogicState.Camera = result.Camera;
             LogicState.AutoSaveTimer = 0f;
             LogicState.MapName = result.MapName;
+
+            Objects.Player = result.Player;
+            Objects.Camera = result.Camera;
 
             LogicState.Player.RestoreAttributes(teleportState);
             _session.CurrentMapStateId = null;
@@ -241,6 +324,8 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
                 string name = LocaleManager.Get("items", obj.ItemId, obj.Definition.Metadata.DisplayName);
                 MessageQueue.Enqueue(LocaleManager.Format("ui", "interact", name));
             };
+
+            _mapTransition.Start(result.MapName);
         };
     }
 
@@ -248,18 +333,35 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
 
     protected override void CopyState(WorldLogicState logic, WorldRenderState render)
     {
-        // Share references (GameMap/Player/Camera are thread-confined to main thread anyway)
         render.CurrentMap = logic.CurrentMap;
         render.Player = logic.Player;
         render.Camera = logic.Camera;
         render.IsLoading = logic.IsLoading;
         render.MapName = logic.MapName;
+        render.IsMenuOpen = logic.IsMenuOpen;
+
+        // Deep-copy damage numbers
+        render.DamageNumbers = new List<DamageNumber>(logic.DamageNumbers.Count);
+        foreach (var dn in logic.DamageNumbers)
+        {
+            render.DamageNumbers.Add(new DamageNumber
+            {
+                WorldPosition = dn.WorldPosition,
+                Amount = dn.Amount,
+                IsCritical = dn.IsCritical,
+                Timer = dn.Timer,
+                Duration = dn.Duration
+            });
+        }
     }
 
     // ─── Draw ───────────────────────────────────────────────
 
     public override void DrawRender(SpriteBatch spriteBatch)
     {
+        if (_screenManager != null && _screenManager.CurrentState != GameState.Playing)
+            return;
+
         if (RenderState.IsLoading)
         {
             spriteBatch.Begin(samplerState: SamplerState.PointClamp);
@@ -270,8 +372,7 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
                 var size = font.MeasureString(text);
                 float x = (GameConstants.ScreenWidth - size.X) / 2f;
                 float y = (GameConstants.ScreenHeight - size.Y) / 2f;
-                font.DrawText(spriteBatch, text, new Microsoft.Xna.Framework.Vector2(x, y),
-                    new Color(200, 220, 200));
+                font.DrawText(spriteBatch, text, new Vector2(x, y), new Color(200, 220, 200));
             }
             spriteBatch.End();
             return;
@@ -289,6 +390,27 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
         if (RenderState.Player != null)
             RenderState.CurrentMap.DrawObjectInfo(spriteBatch, RenderState.Player.GridPosition);
 
+        // Damage numbers (world-space)
+        foreach (var dn in RenderState.DamageNumbers)
+        {
+            float progress = dn.Timer / dn.Duration;
+            float alpha = 1f - progress;
+            int fontSize = dn.IsCritical ? 18 : 14;
+            var dmgFont = FontManager.GetFont(fontSize);
+            if (dmgFont == null) continue;
+            string text = dn.IsCritical ? $"{dn.Amount}!" : dn.Amount.ToString();
+            var color = dn.IsCritical ? Color.Yellow : Color.White;
+            dmgFont.DrawText(spriteBatch, text, dn.WorldPosition, color * alpha);
+        }
+
+        spriteBatch.End();
+
+        // Screen-space HUD (toast, map transition, game menu)
+        spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+        _toast.Draw(spriteBatch);
+        if (_mapTransition.IsActive)
+            _mapTransition.Draw(spriteBatch);
+        _gameMenu.Draw(spriteBatch);
         spriteBatch.End();
     }
 
@@ -303,15 +425,35 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
     public Task Handle(DatabaseDisconnectedEvent notification, CancellationToken ct)
     {
         LogicState.IsPaused = true;
-        Log.Warning("WorldController paused: {Reason}", notification.Reason);
         return Task.CompletedTask;
     }
 
     public Task Handle(DatabaseReconnectedEvent notification, CancellationToken ct)
     {
         LogicState.IsPaused = false;
-        Log.Information("WorldController resumed");
         return Task.CompletedTask;
     }
 
+    public Task Handle(MapLoadedEvent notification, CancellationToken ct)
+    {
+        _mapTransition.Start(notification.MapName);
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(DamageDealtEvent notification, CancellationToken ct)
+    {
+        LogicState.DamageNumbers.Add(new DamageNumber
+        {
+            WorldPosition = notification.WorldPosition,
+            Amount = notification.Damage,
+            IsCritical = notification.IsCritical,
+        });
+        return Task.CompletedTask;
+    }
+
+    public Task Handle(TogglePauseEvent notification, CancellationToken ct)
+    {
+        _gameMenu.Toggle();
+        return Task.CompletedTask;
+    }
 }

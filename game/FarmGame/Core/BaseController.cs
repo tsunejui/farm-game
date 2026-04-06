@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-
 namespace FarmGame.Core;
 
 /// <summary>
@@ -25,8 +24,9 @@ public abstract class BaseController<TLogic, TRender> : IController
 
     private readonly object _syncLock = new();
 
-    public virtual void Subscribe(QueueManager queue) { }
-    public virtual void LoadResource(GraphicsDevice graphicsDevice, string contentDir) { }
+    public virtual void Initialize() { }
+    public virtual void Load(ConfigManager config) { }
+    public virtual void Shutdown() { }
     public virtual void UpdateLogic(GameTime gameTime) { }
     public virtual void DrawRender(SpriteBatch spriteBatch) { }
 

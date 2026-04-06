@@ -1,3 +1,10 @@
+// =============================================================================
+// NetworkController.cs — Network connectivity and socket management
+//
+// Order: 900 (drawn on top of everything, overlay when disconnected)
+// Monitors database connectivity. Future: socket connection management.
+// =============================================================================
+
 using System.Threading;
 using System.Threading.Tasks;
 using FontStashSharp;
@@ -23,17 +30,13 @@ public class NetworkRenderState
     public float ReconnectTimer { get; set; }
 }
 
-/// <summary>
-/// Monitors database connectivity and draws a reconnecting overlay when disconnected.
-/// Subscribes to DatabaseDisconnectedEvent and DatabaseReconnectedEvent via MediatR.
-/// </summary>
-public class NetworkSystemController : BaseController<NetworkLogicState, NetworkRenderState>,
+public class NetworkController : BaseController<NetworkLogicState, NetworkRenderState>,
     INotificationHandler<DatabaseDisconnectedEvent>,
     INotificationHandler<DatabaseReconnectedEvent>
 {
     private const int OverlayFontSize = 28;
 
-    public override string Name => "NetworkSystem";
+    public override string Name => "Network";
     public override int Order => 900;
 
     public Task Handle(DatabaseDisconnectedEvent notification, CancellationToken cancellationToken)
@@ -63,45 +66,35 @@ public class NetworkSystemController : BaseController<NetworkLogicState, Network
 
     public override void DrawRender(SpriteBatch spriteBatch)
     {
-        if (!RenderState.IsDisconnected)
-            return;
+        if (!RenderState.IsDisconnected) return;
 
         int screenW = GameConstants.ScreenWidth;
         int screenH = GameConstants.ScreenHeight;
 
         spriteBatch.Begin(samplerState: SamplerState.PointClamp);
 
-        // Semi-transparent black overlay
-        spriteBatch.FillRectangle(
-            new Rectangle(0, 0, screenW, screenH),
-            Color.Black * 0.7f);
+        spriteBatch.FillRectangle(new Rectangle(0, 0, screenW, screenH), Color.Black * 0.7f);
 
         var font = FontManager.GetFont(OverlayFontSize);
-        if (font == null) return;
-
-        // Animate dots: cycle through ".", "..", "..."
-        int dotCount = ((int)RenderState.ReconnectTimer % 3) + 1;
-        string dots = new string('.', dotCount);
-        string text = $"Reconnecting{dots}";
-
-        var textSize = font.MeasureString(text);
-        var textPos = new Vector2(
-            (screenW - textSize.X) / 2f,
-            (screenH - textSize.Y) / 2f);
-
-        font.DrawText(spriteBatch, text, textPos, Color.White);
-
-        // Show reason below if available
-        if (!string.IsNullOrEmpty(RenderState.DisconnectReason))
+        if (font != null)
         {
-            var smallFont = FontManager.GetFont(16);
-            if (smallFont != null)
+            int dotCount = ((int)RenderState.ReconnectTimer % 3) + 1;
+            string dots = new string('.', dotCount);
+            string text = $"Reconnecting{dots}";
+
+            var textSize = font.MeasureString(text);
+            var textPos = new Vector2((screenW - textSize.X) / 2f, (screenH - textSize.Y) / 2f);
+            font.DrawText(spriteBatch, text, textPos, Color.White);
+
+            if (!string.IsNullOrEmpty(RenderState.DisconnectReason))
             {
-                var reasonSize = smallFont.MeasureString(RenderState.DisconnectReason);
-                var reasonPos = new Vector2(
-                    (screenW - reasonSize.X) / 2f,
-                    textPos.Y + textSize.Y + 12f);
-                smallFont.DrawText(spriteBatch, RenderState.DisconnectReason, reasonPos, Color.Gray);
+                var smallFont = FontManager.GetFont(16);
+                if (smallFont != null)
+                {
+                    var reasonSize = smallFont.MeasureString(RenderState.DisconnectReason);
+                    var reasonPos = new Vector2((screenW - reasonSize.X) / 2f, textPos.Y + textSize.Y + 12f);
+                    smallFont.DrawText(spriteBatch, RenderState.DisconnectReason, reasonPos, Color.Gray);
+                }
             }
         }
 
