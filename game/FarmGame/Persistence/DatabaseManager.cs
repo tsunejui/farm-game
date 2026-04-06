@@ -149,7 +149,9 @@ public class DatabaseManager
                             break;
 
                         case 2:
-                            db.Execute("ALTER TABLE map_state ADD COLUMN TtlUtc INTEGER NOT NULL DEFAULT 0");
+                            // Column may already exist if table was created with the entity class
+                            try { db.Execute("ALTER TABLE map_state ADD COLUMN TtlUtc INTEGER NOT NULL DEFAULT 0"); }
+                            catch { /* column already exists */ }
                             db.Insert(new SchemaVersion
                             {
                                 Version = 2,

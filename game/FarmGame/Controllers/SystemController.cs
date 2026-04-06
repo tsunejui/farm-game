@@ -106,6 +106,8 @@ public class SystemController : BaseController<SystemLogicState, SystemRenderSta
 
     public override void Load(ControllerManager controllers)
     {
+        if (Queue == null) return;
+
         // Register MediatR handlers from all controllers and build queue
         foreach (var c in new IController[] { controllers.World, controllers.Network })
         {
