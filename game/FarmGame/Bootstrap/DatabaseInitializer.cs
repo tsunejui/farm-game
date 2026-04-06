@@ -1,19 +1,14 @@
 using System;
 using Serilog;
 using FarmGame.Core;
-using FarmGame.Persistence;
 using FarmGame.Models;
-using FarmGame.Persistence.Entities;
-using FarmGame.Persistence.Repositories;
+using FarmGame.Persistence;
 
 namespace FarmGame.Bootstrap;
 
 public class DatabaseInitResult
 {
-    public DatabaseBootstrapper Database { get; init; }
-    public SettingRepository Settings { get; init; }
-    public PlayerStateRepository PlayerStateRepo { get; init; }
-    public MapStateRepository MapStateRepo { get; init; }
+    public DatabaseManager Database { get; init; }
     public string PlayerUuid { get; init; }
     public PlayerState SavedState { get; init; }
     public string Error { get; init; }
@@ -28,19 +23,9 @@ public static class DatabaseInitializer
 
     public static DatabaseInitResult Run()
     {
-        var dbDir = DatabasePathResolver.GetDatabaseDirectory(GameConstants.GameTitle);
-        var dirResult = DatabasePathResolver.EnsureDirectoryExists(dbDir);
-        if (!dirResult.Success)
-            return new DatabaseInitResult { Error = dirResult.ErrorMessage };
+        var database = new DatabaseManager(GameConstants.GameTitle);
+        Log.Information("[Init] Database path: {DbPath}", database.DatabasePath);
 
-        var permResult = DatabasePathResolver.CheckWritePermission(dbDir);
-        if (!permResult.Success)
-            return new DatabaseInitResult { Error = permResult.ErrorMessage };
-
-        var dbPath = DatabasePathResolver.GetDatabasePath(GameConstants.GameTitle);
-        Log.Information("[Init] Database path: {DbPath}", dbPath);
-
-        var database = new DatabaseBootstrapper(dbPath);
         var initResult = database.Initialize();
         if (!initResult.Success)
         {
@@ -48,19 +33,11 @@ public static class DatabaseInitializer
             return new DatabaseInitResult { Error = initResult.ErrorMessage };
         }
 
-        // Backup database
-        DatabaseBackup.Backup(dbPath);
-        Log.Information("[Init] Database backup completed");
-
-        var settings = new SettingRepository(database);
-        var playerStateRepo = new PlayerStateRepository(database);
-        var mapStateRepo = new MapStateRepository(database);
-
-        var playerUuid = settings.Get("player_uuid");
+        var playerUuid = database.GetSetting("player_uuid");
         if (string.IsNullOrEmpty(playerUuid))
         {
             playerUuid = Guid.NewGuid().ToString();
-            settings.Set("player_uuid", playerUuid);
+            database.SetSetting("player_uuid", playerUuid);
             Log.Information("[Init] Created new player UUID: {Uuid}", playerUuid);
         }
         else
@@ -70,7 +47,7 @@ public static class DatabaseInitializer
 
         // Load saved player state
         PlayerState savedState = null;
-        var loadResult = playerStateRepo.Load(playerUuid);
+        var loadResult = database.LoadPlayerState(playerUuid);
         if (loadResult.Success)
         {
             savedState = loadResult.Value;
@@ -87,9 +64,6 @@ public static class DatabaseInitializer
         _cachedResult = new DatabaseInitResult
         {
             Database = database,
-            Settings = settings,
-            PlayerStateRepo = playerStateRepo,
-            MapStateRepo = mapStateRepo,
             PlayerUuid = playerUuid,
             SavedState = savedState,
         };

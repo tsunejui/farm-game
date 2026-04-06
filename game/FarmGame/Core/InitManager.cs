@@ -33,14 +33,14 @@ public class InitManager
     {
         var dbResult = DatabaseInitializer.Run();
         if (dbResult.Success)
-            Session = new GameSession(dbResult);
+            Session = new GameSession(dbResult.Database, dbResult.PlayerUuid, dbResult.SavedState);
         return this;
     }
 
     public InitManager WithLocale()
     {
         var dbResult = DatabaseInitializer.GetCachedResult();
-        LocaleInitializer.Run(_contentDir, dbResult?.Success == true ? dbResult.Settings : null);
+        LocaleInitializer.Run(_contentDir, dbResult?.Success == true ? dbResult.Database : null);
         return this;
     }
 

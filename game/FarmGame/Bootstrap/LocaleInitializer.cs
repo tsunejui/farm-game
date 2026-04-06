@@ -1,14 +1,14 @@
 using Serilog;
 using FarmGame.Core;
-using FarmGame.Persistence.Repositories;
+using FarmGame.Persistence;
 
 namespace FarmGame.Bootstrap;
 
 public static class LocaleInitializer
 {
-    public static void Run(string contentDir, SettingRepository settings)
+    public static void Run(string contentDir, DatabaseManager db)
     {
-        var language = settings?.Get("language", GameConstants.DefaultLanguage)
+        var language = db?.GetSetting("language", GameConstants.DefaultLanguage)
             ?? GameConstants.DefaultLanguage;
         LocaleManager.Load(contentDir, language);
 
