@@ -38,10 +38,6 @@
     <PackageReference Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
   <ItemGroup>
-    <!-- Config files (YAML definitions) -->
-    <Content Include="Configs\**\*.yaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <!-- Static resources (images, fonts, locales) -->
     <Content Include="Content\Images\**\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

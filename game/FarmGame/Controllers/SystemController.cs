@@ -44,7 +44,10 @@ public class SystemController : BaseController<SystemLogicState, SystemRenderSta
 
     public override void Initialize()
     {
-        var configsDir = Path.Combine(Path.GetDirectoryName(ContentDir), "Configs");
+        // Read configs dir from env (set by .env.local), fallback to relative path
+        var configsDir = Environment.GetEnvironmentVariable("CONFIGS_DIR");
+        if (string.IsNullOrEmpty(configsDir) || !Directory.Exists(configsDir))
+            configsDir = Path.Combine(Path.GetDirectoryName(ContentDir), "Configs");
 
         // 1. ConfigManager — load all YAML configs
         Config = new ConfigManager();
