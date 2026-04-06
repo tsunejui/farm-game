@@ -2,6 +2,9 @@ using Serilog;
 using FarmGame.Core;
 using FarmGame.Persistence;
 
+// Load .env.local before anything else
+EnvLoader.Load();
+
 var logDir = System.IO.Path.Combine(
     DatabaseManager.ResolveDatabaseDirectory("Farm Game"), "logs");
 LogManager.Initialize(logDir);
