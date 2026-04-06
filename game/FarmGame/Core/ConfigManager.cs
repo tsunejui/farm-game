@@ -145,10 +145,11 @@ public class ConfigManager
 
     private void LoadItems(string configsDir)
     {
-        var dir = Path.Combine(configsDir, "items");
+        var dir = Path.Combine(configsDir, "objects");
         if (!Directory.Exists(dir)) return;
 
-        foreach (var file in Directory.GetFiles(dir, "*.yaml"))
+        // Recursively scan all subdirectories (creatures, items, environment)
+        foreach (var file in Directory.GetFiles(dir, "*.yaml", SearchOption.AllDirectories))
         {
             var data = _deserializer.Deserialize<ItemDefinition>(File.ReadAllText(file));
             Items[data.Metadata.ItemId] = new ItemConfig(data);
