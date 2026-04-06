@@ -6,6 +6,7 @@
 // =============================================================================
 
 using FarmGame.Combat;
+using FarmGame.Entities.Objects;
 
 namespace FarmGame.World.Effects;
 
@@ -20,11 +21,11 @@ public interface IEffect
     // Called when a damage amount is about to be applied.
     // Returns the modified damage amount. Return 0 to negate all damage.
     // attackInfo provides the attack category and element for filtering.
-    int ModifyDamage(WorldObject obj, int damage, AttackInfo attackInfo) => damage;
+    int ModifyDamage(BaseObject obj, int damage, AttackInfo attackInfo) => damage;
 
     // Legacy overload without attack info (for backward compatibility)
-    int ModifyDamage(WorldObject obj, int damage) => ModifyDamage(obj, damage, AttackInfo.Physical);
+    int ModifyDamage(BaseObject obj, int damage) => ModifyDamage(obj, damage, AttackInfo.Physical);
 
     // Called every effect refresh tick (~1 second). Used for aura/DoT effects.
-    void OnTick(WorldObject owner, GameMap map) { }
+    void OnTick(BaseObject owner, GameMap map) { }
 }

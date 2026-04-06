@@ -1,3 +1,4 @@
+using System;
 using MediatR;
 
 namespace FarmGame.Queues;
@@ -8,10 +9,16 @@ namespace FarmGame.Queues;
 /// via MediatR on the main thread during Process().
 /// </summary>
 /// <typeparam name="T">The message type (IRequest or INotification).</typeparam>
-public interface IGameQueue<T>
+public interface IGameQueue<T> : IDisposable
 {
+    /// <summary>Unique identifier for this queue instance.</summary>
+    string Id { get; }
+
     /// <summary>Thread-safe enqueue. Can be called from any thread.</summary>
     void Enqueue(T item);
+
+    /// <summary>Try to dequeue a single item.</summary>
+    bool TryDequeue(out T item);
 
     /// <summary>
     /// Drain the queue and dispatch each item via MediatR.

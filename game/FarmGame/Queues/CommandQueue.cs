@@ -1,6 +1,4 @@
-using System.Collections.Concurrent;
 using MediatR;
-using Serilog;
 
 namespace FarmGame.Queues;
 
@@ -8,29 +6,12 @@ namespace FarmGame.Queues;
 /// Queue for IRequest&lt;T&gt; commands (modify state, sent to IRequestHandler).
 /// Each item is dispatched via mediator.Send() sequentially.
 /// </summary>
-public class CommandQueue<TCommand, TResponse> : IGameQueue<TCommand>
+public class CommandQueue<TCommand, TResponse> : BaseQueue<TCommand>
     where TCommand : IRequest<TResponse>
 {
-    private readonly ConcurrentQueue<TCommand> _queue = new();
-
-    public int Count => _queue.Count;
-
-    public void Enqueue(TCommand item) => _queue.Enqueue(item);
-
-    public void Process(IMediator mediator)
+    protected override void Dispatch(IMediator mediator, TCommand item)
     {
-        while (_queue.TryDequeue(out var cmd))
-        {
-            try
-            {
-                mediator.Send(cmd).GetAwaiter().GetResult();
-            }
-            catch (System.Exception ex)
-            {
-                Log.Warning("[CommandQueue<{Type}>] Error: {Error}",
-                    typeof(TCommand).Name, ex.Message);
-            }
-        }
+        mediator.Send(item).GetAwaiter().GetResult();
     }
 }
 

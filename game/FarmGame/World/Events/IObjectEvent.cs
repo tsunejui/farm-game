@@ -6,6 +6,8 @@
 // then the next event in the queue begins.
 // =============================================================================
 
+using FarmGame.Entities.Objects;
+
 namespace FarmGame.World.Events;
 
 public interface IObjectEvent
@@ -14,8 +16,8 @@ public interface IObjectEvent
     bool IsComplete { get; }
 
     // Called once when the event starts processing
-    void Start(WorldObject obj, GameMap map);
+    void Start(BaseObject obj, GameMap map);
 
     // Called every frame while the event is active
-    void Update(WorldObject obj, GameMap map, float deltaTime);
+    void Update(BaseObject obj, GameMap map, float deltaTime);
 }

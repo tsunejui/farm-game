@@ -4,6 +4,8 @@
 // Completes when the bounce animation finishes (tracked by ObjectState).
 // =============================================================================
 
+using FarmGame.Entities.Objects;
+
 namespace FarmGame.World.Events;
 
 public class BounceEvent : IObjectEvent
@@ -12,13 +14,13 @@ public class BounceEvent : IObjectEvent
 
     public bool IsComplete { get; private set; }
 
-    public void Start(WorldObject obj, GameMap map)
+    public void Start(BaseObject obj, GameMap map)
     {
         _started = true;
         obj.State.TriggerBounce();
     }
 
-    public void Update(WorldObject obj, GameMap map, float deltaTime)
+    public void Update(BaseObject obj, GameMap map, float deltaTime)
     {
         if (!_started) return;
         if (!obj.State.IsBouncing)

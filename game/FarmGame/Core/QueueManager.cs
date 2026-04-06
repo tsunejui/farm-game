@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 using FarmGame.Queues;
@@ -15,9 +14,9 @@ namespace FarmGame.Core;
 /// Thread-safe: Enqueue from any thread, ProcessAll on main thread.
 ///
 /// Usage:
-///   queue.Enqueue(new DamageCommand(...));      // from worker thread
-///   queue.Enqueue(new VFXRequestEvent(...));     // from worker thread
-///   queue.ProcessAll();                          // main thread, after parallel update
+///   manager.Register("damage", new CommandQueue&lt;DamageCommand&gt;());
+///   manager.Enqueue(new DamageCommand(...));      // from worker thread
+///   manager.ProcessAll();                          // main thread
 /// </summary>
 public class QueueManager : IDisposable
 {
@@ -25,23 +24,14 @@ public class QueueManager : IDisposable
     private IServiceProvider _serviceProvider;
     private readonly CancellationTokenSource _cts = new();
 
-    // Typed queue container: Type → IGameQueue instance
+    // Queue registry: message Type → queue instance
     private readonly Dictionary<Type, object> _queues = new();
+    // Queue registry by string ID → queue instance (for named lookup)
+    private readonly Dictionary<string, object> _queuesById = new();
 
     // DI builder (handlers registered before Build)
     private readonly ServiceCollection _services = new();
     private bool _built;
-
-    // ─── Concrete Queues ────────────────────────────────────
-
-    // Commands (IRequest → IRequestHandler, modify state)
-    public CommandQueue<DamageCommand> Damage { get; } = new();
-    public CommandQueue<ActorActionCommand> ActorAction { get; } = new();
-    public CommandQueue<SpawnEntityCommand> Spawn { get; } = new();
-
-    // Events (INotification → INotificationHandler, broadcast)
-    public EventQueue<InputEvent> Input { get; } = new();
-    public EventQueue<VFXRequestEvent> VFX { get; } = new();
 
     // General notification queue (for events without a dedicated queue)
     public EventQueue<INotification> General { get; } = new();
@@ -50,12 +40,114 @@ public class QueueManager : IDisposable
     {
         _services.AddLogging();
 
-        // Register typed queues in the container
-        _queues[typeof(DamageCommand)] = Damage;
-        _queues[typeof(ActorActionCommand)] = ActorAction;
-        _queues[typeof(SpawnEntityCommand)] = Spawn;
-        _queues[typeof(InputEvent)] = Input;
-        _queues[typeof(VFXRequestEvent)] = VFX;
+        // Register default queues
+        Register("damage", new CommandQueue<DamageCommand>());
+        Register("actor_action", new CommandQueue<ActorActionCommand>());
+        Register("spawn", new CommandQueue<SpawnEntityCommand>());
+        Register("input", new EventQueue<InputEvent>());
+        Register("vfx", new EventQueue<VFXRequestEvent>());
+
+        General.SetId("general");
+        General.Initialize();
+    }
+
+    // ─── Queue Registration ─────────────────────────────────
+
+    /// <summary>
+    /// Register a typed queue with a string ID.
+    /// Sets the queue's ID, calls Initialize(), and indexes it by message type and ID.
+    /// </summary>
+    public void Register<T>(string id, BaseQueue<T> queue)
+    {
+        queue.SetId(id);
+        queue.Initialize();
+        _queues[typeof(T)] = queue;
+        _queuesById[id] = queue;
+
+        Log.Debug("[QueueManager] Registered queue '{Id}' for type {Type}", id, typeof(T).Name);
+    }
+
+    /// <summary>
+    /// Get a queue by its message type. Returns null if not found.
+    /// </summary>
+    public BaseQueue<T> Get<T>()
+    {
+        return _queues.TryGetValue(typeof(T), out var queue) ? (BaseQueue<T>)queue : null;
+    }
+
+    /// <summary>
+    /// Get a queue by its string ID. Returns null if not found.
+    /// </summary>
+    public object GetById(string id)
+    {
+        return _queuesById.TryGetValue(id, out var queue) ? queue : null;
+    }
+
+    /// <summary>
+    /// Remove a queue by its message type. Calls Dispose() on the queue.
+    /// </summary>
+    public bool Remove<T>()
+    {
+        if (!_queues.TryGetValue(typeof(T), out var queue))
+            return false;
+
+        var baseQueue = (BaseQueue<T>)queue;
+        var id = baseQueue.Id;
+
+        baseQueue.Dispose();
+        _queues.Remove(typeof(T));
+        if (id != null)
+            _queuesById.Remove(id);
+
+        Log.Debug("[QueueManager] Removed queue '{Id}' for type {Type}", id, typeof(T).Name);
+        return true;
+    }
+
+    /// <summary>
+    /// Remove a queue by its string ID. Calls Dispose() on the queue.
+    /// </summary>
+    public bool RemoveById(string id)
+    {
+        if (!_queuesById.TryGetValue(id, out var queue))
+            return false;
+
+        if (queue is IDisposable disposable)
+            disposable.Dispose();
+
+        _queuesById.Remove(id);
+
+        // Also remove from type-based registry
+        Type keyToRemove = null;
+        foreach (var kvp in _queues)
+        {
+            if (ReferenceEquals(kvp.Value, queue))
+            {
+                keyToRemove = kvp.Key;
+                break;
+            }
+        }
+        if (keyToRemove != null)
+            _queues.Remove(keyToRemove);
+
+        Log.Debug("[QueueManager] Removed queue '{Id}'", id);
+        return true;
+    }
+
+    /// <summary>
+    /// Remove all registered queues. Calls Dispose() on each.
+    /// </summary>
+    public void RemoveAll()
+    {
+        foreach (var queue in _queuesById.Values)
+        {
+            if (queue is IDisposable disposable)
+                disposable.Dispose();
+        }
+
+        _queues.Clear();
+        _queuesById.Clear();
+
+        Log.Debug("[QueueManager] Removed all queues");
     }
 
     // ─── Enqueue (thread-safe) ──────────────────────────────
@@ -90,7 +182,6 @@ public class QueueManager : IDisposable
         var type = notification.GetType();
         if (_queues.TryGetValue(type, out var queue))
         {
-            // Use reflection to call Enqueue on the correct generic type
             var enqueueMethod = queue.GetType().GetMethod("Enqueue");
             enqueueMethod?.Invoke(queue, new object[] { notification });
             return;
@@ -103,20 +194,17 @@ public class QueueManager : IDisposable
 
     /// <summary>
     /// Drain all queues and dispatch via MediatR. Must be called on main thread.
-    /// Order: Commands first (state mutations), then Events (notifications).
     /// </summary>
     public void ProcessAll()
     {
         if (!_built) return;
 
-        // 1. Commands (state-changing, sequential)
-        Damage.Process(_mediator);
-        ActorAction.Process(_mediator);
-        Spawn.Process(_mediator);
+        foreach (var queue in _queuesById.Values)
+        {
+            var processMethod = queue.GetType().GetMethod("Process");
+            processMethod?.Invoke(queue, new object[] { _mediator });
+        }
 
-        // 2. Events (broadcast notifications)
-        Input.Process(_mediator);
-        VFX.Process(_mediator);
         General.Process(_mediator);
     }
 
@@ -159,19 +247,35 @@ public class QueueManager : IDisposable
         _mediator = _serviceProvider.GetRequiredService<IMediator>();
         _built = true;
 
-        Log.Information("[QueueManager] Built — {QueueCount} typed queues + General",
-            _queues.Count);
+        Log.Information("[QueueManager] Built - {QueueCount} typed queues + General",
+            _queuesById.Count);
     }
 
     // ─── Diagnostics ────────────────────────────────────────
 
     /// <summary>Total items across all queues.</summary>
-    public int TotalPending =>
-        Damage.Count + ActorAction.Count + Spawn.Count +
-        Input.Count + VFX.Count + General.Count;
+    public int TotalPending
+    {
+        get
+        {
+            var total = General.Count;
+            foreach (var queue in _queuesById.Values)
+            {
+                var countProp = queue.GetType().GetProperty("Count");
+                if (countProp != null)
+                    total += (int)countProp.GetValue(queue);
+            }
+            return total;
+        }
+    }
+
+    /// <summary>Number of registered queues (excluding General).</summary>
+    public int RegisteredCount => _queuesById.Count;
 
     public void Dispose()
     {
+        RemoveAll();
+        General.Dispose();
         _cts.Cancel();
         _cts.Dispose();
     }
