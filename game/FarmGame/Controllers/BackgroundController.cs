@@ -107,8 +107,6 @@ public class BackgroundController : BaseController<BackgroundLogicState, Backgro
             TransitionTo(GameState.Playing);
         };
 
-        OnExitGame = null; // Set by Game1 after Load
-
         // Start on title screen
         InitializeScreen(GameState.TitleScreen);
     }

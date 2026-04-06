@@ -79,11 +79,11 @@ public class Game1 : Game
         var assets = new AssetService(GraphicsDevice, Content, _contentDir);
         _controllerManager.World.SetGraphicsContext(GraphicsDevice, assets.LoadTexture);
 
-        // BackgroundController exit callback (needs Game1.Exit reference)
-        _controllerManager.Background.OnExitGame = () => Exit();
-
         // Load all controllers (each wires its own dependencies)
         _controllerManager.Load();
+
+        // BackgroundController exit callback (needs Game1.Exit reference, must be after Load)
+        _controllerManager.Background.OnExitGame = () => Exit();
 
         Log.Information("[Game1] Initialization complete");
     }
