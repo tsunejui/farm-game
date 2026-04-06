@@ -1,5 +1,5 @@
 // =============================================================================
-// LoadingScreen.cs — Reusable loading screen with configurable work action
+// LoadingView.cs — Reusable loading view with configurable work action
 // =============================================================================
 
 using System;
@@ -7,11 +7,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
 using FarmGame.Core;
-using FarmGame.Screens.Components;
+using FarmGame.Views.Components;
 
-namespace FarmGame.Screens.HUD;
+namespace FarmGame.Views.HUD;
 
-public class LoadingScreen : IScreen
+public class LoadingView : IView
 {
     private Desktop _desktop;
     private int _frameCount;
@@ -44,21 +44,21 @@ public class LoadingScreen : IScreen
         _desktop = new Desktop { Root = label };
     }
 
-    public ScreenTransition Update(GameTime gameTime)
+    public ViewTransition Update(GameTime gameTime)
     {
         _frameCount++;
 
         if (_frameCount <= 1)
-            return ScreenTransition.None;
+            return ViewTransition.None;
 
         if (!_workDone)
         {
             _workAction?.Invoke();
             _workDone = true;
-            return ScreenTransition.None;
+            return ViewTransition.None;
         }
 
-        return ScreenTransition.To(_targetState);
+        return ViewTransition.To(_targetState);
     }
 
     public void Draw(SpriteBatch spriteBatch)

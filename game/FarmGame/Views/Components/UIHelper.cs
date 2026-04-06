@@ -1,6 +1,6 @@
 using Myra.Graphics2D.UI;
 
-namespace FarmGame.Screens.Components;
+namespace FarmGame.Views.Components;
 
 /// <summary>
 /// Convenience facade — delegates to individual component classes.

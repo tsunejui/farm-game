@@ -22,7 +22,7 @@ using FarmGame.Camera;
 using FarmGame.Data;
 using FarmGame.Entities;
 using FarmGame.Models;
-using FarmGame.Screens.Panels;
+using FarmGame.Views.Panels;
 using FarmGame.World;
 using FarmGame.World.Interactions;
 

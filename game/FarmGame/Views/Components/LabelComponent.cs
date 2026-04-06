@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Myra.Graphics2D.UI;
 using FarmGame.Core;
 
-namespace FarmGame.Screens.Components;
+namespace FarmGame.Views.Components;
 
 public static class LabelComponent
 {
