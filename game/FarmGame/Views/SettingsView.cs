@@ -238,7 +238,11 @@ public class SettingsView : IView
         return ViewTransition.None;
     }
 
-    public void Draw(SpriteBatch spriteBatch) { _desktop?.Render(); }
+    public void Draw(SpriteBatch spriteBatch)
+    {
+        if (_enterGuardFrames > 0) return;
+        _desktop?.Render();
+    }
 
     private void UpdateButtonFocus()
     {

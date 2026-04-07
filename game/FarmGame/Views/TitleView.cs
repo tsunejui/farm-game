@@ -110,7 +110,12 @@ public class TitleView : IView
 
     public void SetError(string msg) { if (_errorLabel != null) _errorLabel.Text = msg ?? ""; }
 
-    public void Draw(SpriteBatch spriteBatch) { _desktop?.Render(); }
+    public void Draw(SpriteBatch spriteBatch)
+    {
+        // Skip Render during guard — Myra processes mouse input in Render()
+        if (_enterGuardFrames > 0) return;
+        _desktop?.Render();
+    }
 
     private void UpdateButtonFocus()
     {
