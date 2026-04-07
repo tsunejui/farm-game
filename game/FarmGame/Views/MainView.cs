@@ -11,7 +11,7 @@ using Serilog;
 
 namespace FarmGame.Views;
 
-public class TitleView : IView
+public class MainView : IView
 {
     private Desktop _desktop;
     private Label _errorLabel;
@@ -27,7 +27,7 @@ public class TitleView : IView
     public void Rebuild() { _selectedIndex = 0; BuildUI(); }
     public void OnEnter(GameState fromState)
     {
-        Log.Information("[TitleView] OnEnter from {From}, guard active", fromState);
+        Log.Information("[MainView] OnEnter from {From}, guard active", fromState);
         _enterGuard = true;
         Rebuild();
     }
@@ -51,7 +51,7 @@ public class TitleView : IView
         var startBtn = UIHelper.CreateButton(LocaleManager.Get("ui", startKey));
         startBtn.Click += (_, _) =>
         {
-            Log.Information("[TitleView] Myra Click: StartGame (guard={Guard})", _enterGuard);
+            Log.Information("[MainView] Myra Click: StartGame (guard={Guard})", _enterGuard);
             OnStartGame?.Invoke();
         };
         root.Widgets.Add(startBtn);
@@ -59,7 +59,7 @@ public class TitleView : IView
         var settingsBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "settings"));
         settingsBtn.Click += (_, _) =>
         {
-            Log.Information("[TitleView] Myra Click: Settings (guard={Guard})", _enterGuard);
+            Log.Information("[MainView] Myra Click: Settings (guard={Guard})", _enterGuard);
             _pendingTransition = ViewTransition.To(GameState.Settings);
         };
         root.Widgets.Add(settingsBtn);
@@ -67,7 +67,7 @@ public class TitleView : IView
         var exitBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "close_game"));
         exitBtn.Click += (_, _) =>
         {
-            Log.Information("[TitleView] Myra Click: ExitGame (guard={Guard})", _enterGuard);
+            Log.Information("[MainView] Myra Click: ExitGame (guard={Guard})", _enterGuard);
             _pendingTransition = ViewTransition.ExitGame();
         };
         root.Widgets.Add(exitBtn);
@@ -119,7 +119,7 @@ public class TitleView : IView
 
         if (_pendingTransition != null)
         {
-            Log.Information("[TitleView] Processing pending transition: Exit={Exit}, Target={Target}",
+            Log.Information("[MainView] Processing pending transition: Exit={Exit}, Target={Target}",
                 _pendingTransition.Exit, _pendingTransition.Target);
             var t = _pendingTransition;
             _pendingTransition = null;
