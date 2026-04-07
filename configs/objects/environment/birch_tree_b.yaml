@@ -13,13 +13,13 @@ visuals:
     offset_y: 0
     states:
       normal:
-        image_path: "Images/birch_trees/birch_tree_b_normal"
+        image_path: "Images/environment_birch_trees/birch_tree_b_normal"
         file_type: "gif"
         frame_delay: 2500
       damaged:
-        image_path: "Images/birch_trees/birch_tree_damaged"
+        image_path: "Images/environment_birch_trees/birch_tree_damaged"
       dead:
-        image_path: "Images/birch_trees/birch_tree_dead"
+        image_path: "Images/environment_birch_trees/birch_tree_dead"
 
 physics:
   occupy_width: 3

@@ -13,11 +13,11 @@ visuals:
     offset_y: 0
     states:
       normal:
-        image_path: "Images/trees/tree_normal"
+        image_path: "Images/environment_trees/tree_normal"
       damaged:
-        image_path: "Images/trees/tree_damaged"
+        image_path: "Images/environment_trees/tree_damaged"
       dead:
-        image_path: "Images/trees/tree_dead"
+        image_path: "Images/environment_trees/tree_dead"
 
 physics:
   occupy_width: 2

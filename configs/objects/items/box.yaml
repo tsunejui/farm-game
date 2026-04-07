@@ -13,11 +13,11 @@ visuals:
     offset_y: 0
     states:
       normal:
-        image_path: "Images/boxes/box_normal"
+        image_path: "Images/items_boxes/box_normal"
       damaged:
-        image_path: "Images/boxes/box_damaged"
+        image_path: "Images/items_boxes/box_damaged"
       dead:
-        image_path: "Images/boxes/box_dead"
+        image_path: "Images/items_boxes/box_dead"
 
 physics:
   occupy_width: 1

@@ -13,11 +13,11 @@ visuals:
     offset_y: 0
     states:
       normal:
-        image_path: "Images/chrysanthemums/chrysanthemum_normal"
+        image_path: "Images/environment_chrysanthemums/chrysanthemum_normal"
       damaged:
-        image_path: "Images/chrysanthemums/chrysanthemum_damaged"
+        image_path: "Images/environment_chrysanthemums/chrysanthemum_damaged"
       dead:
-        image_path: "Images/chrysanthemums/chrysanthemum_dead"
+        image_path: "Images/environment_chrysanthemums/chrysanthemum_dead"
 
 physics:
   occupy_width: 1

@@ -1,0 +1,70 @@
+metadata:
+  name: "fence_rail_normal"
+type: "png"
+output_dir: "Images/items_fences"
+palette:
+  ".": "#00000000"
+  "A": "#5a0d0d"
+  "B": "#5c0e0e"
+  "C": "#5d0e0e"
+  "D": "#5e0e0e"
+  "E": "#570c0d"
+  "F": "#580c0d"
+  "G": "#5f0f0f"
+  "H": "#5e0f0e"
+  "I": "#590d0d"
+  "J": "#5b0d0e"
+  "K": "#7f241a"
+  "L": "#81251b"
+  "M": "#82251b"
+  "N": "#7c231a"
+  "O": "#7d231a"
+  "P": "#87271c"
+  "Q": "#86271c"
+  "R": "#83261b"
+  "S": "#80241b"
+  "T": "#84261c"
+  "U": "#7e241a"
+  "V": "#88281d"
+  "W": "#89281d"
+  "X": "#8b291d"
+  "Y": "#8a291d"
+  "Z": "#8e2a1e"
+  "a": "#8c291e"
+  "b": "#85261c"
+  "c": "#8a281d"
+  "d": "#8d2a1e"
+data:
+  - |
+    ................................................
+    ................................................
+    ................................................
+    ................................................
+    ................................................
+    ................................................
+    .ABCBDEFGGDEHHHGBEIJEEICHBIACFCAAAIABDECJHHBBEF.
+    .KLMMMNOPQMRMMRONNOSNNKMRMKSMTMNKNKKLMLMLRRLLUT.
+    .VWXXYTQZZTXYXaZXRbVbQVaaTVWYaYVVWVVYccXcXaWYPd.
+    .XaZZZPVZZdddZVZZQSXVWaZZZXadZQXXddaddaddZZddXZ.
+    .VVaXXTbZdWcLXdZYMTPTQcaaXVWcYWPWcYcYcVWYXXYYVd.
+    .KSNMRNNPRKSUMTPLNNONOLRRNSNLNKKLLNMMLOSLMLNLSb.
+    .AAHCHEEGDIAFCGGJEEEEACEHEBJBEEACEDHCBEACCEDJJG.
+    ................................................
+    ................................................
+    ................................................
+    ................................................
+    ................................................
+    ................................................
+    .EEIJJHGGGGCCCGGBBBEGAIJJBEHJAIJAGEGAFEFIIFEEEI.
+    .ONUSSRTbbRMMLRQMSNLbKKSSLTTKKUSKQRTUNNOKOONOON.
+    .QQPWWdddZXXXWXZXWWcQPVVWcZdPVVWVPXaPbRQWQPbQPS.
+    .YYXaaZWZZZQZadZZaddZYYTadZZYaXdaZZZMLSMbMcWYYX.
+    .PVVVcddZdWWYPVZaVWcXPQVWYZdPVLYcdaXPbTQWQPPVVW.
+    .KLKKMTTQTSKLOUPNKLLLOOKLMQbUKSMMRRLUNNOSOUKSKL.
+    .ACAACGGGHAAEFEGHABBBIEJCCGGIAJCCDHBIEEFJFIABJB.
+    ................................................
+    ................................................
+    ................................................
+    ................................................
+    ................................................
+    ................................................

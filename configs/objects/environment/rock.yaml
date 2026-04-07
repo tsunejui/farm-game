@@ -13,11 +13,11 @@ visuals:
     offset_y: 0
     states:
       normal:
-        image_path: "Images/rocks/rock_normal"
+        image_path: "Images/environment_rocks/rock_normal"
       damaged:
-        image_path: "Images/rocks/rock_damaged"
+        image_path: "Images/environment_rocks/rock_damaged"
       dead:
-        image_path: "Images/rocks/rock_dead"
+        image_path: "Images/environment_rocks/rock_dead"
 
 physics:
   occupy_width: 1

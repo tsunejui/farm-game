@@ -13,13 +13,13 @@ visuals:
     offset_y: 0
     states:
       normal:
-        image_path: "Images/apple_trees/apple_tree_a_normal"
+        image_path: "Images/environment_apple_trees/apple_tree_a_normal"
         file_type: "gif"
         frame_delay: 2500
       damaged:
-        image_path: "Images/apple_trees/apple_tree_damaged"
+        image_path: "Images/environment_apple_trees/apple_tree_damaged"
       dead:
-        image_path: "Images/apple_trees/apple_tree_dead"
+        image_path: "Images/environment_apple_trees/apple_tree_dead"
 
 physics:
   occupy_width: 3
