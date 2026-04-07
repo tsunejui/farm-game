@@ -10,6 +10,7 @@ env:
 		"DB_PATH=\"$data_dir/game.db\"" \
 		"LOG_DIR=\"$data_dir/logs\"" \
 		"CONFIGS_DIR=\"$project_root/configs\"" \
+		"LOCALES_DIR=\"$project_root/configs/locales\"" \
 		"CONTENT_DIR=\"$project_root/game/FarmGame/Content\"" \
 		> .env.local
 	echo "Generated .env.local"

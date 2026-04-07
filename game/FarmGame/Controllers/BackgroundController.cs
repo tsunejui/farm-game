@@ -73,19 +73,19 @@ public class BackgroundController : BaseController<BackgroundLogicState, Backgro
     public override void Load(ControllerManager controllers)
     {
         var session = controllers.System.Session;
-        var contentDir = controllers.System.ContentDir;
+        var localesDir = controllers.System.LocalesDir;
 
         // Create and register screens
-        var titleView = new MainView();
-        titleView.OnStartGame = () => OnStartGame?.Invoke();
-        titleView.HasSavedState = session?.HasSavedState ?? false;
-        titleView.Initialize();
+        var mainView = new MainView();
+        mainView.OnStartGame = () => OnStartGame?.Invoke();
+        mainView.HasSavedState = session?.HasSavedState ?? false;
+        mainView.Initialize();
 
         var settingsView = new SettingsView();
         settingsView.HasSavedState = () => session?.HasSavedState ?? false;
         settingsView.OnLanguageChanged = (lang) =>
         {
-            session?.ChangeLanguage(lang, contentDir);
+            session?.ChangeLanguage(lang, localesDir);
             // Rebuild all views to reflect the new language
             foreach (var view in _screens.Values)
                 view.Rebuild();
@@ -93,7 +93,7 @@ public class BackgroundController : BaseController<BackgroundLogicState, Backgro
         settingsView.OnDeleteCharacter = () =>
         {
             session?.DeleteAndReset();
-            titleView.HasSavedState = false;
+            mainView.HasSavedState = false;
             TransitionTo(GameState.TitleScreen);
         };
         settingsView.Initialize();
@@ -101,7 +101,7 @@ public class BackgroundController : BaseController<BackgroundLogicState, Backgro
         var loadingView = new LoadingView();
         loadingView.Initialize();
 
-        RegisterScreen(GameState.TitleScreen, titleView);
+        RegisterScreen(GameState.TitleScreen, mainView);
         RegisterScreen(GameState.Settings, settingsView);
         RegisterScreen(GameState.Loading, loadingView);
 

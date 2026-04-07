@@ -226,9 +226,9 @@ public class GameSession
     public string GetSetting(string key, string defaultValue = null) =>
         _settings?.Get(key, defaultValue) ?? defaultValue;
 
-    public void ChangeLanguage(string language, string contentDir)
+    public void ChangeLanguage(string language, string localesDir)
     {
-        LocaleManager.Load(contentDir, language);
+        LocaleManager.Load(localesDir, language);
         SaveSetting("language", language);
     }
 
