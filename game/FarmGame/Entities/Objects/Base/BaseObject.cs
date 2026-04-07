@@ -133,6 +133,9 @@ public abstract class BaseObject : IEntity
     public void RegisterQueues(QueueManager queueManager)
     {
         if (!IsInteractable || string.IsNullOrEmpty(Id)) return;
+        // Update queue IDs to use unique InstanceId
+        DamageQueue?.SetId(Id);
+        ActionQueue?.SetId(Id);
         queueManager.RegisterObjectQueues(Id, DamageQueue, ActionQueue);
     }
 

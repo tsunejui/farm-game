@@ -78,6 +78,7 @@ public class TitleView : IView
         if (_enterGuardFrames > 0)
         {
             _enterGuardFrames--;
+            _pendingTransition = null; // discard any Myra clicks during guard
             return ViewTransition.None;
         }
 
