@@ -12,7 +12,7 @@ screen:
 
 # Tile rendering
 tile:
-  size: 32
+  size: 64
 
 # Player defaults
 player:
