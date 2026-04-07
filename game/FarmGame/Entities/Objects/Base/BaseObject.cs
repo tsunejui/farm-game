@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FarmGame.Core.Managers;
 using FarmGame.Data;
 using FarmGame.Queues;
 using FarmGame.World;
@@ -117,11 +118,32 @@ public abstract class BaseObject : IEntity
         {
             DamageQueue = new DamageQueue(this);
             ActionQueue = new ActionQueue(this);
-            Log.Debug("[BaseObject] Created DamageQueue + ActionQueue for '{ItemId}'", ItemId);
         }
 
         // Set up interaction behavior from YAML config
         InitInteractionBehavior();
+    }
+
+    // ─── QueueManager Registration ──────────────────────────
+
+    /// <summary>
+    /// Register this object's queues with QueueManager.
+    /// Called after the object has an ID assigned (e.g. after map load).
+    /// </summary>
+    public void RegisterQueues(QueueManager queueManager)
+    {
+        if (!IsInteractable || string.IsNullOrEmpty(Id)) return;
+        queueManager.RegisterObjectQueues(Id, DamageQueue, ActionQueue);
+    }
+
+    /// <summary>
+    /// Unregister this object's queues from QueueManager.
+    /// Called when the object is removed from the world.
+    /// </summary>
+    public void UnregisterQueues(QueueManager queueManager)
+    {
+        if (string.IsNullOrEmpty(Id)) return;
+        queueManager.UnregisterObjectQueues(Id);
     }
 
     // ─── Interaction Behavior Setup ─────────────────────────
