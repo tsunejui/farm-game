@@ -38,4 +38,18 @@ public class ActionQueue
     {
         while (_queue.TryDequeue(out _)) { }
     }
+
+    /// <summary>
+    /// Graceful shutdown: drain all remaining action events and log.
+    /// </summary>
+    public void Drain()
+    {
+        int count = _queue.Count;
+        if (count > 0)
+        {
+            Log.Information("[{QueueId}] Draining {Count} pending action events...", Id, count);
+            Clear();
+            Log.Information("[{QueueId}] Drained", Id);
+        }
+    }
 }

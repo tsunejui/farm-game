@@ -19,23 +19,12 @@ public abstract class BaseQueue<T> : IGameQueue<T>, IDisposable
 
     public int Count => _queue.Count;
 
-    /// <summary>
-    /// Set the queue identifier. Called once during registration.
-    /// </summary>
     public void SetId(string id) => Id = id;
 
-    /// <summary>
-    /// Initialization hook. Called after the queue is registered.
-    /// Override in subclasses for custom setup logic.
-    /// </summary>
     public virtual void Initialize() { }
 
-    /// <summary>Thread-safe enqueue. Can be called from any thread.</summary>
     public void Enqueue(T item) => _queue.Enqueue(item);
 
-    /// <summary>
-    /// Try to dequeue a single item from the queue.
-    /// </summary>
     public bool TryDequeue(out T item) => _queue.TryDequeue(out item);
 
     /// <summary>
@@ -52,20 +41,31 @@ public abstract class BaseQueue<T> : IGameQueue<T>, IDisposable
             }
             catch (Exception ex)
             {
-                Log.Warning("[{QueueType}<{ItemType}>] Error: {Error}",
-                    GetType().Name, typeof(T).Name, ex.Message);
+                Log.Warning("[{QueueId}] Error dispatching {ItemType}: {Error}",
+                    Id, typeof(T).Name, ex.Message);
             }
         }
     }
 
-    /// <summary>
-    /// Subclasses implement the actual MediatR dispatch strategy.
-    /// </summary>
     protected abstract void Dispatch(IMediator mediator, T item);
 
     /// <summary>
-    /// Cleanup hook called when the queue is removed.
-    /// Override in subclasses for custom teardown logic.
+    /// Graceful shutdown: drain all remaining items via MediatR, then log completion.
     /// </summary>
+    public void Drain(IMediator mediator)
+    {
+        int count = _queue.Count;
+        if (count > 0)
+        {
+            Log.Information("[{QueueId}] Draining {Count} pending items...", Id, count);
+            Process(mediator);
+            Log.Information("[{QueueId}] Drained", Id);
+        }
+        else
+        {
+            Log.Information("[{QueueId}] Empty, nothing to drain", Id);
+        }
+    }
+
     public virtual void Dispose() { }
 }
