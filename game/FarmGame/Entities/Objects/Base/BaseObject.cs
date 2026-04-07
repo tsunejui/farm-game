@@ -75,6 +75,13 @@ public abstract class BaseObject : IEntity
     /// </summary>
     public DamageQueue DamageQueue { get; private set; }
 
+    /// <summary>
+    /// Per-object action queue. Only created when IsInteractable is true.
+    /// AI or input systems enqueue ActionEvent here; the object processes
+    /// them during its update cycle.
+    /// </summary>
+    public ActionQueue ActionQueue { get; private set; }
+
     // ─── Constructor ────────────────────────────────────────
 
     protected BaseObject(string itemId, ItemDefinition definition, int tileX, int tileY,
@@ -105,12 +112,12 @@ public abstract class BaseObject : IEntity
         // Determine interactability: explicit override > definition flag
         IsInteractable = isInteractable ?? definition.Logic.IsInteractable;
 
-        // Create per-object DamageQueue for interactable objects
+        // Create per-object queues for interactable objects
         if (IsInteractable)
         {
             DamageQueue = new DamageQueue(this);
-            Log.Debug("[BaseObject] Created DamageQueue for interactable object '{Id}' ({ItemId})",
-                Id, ItemId);
+            ActionQueue = new ActionQueue(this);
+            Log.Debug("[BaseObject] Created DamageQueue + ActionQueue for '{ItemId}'", ItemId);
         }
 
         // Set up interaction behavior from YAML config
