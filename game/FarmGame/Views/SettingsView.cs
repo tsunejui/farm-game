@@ -19,7 +19,7 @@ public class SettingsView : IView
     private int _selectedIndex;
     private bool _showDeleteConfirmation;
     private ViewTransition _pendingTransition;
-    private int _enterGuardFrames;
+    private bool _enterGuard;
 
     public Action<string> OnLanguageChanged { get; set; }
     public Action OnDeleteCharacter { get; set; }
@@ -28,7 +28,7 @@ public class SettingsView : IView
 
     public void Initialize() { _selectedIndex = 0; BuildUI(); }
     public void Rebuild() { _selectedIndex = 0; _showDeleteConfirmation = false; BuildUI(); }
-    public void OnEnter(GameState fromState) { ReturnState = fromState; _enterGuardFrames = 2; Rebuild(); }
+    public void OnEnter(GameState fromState) { ReturnState = fromState; _enterGuard = true; Rebuild(); }
 
     private void BuildUI()
     {
@@ -164,10 +164,11 @@ public class SettingsView : IView
 
     public ViewTransition Update(GameTime gameTime)
     {
-        if (_enterGuardFrames > 0)
+        if (_enterGuard)
         {
-            _enterGuardFrames--;
             _pendingTransition = null;
+            if (Mouse.GetState().LeftButton == ButtonState.Released)
+                _enterGuard = false;
             return ViewTransition.None;
         }
 
@@ -240,7 +241,7 @@ public class SettingsView : IView
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        if (_enterGuardFrames > 0) return;
+        if (_enterGuard) return;
         _desktop?.Render();
     }
 

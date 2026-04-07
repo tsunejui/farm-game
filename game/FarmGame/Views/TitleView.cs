@@ -18,7 +18,7 @@ public class TitleView : IView
     private Button[] _buttons;
     private int _selectedIndex;
     private ViewTransition _pendingTransition;
-    private int _enterGuardFrames;
+    private bool _enterGuard;
 
     public Action OnStartGame { get; set; }
     public bool HasSavedState { get; set; }
@@ -27,8 +27,8 @@ public class TitleView : IView
     public void Rebuild() { _selectedIndex = 0; BuildUI(); }
     public void OnEnter(GameState fromState)
     {
-        Log.Information("[TitleView] OnEnter from {From}, guard=2", fromState);
-        _enterGuardFrames = 2;
+        Log.Information("[TitleView] OnEnter from {From}, guard active", fromState);
+        _enterGuard = true;
         Rebuild();
     }
 
@@ -51,7 +51,7 @@ public class TitleView : IView
         var startBtn = UIHelper.CreateButton(LocaleManager.Get("ui", startKey));
         startBtn.Click += (_, _) =>
         {
-            Log.Information("[TitleView] Myra Click: StartGame (guard={Guard})", _enterGuardFrames);
+            Log.Information("[TitleView] Myra Click: StartGame (guard={Guard})", _enterGuard);
             OnStartGame?.Invoke();
         };
         root.Widgets.Add(startBtn);
@@ -59,7 +59,7 @@ public class TitleView : IView
         var settingsBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "settings"));
         settingsBtn.Click += (_, _) =>
         {
-            Log.Information("[TitleView] Myra Click: Settings (guard={Guard})", _enterGuardFrames);
+            Log.Information("[TitleView] Myra Click: Settings (guard={Guard})", _enterGuard);
             _pendingTransition = ViewTransition.To(GameState.Settings);
         };
         root.Widgets.Add(settingsBtn);
@@ -67,7 +67,7 @@ public class TitleView : IView
         var exitBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "close_game"));
         exitBtn.Click += (_, _) =>
         {
-            Log.Information("[TitleView] Myra Click: ExitGame (guard={Guard})", _enterGuardFrames);
+            Log.Information("[TitleView] Myra Click: ExitGame (guard={Guard})", _enterGuard);
             _pendingTransition = ViewTransition.ExitGame();
         };
         root.Widgets.Add(exitBtn);
@@ -91,12 +91,13 @@ public class TitleView : IView
 
     public ViewTransition Update(GameTime gameTime)
     {
-        // Guard: ignore input for a few frames after entering to prevent
-        // mouse clicks from the previous screen from bleeding through
-        if (_enterGuardFrames > 0)
+        // Guard: wait until mouse is released before accepting input.
+        // Prevents clicks from the previous screen from bleeding through.
+        if (_enterGuard)
         {
-            _enterGuardFrames--;
-            _pendingTransition = null; // discard any Myra clicks during guard
+            _pendingTransition = null;
+            if (Mouse.GetState().LeftButton == ButtonState.Released)
+                _enterGuard = false;
             return ViewTransition.None;
         }
 
@@ -133,7 +134,7 @@ public class TitleView : IView
     public void Draw(SpriteBatch spriteBatch)
     {
         // Skip Render during guard — Myra processes mouse input in Render()
-        if (_enterGuardFrames > 0) return;
+        if (_enterGuard) return;
         _desktop?.Render();
     }
 
