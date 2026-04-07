@@ -11,6 +11,7 @@ public class GameConfig
 
     public ScreenConfig Screen { get; set; } = new();
     public TileConfig Tile { get; set; } = new();
+    public CameraConfig Camera { get; set; } = new();
     public PlayerConfig Player { get; set; } = new();
     public GameStartConfig Game { get; set; } = new();
     public SaveConfig Save { get; set; } = new();
@@ -39,6 +40,11 @@ public class ScreenConfig
 public class TileConfig
 {
     public int Size { get; set; } = 32;
+}
+
+public class CameraConfig
+{
+    public float Zoom { get; set; } = 1.0f;
 }
 
 public class PlayerConfig

@@ -17,6 +17,7 @@ public class Camera2D
     public Camera2D(GraphicsDevice graphicsDevice)
     {
         _camera = new OrthographicCamera(graphicsDevice);
+        _camera.Zoom = GameConstants.CameraZoom;
     }
 
     // Call once when the map is loaded or changed
