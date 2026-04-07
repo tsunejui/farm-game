@@ -6,6 +6,7 @@ namespace FarmGame.Core;
 public static class GameConstants
 {
     public static int TileSize { get; private set; } = 32;
+    public static float CameraZoom { get; private set; } = 1.0f;
     public static float PlayerMoveSpeed { get; private set; } = 4.0f;
     public static int ScreenWidth { get; private set; } = 800;
     public static int ScreenHeight { get; private set; } = 600;
@@ -66,6 +67,7 @@ public static class GameConstants
         ScreenWidth = config.Screen.Width;
         ScreenHeight = config.Screen.Height;
         TileSize = config.Tile.Size;
+        CameraZoom = config.Camera.Zoom;
         PlayerMoveSpeed = config.Player.MoveSpeed;
         StartMap = config.Game.StartMap;
         GameTitle = config.Game.Title;
