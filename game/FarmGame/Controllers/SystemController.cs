@@ -30,6 +30,9 @@ public class SystemController : BaseController<SystemLogicState, SystemRenderSta
     /// <summary>Content directory path. Must be set before Initialize().</summary>
     public string ContentDir { get; set; }
 
+    /// <summary>Locales directory path. Resolved from env or defaults to configs/locales.</summary>
+    public string LocalesDir { get; private set; }
+
     // ─── Managers ───────────────────────────────────────────
 
     public DatabaseManager Database { get; private set; }
@@ -104,11 +107,15 @@ public class SystemController : BaseController<SystemLogicState, SystemRenderSta
         Queue = new QueueManager();
 
         // 7. Locale
+        LocalesDir = Environment.GetEnvironmentVariable("LOCALES_DIR");
+        if (string.IsNullOrEmpty(LocalesDir) || !Directory.Exists(LocalesDir))
+            LocalesDir = Path.Combine(Path.GetDirectoryName(ContentDir), "configs", "locales");
+
         string language = GameConstants.DefaultLanguage;
         var langSetting = settings.Get("language");
         if (!string.IsNullOrEmpty(langSetting))
             language = langSetting;
-        LocaleManager.Load(ContentDir, language);
+        LocaleManager.Load(LocalesDir, language);
 
         Log.Information("[SystemController] Initialized");
     }

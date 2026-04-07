@@ -13,17 +13,22 @@ public static class LocaleManager
 
     public static string CurrentLanguage { get; private set; } = "en";
 
-    public static void Load(string contentDir, string language)
+    /// <summary>
+    /// Load locale files from the given locales directory.
+    /// </summary>
+    /// <param name="localesDir">Path to the locales root (contains en/, zh-TW/, etc.)</param>
+    /// <param name="language">Language code to load.</param>
+    public static void Load(string localesDir, string language)
     {
         CurrentLanguage = language;
         _current.Clear();
 
-        LoadLanguage(contentDir, language, _current);
+        LoadLanguage(localesDir, language, _current);
 
         if (language != "en")
         {
             _fallback.Clear();
-            LoadLanguage(contentDir, "en", _fallback);
+            LoadLanguage(localesDir, "en", _fallback);
         }
 
         Log.Information("Locale loaded: {Language}", language);
@@ -48,17 +53,17 @@ public static class LocaleManager
         return string.Format(template, args);
     }
 
-    private static void LoadLanguage(string contentDir, string language,
+    private static void LoadLanguage(string localesDir, string language,
         Dictionary<string, Dictionary<string, string>> target)
     {
-        var localeDir = Path.Combine(contentDir, "Locales", language);
-        if (!Directory.Exists(localeDir))
+        var langDir = Path.Combine(localesDir, language);
+        if (!Directory.Exists(langDir))
         {
-            Log.Warning("Locale directory not found: {Dir}", localeDir);
+            Log.Warning("Locale directory not found: {Dir}", langDir);
             return;
         }
 
-        foreach (var file in Directory.GetFiles(localeDir, "*.json"))
+        foreach (var file in Directory.GetFiles(langDir, "*.json"))
         {
             var module = Path.GetFileNameWithoutExtension(file);
             try
