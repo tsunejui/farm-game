@@ -13,7 +13,7 @@ public record InputEvent(KeyboardState Keyboard, GameTime GameTime) : INotificat
 public record TogglePauseEvent : INotification;
 
 // ─── World Events ───────────────────────────────────────────
-/// <summary>Damage was dealt to an entity (broadcast after DamageCommand).</summary>
+/// <summary>Damage was dealt to an entity.</summary>
 public record DamageDealtEvent(
     string TargetId,
     int Damage,
@@ -29,14 +29,6 @@ public record TeleportRequestEvent(string TargetMap, int TargetX, int TargetY) :
 
 /// <summary>Map has finished loading.</summary>
 public record MapLoadedEvent(string MapId, string MapName) : INotification;
-
-// ─── VFX Events ─────────────────────────────────────────────
-/// <summary>Request a visual effect at a world position.</summary>
-public record VFXRequestEvent(
-    string EffectType,     // "hit_spark", "heal_glow", "explosion", etc.
-    Vector2 WorldPosition,
-    Color Tint,
-    float Duration = 0.5f) : INotification;
 
 // ─── UI Events ──────────────────────────────────────────────
 /// <summary>Toggle inventory open/close.</summary>

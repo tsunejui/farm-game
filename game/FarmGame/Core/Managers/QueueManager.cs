@@ -14,8 +14,8 @@ namespace FarmGame.Core.Managers;
 /// Thread-safe: Enqueue from any thread, ProcessAll on main thread.
 ///
 /// Usage:
-///   manager.Register("damage", new CommandQueue&lt;DamageCommand&gt;());
-///   manager.Enqueue(new DamageCommand(...));      // from worker thread
+///   manager.Register("input", new EventQueue&lt;InputEvent&gt;());
+///   manager.Enqueue(new InputEvent(...));          // from worker thread
 ///   manager.ProcessAll();                          // main thread
 /// </summary>
 public class QueueManager : IDisposable
@@ -41,11 +41,7 @@ public class QueueManager : IDisposable
         _services.AddLogging();
 
         // Register default queues
-        Register("damage", new CommandQueue<DamageCommand>());
-        Register("actor_action", new CommandQueue<ActorActionCommand>());
-        Register("spawn", new CommandQueue<SpawnEntityCommand>());
         Register("input", new EventQueue<InputEvent>());
-        Register("vfx", new EventQueue<VFXRequestEvent>());
 
         General.SetId("general");
         General.Initialize();
