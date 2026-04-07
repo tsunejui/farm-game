@@ -24,6 +24,7 @@ public class GameMenuPanel
     private static readonly string[] MenuItems = { "Resume", "Settings", "Leave Game" };
     private int _selectedIndex;
     private bool _isOpen;
+    private ButtonState _prevMouseLeft = ButtonState.Released;
 
     // Cached item rectangles for mouse hit testing (set during Draw)
     private readonly Rectangle[] _itemRects = new Rectangle[MenuItems.Length];
@@ -76,9 +77,12 @@ public class GameMenuPanel
             return;
         }
 
-        // Mouse hover and click
+        // Mouse hover and click (only trigger on press, not hold)
         var mouse = Mouse.GetState();
         var mousePos = new Point(mouse.X, mouse.Y);
+        bool mouseJustPressed = mouse.LeftButton == ButtonState.Pressed
+            && _prevMouseLeft == ButtonState.Released;
+        _prevMouseLeft = mouse.LeftButton;
 
         for (int i = 0; i < _itemRects.Length; i++)
         {
@@ -86,7 +90,7 @@ public class GameMenuPanel
             {
                 _selectedIndex = i;
 
-                if (mouse.LeftButton == ButtonState.Pressed)
+                if (mouseJustPressed)
                 {
                     ExecuteSelected();
                     return;

@@ -17,13 +17,14 @@ public class TitleView : IView
     private Button[] _buttons;
     private int _selectedIndex;
     private ViewTransition _pendingTransition;
+    private int _enterGuardFrames;
 
     public Action OnStartGame { get; set; }
     public bool HasSavedState { get; set; }
 
     public void Initialize() { _selectedIndex = 0; BuildUI(); }
     public void Rebuild() { _selectedIndex = 0; BuildUI(); }
-    public void OnEnter(GameState fromState) { Rebuild(); }
+    public void OnEnter(GameState fromState) { _enterGuardFrames = 2; Rebuild(); }
 
     private void BuildUI()
     {
@@ -72,6 +73,14 @@ public class TitleView : IView
 
     public ViewTransition Update(GameTime gameTime)
     {
+        // Guard: ignore input for a few frames after entering to prevent
+        // mouse clicks from the previous screen from bleeding through
+        if (_enterGuardFrames > 0)
+        {
+            _enterGuardFrames--;
+            return ViewTransition.None;
+        }
+
         var kb = KeyboardExtended.GetState();
         if (kb.WasKeyPressed(Keys.Up) || kb.WasKeyPressed(Keys.W))
         { _selectedIndex = (_selectedIndex - 1 + _buttons.Length) % _buttons.Length; UpdateButtonFocus(); }
