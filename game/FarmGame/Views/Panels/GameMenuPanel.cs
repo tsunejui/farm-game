@@ -16,6 +16,7 @@ using MonoGame.Extended;
 using MonoGame.Extended.Input;
 using FarmGame.Core;
 using FarmGame.Core.Managers;
+using Serilog;
 
 namespace FarmGame.Views.Panels;
 
@@ -92,6 +93,8 @@ public class GameMenuPanel
 
                 if (mouseJustPressed)
                 {
+                    Log.Information("[GameMenu] Mouse click on item {Index} at ({X},{Y})",
+                        i, mousePos.X, mousePos.Y);
                     ExecuteSelected();
                     return;
                 }
@@ -101,6 +104,9 @@ public class GameMenuPanel
 
     private void ExecuteSelected()
     {
+        string action = _selectedIndex switch { 0 => "Resume", 1 => "Settings", 2 => "LeaveGame", _ => "?" };
+        Log.Information("[GameMenu] ExecuteSelected: {Action} (index={Index})", action, _selectedIndex);
+
         switch (_selectedIndex)
         {
             case 0: Close(); break;               // Resume
