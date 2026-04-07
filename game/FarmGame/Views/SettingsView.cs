@@ -19,6 +19,7 @@ public class SettingsView : IView
     private int _selectedIndex;
     private bool _showDeleteConfirmation;
     private ViewTransition _pendingTransition;
+    private int _enterGuardFrames;
 
     public Action<string> OnLanguageChanged { get; set; }
     public Action OnDeleteCharacter { get; set; }
@@ -27,7 +28,7 @@ public class SettingsView : IView
 
     public void Initialize() { _selectedIndex = 0; BuildUI(); }
     public void Rebuild() { _selectedIndex = 0; _showDeleteConfirmation = false; BuildUI(); }
-    public void OnEnter(GameState fromState) { ReturnState = fromState; Rebuild(); }
+    public void OnEnter(GameState fromState) { ReturnState = fromState; _enterGuardFrames = 2; Rebuild(); }
 
     private void BuildUI()
     {
@@ -163,6 +164,13 @@ public class SettingsView : IView
 
     public ViewTransition Update(GameTime gameTime)
     {
+        if (_enterGuardFrames > 0)
+        {
+            _enterGuardFrames--;
+            _pendingTransition = null;
+            return ViewTransition.None;
+        }
+
         var kb = KeyboardExtended.GetState();
         if (kb.WasKeyPressed(Keys.Up) || kb.WasKeyPressed(Keys.W) ||
             kb.WasKeyPressed(Keys.Left) || kb.WasKeyPressed(Keys.A))

@@ -13,8 +13,8 @@ public class DamageQueue
     private readonly ConcurrentQueue<DamageEvent> _queue = new();
     private readonly BaseObject _owner;
 
-    /// <summary>Unique queue ID: {ItemId}:damage</summary>
-    public string Id { get; }
+    /// <summary>Unique queue ID. Set to {InstanceId}:damage when registered.</summary>
+    public string Id { get; private set; }
 
     public BaseObject Owner => _owner;
     public int Count => _queue.Count;
@@ -22,8 +22,11 @@ public class DamageQueue
     public DamageQueue(BaseObject owner)
     {
         _owner = owner;
-        Id = $"{owner.ItemId}:damage";
+        Id = $"{owner.ItemId}:damage"; // temporary, updated on RegisterQueues
     }
+
+    /// <summary>Update ID to use the object's unique InstanceId.</summary>
+    public void SetId(string objectId) => Id = $"{objectId}:damage";
 
     public void Enqueue(DamageEvent damageEvent)
     {
