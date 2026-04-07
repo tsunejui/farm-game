@@ -176,6 +176,15 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
 
     private void LoadMap(PlayerState savedState)
     {
+        var mapId = savedState?.CurrentMap ?? GameConstants.StartMap;
+        if (!_registry.Maps.ContainsKey(mapId))
+        {
+            Log.Error("[WorldController] Map '{MapId}' not found in registry ({Count} maps)",
+                mapId, _registry.Maps.Count);
+            LogicState.IsLoading = false;
+            return;
+        }
+
         var result = Maps.LoadMap(savedState);
         LogicState.CurrentMap = result.Map;
         LogicState.Player = result.Player;
