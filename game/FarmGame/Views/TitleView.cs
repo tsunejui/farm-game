@@ -7,6 +7,7 @@ using MonoGame.Extended.Input;
 using FarmGame.Core;
 using FarmGame.Core.Managers;
 using FarmGame.Views.Components;
+using Serilog;
 
 namespace FarmGame.Views;
 
@@ -24,7 +25,12 @@ public class TitleView : IView
 
     public void Initialize() { _selectedIndex = 0; BuildUI(); }
     public void Rebuild() { _selectedIndex = 0; BuildUI(); }
-    public void OnEnter(GameState fromState) { _enterGuardFrames = 2; Rebuild(); }
+    public void OnEnter(GameState fromState)
+    {
+        Log.Information("[TitleView] OnEnter from {From}, guard=2", fromState);
+        _enterGuardFrames = 2;
+        Rebuild();
+    }
 
     private void BuildUI()
     {
@@ -43,15 +49,27 @@ public class TitleView : IView
 
         var startKey = HasSavedState ? "continue_game" : "start_game";
         var startBtn = UIHelper.CreateButton(LocaleManager.Get("ui", startKey));
-        startBtn.Click += (_, _) => { OnStartGame?.Invoke(); };
+        startBtn.Click += (_, _) =>
+        {
+            Log.Information("[TitleView] Myra Click: StartGame (guard={Guard})", _enterGuardFrames);
+            OnStartGame?.Invoke();
+        };
         root.Widgets.Add(startBtn);
 
         var settingsBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "settings"));
-        settingsBtn.Click += (_, _) => _pendingTransition = ViewTransition.To(GameState.Settings);
+        settingsBtn.Click += (_, _) =>
+        {
+            Log.Information("[TitleView] Myra Click: Settings (guard={Guard})", _enterGuardFrames);
+            _pendingTransition = ViewTransition.To(GameState.Settings);
+        };
         root.Widgets.Add(settingsBtn);
 
         var exitBtn = UIHelper.CreateButton(LocaleManager.Get("ui", "close_game"));
-        exitBtn.Click += (_, _) => _pendingTransition = ViewTransition.ExitGame();
+        exitBtn.Click += (_, _) =>
+        {
+            Log.Information("[TitleView] Myra Click: ExitGame (guard={Guard})", _enterGuardFrames);
+            _pendingTransition = ViewTransition.ExitGame();
+        };
         root.Widgets.Add(exitBtn);
 
         _buttons = new[] { startBtn, settingsBtn, exitBtn };
@@ -100,6 +118,8 @@ public class TitleView : IView
 
         if (_pendingTransition != null)
         {
+            Log.Information("[TitleView] Processing pending transition: Exit={Exit}, Target={Target}",
+                _pendingTransition.Exit, _pendingTransition.Target);
             var t = _pendingTransition;
             _pendingTransition = null;
             return t;

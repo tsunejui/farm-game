@@ -200,6 +200,9 @@ public class BackgroundController : BaseController<BackgroundLogicState, Backgro
             var t = logic.PendingTransition;
             logic.PendingTransition = null;
 
+            Log.Information("[BackgroundController] CopyState transition: Exit={Exit}, Target={Target}",
+                t.Exit, t.Target);
+
             if (t.Exit)
                 OnExitGame?.Invoke();
             else if (t.Target.HasValue)
