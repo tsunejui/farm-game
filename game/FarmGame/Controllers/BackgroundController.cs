@@ -76,7 +76,7 @@ public class BackgroundController : BaseController<BackgroundLogicState, Backgro
         var contentDir = controllers.System.ContentDir;
 
         // Create and register screens
-        var titleView = new TitleView();
+        var titleView = new MainView();
         titleView.OnStartGame = () => OnStartGame?.Invoke();
         titleView.HasSavedState = session?.HasSavedState ?? false;
         titleView.Initialize();
