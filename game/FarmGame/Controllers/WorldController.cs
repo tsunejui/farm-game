@@ -197,6 +197,14 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
 
         LogicState.Player.RestoreAttributes(savedState);
         _session.LoadOrCreateMapState(result.Map.MapId, result.Map, savedState);
+
+        // Register per-object queues with QueueManager (after IDs are assigned)
+        if (_queue != null)
+        {
+            foreach (var obj in result.Map.Objects)
+                obj.RegisterQueues(_queue);
+        }
+
         LogicState.Camera.SetWorldBounds(LogicState.CurrentMap);
         LogicState.CurrentMap.PlayerProxy = LogicState.Player.WorldProxy;
 
@@ -339,6 +347,14 @@ public class WorldController : BaseController<WorldLogicState, WorldRenderState>
             LogicState.Player.RestoreAttributes(teleportState);
             _session.CurrentMapStateId = null;
             _session.LoadOrCreateMapState(result.Map.MapId, result.Map, null);
+
+            // Register per-object queues with QueueManager
+            if (_queue != null)
+            {
+                foreach (var obj in result.Map.Objects)
+                    obj.RegisterQueues(_queue);
+            }
+
             LogicState.Camera.SetWorldBounds(LogicState.CurrentMap);
             LogicState.CurrentMap.PlayerProxy = LogicState.Player.WorldProxy;
 
