@@ -316,8 +316,40 @@ public class QueueManager : IDisposable
     /// <summary>Number of registered queues (excluding General).</summary>
     public int RegisteredCount => _queuesById.Count;
 
+    // ─── Graceful Shutdown ────────────────────────────────────
+
+    /// <summary>
+    /// Graceful shutdown: drain all queues in order, then dispose.
+    /// Processes remaining events before closing so no data is lost.
+    /// </summary>
+    public void GracefulShutdown()
+    {
+        Log.Information("[QueueManager] Graceful shutdown starting...");
+
+        // 1. Drain typed queues (MediatR-based)
+        if (_built)
+        {
+            foreach (var kvp in _queuesById)
+            {
+                var drainMethod = kvp.Value.GetType().GetMethod("Drain");
+                drainMethod?.Invoke(kvp.Value, new object[] { _mediator });
+            }
+
+            General.Drain(_mediator);
+        }
+
+        // 2. Drain per-object queues
+        foreach (var kvp in _damageQueues)
+            kvp.Value.Drain();
+        foreach (var kvp in _actionQueues)
+            kvp.Value.Drain();
+
+        Log.Information("[QueueManager] Graceful shutdown complete — all queues drained");
+    }
+
     public void Dispose()
     {
+        GracefulShutdown();
         RemoveAll();
         General.Dispose();
         _cts.Cancel();

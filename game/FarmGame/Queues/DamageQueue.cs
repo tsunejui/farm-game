@@ -38,4 +38,18 @@ public class DamageQueue
     {
         while (_queue.TryDequeue(out _)) { }
     }
+
+    /// <summary>
+    /// Graceful shutdown: drain all remaining damage events and log.
+    /// </summary>
+    public void Drain()
+    {
+        int count = _queue.Count;
+        if (count > 0)
+        {
+            Log.Information("[{QueueId}] Draining {Count} pending damage events...", Id, count);
+            Clear();
+            Log.Information("[{QueueId}] Drained", Id);
+        }
+    }
 }
