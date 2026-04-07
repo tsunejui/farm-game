@@ -13,7 +13,7 @@ visuals:
     offset_y: 0
     states:
       normal:
-        image_path: "Images/portals/portal_normal"
+        image_path: "Images/items_portals/portal_normal"
         file_type: "gif"
         frame_delay: 400
 

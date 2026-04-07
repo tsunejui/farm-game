@@ -13,11 +13,11 @@ visuals:
     offset_y: 0
     states:
       normal:
-        image_path: "Images/fences/fence_normal"
+        image_path: "Images/items_fences/fence_normal"
       damaged:
-        image_path: "Images/fences/fence_damaged"
+        image_path: "Images/items_fences/fence_damaged"
       dead:
-        image_path: "Images/fences/fence_dead"
+        image_path: "Images/items_fences/fence_dead"
 
 physics:
   occupy_width: 1

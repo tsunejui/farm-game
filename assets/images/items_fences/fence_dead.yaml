@@ -1,0 +1,70 @@
+metadata:
+  name: "fence_dead"
+type: "png"
+output_dir: "Images/items_fences"
+palette:
+  ".": "#00000000"
+  "A": "#7b2219"
+  "B": "#7d231a"
+  "C": "#7f241a"
+  "D": "#82251b"
+  "E": "#84261c"
+  "F": "#86271c"
+  "G": "#88281d"
+  "H": "#741f18"
+  "I": "#8f2b1e"
+  "J": "#8b291d"
+  "K": "#762018"
+  "L": "#711e17"
+  "M": "#85261c"
+  "N": "#701e17"
+  "O": "#772118"
+  "P": "#89281d"
+  "Q": "#8d2a1e"
+  "R": "#752018"
+  "S": "#721f17"
+  "T": "#87271c"
+  "U": "#782119"
+  "V": "#8a291d"
+  "W": "#731f17"
+  "X": "#83251b"
+  "Y": "#81251b"
+  "Z": "#83261b"
+  "a": "#8e2a1e"
+  "b": "#85271c"
+  "c": "#8c291e"
+  "d": "#80241b"
+data:
+  - |
+    ABCDEFG..................ABCDEFG
+    ABCDEFG..................ABCDEFG
+    ABCDEFG..................ABCDEFG
+    .H.IJK....................LMJDN.
+    .OP.M.....................NDPDN.
+    .NEQM.....................RPIPK.
+    .ST.SU.UUS.SOUUKOORRL.RKRKRHVF..
+    .WXJYTFGPYC.EFTFTFEEYYZEEFFD.ZL.
+    .W.ITQ.aI.bTVcQ.Q.V.TTPVVQQGQ.K.
+    .WMQ.T.GPYCYEFTb.F.ZDYXEE.F.IPH.
+    .LFIWUOUUWSHOK.K.ORHRWRK.OOW.FW.
+    ..EP.R....................WTaMN.
+    .Nd.DH....................WEcDN.
+    .NDVbR.....................DcT..
+    .WEPRK.UWKO.AHWSHR.HAOOUOW.SIGH.
+    .S.JZMG.Y....ZddD...PFFFFYd.aML.
+    .HbaG.IQF..aIPMbGJ.PIQQccFFFI.U.
+    ..Y.XEGTYbTTPZdCXEYZPFFFF..d.ZN.
+    .R.c.RUO.O..UWSLHR.HUUOOKSSL..O.
+    .NYJbR....................ND..L.
+    .SMQM.....................NDcFS.
+    .S.P.W....................SEcZN.
+    .SGIKORHUU.ORR.WOROOOROUORWLJFR.
+    ...Gb..ZTGPFZEDD..MTFZF.TZYdcES.
+    .NDVcQPPQIIQP.GGQ.JQQPQ.QPT.I.N.
+    ....FTZZ.PPTZMD.TXb.F.FTTZYYI.R.
+    .NZaKURHUAU..O.WO.U.RRKUURW.....
+    .U..FN....................KVIZN.
+    .RZTZW.....................TQMW.
+    .LFIFW....................NXQGK.
+    ................................
+    ................................

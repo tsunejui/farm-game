@@ -13,11 +13,11 @@ visuals:
     offset_y: 0
     states:
       normal:
-        image_path: "Images/morning_glories/morning_glory_normal"
+        image_path: "Images/environment_morning_glories/morning_glory_normal"
       damaged:
-        image_path: "Images/morning_glories/morning_glory_damaged"
+        image_path: "Images/environment_morning_glories/morning_glory_damaged"
       dead:
-        image_path: "Images/morning_glories/morning_glory_dead"
+        image_path: "Images/environment_morning_glories/morning_glory_dead"
 
 physics:
   occupy_width: 1

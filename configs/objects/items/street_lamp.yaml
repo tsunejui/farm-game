@@ -13,7 +13,7 @@ visuals:
     offset_y: 0
     states:
       normal:
-        image_path: "Images/street_lamps/street_lamp_normal"
+        image_path: "Images/items_street_lamps/street_lamp_normal"
 
 physics:
   occupy_width: 1
