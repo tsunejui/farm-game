@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
 using FarmGame.Queues;
+using FarmGame.Entities.Objects;
 
 namespace FarmGame.Core.Managers;
 
@@ -143,6 +144,8 @@ public class QueueManager : IDisposable
 
         _queues.Clear();
         _queuesById.Clear();
+        _damageQueues.Clear();
+        _actionQueues.Clear();
 
         Log.Debug("[QueueManager] Removed all queues");
     }
@@ -247,6 +250,49 @@ public class QueueManager : IDisposable
         Log.Information("[QueueManager] Built - {QueueCount} typed queues + General",
             _queuesById.Count);
     }
+
+    // ─── Per-Object Queues ────────────────────────────────────
+
+    // Object ID → DamageQueue
+    private readonly Dictionary<string, DamageQueue> _damageQueues = new();
+    // Object ID → ActionQueue
+    private readonly Dictionary<string, ActionQueue> _actionQueues = new();
+
+    /// <summary>
+    /// Register per-object queues (DamageQueue + ActionQueue) for an object.
+    /// Called when an interactable object is created.
+    /// </summary>
+    public void RegisterObjectQueues(string objectId, DamageQueue damageQueue, ActionQueue actionQueue)
+    {
+        if (damageQueue != null)
+            _damageQueues[objectId] = damageQueue;
+        if (actionQueue != null)
+            _actionQueues[objectId] = actionQueue;
+
+        Log.Information("[QueueManager] Registered object queues for '{ObjectId}'", objectId);
+    }
+
+    /// <summary>
+    /// Remove per-object queues for an object.
+    /// Called when an object is destroyed or removed from the world.
+    /// </summary>
+    public void UnregisterObjectQueues(string objectId)
+    {
+        bool removed = _damageQueues.Remove(objectId) | _actionQueues.Remove(objectId);
+        if (removed)
+            Log.Information("[QueueManager] Unregistered object queues for '{ObjectId}'", objectId);
+    }
+
+    /// <summary>Get the DamageQueue for a specific object. Returns null if not found.</summary>
+    public DamageQueue GetDamageQueue(string objectId) =>
+        _damageQueues.TryGetValue(objectId, out var q) ? q : null;
+
+    /// <summary>Get the ActionQueue for a specific object. Returns null if not found.</summary>
+    public ActionQueue GetActionQueue(string objectId) =>
+        _actionQueues.TryGetValue(objectId, out var q) ? q : null;
+
+    /// <summary>Number of registered per-object queue pairs.</summary>
+    public int ObjectQueueCount => _damageQueues.Count;
 
     // ─── Diagnostics ────────────────────────────────────────
 
