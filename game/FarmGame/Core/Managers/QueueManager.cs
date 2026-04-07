@@ -49,6 +49,7 @@ public class QueueManager : IDisposable
 
         General.SetId("general");
         General.Initialize();
+        Log.Information("[QueueManager] Registered queue 'general' for type INotification");
     }
 
     // ─── Queue Registration ─────────────────────────────────
@@ -64,7 +65,7 @@ public class QueueManager : IDisposable
         _queues[typeof(T)] = queue;
         _queuesById[id] = queue;
 
-        Log.Debug("[QueueManager] Registered queue '{Id}' for type {Type}", id, typeof(T).Name);
+        Log.Information("[QueueManager] Registered queue '{Id}' for type {Type}", id, typeof(T).Name);
     }
 
     /// <summary>
