@@ -269,7 +269,8 @@ public class QueueManager : IDisposable
         if (actionQueue != null)
             _actionQueues[objectId] = actionQueue;
 
-        Log.Information("[QueueManager] Registered object queues for '{ObjectId}'", objectId);
+        Log.Information("[QueueManager] Registered object queues '{DamageId}', '{ActionId}'",
+            damageQueue?.Id ?? "null", actionQueue?.Id ?? "null");
     }
 
     /// <summary>
