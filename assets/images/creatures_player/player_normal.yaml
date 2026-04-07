@@ -1,0 +1,8 @@
+metadata:
+  name: "player_normal"
+  description: "Player character - idle facing down"
+type: "png"
+source: "prerendered"
+width: 64
+height: 128
+output_dir: "Images/creatures_player"
