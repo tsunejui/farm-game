@@ -34,7 +34,7 @@ just release          # Build for all platforms
 - `game/FarmGame/Data/` — DataRegistry, GameConfig, terrain/item/map definitions
 - `game/FarmGame/World/` — GameMap, MapBuilder, WorldObject, ObjectState
 - `game/FarmGame/Combat/` — DamagePipeline, DamageContext, IDamageStep, Steps/
-- `game/FarmGame/Entities/` — Player coordinator, Direction enum
+- `game/FarmGame/Entities/` — Player coordinator, Direction enum (8-direction: Up, Down, Left, Right, UpLeft, UpRight, DownLeft, DownRight)
 - `game/FarmGame/Entities/Actions/` — IPlayerAction interface, ActionDrawContext
 - `game/FarmGame/Entities/Actions/Player/` — MovementAction, JumpAction, AttackAction
 - `game/FarmGame/Persistence/` — DatabaseBootstrapper, DatabasePathResolver, MigrationManager
@@ -59,7 +59,7 @@ just release          # Build for all platforms
 
 | Key | Action |
 |-----|--------|
-| Arrow Keys | Move player |
+| Arrow Keys | Move player (8-direction: combine two keys for diagonal) |
 | Space | Jump |
 | Z | Attack |
 | ESC | Pause / Resume |

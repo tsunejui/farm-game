@@ -160,12 +160,21 @@ public class Player
         int cx = (int)_movement.PixelPosition.X + GameConstants.TileSize / 2 - half;
         int cy = (int)_movement.PixelPosition.Y + GameConstants.TileSize / 2 - half + yOffset;
 
+        int leftX = (int)_movement.PixelPosition.X + pad;
+        int rightX = (int)_movement.PixelPosition.X + GameConstants.TileSize - pad - sz;
+        int topY = (int)_movement.PixelPosition.Y + pad + yOffset;
+        int bottomY = (int)_movement.PixelPosition.Y + GameConstants.TileSize - pad - sz + yOffset;
+
         Rectangle rect = _movement.FacingDirection switch
         {
-            Direction.Up => new Rectangle(cx, (int)_movement.PixelPosition.Y + pad + yOffset, sz, sz),
-            Direction.Down => new Rectangle(cx, (int)_movement.PixelPosition.Y + GameConstants.TileSize - pad - sz + yOffset, sz, sz),
-            Direction.Left => new Rectangle((int)_movement.PixelPosition.X + pad, cy, sz, sz),
-            Direction.Right => new Rectangle((int)_movement.PixelPosition.X + GameConstants.TileSize - pad - sz, cy, sz, sz),
+            Direction.Up => new Rectangle(cx, topY, sz, sz),
+            Direction.Down => new Rectangle(cx, bottomY, sz, sz),
+            Direction.Left => new Rectangle(leftX, cy, sz, sz),
+            Direction.Right => new Rectangle(rightX, cy, sz, sz),
+            Direction.UpLeft => new Rectangle(leftX, topY, sz, sz),
+            Direction.UpRight => new Rectangle(rightX, topY, sz, sz),
+            Direction.DownLeft => new Rectangle(leftX, bottomY, sz, sz),
+            Direction.DownRight => new Rectangle(rightX, bottomY, sz, sz),
             _ => new Rectangle(cx, cy, sz, sz),
         };
 
