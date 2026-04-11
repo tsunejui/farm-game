@@ -86,32 +86,29 @@ public class MovementAction : IPlayerAction
 
     private void TryMove(KeyboardStateExtended keyboard)
     {
-        Point direction = Point.Zero;
+        int dx = 0, dy = 0;
 
-        if (keyboard.IsKeyDown(Keys.Up))
-        {
-            direction = new Point(0, -1);
-            FacingDirection = Direction.Up;
-        }
-        else if (keyboard.IsKeyDown(Keys.Down))
-        {
-            direction = new Point(0, 1);
-            FacingDirection = Direction.Down;
-        }
-        else if (keyboard.IsKeyDown(Keys.Left))
-        {
-            direction = new Point(-1, 0);
-            FacingDirection = Direction.Left;
-        }
-        else if (keyboard.IsKeyDown(Keys.Right))
-        {
-            direction = new Point(1, 0);
-            FacingDirection = Direction.Right;
-        }
+        if (keyboard.IsKeyDown(Keys.Up)) dy -= 1;
+        if (keyboard.IsKeyDown(Keys.Down)) dy += 1;
+        if (keyboard.IsKeyDown(Keys.Left)) dx -= 1;
+        if (keyboard.IsKeyDown(Keys.Right)) dx += 1;
 
-        if (direction != Point.Zero)
+        if (dx != 0 || dy != 0)
         {
-            var target = _gridPosition + direction;
+            FacingDirection = (dx, dy) switch
+            {
+                (0, -1) => Direction.Up,
+                (0, 1) => Direction.Down,
+                (-1, 0) => Direction.Left,
+                (1, 0) => Direction.Right,
+                (-1, -1) => Direction.UpLeft,
+                (1, -1) => Direction.UpRight,
+                (-1, 1) => Direction.DownLeft,
+                (1, 1) => Direction.DownRight,
+                _ => FacingDirection,
+            };
+
+            var target = _gridPosition + new Point(dx, dy);
             if (_tileMap.IsPassable(target.X, target.Y))
             {
                 _targetGridPosition = target;

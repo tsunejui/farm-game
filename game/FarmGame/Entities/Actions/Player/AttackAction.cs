@@ -102,6 +102,10 @@ public class AttackAction : IPlayerAction
             Direction.Down => new Rectangle(centerX - width / 2, centerY + halfTile, width, range),
             Direction.Left => new Rectangle(centerX - halfTile - range, centerY - width / 2, range, width),
             Direction.Right => new Rectangle(centerX + halfTile, centerY - width / 2, range, width),
+            Direction.UpLeft => new Rectangle(centerX - halfTile - range, centerY - halfTile - range, range, range),
+            Direction.UpRight => new Rectangle(centerX + halfTile, centerY - halfTile - range, range, range),
+            Direction.DownLeft => new Rectangle(centerX - halfTile - range, centerY + halfTile, range, range),
+            Direction.DownRight => new Rectangle(centerX + halfTile, centerY + halfTile, range, range),
             _ => Rectangle.Empty,
         };
 
@@ -118,6 +122,10 @@ public class AttackAction : IPlayerAction
             Direction.Down => new Point(pos.X, pos.Y + 1),
             Direction.Left => new Point(pos.X - 1, pos.Y),
             Direction.Right => new Point(pos.X + 1, pos.Y),
+            Direction.UpLeft => new Point(pos.X - 1, pos.Y - 1),
+            Direction.UpRight => new Point(pos.X + 1, pos.Y - 1),
+            Direction.DownLeft => new Point(pos.X - 1, pos.Y + 1),
+            Direction.DownRight => new Point(pos.X + 1, pos.Y + 1),
             _ => pos,
         };
         return _map.GetObjectAt(target.X, target.Y);
@@ -162,8 +170,8 @@ public class AttackAction : IPlayerAction
             if (isCritical)
                 kb += GameConstants.CritKnockbackBonus;
 
-            int dirX = dir switch { Direction.Left => -1, Direction.Right => 1, _ => 0 };
-            int dirY = dir switch { Direction.Up => -1, Direction.Down => 1, _ => 0 };
+            int dirX = dir switch { Direction.Left or Direction.UpLeft or Direction.DownLeft => -1, Direction.Right or Direction.UpRight or Direction.DownRight => 1, _ => 0 };
+            int dirY = dir switch { Direction.Up or Direction.UpLeft or Direction.UpRight => -1, Direction.Down or Direction.DownLeft or Direction.DownRight => 1, _ => 0 };
 
             obj.EnqueueEvent(new World.Events.KnockbackEvent(dirX, dirY, kb));
         }
