@@ -1,0 +1,13 @@
+pyyaml>=6.0
+Pillow>=10.0
+torch>=2.0
+torchvision
+trimesh>=4.0
+rembg>=2.0
+omegaconf>=2.3.0
+einops
+transformers
+huggingface_hub
+xatlas
+moderngl
+imageio

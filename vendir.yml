@@ -6,3 +6,9 @@ directories:
       - path: .
         http:
           url: https://cdn.jsdelivr.net/gh/notofonts/noto-cjk@Sans2.004/Sans/OTF/TraditionalChinese/NotoSansCJKtc-Regular.otf
+  - path: vendor/TripoSR
+    contents:
+      - path: .
+        git:
+          url: https://github.com/VAST-AI-Research/TripoSR
+          ref: d26e33181947bbbc4c6fc0f5734e1ec6c080956e

@@ -6,6 +6,7 @@ import 'justfiles/env.just'
 import 'justfiles/generate.just'
 import 'justfiles/map.just'
 import 'justfiles/release.just'
+import 'justfiles/sprite.just'
 
 # Default invocation prints the command list
 default:

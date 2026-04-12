@@ -7,4 +7,5 @@ gum = "0.17.0"
 vendir = "0.45.0"
 
 # GUI tools (install manually):
-#   brew install --cask tiled   # Tiled map editor (https://github.com/mapeditor/tiled)
+#   brew install --cask tiled    # Tiled map editor (https://github.com/mapeditor/tiled)
+#   brew install --cask blender  # Blender for sprite pipeline (https://www.blender.org)
