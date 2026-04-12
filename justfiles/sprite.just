@@ -25,7 +25,7 @@ sprite-pixelate name size="64" colors="32":
 sprite-setup:
     vendir sync
     pip3 install -r tools/requirements-sprite.txt
-    pip3 install -r vendor/TripoSR/requirements.txt
+    CMAKE_POLICY_VERSION_MINIMUM=3.5 pip3 install -r vendor/TripoSR/requirements.txt
 
 # Clean sprite pipeline build artifacts
 sprite-clean:
