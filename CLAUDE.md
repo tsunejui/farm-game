@@ -5,12 +5,27 @@ A Stardew Valley-inspired 2D farming game built with MonoGame and .NET 9.
 ## Build & Run
 
 ```bash
-mise install          # Install dotnet, just, litecli
+mise install          # Install dotnet, just, litecli, git-filter-repo, vendir
 just build            # Compile
 just start            # Run the game (also generates .env.local)
 just clean            # Clean build artifacts
 just release          # Build for all platforms
+just image-generate   # Generate game PNGs/GIFs from YAML palette definitions
 ```
+
+### AI Sprite Pipeline
+
+Generate 8-direction pixel sprites from a reference image via TripoSR -> Blender -> pixelation -> YAML:
+
+```bash
+brew install --cask blender            # One-time (GUI tool, not in mise)
+just sprite-setup                      # vendir sync TripoSR + pip install deps
+just sprite-generate <name> <input.png> [category]  # Full pipeline
+just sprite-pixelate <name> [size] [colors]         # Re-run pixelation only
+just sprite-clean                      # Clean build/sprite_pipeline/
+```
+
+Intermediate files land in `build/sprite_pipeline/<name>/` (model.obj, renders/, pixelated/); final YAML goes to `assets/images/<category>_<name>/`, which `just image-generate` picks up.
 
 ## Architecture
 
@@ -44,6 +59,11 @@ just release          # Build for all platforms
 - `game/FarmGame/Screens/` — TitleScreen, PauseScreen, SettingsScreen (Myra UI)
 - `game/FarmGame/Screens/HUD/` — MapTransitionOverlay, ToastAlert (in-game overlays)
 - `game/FarmGame/Content/` — config.yaml, Maps/, Terrains/, Items/, Locales/, Fonts/, Images/
+- `assets/images/` — Source YAML palette-encoded pixel art definitions (consumed by `tools/pixel_artify.py`)
+- `tools/sprite_pipeline/` — AI sprite generation pipeline (triposr_convert, blender_render, pixelate, yaml_export, run_pipeline)
+- `tools/` — Python tools: pixel_artify.py, png_to_yaml.py, compress_and_yaml.py, yaml_to_tmx.py
+- `vendor/TripoSR/` — Vendored image-to-3D model (pinned via vendir, not a submodule)
+- `justfiles/` — Modular just recipes (db, download, env, generate, map, release, sprite)
 
 ## Conventions
 
@@ -54,6 +74,8 @@ just release          # Build for all platforms
 - Adding new types: create a YAML definition file, then use in map configs
 - Database stored at platform-specific path (see DatabasePathResolver)
 - Player UUID generated on first launch, stored in `setting` table
+- Sprites are defined as YAML palette-encoded files in `assets/images/<category>/*.yaml`; `just image-generate` renders them to `game/FarmGame/Content/Images/` via Pillow
+- Third-party source code is vendored under `vendor/` via vendir (`vendir.yml`, pinned by commit SHA), not git submodules
 
 ## Controls
 

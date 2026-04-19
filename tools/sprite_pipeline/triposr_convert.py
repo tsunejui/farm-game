@@ -23,7 +23,8 @@ if os.path.isdir(_TRIPOSR_PATH) and _TRIPOSR_PATH not in sys.path:
     sys.path.insert(0, _TRIPOSR_PATH)
 
 
-def convert(input_path, output_path, resolution=256, remove_bg=False, device=None):
+def convert(input_path, output_path, resolution=256, remove_bg=True, device=None):
+    import numpy as np
     from PIL import Image
 
     if not os.path.exists(input_path):
@@ -32,41 +33,52 @@ def convert(input_path, output_path, resolution=256, remove_bg=False, device=Non
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
-    # Optionally remove background
-    img = Image.open(input_path)
-    if remove_bg:
-        print("Removing background...")
-        from rembg import remove
-        img = remove(img)
-
-    # Ensure RGBA
-    img = img.convert("RGBA")
-
     print(f"Loading TripoSR model (device={device or 'auto'})...")
     import torch
-    from tsr.system import TSRSystem
+    from tsr.system import TSR
+    from tsr.utils import remove_background, resize_foreground
 
     if device is None:
-        if torch.cuda.is_available():
-            device = "cuda:0"
-        elif torch.backends.mps.is_available():
-            device = "mps"
-        else:
-            device = "cpu"
+        # torchmcubes (used by extract_mesh) only supports CUDA or CPU.
+        # MPS is not supported, so fall back to CPU on non-CUDA systems.
+        device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
-    model = TSRSystem.from_pretrained(
+    model = TSR.from_pretrained(
         "stabilityai/TripoSR",
-        device=device,
+        config_name="config.yaml",
+        weight_name="model.ckpt",
     )
     model.renderer.set_chunk_size(8192)
+    model.to(device)
+
+    print("Processing input image...")
+    if remove_bg:
+        import rembg
+        rembg_session = rembg.new_session()
+        image = remove_background(Image.open(input_path), rembg_session)
+        image = resize_foreground(image, 0.85)
+        image = np.array(image).astype(np.float32) / 255.0
+        image = image[:, :, :3] * image[:, :, 3:4] + (1 - image[:, :, 3:4]) * 0.5
+        image = Image.fromarray((image * 255.0).astype(np.uint8))
+    else:
+        image = Image.open(input_path).convert("RGB")
 
     print("Running inference...")
-    scene_codes = model([img], device=device)
+    with torch.no_grad():
+        scene_codes = model([image], device=device)
 
-    print(f"Extracting mesh (resolution={resolution})...")
-    meshes = model.extract_mesh(scene_codes, resolution=resolution)
+    print(f"Extracting mesh (resolution={resolution}) with vertex colors...")
+    meshes = model.extract_mesh(scene_codes, True, resolution=resolution)
+    mesh = meshes[0]
 
-    meshes[0].export(output_path)
+    # PLY preserves per-vertex colors natively and is handled reliably by Blender.
+    ext = os.path.splitext(output_path)[1].lower()
+    if ext == ".ply":
+        mesh.export(output_path, file_type="ply")
+    elif ext in (".glb", ".gltf"):
+        mesh.export(output_path, file_type="glb")
+    else:
+        mesh.export(output_path)
     print(f"Saved 3D model: {output_path}")
 
 
@@ -76,13 +88,13 @@ def main():
     parser.add_argument("--output", required=True, help="Output mesh path (.obj)")
     parser.add_argument("--resolution", type=int, default=256,
                         help="Marching cubes resolution (default: 256)")
-    parser.add_argument("--remove-bg", action="store_true",
-                        help="Remove background before processing")
+    parser.add_argument("--no-remove-bg", action="store_true",
+                        help="Skip background removal (default: remove)")
     parser.add_argument("--device", default=None,
                         help="Device: cuda, mps, cpu (auto-detected if omitted)")
     args = parser.parse_args()
 
-    convert(args.input, args.output, args.resolution, args.remove_bg, args.device)
+    convert(args.input, args.output, args.resolution, not args.no_remove_bg, args.device)
 
 
 if __name__ == "__main__":

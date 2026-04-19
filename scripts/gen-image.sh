@@ -36,8 +36,8 @@ for dir in "$ASSETS_DIR"/*/; do
         [ -f "$yaml_file" ] || continue
         name=$(basename "$yaml_file" .yaml)
 
-        # Check if YAML has output_dir override (relative to Content/)
-        output_dir=$(grep "^output_dir:" "$yaml_file" 2>/dev/null | sed 's/output_dir: *"//' | sed 's/".*//' || true)
+        # Check if YAML has output_dir override (relative to Content/); supports quoted and unquoted values
+        output_dir=$(grep "^output_dir:" "$yaml_file" 2>/dev/null | sed -E 's/^output_dir: *"?//' | sed -E 's/"? *$//' || true)
         if [ -n "$output_dir" ]; then
             output="game/FarmGame/Content/$output_dir/$name"
         else

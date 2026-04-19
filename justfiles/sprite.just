@@ -1,10 +1,12 @@
 # Generate 8-direction pixel sprites from a reference image via AI pipeline
-# Usage: just sprite-generate <name> <input_image> [category] [size] [colors]
-sprite-generate name input category="items" size="64" colors="32":
+# Usage: just sprite-generate <name> <input_image> [size] [colors]
+#   <name> is used as both the sprite name prefix AND the output directory.
+#   Output: assets/images/<name>/<name>_{down,up,...}.yaml
+sprite-generate name input size="64" colors="32":
     python3 tools/sprite_pipeline/run_pipeline.py \
         --input {{input}} \
         --name {{name}} \
-        --category {{category}} \
+        --output-name {{name}} \
         --size {{size}} \
         --colors {{colors}}
 

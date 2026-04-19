@@ -64,18 +64,20 @@ def main():
     parser.add_argument("--name", required=True, help="Sprite name (e.g., chicken)")
     parser.add_argument("--category", default="items",
                         help="Asset category (default: items)")
-    parser.add_argument("--size", type=int, default=64,
-                        help="Pixel art max dimension (default: 64)")
-    parser.add_argument("--colors", type=int, default=32,
-                        help="Color count after quantization (default: 32)")
-    parser.add_argument("--resolution", type=int, default=256,
-                        help="TripoSR mesh resolution (default: 256)")
-    parser.add_argument("--render-resolution", type=int, default=512,
-                        help="Blender render resolution (default: 512)")
-    parser.add_argument("--elevation", type=float, default=30.0,
-                        help="Camera elevation angle (default: 30)")
-    parser.add_argument("--remove-bg", action="store_true",
-                        help="Remove background from input image")
+    parser.add_argument("--output-name", default=None,
+                        help="Override output directory name (default: <category>_<name>)")
+    parser.add_argument("--size", type=int, default=128,
+                        help="Pixel art max dimension (default: 128)")
+    parser.add_argument("--colors", type=int, default=48,
+                        help="Color count after quantization (default: 48)")
+    parser.add_argument("--resolution", type=int, default=320,
+                        help="TripoSR mesh resolution (default: 320)")
+    parser.add_argument("--render-resolution", type=int, default=1024,
+                        help="Blender render resolution (default: 1024)")
+    parser.add_argument("--elevation", type=float, default=45.0,
+                        help="Camera elevation in degrees (default: 45, classic RO 3/4 view)")
+    parser.add_argument("--no-remove-bg", action="store_true",
+                        help="Skip background removal (default: remove)")
     parser.add_argument("--device", default=None,
                         help="TripoSR device: cuda, mps, cpu (auto-detected)")
     parser.add_argument("--skip-3d", action="store_true",
@@ -92,10 +94,10 @@ def main():
     # Paths
     project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     build_dir = os.path.join(project_root, "build", "sprite_pipeline", args.name)
-    model_path = os.path.join(build_dir, "model.obj")
+    model_path = os.path.join(build_dir, "model.ply")
     renders_dir = os.path.join(build_dir, "renders")
     pixelated_dir = os.path.join(build_dir, "pixelated")
-    output_category = f"{args.category}_{args.name}"
+    output_category = args.output_name or f"{args.category}_{args.name}"
     yaml_output_dir = os.path.join(project_root, "assets", "images", output_category)
     tools_dir = os.path.join(project_root, "tools", "sprite_pipeline")
 
@@ -115,8 +117,8 @@ def main():
             "--output", model_path,
             "--resolution", str(args.resolution),
         ]
-        if args.remove_bg:
-            cmd.append("--remove-bg")
+        if args.no_remove_bg:
+            cmd.append("--no-remove-bg")
         if args.device:
             cmd.extend(["--device", args.device])
         run_step("TripoSR: Image to 3D", cmd)
@@ -134,7 +136,7 @@ def main():
             sys.exit(1)
 
         cmd = [
-            blender, "--background", "--python",
+            blender, "--background", "--python-exit-code", "1", "--python",
             os.path.join(tools_dir, "blender_render.py"),
             "--",
             "--model", model_path,

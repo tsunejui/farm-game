@@ -28,7 +28,7 @@ class LiteralDumper(yaml.SafeDumper):
     """YAML dumper that uses literal block style for multiline strings."""
     def represent_data(self, data):
         if isinstance(data, str) and "\n" in data:
-            return self.represent_scalar("tag:yaml.org,002:str", data, style="|")
+            return self.represent_scalar("tag:yaml.org,2002:str", data, style="|")
         return super().represent_data(data)
 
 

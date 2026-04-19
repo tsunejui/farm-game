@@ -4,6 +4,7 @@ torch>=2.0
 torchvision
 trimesh>=4.0
 rembg>=2.0
+onnxruntime
 omegaconf>=2.3.0
 einops
 transformers
